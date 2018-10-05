@@ -1,0 +1,1732 @@
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+[03/Oct/2018 23:27:16] "GET / HTTP/1.1" 200 16348
+[03/Oct/2018 23:27:16] "GET /static/admin/css/fonts.css HTTP/1.1" 200 423
+[03/Oct/2018 23:27:16] "GET /static/admin/fonts/Roboto-Bold-webfont.woff HTTP/1.1" 200 82564
+[03/Oct/2018 23:27:16] "GET /static/admin/fonts/Roboto-Regular-webfont.woff HTTP/1.1" 200 80304
+[03/Oct/2018 23:27:16] "GET /static/admin/fonts/Roboto-Light-webfont.woff HTTP/1.1" 200 81348
+Not Found: /favicon.ico
+[03/Oct/2018 23:27:16] "GET /favicon.ico HTTP/1.1" 404 1988
+[03/Oct/2018 23:27:40] "GET / HTTP/1.1" 200 16348
+[03/Oct/2018 23:27:43] "GET / HTTP/1.1" 200 16348
+[03/Oct/2018 23:28:18] "GET / HTTP/1.1" 200 16348
+[03/Oct/2018 23:28:19] "GET /static/admin/css/fonts.css HTTP/1.1" 200 423
+[03/Oct/2018 23:28:19] "GET /static/admin/fonts/Roboto-Light-webfont.woff HTTP/1.1" 200 81348
+[03/Oct/2018 23:28:19] "GET /static/admin/fonts/Roboto-Regular-webfont.woff HTTP/1.1" 200 80304
+[03/Oct/2018 23:28:19] "GET /static/admin/fonts/Roboto-Bold-webfont.woff HTTP/1.1" 200 82564
+Not Found: /api
+[03/Oct/2018 23:37:37] "GET /api HTTP/1.1" 404 1964
+[03/Oct/2018 23:37:45] "GET /admin HTTP/1.1" 301 0
+[03/Oct/2018 23:37:45] "GET /admin/ HTTP/1.1" 302 0
+[03/Oct/2018 23:37:45] "GET /admin/login/?next=/admin/ HTTP/1.1" 200 1819
+[03/Oct/2018 23:37:45] "GET /static/admin/css/login.css HTTP/1.1" 200 1203
+[03/Oct/2018 23:37:45] "GET /static/admin/css/base.css HTTP/1.1" 200 16225
+[03/Oct/2018 23:37:45] "GET /static/admin/css/responsive.css HTTP/1.1" 200 17976
+[03/Oct/2018 23:38:27] "POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+[03/Oct/2018 23:38:27] "GET /admin/ HTTP/1.1" 200 3053
+[03/Oct/2018 23:38:27] "GET /static/admin/css/dashboard.css HTTP/1.1" 200 412
+[03/Oct/2018 23:38:27] "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+[03/Oct/2018 23:38:27] "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+[03/Oct/2018 23:38:32] "GET /admin/auth/group/ HTTP/1.1" 200 3514
+[03/Oct/2018 23:38:32] "GET /static/admin/css/changelists.css HTTP/1.1" 200 6170
+[03/Oct/2018 23:38:32] "GET /static/admin/js/jquery.init.js HTTP/1.1" 200 363
+[03/Oct/2018 23:38:32] "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 271751
+[03/Oct/2018 23:38:32] "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 6918
+[03/Oct/2018 23:38:32] "GET /static/admin/js/actions.js HTTP/1.1" 200 6538
+[03/Oct/2018 23:38:32] "GET /static/admin/js/core.js HTTP/1.1" 200 7134
+[03/Oct/2018 23:38:32] "GET /static/admin/js/urlify.js HTTP/1.1" 200 8972
+[03/Oct/2018 23:38:32] "GET /admin/jsi18n/ HTTP/1.1" 200 3185
+[03/Oct/2018 23:38:32] "GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1530
+[03/Oct/2018 23:38:32] "GET /static/admin/img/search.svg HTTP/1.1" 200 458
+[03/Oct/2018 23:38:32] "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 128820
+[03/Oct/2018 23:38:32] "GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 331
+[03/Oct/2018 23:38:33] "GET /admin/ HTTP/1.1" 200 3053
+[03/Oct/2018 23:38:35] "GET /admin/auth/user/ HTTP/1.1" 200 7069
+[03/Oct/2018 23:38:35] "GET /static/admin/img/icon-yes.svg HTTP/1.1" 200 436
+[03/Oct/2018 23:38:35] "GET /admin/jsi18n/ HTTP/1.1" 200 3185
+[03/Oct/2018 23:38:35] "GET /static/admin/img/sorting-icons.svg HTTP/1.1" 200 1097
+[03/Oct/2018 23:38:39] "GET / HTTP/1.1" 200 16348
+[03/Oct/2018 23:38:39] "GET /static/admin/css/fonts.css HTTP/1.1" 200 423
+[03/Oct/2018 23:38:39] "GET /static/admin/fonts/Roboto-Regular-webfont.woff HTTP/1.1" 200 80304
+[03/Oct/2018 23:38:39] "GET /static/admin/fonts/Roboto-Light-webfont.woff HTTP/1.1" 200 81348
+[03/Oct/2018 23:38:39] "GET /static/admin/fonts/Roboto-Bold-webfont.woff HTTP/1.1" 200 82564
+Not Found: /favicon.ico
+[03/Oct/2018 23:38:39] "GET /favicon.ico HTTP/1.1" 404 1988
+[03/Oct/2018 23:38:40] "GET /admin/auth/user/2/change/ HTTP/1.1" 200 13952
+[03/Oct/2018 23:38:40] "GET /static/admin/css/forms.css HTTP/1.1" 200 8505
+[03/Oct/2018 23:38:40] "GET /static/admin/js/SelectBox.js HTTP/1.1" 200 5755
+[03/Oct/2018 23:38:40] "GET /static/admin/js/calendar.js HTTP/1.1" 200 7777
+[03/Oct/2018 23:38:40] "GET /static/admin/js/SelectFilter2.js HTTP/1.1" 200 12712
+[03/Oct/2018 23:38:40] "GET /static/admin/js/admin/DateTimeShortcuts.js HTTP/1.1" 200 20281
+[03/Oct/2018 23:38:40] "GET /static/admin/js/change_form.js HTTP/1.1" 200 712
+[03/Oct/2018 23:38:40] "GET /static/admin/css/widgets.css HTTP/1.1" 200 10340
+[03/Oct/2018 23:38:40] "GET /admin/jsi18n/ HTTP/1.1" 200 3185
+[03/Oct/2018 23:38:40] "GET /static/admin/js/prepopulate_init.js HTTP/1.1" 200 495
+[03/Oct/2018 23:38:40] "GET /static/admin/img/selector-icons.svg HTTP/1.1" 200 3291
+[03/Oct/2018 23:38:40] "GET /static/admin/img/icon-unknown-alt.svg HTTP/1.1" 200 655
+[03/Oct/2018 23:38:40] "GET /static/admin/img/icon-unknown.svg HTTP/1.1" 200 655
+[03/Oct/2018 23:38:40] "GET /static/admin/img/icon-clock.svg HTTP/1.1" 200 677
+[03/Oct/2018 23:38:40] "GET /static/admin/img/icon-calendar.svg HTTP/1.1" 200 1086
+[03/Oct/2018 23:38:43] "GET / HTTP/1.1" 200 16348
+[03/Oct/2018 23:38:43] "GET /static/admin/css/fonts.css HTTP/1.1" 200 423
+[03/Oct/2018 23:38:44] "GET /static/admin/fonts/Roboto-Light-webfont.woff HTTP/1.1" 200 81348
+[03/Oct/2018 23:38:44] "GET /static/admin/fonts/Roboto-Regular-webfont.woff HTTP/1.1" 200 80304
+[03/Oct/2018 23:38:44] "GET /static/admin/fonts/Roboto-Bold-webfont.woff HTTP/1.1" 200 82564
+Not Found: /favicon.ico
+[03/Oct/2018 23:38:44] "GET /favicon.ico HTTP/1.1" 404 1988
+[03/Oct/2018 23:38:54] "GET /admin/ HTTP/1.1" 200 3053
+[03/Oct/2018 23:39:06] "GET / HTTP/1.1" 200 16348
+[03/Oct/2018 23:39:09] "GET /admin/ HTTP/1.1" 200 3053
+Invalid HTTP_HOST header: 'localhost.localdomain:8000'. You may need to add 'localhost.localdomain' to ALLOWED_HOSTS.
+Bad Request: /
+[04/Oct/2018 01:46:54] "GET / HTTP/1.0" 400 58914
+[04/Oct/2018 02:26:36] "GET / HTTP/1.1" 200 16348
+[04/Oct/2018 02:26:36] "GET /static/admin/css/fonts.css HTTP/1.1" 200 423
+[04/Oct/2018 02:26:36] "GET /static/admin/fonts/Roboto-Bold-webfont.woff HTTP/1.1" 200 82564
+[04/Oct/2018 02:26:36] "GET /static/admin/fonts/Roboto-Regular-webfont.woff HTTP/1.1" 200 80304
+[04/Oct/2018 02:26:36] "GET /static/admin/fonts/Roboto-Light-webfont.woff HTTP/1.1" 200 81348
+Not Found: /status
+[04/Oct/2018 10:38:47] "GET /status HTTP/1.1" 404 1973
+[04/Oct/2018 14:16:59] "GET / HTTP/1.1" 200 16348
+[04/Oct/2018 14:16:59] "GET /static/admin/css/fonts.css HTTP/1.1" 200 423
+[04/Oct/2018 14:16:59] "GET /static/admin/fonts/Roboto-Bold-webfont.woff HTTP/1.1" 200 82564
+[04/Oct/2018 14:16:59] "GET /static/admin/fonts/Roboto-Light-webfont.woff HTTP/1.1" 200 81348
+[04/Oct/2018 14:16:59] "GET /static/admin/fonts/Roboto-Regular-webfont.woff HTTP/1.1" 304 0
+[04/Oct/2018 14:17:00] "GET / HTTP/1.1" 200 16348
+[04/Oct/2018 14:17:11] "GET / HTTP/1.1" 200 16348
+Not Found: /apple-touch-icon-precomposed.png
+[04/Oct/2018 14:17:11] "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 2051
+Not Found: /apple-touch-icon.png
+[04/Oct/2018 14:17:11] "GET /apple-touch-icon.png HTTP/1.1" 404 2015
+Not Found: /favicon.ico
+[04/Oct/2018 14:17:11] "GET /favicon.ico HTTP/1.1" 404 1988
+Not Found: /apple-touch-icon-precomposed.png
+[04/Oct/2018 14:17:11] "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 2051
+Not Found: /apple-touch-icon.png
+[04/Oct/2018 14:17:11] "GET /apple-touch-icon.png HTTP/1.1" 404 2015
+Not Found: /favicon.ico
+[04/Oct/2018 14:17:11] "GET /favicon.ico HTTP/1.1" 404 1988
+[04/Oct/2018 14:17:11] "GET / HTTP/1.1" 200 16348
+Not Found: /apple-touch-icon-precomposed.png
+[04/Oct/2018 14:17:11] "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 2051
+Not Found: /apple-touch-icon.png
+[04/Oct/2018 14:17:11] "GET /apple-touch-icon.png HTTP/1.1" 404 2015
+Not Found: /favicon.ico
+[04/Oct/2018 14:17:11] "GET /favicon.ico HTTP/1.1" 404 1988
+Not Found: /apple-touch-icon-precomposed.png
+[04/Oct/2018 14:17:11] "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 2051
+Not Found: /apple-touch-icon.png
+[04/Oct/2018 14:17:11] "GET /apple-touch-icon.png HTTP/1.1" 404 2015
+Not Found: /favicon.ico
+[04/Oct/2018 14:17:11] "GET /favicon.ico HTTP/1.1" 404 1988
+[04/Oct/2018 14:17:27] "GET / HTTP/1.1" 200 16348
+Not Found: /apple-touch-icon-precomposed.png
+[04/Oct/2018 14:17:27] "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 2051
+Not Found: /apple-touch-icon.png
+[04/Oct/2018 14:17:27] "GET /apple-touch-icon.png HTTP/1.1" 404 2015
+[04/Oct/2018 14:17:28] "GET /admin/ HTTP/1.1" 200 3053
+[04/Oct/2018 14:17:28] "GET /static/admin/css/base.css HTTP/1.1" 200 16225
+[04/Oct/2018 14:17:28] "GET /static/admin/css/dashboard.css HTTP/1.1" 200 412
+[04/Oct/2018 14:17:28] "GET /static/admin/css/responsive.css HTTP/1.1" 200 17976
+[04/Oct/2018 14:17:28] "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+[04/Oct/2018 14:17:28] "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+[04/Oct/2018 14:17:28] "GET /admin/ HTTP/1.1" 200 3053
+[04/Oct/2018 14:17:38] "GET /admin/auth/user/add/ HTTP/1.1" 200 5666
+[04/Oct/2018 14:17:38] "GET /static/admin/js/core.js HTTP/1.1" 200 7134
+[04/Oct/2018 14:17:38] "GET /static/admin/css/forms.css HTTP/1.1" 304 0
+[04/Oct/2018 14:17:38] "GET /static/admin/js/jquery.init.js HTTP/1.1" 200 363
+[04/Oct/2018 14:17:38] "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 6918
+[04/Oct/2018 14:17:38] "GET /static/admin/js/urlify.js HTTP/1.1" 200 8972
+[04/Oct/2018 14:17:38] "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 304 0
+[04/Oct/2018 14:17:38] "GET /static/admin/js/change_form.js HTTP/1.1" 200 712
+[04/Oct/2018 14:17:39] "GET /static/admin/js/prepopulate.js HTTP/1.1" 304 0
+[04/Oct/2018 14:17:39] "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 128820
+[04/Oct/2018 14:17:39] "GET /admin/jsi18n/ HTTP/1.1" 200 3185
+[04/Oct/2018 14:17:39] "GET /static/admin/css/widgets.css HTTP/1.1" 200 10340
+[04/Oct/2018 14:17:39] "GET /static/admin/js/actions.js HTTP/1.1" 304 0
+[04/Oct/2018 14:17:39] "GET /static/admin/js/prepopulate_init.js HTTP/1.1" 304 0
+[04/Oct/2018 14:17:41] "GET /admin/auth/group/add/ HTTP/1.1" 200 6544
+[04/Oct/2018 14:17:41] "GET /static/admin/js/SelectBox.js HTTP/1.1" 200 5755
+[04/Oct/2018 14:17:41] "GET /static/admin/js/SelectFilter2.js HTTP/1.1" 200 12712
+[04/Oct/2018 14:17:41] "GET /admin/jsi18n/ HTTP/1.1" 200 3185
+[04/Oct/2018 14:17:42] "GET /static/admin/img/selector-icons.svg HTTP/1.1" 200 3291
+[04/Oct/2018 14:17:42] "GET /static/admin/img/icon-unknown.svg HTTP/1.1" 200 655
+[04/Oct/2018 14:17:42] "GET /static/admin/img/search.svg HTTP/1.1" 200 458
+[04/Oct/2018 14:17:42] "GET /static/admin/img/icon-unknown-alt.svg HTTP/1.1" 200 655
+[04/Oct/2018 14:29:52] "GET / HTTP/1.1" 200 16348
+[04/Oct/2018 14:43:12] "GET / HTTP/1.1" 200 16348
+Not Found: /apple-touch-icon-120x120-precomposed.png
+[04/Oct/2018 14:43:12] "GET /apple-touch-icon-120x120-precomposed.png HTTP/1.1" 404 2075
+Not Found: /apple-touch-icon-120x120.png
+[04/Oct/2018 14:43:12] "GET /apple-touch-icon-120x120.png HTTP/1.1" 404 2039
+Not Found: /apple-touch-icon-precomposed.png
+[04/Oct/2018 14:43:12] "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 2051
+Not Found: /apple-touch-icon.png
+[04/Oct/2018 14:43:12] "GET /apple-touch-icon.png HTTP/1.1" 404 2015
+Not Found: /favicon.ico
+[04/Oct/2018 14:43:12] "GET /favicon.ico HTTP/1.1" 404 1988
+Not Found: /apple-touch-icon-120x120-precomposed.png
+[04/Oct/2018 14:43:13] "GET /apple-touch-icon-120x120-precomposed.png HTTP/1.1" 404 2075
+Not Found: /apple-touch-icon-120x120.png
+[04/Oct/2018 14:43:13] "GET /apple-touch-icon-120x120.png HTTP/1.1" 404 2039
+Not Found: /apple-touch-icon-precomposed.png
+[04/Oct/2018 14:43:13] "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 2051
+Not Found: /apple-touch-icon.png
+[04/Oct/2018 14:43:13] "GET /apple-touch-icon.png HTTP/1.1" 404 2015
+Not Found: /favicon.ico
+[04/Oct/2018 14:43:13] "GET /favicon.ico HTTP/1.1" 404 1988
+Not Found: /status
+[04/Oct/2018 18:29:36] "GET /status HTTP/1.1" 404 1973
+[04/Oct/2018 18:41:18] "GET / HTTP/1.1" 200 16348
+Not Found: /apple-touch-icon-120x120-precomposed.png
+[04/Oct/2018 18:41:18] "GET /apple-touch-icon-120x120-precomposed.png HTTP/1.1" 404 2075
+Not Found: /apple-touch-icon-120x120.png
+[04/Oct/2018 18:41:18] "GET /apple-touch-icon-120x120.png HTTP/1.1" 404 2039
+Not Found: /apple-touch-icon-precomposed.png
+[04/Oct/2018 18:41:18] "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 2051
+Not Found: /apple-touch-icon.png
+[04/Oct/2018 18:41:18] "GET /apple-touch-icon.png HTTP/1.1" 404 2015
+Not Found: /favicon.ico
+[04/Oct/2018 18:41:18] "GET /favicon.ico HTTP/1.1" 404 1988
+Not Found: /apple-touch-icon-120x120-precomposed.png
+[04/Oct/2018 18:41:18] "GET /apple-touch-icon-120x120-precomposed.png HTTP/1.1" 404 2075
+Not Found: /apple-touch-icon-120x120.png
+[04/Oct/2018 18:41:18] "GET /apple-touch-icon-120x120.png HTTP/1.1" 404 2039
+Not Found: /apple-touch-icon-precomposed.png
+[04/Oct/2018 18:41:18] "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 2051
+Not Found: /apple-touch-icon.png
+[04/Oct/2018 18:41:18] "GET /apple-touch-icon.png HTTP/1.1" 404 2015
+Not Found: /favicon.ico
+[04/Oct/2018 18:41:18] "GET /favicon.ico HTTP/1.1" 404 1988
+[04/Oct/2018 21:25:47] "GET / HTTP/1.1" 200 16348
+Not Found: /apple-touch-icon-120x120-precomposed.png
+[04/Oct/2018 21:25:48] "GET /apple-touch-icon-120x120-precomposed.png HTTP/1.1" 404 2075
+Not Found: /apple-touch-icon-120x120.png
+[04/Oct/2018 21:25:48] "GET /apple-touch-icon-120x120.png HTTP/1.1" 404 2039
+Not Found: /apple-touch-icon-precomposed.png
+[04/Oct/2018 21:25:48] "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 2051
+Not Found: /apple-touch-icon.png
+[04/Oct/2018 21:25:48] "GET /apple-touch-icon.png HTTP/1.1" 404 2015
+Not Found: /favicon.ico
+[04/Oct/2018 21:25:48] "GET /favicon.ico HTTP/1.1" 404 1988
+Not Found: /apple-touch-icon-120x120-precomposed.png
+[04/Oct/2018 21:25:48] "GET /apple-touch-icon-120x120-precomposed.png HTTP/1.1" 404 2075
+Not Found: /apple-touch-icon-120x120.png
+[04/Oct/2018 21:25:48] "GET /apple-touch-icon-120x120.png HTTP/1.1" 404 2039
+Not Found: /apple-touch-icon-precomposed.png
+[04/Oct/2018 21:25:48] "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 2051
+Not Found: /apple-touch-icon.png
+[04/Oct/2018 21:25:48] "GET /apple-touch-icon.png HTTP/1.1" 404 2015
+Not Found: /favicon.ico
+[04/Oct/2018 21:25:48] "GET /favicon.ico HTTP/1.1" 404 1988
+[04/Oct/2018 22:46:32] "GET / HTTP/1.1" 200 16348
+[04/Oct/2018 22:55:10] "GET / HTTP/1.1" 200 16348
+Not Found: /apple-touch-icon-120x120-precomposed.png
+[04/Oct/2018 22:55:10] "GET /apple-touch-icon-120x120-precomposed.png HTTP/1.1" 404 2075
+Not Found: /apple-touch-icon-120x120.png
+[04/Oct/2018 22:55:10] "GET /apple-touch-icon-120x120.png HTTP/1.1" 404 2039
+Not Found: /apple-touch-icon-precomposed.png
+[04/Oct/2018 22:55:10] "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 2051
+Not Found: /apple-touch-icon.png
+[04/Oct/2018 22:55:10] "GET /apple-touch-icon.png HTTP/1.1" 404 2015
+Not Found: /favicon.ico
+[04/Oct/2018 22:55:10] "GET /favicon.ico HTTP/1.1" 404 1988
+Not Found: /apple-touch-icon-120x120-precomposed.png
+[04/Oct/2018 22:55:10] "GET /apple-touch-icon-120x120-precomposed.png HTTP/1.1" 404 2075
+Not Found: /apple-touch-icon-120x120.png
+[04/Oct/2018 22:55:11] "GET /apple-touch-icon-120x120.png HTTP/1.1" 404 2039
+Not Found: /apple-touch-icon-precomposed.png
+[04/Oct/2018 22:55:11] "GET /apple-touch-icon-precomposed.png HTTP/1.1" 404 2051
+Not Found: /apple-touch-icon.png
+[04/Oct/2018 22:55:11] "GET /apple-touch-icon.png HTTP/1.1" 404 2015
+Not Found: /favicon.ico
+[04/Oct/2018 22:55:11] "GET /favicon.ico HTTP/1.1" 404 1988
+[04/Oct/2018 22:59:42] code 400, message Bad request syntax ('\x16\x03\x03\x00\x9c\x01\x00\x00\x98\x03\x03[¶\x9b^¨9\x82\x1f\x8e\x95Î-\x16O3ã\xad{\x05X\x8c=]\x1f"ÿFM\x0b:$Ð\x00\x008À,À+À0À/\x00\x9f\x00\x9eÀ$À#À(À\'À')
+[04/Oct/2018 22:59:42] You're accessing the development server over HTTPS, but it only supports HTTP.
+
+[04/Oct/2018 22:59:42] code 400, message Bad HTTP/0.9 request type ('\x16\x03\x03\x00\x9c\x01\x00\x00\x98\x03\x03[¶\x9b^bõ\x01»\x99')
+[04/Oct/2018 22:59:42] You're accessing the development server over HTTPS, but it only supports HTTP.
+
+[05/Oct/2018 03:59:39] "GET / HTTP/1.1" 200 16348
+[05/Oct/2018 03:59:40] "GET /static/admin/fonts/Roboto-Regular-webfont.woff HTTP/1.1" 304 0
+[05/Oct/2018 03:59:41] "GET /static/admin/fonts/Roboto-Light-webfont.woff HTTP/1.1" 304 0
+[05/Oct/2018 03:59:42] "GET /static/admin/css/fonts.css HTTP/1.1" 304 0
+[05/Oct/2018 03:59:42] "GET /static/admin/fonts/Roboto-Bold-webfont.woff HTTP/1.1" 304 0
+[05/Oct/2018 03:59:45] "GET / HTTP/1.1" 200 16348
+[05/Oct/2018 03:59:45] "GET /admin/ HTTP/1.1" 200 3053
+[05/Oct/2018 03:59:45] "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 304 0
+[05/Oct/2018 03:59:45] "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 304 0
+[05/Oct/2018 03:59:46] "GET /admin/ HTTP/1.1" 200 3053
+[05/Oct/2018 03:59:46] "GET /static/admin/css/responsive.css HTTP/1.1" 304 0
+[05/Oct/2018 03:59:46] "GET /static/admin/css/base.css HTTP/1.1" 304 0
+[05/Oct/2018 03:59:47] "GET /static/admin/css/dashboard.css HTTP/1.1" 304 0
+Performing system checks...
+
+System check identified no issues (0 silenced).
+October 03, 2018 - 23:27:07
+Django version 2.1.1, using settings 'outdoors_project.settings'
+Starting development server at http://0.0.0.0:8000/
+Quit the server with CONTROL-C.
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7f7a618a09d8>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 109, in inner_run
+    autoreload.raise_last_exception()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 248, in raise_last_exception
+    raise _exception[1]
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/__init__.py", line 337, in execute
+    autoreload.check_errors(django.setup)()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/registry.py", line 112, in populate
+    app_config.import_models()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/config.py", line 198, in import_models
+    self.models_module = import_module(models_module_name)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 986, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 969, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 958, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 673, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 665, in exec_module
+  File "<frozen importlib._bootstrap>", line 222, in _call_with_frames_removed
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 5, in <module>
+    class Gear(models.Model):
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 12, in Gear
+    description = models.CharField(max_length = 255, default = null)
+NameError: name 'null' is not defined
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7f6477a1d950>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 109, in inner_run
+    autoreload.raise_last_exception()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 248, in raise_last_exception
+    raise _exception[1]
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/__init__.py", line 337, in execute
+    autoreload.check_errors(django.setup)()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/registry.py", line 112, in populate
+    app_config.import_models()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/config.py", line 198, in import_models
+    self.models_module = import_module(models_module_name)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 986, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 969, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 958, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 673, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 665, in exec_module
+  File "<frozen importlib._bootstrap>", line 222, in _call_with_frames_removed
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 23, in <module>
+    class Condition(models.Model):
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 27, in Condition
+    choices = [(condition, condition.value)	for condition in Quality]
+NameError: name 'Quality' is not defined
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7fb90e505b70>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 109, in inner_run
+    autoreload.raise_last_exception()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 248, in raise_last_exception
+    raise _exception[1]
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/__init__.py", line 337, in execute
+    autoreload.check_errors(django.setup)()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/registry.py", line 112, in populate
+    app_config.import_models()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/config.py", line 198, in import_models
+    self.models_module = import_module(models_module_name)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 986, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 969, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 958, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 673, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 661, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 767, in get_code
+  File "<frozen importlib._bootstrap_external>", line 727, in source_to_code
+  File "<frozen importlib._bootstrap>", line 222, in _call_with_frames_removed
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 46
+    class Inventory(models.Model):
+        ^
+IndentationError: expected an indented block
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7ff8a34c5b70>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 109, in inner_run
+    autoreload.raise_last_exception()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 248, in raise_last_exception
+    raise _exception[1]
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/__init__.py", line 337, in execute
+    autoreload.check_errors(django.setup)()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/registry.py", line 112, in populate
+    app_config.import_models()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/config.py", line 198, in import_models
+    self.models_module = import_module(models_module_name)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 986, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 969, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 958, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 673, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 661, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 767, in get_code
+  File "<frozen importlib._bootstrap_external>", line 727, in source_to_code
+  File "<frozen importlib._bootstrap>", line 222, in _call_with_frames_removed
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 46
+    class Inventory(models.Model):
+        ^
+IndentationError: expected an indented block
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7f7c2375cb70>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 109, in inner_run
+    autoreload.raise_last_exception()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 248, in raise_last_exception
+    raise _exception[1]
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/__init__.py", line 337, in execute
+    autoreload.check_errors(django.setup)()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/registry.py", line 112, in populate
+    app_config.import_models()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/config.py", line 198, in import_models
+    self.models_module = import_module(models_module_name)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 986, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 969, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 958, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 673, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 661, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 767, in get_code
+  File "<frozen importlib._bootstrap_external>", line 727, in source_to_code
+  File "<frozen importlib._bootstrap>", line 222, in _call_with_frames_removed
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 46
+    class Inventory(models.Model):
+        ^
+IndentationError: expected an indented block
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7f726650cb70>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 109, in inner_run
+    autoreload.raise_last_exception()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 248, in raise_last_exception
+    raise _exception[1]
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/__init__.py", line 337, in execute
+    autoreload.check_errors(django.setup)()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/registry.py", line 112, in populate
+    app_config.import_models()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/config.py", line 198, in import_models
+    self.models_module = import_module(models_module_name)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 986, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 969, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 958, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 673, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 661, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 767, in get_code
+  File "<frozen importlib._bootstrap_external>", line 727, in source_to_code
+  File "<frozen importlib._bootstrap>", line 222, in _call_with_frames_removed
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 75
+    class ReservationStatus(Enum)
+                                ^
+SyntaxError: invalid syntax
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7efe63142950>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 109, in inner_run
+    autoreload.raise_last_exception()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 248, in raise_last_exception
+    raise _exception[1]
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/__init__.py", line 337, in execute
+    autoreload.check_errors(django.setup)()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/registry.py", line 112, in populate
+    app_config.import_models()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/config.py", line 198, in import_models
+    self.models_module = import_module(models_module_name)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 986, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 969, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 958, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 673, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 665, in exec_module
+  File "<frozen importlib._bootstrap>", line 222, in _call_with_frames_removed
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 23, in <module>
+    class Condition(models.Model):
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 41, in Condition
+    gearID = models.ForeignKey(gearID, required = True, on_delete = models.CASCADE)
+NameError: name 'gearID' is not defined
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7f063c79bb70>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 109, in inner_run
+    autoreload.raise_last_exception()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 248, in raise_last_exception
+    raise _exception[1]
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/__init__.py", line 337, in execute
+    autoreload.check_errors(django.setup)()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/registry.py", line 112, in populate
+    app_config.import_models()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/config.py", line 198, in import_models
+    self.models_module = import_module(models_module_name)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 986, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 969, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 958, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 673, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 661, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 767, in get_code
+  File "<frozen importlib._bootstrap_external>", line 727, in source_to_code
+  File "<frozen importlib._bootstrap>", line 222, in _call_with_frames_removed
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 79
+    (EDIT_RESERVATION = 'Edit Reservation'),
+                      ^
+SyntaxError: invalid syntax
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7f12a7ef9b70>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 109, in inner_run
+    autoreload.raise_last_exception()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 248, in raise_last_exception
+    raise _exception[1]
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/__init__.py", line 337, in execute
+    autoreload.check_errors(django.setup)()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/registry.py", line 112, in populate
+    app_config.import_models()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/config.py", line 198, in import_models
+    self.models_module = import_module(models_module_name)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 986, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 969, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 958, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 673, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 661, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 767, in get_code
+  File "<frozen importlib._bootstrap_external>", line 727, in source_to_code
+  File "<frozen importlib._bootstrap>", line 222, in _call_with_frames_removed
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 94
+    (EDIT_RESERVATION = 'Edit Reservation'),
+                      ^
+SyntaxError: invalid syntax
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7f251127ab70>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 109, in inner_run
+    autoreload.raise_last_exception()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 248, in raise_last_exception
+    raise _exception[1]
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/__init__.py", line 337, in execute
+    autoreload.check_errors(django.setup)()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/registry.py", line 112, in populate
+    app_config.import_models()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/config.py", line 198, in import_models
+    self.models_module = import_module(models_module_name)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 986, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 969, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 958, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 673, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 661, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 767, in get_code
+  File "<frozen importlib._bootstrap_external>", line 727, in source_to_code
+  File "<frozen importlib._bootstrap>", line 222, in _call_with_frames_removed
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 76
+    (EDIT_RESERVATION = 'Edit Reservation'),
+                      ^
+SyntaxError: invalid syntax
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7f52bb0c6b70>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 109, in inner_run
+    autoreload.raise_last_exception()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 248, in raise_last_exception
+    raise _exception[1]
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/__init__.py", line 337, in execute
+    autoreload.check_errors(django.setup)()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/registry.py", line 112, in populate
+    app_config.import_models()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/config.py", line 198, in import_models
+    self.models_module = import_module(models_module_name)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 986, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 969, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 958, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 673, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 661, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 767, in get_code
+  File "<frozen importlib._bootstrap_external>", line 727, in source_to_code
+  File "<frozen importlib._bootstrap>", line 222, in _call_with_frames_removed
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 76
+    (EDIT_RESERVATION = 'Edit Reservation'),
+                      ^
+SyntaxError: invalid syntax
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7f1af95e9b70>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 109, in inner_run
+    autoreload.raise_last_exception()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 248, in raise_last_exception
+    raise _exception[1]
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/__init__.py", line 337, in execute
+    autoreload.check_errors(django.setup)()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/registry.py", line 112, in populate
+    app_config.import_models()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/config.py", line 198, in import_models
+    self.models_module = import_module(models_module_name)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 986, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 969, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 958, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 673, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 661, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 767, in get_code
+  File "<frozen importlib._bootstrap_external>", line 727, in source_to_code
+  File "<frozen importlib._bootstrap>", line 222, in _call_with_frames_removed
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 76
+    (EDIT_RESERVATION = 'Edit Reservation'),
+                      ^
+SyntaxError: invalid syntax
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7f9684b9d8c8>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 109, in inner_run
+    autoreload.raise_last_exception()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 248, in raise_last_exception
+    raise _exception[1]
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/__init__.py", line 337, in execute
+    autoreload.check_errors(django.setup)()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/registry.py", line 112, in populate
+    app_config.import_models()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/config.py", line 198, in import_models
+    self.models_module = import_module(models_module_name)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 986, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 969, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 958, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 673, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 665, in exec_module
+  File "<frozen importlib._bootstrap>", line 222, in _call_with_frames_removed
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 19, in <module>
+    class Condition(models.Model):
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 38, in Condition
+    gearID = models.ForeignKey(Gear, required = True)
+TypeError: __init__() missing 1 required positional argument: 'on_delete'
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7f6708a5a8c8>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 109, in inner_run
+    autoreload.raise_last_exception()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 248, in raise_last_exception
+    raise _exception[1]
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/__init__.py", line 337, in execute
+    autoreload.check_errors(django.setup)()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/registry.py", line 112, in populate
+    app_config.import_models()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/config.py", line 198, in import_models
+    self.models_module = import_module(models_module_name)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 986, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 969, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 958, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 673, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 665, in exec_module
+  File "<frozen importlib._bootstrap>", line 222, in _call_with_frames_removed
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 19, in <module>
+    class Condition(models.Model):
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 38, in Condition
+    gearID = models.ForeignKey(Gear, required = True)
+TypeError: __init__() missing 1 required positional argument: 'on_delete'
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7f524efaa8c8>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 109, in inner_run
+    autoreload.raise_last_exception()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 248, in raise_last_exception
+    raise _exception[1]
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/__init__.py", line 337, in execute
+    autoreload.check_errors(django.setup)()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/registry.py", line 112, in populate
+    app_config.import_models()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/config.py", line 198, in import_models
+    self.models_module = import_module(models_module_name)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 986, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 969, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 958, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 673, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 665, in exec_module
+  File "<frozen importlib._bootstrap>", line 222, in _call_with_frames_removed
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 19, in <module>
+    class Condition(models.Model):
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 38, in Condition
+    gearID = models.ForeignKey(Gear, required = True)
+TypeError: __init__() missing 1 required positional argument: 'on_delete'
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7f0a87aef8c8>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 109, in inner_run
+    autoreload.raise_last_exception()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 248, in raise_last_exception
+    raise _exception[1]
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/__init__.py", line 337, in execute
+    autoreload.check_errors(django.setup)()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/registry.py", line 112, in populate
+    app_config.import_models()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/config.py", line 198, in import_models
+    self.models_module = import_module(models_module_name)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 986, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 969, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 958, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 673, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 665, in exec_module
+  File "<frozen importlib._bootstrap>", line 222, in _call_with_frames_removed
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 19, in <module>
+    class Condition(models.Model):
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 38, in Condition
+    gearID = models.ForeignKey(Gear)
+TypeError: __init__() missing 1 required positional argument: 'on_delete'
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7fd70b0e48c8>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 109, in inner_run
+    autoreload.raise_last_exception()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 248, in raise_last_exception
+    raise _exception[1]
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/__init__.py", line 337, in execute
+    autoreload.check_errors(django.setup)()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/registry.py", line 112, in populate
+    app_config.import_models()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/config.py", line 198, in import_models
+    self.models_module = import_module(models_module_name)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 986, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 969, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 958, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 673, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 665, in exec_module
+  File "<frozen importlib._bootstrap>", line 222, in _call_with_frames_removed
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 19, in <module>
+    class Condition(models.Model):
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 38, in Condition
+    gearID = models.ForeignKey(Gear)
+TypeError: __init__() missing 1 required positional argument: 'on_delete'
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7fe8b0bef8c8>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 109, in inner_run
+    autoreload.raise_last_exception()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 248, in raise_last_exception
+    raise _exception[1]
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/__init__.py", line 337, in execute
+    autoreload.check_errors(django.setup)()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/registry.py", line 112, in populate
+    app_config.import_models()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/config.py", line 198, in import_models
+    self.models_module = import_module(models_module_name)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 986, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 969, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 958, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 673, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 665, in exec_module
+  File "<frozen importlib._bootstrap>", line 222, in _call_with_frames_removed
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 19, in <module>
+    class Condition(models.Model):
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 38, in Condition
+    gearID = models.ForeignKey(Gear)
+TypeError: __init__() missing 1 required positional argument: 'on_delete'
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7fde45c9f8c8>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 109, in inner_run
+    autoreload.raise_last_exception()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 248, in raise_last_exception
+    raise _exception[1]
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/__init__.py", line 337, in execute
+    autoreload.check_errors(django.setup)()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/registry.py", line 112, in populate
+    app_config.import_models()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/config.py", line 198, in import_models
+    self.models_module = import_module(models_module_name)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 986, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 969, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 958, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 673, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 665, in exec_module
+  File "<frozen importlib._bootstrap>", line 222, in _call_with_frames_removed
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 40, in <module>
+    class Reservation(models.Model):
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 44, in Reservation
+    gearReserved = models.ForeignKey(Gear)
+TypeError: __init__() missing 1 required positional argument: 'on_delete'
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7f79ba4c88c8>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 109, in inner_run
+    autoreload.raise_last_exception()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 248, in raise_last_exception
+    raise _exception[1]
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/__init__.py", line 337, in execute
+    autoreload.check_errors(django.setup)()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/registry.py", line 112, in populate
+    app_config.import_models()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/config.py", line 198, in import_models
+    self.models_module = import_module(models_module_name)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 986, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 969, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 958, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 673, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 665, in exec_module
+  File "<frozen importlib._bootstrap>", line 222, in _call_with_frames_removed
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 40, in <module>
+    class Reservation(models.Model):
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 44, in Reservation
+    gearReserved = models.ForeignKey(Gear)
+TypeError: __init__() missing 1 required positional argument: 'on_delete'
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7f3e1f38f8c8>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 109, in inner_run
+    autoreload.raise_last_exception()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 248, in raise_last_exception
+    raise _exception[1]
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/__init__.py", line 337, in execute
+    autoreload.check_errors(django.setup)()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/registry.py", line 112, in populate
+    app_config.import_models()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/config.py", line 198, in import_models
+    self.models_module = import_module(models_module_name)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 986, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 969, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 958, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 673, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 665, in exec_module
+  File "<frozen importlib._bootstrap>", line 222, in _call_with_frames_removed
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 40, in <module>
+    class Reservation(models.Model):
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 44, in Reservation
+    gearReserved = models.ForeignKey(Gear)
+TypeError: __init__() missing 1 required positional argument: 'on_delete'
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7fd3599838c8>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 109, in inner_run
+    autoreload.raise_last_exception()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 248, in raise_last_exception
+    raise _exception[1]
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/__init__.py", line 337, in execute
+    autoreload.check_errors(django.setup)()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/registry.py", line 112, in populate
+    app_config.import_models()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/config.py", line 198, in import_models
+    self.models_module = import_module(models_module_name)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 986, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 969, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 958, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 673, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 665, in exec_module
+  File "<frozen importlib._bootstrap>", line 222, in _call_with_frames_removed
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 40, in <module>
+    class Reservation(models.Model):
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 44, in Reservation
+    gearReserved = models.ForeignKey(Gear)
+TypeError: __init__() missing 1 required positional argument: 'on_delete'
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7fd3ebe178c8>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 109, in inner_run
+    autoreload.raise_last_exception()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 248, in raise_last_exception
+    raise _exception[1]
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/__init__.py", line 337, in execute
+    autoreload.check_errors(django.setup)()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/registry.py", line 112, in populate
+    app_config.import_models()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/config.py", line 198, in import_models
+    self.models_module = import_module(models_module_name)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 986, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 969, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 958, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 673, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 665, in exec_module
+  File "<frozen importlib._bootstrap>", line 222, in _call_with_frames_removed
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 40, in <module>
+    class Reservation(models.Model):
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 44, in Reservation
+    gearReserved = models.ForeignKey(Gear)
+TypeError: __init__() missing 1 required positional argument: 'on_delete'
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7efbf13ab8c8>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 109, in inner_run
+    autoreload.raise_last_exception()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 248, in raise_last_exception
+    raise _exception[1]
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/__init__.py", line 337, in execute
+    autoreload.check_errors(django.setup)()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/registry.py", line 112, in populate
+    app_config.import_models()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/config.py", line 198, in import_models
+    self.models_module = import_module(models_module_name)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 986, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 969, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 958, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 673, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 665, in exec_module
+  File "<frozen importlib._bootstrap>", line 222, in _call_with_frames_removed
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 40, in <module>
+    class Reservation(models.Model):
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 44, in Reservation
+    gearReserved = models.ForeignKey(Gear)
+TypeError: __init__() missing 1 required positional argument: 'on_delete'
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7fc587ca78c8>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 109, in inner_run
+    autoreload.raise_last_exception()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 248, in raise_last_exception
+    raise _exception[1]
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/__init__.py", line 337, in execute
+    autoreload.check_errors(django.setup)()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/registry.py", line 112, in populate
+    app_config.import_models()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/config.py", line 198, in import_models
+    self.models_module = import_module(models_module_name)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 986, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 969, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 958, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 673, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 665, in exec_module
+  File "<frozen importlib._bootstrap>", line 222, in _call_with_frames_removed
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 40, in <module>
+    class Reservation(models.Model):
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 44, in Reservation
+    gearReserved = models.ForeignKey(Gear)
+TypeError: __init__() missing 1 required positional argument: 'on_delete'
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7f17bd4008c8>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 109, in inner_run
+    autoreload.raise_last_exception()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 248, in raise_last_exception
+    raise _exception[1]
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/__init__.py", line 337, in execute
+    autoreload.check_errors(django.setup)()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/registry.py", line 112, in populate
+    app_config.import_models()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/config.py", line 198, in import_models
+    self.models_module = import_module(models_module_name)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 986, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 969, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 958, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 673, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 665, in exec_module
+  File "<frozen importlib._bootstrap>", line 222, in _call_with_frames_removed
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 40, in <module>
+    class Reservation(models.Model):
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 44, in Reservation
+    gearReserved = models.ForeignKey(Gear)
+TypeError: __init__() missing 1 required positional argument: 'on_delete'
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7fec1de7d8c8>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 109, in inner_run
+    autoreload.raise_last_exception()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 248, in raise_last_exception
+    raise _exception[1]
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/__init__.py", line 337, in execute
+    autoreload.check_errors(django.setup)()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/registry.py", line 112, in populate
+    app_config.import_models()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/config.py", line 198, in import_models
+    self.models_module = import_module(models_module_name)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 986, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 969, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 958, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 673, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 665, in exec_module
+  File "<frozen importlib._bootstrap>", line 222, in _call_with_frames_removed
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 40, in <module>
+    class Reservation(models.Model):
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 44, in Reservation
+    gearReserved = models.ForeignKey(Gear)
+TypeError: __init__() missing 1 required positional argument: 'on_delete'
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7f3b92cdab70>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 109, in inner_run
+    autoreload.raise_last_exception()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 248, in raise_last_exception
+    raise _exception[1]
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/__init__.py", line 337, in execute
+    autoreload.check_errors(django.setup)()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/registry.py", line 112, in populate
+    app_config.import_models()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/config.py", line 198, in import_models
+    self.models_module = import_module(models_module_name)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 986, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 969, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 958, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 673, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 661, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 767, in get_code
+  File "<frozen importlib._bootstrap_external>", line 727, in source_to_code
+  File "<frozen importlib._bootstrap>", line 222, in _call_with_frames_removed
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 38
+    gearID = models.ForeignKey(Gear, on_delete = models.)
+                                                        ^
+SyntaxError: invalid syntax
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7fd1a8a34b70>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 109, in inner_run
+    autoreload.raise_last_exception()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 248, in raise_last_exception
+    raise _exception[1]
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/__init__.py", line 337, in execute
+    autoreload.check_errors(django.setup)()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/registry.py", line 112, in populate
+    app_config.import_models()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/config.py", line 198, in import_models
+    self.models_module = import_module(models_module_name)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 986, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 969, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 958, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 673, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 661, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 767, in get_code
+  File "<frozen importlib._bootstrap_external>", line 727, in source_to_code
+  File "<frozen importlib._bootstrap>", line 222, in _call_with_frames_removed
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 38
+    gearID = models.ForeignKey(Gear, on_delete = models.)
+                                                        ^
+SyntaxError: invalid syntax
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7f5356119b70>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 109, in inner_run
+    autoreload.raise_last_exception()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 248, in raise_last_exception
+    raise _exception[1]
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/__init__.py", line 337, in execute
+    autoreload.check_errors(django.setup)()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/registry.py", line 112, in populate
+    app_config.import_models()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/config.py", line 198, in import_models
+    self.models_module = import_module(models_module_name)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 986, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 969, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 958, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 673, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 661, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 767, in get_code
+  File "<frozen importlib._bootstrap_external>", line 727, in source_to_code
+  File "<frozen importlib._bootstrap>", line 222, in _call_with_frames_removed
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 38
+    gearID = models.ForeignKey(Gear, on_delete = models.)
+                                                        ^
+SyntaxError: invalid syntax
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7f8bfc9358c8>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 109, in inner_run
+    autoreload.raise_last_exception()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 248, in raise_last_exception
+    raise _exception[1]
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/__init__.py", line 337, in execute
+    autoreload.check_errors(django.setup)()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/registry.py", line 112, in populate
+    app_config.import_models()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/config.py", line 198, in import_models
+    self.models_module = import_module(models_module_name)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 986, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 969, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 958, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 673, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 665, in exec_module
+  File "<frozen importlib._bootstrap>", line 222, in _call_with_frames_removed
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 65, in <module>
+    class Permission(models.Model):
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 75, in Permission
+    (EDIT_GEAR_LIST, 'Edit Gear'),
+NameError: name 'EDIT_GEAR_LIST' is not defined
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7fd45b76f8c8>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 109, in inner_run
+    autoreload.raise_last_exception()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 248, in raise_last_exception
+    raise _exception[1]
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/__init__.py", line 337, in execute
+    autoreload.check_errors(django.setup)()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/registry.py", line 112, in populate
+    app_config.import_models()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/config.py", line 198, in import_models
+    self.models_module = import_module(models_module_name)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 986, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 969, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 958, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 673, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 665, in exec_module
+  File "<frozen importlib._bootstrap>", line 222, in _call_with_frames_removed
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 65, in <module>
+    class Permission(models.Model):
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 75, in Permission
+    (EDIT_GEAR_LIST, 'Edit Gear'),
+NameError: name 'EDIT_GEAR_LIST' is not defined
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7fd99d28b8c8>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 109, in inner_run
+    autoreload.raise_last_exception()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 248, in raise_last_exception
+    raise _exception[1]
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/__init__.py", line 337, in execute
+    autoreload.check_errors(django.setup)()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/registry.py", line 112, in populate
+    app_config.import_models()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/config.py", line 198, in import_models
+    self.models_module = import_module(models_module_name)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 986, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 969, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 958, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 673, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 665, in exec_module
+  File "<frozen importlib._bootstrap>", line 222, in _call_with_frames_removed
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 65, in <module>
+    class Permission(models.Model):
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 75, in Permission
+    (EDIT_GEAR_LIST, 'Edit Gear'),
+NameError: name 'EDIT_GEAR_LIST' is not defined
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7f3d901918c8>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 109, in inner_run
+    autoreload.raise_last_exception()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 248, in raise_last_exception
+    raise _exception[1]
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/__init__.py", line 337, in execute
+    autoreload.check_errors(django.setup)()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/registry.py", line 112, in populate
+    app_config.import_models()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/config.py", line 198, in import_models
+    self.models_module = import_module(models_module_name)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 986, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 969, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 958, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 673, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 665, in exec_module
+  File "<frozen importlib._bootstrap>", line 222, in _call_with_frames_removed
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 65, in <module>
+    class Permission(models.Model):
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 83, in Permission
+    owner = models.ForeignKey(User, on_delete = models.PROTECT)
+NameError: name 'User' is not defined
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7f835f14e8c8>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 109, in inner_run
+    autoreload.raise_last_exception()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 248, in raise_last_exception
+    raise _exception[1]
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/__init__.py", line 337, in execute
+    autoreload.check_errors(django.setup)()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/registry.py", line 112, in populate
+    app_config.import_models()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/config.py", line 198, in import_models
+    self.models_module = import_module(models_module_name)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 986, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 969, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 958, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 673, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 665, in exec_module
+  File "<frozen importlib._bootstrap>", line 222, in _call_with_frames_removed
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 65, in <module>
+    class Permission(models.Model):
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 83, in Permission
+    owner = models.ForeignKey(User, on_delete = models.PROTECT)
+NameError: name 'User' is not defined
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7f232e8548c8>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 109, in inner_run
+    autoreload.raise_last_exception()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 248, in raise_last_exception
+    raise _exception[1]
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/__init__.py", line 337, in execute
+    autoreload.check_errors(django.setup)()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/__init__.py", line 24, in setup
+    apps.populate(settings.INSTALLED_APPS)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/registry.py", line 112, in populate
+    app_config.import_models()
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/apps/config.py", line 198, in import_models
+    self.models_module = import_module(models_module_name)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/importlib/__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 986, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 969, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 958, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 673, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 665, in exec_module
+  File "<frozen importlib._bootstrap>", line 222, in _call_with_frames_removed
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 65, in <module>
+    class Permission(models.Model):
+  File "/home/ubuntu/outdoors/gear_management/models.py", line 83, in Permission
+    owner = models.ForeignKey(User, on_delete = models.PROTECT)
+NameError: name 'User' is not defined
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7f3198e29950>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 117, in inner_run
+    self.check(display_num_errors=True)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/base.py", line 425, in check
+    raise SystemCheckError(msg)
+django.core.management.base.SystemCheckError: SystemCheckError: System check identified some issues:
+
+ERRORS:
+gear_management.Condition.condition: (fields.E120) CharFields must define a 'max_length' attribute.
+gear_management.Gear.depositFee: (fields.E132) DecimalFields must define a 'max_digits' attribute.
+gear_management.Permission.permissionType: (fields.E120) CharFields must define a 'max_length' attribute.
+gear_management.Reservation.status: (fields.E120) CharFields must define a 'max_length' attribute.
+
+System check identified 4 issues (0 silenced).
+Performing system checks...
+
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7f4ff252a950>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 117, in inner_run
+    self.check(display_num_errors=True)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/base.py", line 425, in check
+    raise SystemCheckError(msg)
+django.core.management.base.SystemCheckError: SystemCheckError: System check identified some issues:
+
+ERRORS:
+gear_management.Condition.condition: (fields.E120) CharFields must define a 'max_length' attribute.
+gear_management.Gear.depositFee: (fields.E132) DecimalFields must define a 'max_digits' attribute.
+gear_management.Permission.permissionType: (fields.E120) CharFields must define a 'max_length' attribute.
+gear_management.Reservation.status: (fields.E120) CharFields must define a 'max_length' attribute.
+
+System check identified 4 issues (0 silenced).
+Performing system checks...
+
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7fb3932c2950>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 117, in inner_run
+    self.check(display_num_errors=True)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/base.py", line 425, in check
+    raise SystemCheckError(msg)
+django.core.management.base.SystemCheckError: SystemCheckError: System check identified some issues:
+
+ERRORS:
+gear_management.Condition.condition: (fields.E120) CharFields must define a 'max_length' attribute.
+gear_management.Gear.depositFee: (fields.E132) DecimalFields must define a 'max_digits' attribute.
+gear_management.Permission.permissionType: (fields.E120) CharFields must define a 'max_length' attribute.
+gear_management.Reservation.status: (fields.E120) CharFields must define a 'max_length' attribute.
+
+System check identified 4 issues (0 silenced).
+Performing system checks...
+
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7f40bc1b0950>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 117, in inner_run
+    self.check(display_num_errors=True)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/base.py", line 425, in check
+    raise SystemCheckError(msg)
+django.core.management.base.SystemCheckError: SystemCheckError: System check identified some issues:
+
+ERRORS:
+gear_management.Gear.depositFee: (fields.E132) DecimalFields must define a 'max_digits' attribute.
+gear_management.Permission.permissionType: (fields.E120) CharFields must define a 'max_length' attribute.
+gear_management.Reservation.status: (fields.E120) CharFields must define a 'max_length' attribute.
+
+System check identified 3 issues (0 silenced).
+Performing system checks...
+
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7fb0e8b7e950>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 117, in inner_run
+    self.check(display_num_errors=True)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/base.py", line 425, in check
+    raise SystemCheckError(msg)
+django.core.management.base.SystemCheckError: SystemCheckError: System check identified some issues:
+
+ERRORS:
+gear_management.Gear.depositFee: (fields.E132) DecimalFields must define a 'max_digits' attribute.
+gear_management.Permission.permissionType: (fields.E120) CharFields must define a 'max_length' attribute.
+gear_management.Reservation.status: (fields.E120) CharFields must define a 'max_length' attribute.
+
+System check identified 3 issues (0 silenced).
+Performing system checks...
+
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7f483e5d3950>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 117, in inner_run
+    self.check(display_num_errors=True)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/base.py", line 425, in check
+    raise SystemCheckError(msg)
+django.core.management.base.SystemCheckError: SystemCheckError: System check identified some issues:
+
+ERRORS:
+gear_management.Gear.depositFee: (fields.E132) DecimalFields must define a 'max_digits' attribute.
+gear_management.Permission.permissionType: (fields.E120) CharFields must define a 'max_length' attribute.
+gear_management.Reservation.status: (fields.E120) CharFields must define a 'max_length' attribute.
+
+System check identified 3 issues (0 silenced).
+Performing system checks...
+
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7fe7ebda4950>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 117, in inner_run
+    self.check(display_num_errors=True)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/base.py", line 425, in check
+    raise SystemCheckError(msg)
+django.core.management.base.SystemCheckError: SystemCheckError: System check identified some issues:
+
+ERRORS:
+gear_management.Gear.depositFee: (fields.E132) DecimalFields must define a 'max_digits' attribute.
+gear_management.Reservation.status: (fields.E120) CharFields must define a 'max_length' attribute.
+
+System check identified 2 issues (0 silenced).
+Performing system checks...
+
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7f7bdac50950>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 117, in inner_run
+    self.check(display_num_errors=True)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/base.py", line 425, in check
+    raise SystemCheckError(msg)
+django.core.management.base.SystemCheckError: SystemCheckError: System check identified some issues:
+
+ERRORS:
+gear_management.Gear.depositFee: (fields.E132) DecimalFields must define a 'max_digits' attribute.
+gear_management.Reservation.status: (fields.E120) CharFields must define a 'max_length' attribute.
+
+System check identified 2 issues (0 silenced).
+Performing system checks...
+
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7f76ce534950>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 117, in inner_run
+    self.check(display_num_errors=True)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/base.py", line 425, in check
+    raise SystemCheckError(msg)
+django.core.management.base.SystemCheckError: SystemCheckError: System check identified some issues:
+
+ERRORS:
+gear_management.Gear.depositFee: (fields.E132) DecimalFields must define a 'max_digits' attribute.
+gear_management.Reservation.status: (fields.E120) CharFields must define a 'max_length' attribute.
+
+System check identified 2 issues (0 silenced).
+Performing system checks...
+
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7f0c4de60950>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 117, in inner_run
+    self.check(display_num_errors=True)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/base.py", line 425, in check
+    raise SystemCheckError(msg)
+django.core.management.base.SystemCheckError: SystemCheckError: System check identified some issues:
+
+ERRORS:
+gear_management.Gear.depositFee: (fields.E132) DecimalFields must define a 'max_digits' attribute.
+
+System check identified 1 issue (0 silenced).
+Performing system checks...
+
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7fb1719c0950>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 117, in inner_run
+    self.check(display_num_errors=True)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/base.py", line 425, in check
+    raise SystemCheckError(msg)
+django.core.management.base.SystemCheckError: SystemCheckError: System check identified some issues:
+
+ERRORS:
+gear_management.Gear.depositFee: (fields.E132) DecimalFields must define a 'max_digits' attribute.
+
+System check identified 1 issue (0 silenced).
+Performing system checks...
+
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Unhandled exception in thread started by <function check_errors.<locals>.wrapper at 0x7f07dba4c950>
+Traceback (most recent call last):
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/utils/autoreload.py", line 225, in wrapper
+    fn(*args, **kwargs)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/commands/runserver.py", line 117, in inner_run
+    self.check(display_num_errors=True)
+  File "/home/ubuntu/outdoors/env/lib/python3.5/site-packages/django/core/management/base.py", line 425, in check
+    raise SystemCheckError(msg)
+django.core.management.base.SystemCheckError: SystemCheckError: System check identified some issues:
+
+ERRORS:
+gear_management.Gear.depositFee: (fields.E132) DecimalFields must define a 'max_digits' attribute.
+
+System check identified 1 issue (0 silenced).
+Performing system checks...
+
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+Performing system checks...
+
+System check identified no issues (0 silenced).
+October 05, 2018 - 18:17:50
+Django version 2.1.1, using settings 'outdoors_project.settings'
+Starting development server at http://0:8000/
+Quit the server with CONTROL-C.
+/home/ubuntu/outdoors/env/lib/python3.5/site-packages/psycopg2/__init__.py:144: UserWarning: The psycopg2 wheel package will be renamed from release 2.8; in order to keep installing from binary please use "pip install psycopg2-binary" instead. For details see: <http://initd.org/psycopg/docs/install.html#binary-install-from-pypi>.
+  """)
+[05/Oct/2018 18:18:11] "GET / HTTP/1.1" 200 16348
+[05/Oct/2018 18:18:11] "GET /static/admin/css/fonts.css HTTP/1.1" 304 0
+[05/Oct/2018 18:18:11] "GET /static/admin/fonts/Roboto-Bold-webfont.woff HTTP/1.1" 304 0
+[05/Oct/2018 18:18:11] "GET /static/admin/fonts/Roboto-Light-webfont.woff HTTP/1.1" 304 0
+[05/Oct/2018 18:18:11] "GET /static/admin/fonts/Roboto-Regular-webfont.woff HTTP/1.1" 304 0
+[05/Oct/2018 18:18:15] "GET / HTTP/1.1" 200 16348
+[05/Oct/2018 18:18:15] "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 304 0
+[05/Oct/2018 18:18:15] "GET /static/admin/css/responsive.css HTTP/1.1" 304 0
+[05/Oct/2018 18:18:15] "GET /static/admin/css/base.css HTTP/1.1" 304 0
+[05/Oct/2018 18:18:15] "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 304 0
+[05/Oct/2018 18:18:15] "GET /admin/ HTTP/1.1" 200 3053
+[05/Oct/2018 18:18:15] "GET /admin/ HTTP/1.1" 200 3053
+[05/Oct/2018 18:18:15] "GET /static/admin/css/dashboard.css HTTP/1.1" 200 412
+[05/Oct/2018 18:18:51] "GET /admin/ HTTP/1.1" 200 3053
