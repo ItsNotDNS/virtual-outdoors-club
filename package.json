@@ -1,0 +1,37 @@
+{
+  "name": "virtual-outdoors-club",
+  "version": "1.0.0",
+  "description": "Gear Management and Rental System for the University of Alberta Outdoors Club",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {
+    "start": "webpack-dev-server --open --mode development",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cmput401-fall2018/virtual-outdoors-club.git"
+  },
+  "keywords": [],
+  "author": "The Indoors Club",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cmput401-fall2018/virtual-outdoors-club/issues"
+  },
+  "homepage": "https://github.com/cmput401-fall2018/virtual-outdoors-club#readme",
+  "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.4",
+    "html-loader": "^0.5.5",
+    "html-webpack-plugin": "^3.2.0",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.9"
+  }
+}
