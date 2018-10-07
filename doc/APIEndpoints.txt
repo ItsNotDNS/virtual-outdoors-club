@@ -1,0 +1,145 @@
+URL:             /get-gear-list
+Type of Request: GET
+Request Object:  None
+Return Object: List of gear   
+  {
+    gearId : Integer,
+    gearCode : String,
+    name : String,
+    availability : String,
+    status : String
+  }
+  
+URL:             /edit-gear
+Type of Request: POST
+Request Object:  
+  {
+    gearId : id,
+    <Gear info changed>
+  }
+Return Object:   None
+
+URL:             /delete-gear
+Type of Request: POST
+Request Object:  
+  {
+    gearId : id
+  }
+Return Object:   None
+
+URL:             /checkout
+Type of Request: POST
+Request Object:  
+  {
+    email : String,
+    phoneNumber : Integer,
+    gear : [gear id(s)]
+  }
+Return Object:   None
+
+URL:             /cancel-reservation
+Type of Request: POST
+Request Object:  
+  {
+    reservationId : id
+  }
+Return Object:   None
+
+URL:             /login
+Type of Request: POST
+Request Object:  
+  {
+    username : String,
+    password : String
+  }
+Return Object:   Authentication object
+
+URL:             /get-reservations
+Type of Request: GET
+Request Object:  None
+Return Object:   List of reservations
+  {
+    reservationId : Integer,
+    name : String (ex. Reservation-001),
+    startDate : String (or Integer),
+    endDate : String (or Integer)
+  }
+  
+URL:             /edit-reservation
+Type of Request: POST
+Request Object:  
+  {
+    reservationId : id,
+    <info we want to change>
+  }
+Return Object:   None
+
+URL:             /complete-reservation
+Type of Request: POST
+Request Object:  
+  {
+    reservationId : id
+  }
+Return Object:   None
+
+URL:             /get-users
+Type of Request: GET
+Request Object:  None
+Return Object:   List of users
+  {
+    userId : Integer,
+    name : String,
+    email : String,
+    status : String
+  }
+  
+URL:             /add-blacklist-user
+Type of Request: POST
+Request Object:  
+  {
+    userId : id
+  }
+Return Object:   None
+
+URL:             /remove-blacklist-user
+Type of Request: POST
+Request Object:  
+  {
+    userId : id
+  }
+Return Object:   None
+
+URL:             /download-(Report)
+Type of Request: GET
+Request Object:  
+  {
+    reportName : String 
+  }
+Return Object:   File (Or data to show in browser)
+
+URL:             /disable-system
+Type of Request: POST
+Request Object:  None
+Return Object:   None
+
+URL:             /update-members
+Type of Request: POST
+Request Object:  
+  {
+    memberList : File
+  }
+Return Object:   None
+
+URL:             /change-system-variables
+Type of Request: POST
+Request Object:  
+  {
+    maxHoldLimitMembers : Integer,
+    maxHoldLimitExecutives : Integer,
+    
+    maxRentalsMembers : Integer,
+    maxRentalsExecutives : Integer,
+    
+    etc.
+  }
+Return Object:   None
