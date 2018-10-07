@@ -1,7 +1,27 @@
 # virtual-outdoors-club
-Description of project
 
-# Requirments
+# Setup
+
+## React
+
+#### Development
+1. Ensure you have [Node (LTS)](https://nodejs.org/en/) installed.
+
+2. Run `npm install`
+
+3. Run `npm start` to start running a local server hosting the react changes
+
+#### Testing
+
+You can run `npm test` to start the test runner. It will report all passing/failing tests. You do not need to close Karma, as when you save the files it will automatically run again.
+
+#### Deployment
+
+Running `npm run-script build` will generate `dist/index.html` you can open the path to this file in your browser to see the results of what was built.
+
+## Django
+
+### Requirements
 
 [Python 3.5](https://www.python.org/downloads/release/python-352/)
 
@@ -9,11 +29,11 @@ Description of project
 
 psycopg2 - [Windows binary](https://www.lfd.uci.edu/~gohlke/pythonlibs/#psycopg)
 
-Django 2.1.1
+[Django 2.1.1](https://docs.djangoproject.com/en/2.1/topics/install/)
 
-# Installation
+### Installation
 
-### Windows
+#### Windows
 - Install Python 3.5
 - Add \python and \python\scripts to your system variables
 - Ensure python and pip are properly installed:
@@ -30,3 +50,6 @@ Django 2.1.1
   NOTE: Make sure to create a db called `outdoors_club_db`
 
 - Clone this repository and run `manage.py runserver` to verify
+
+#### Mac
+
