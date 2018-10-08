@@ -1,0 +1,14 @@
+{
+    "extends": ["standard", "standard-react"],
+    "rules": {
+        "quotes": [2, "double"],
+        "semi": [2, "always"],
+        "space-before-function-paren": [2, "never"],
+        "indent": ["error", 4],
+        "react/jsx-indent": ["error", 4]
+    },
+    "globals": {
+        "describe": false,
+        "it": false
+    }
+}

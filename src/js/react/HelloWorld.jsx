@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 
 export default class HelloWorld extends React.Component {
     render() {
@@ -8,6 +7,3 @@ export default class HelloWorld extends React.Component {
         );
     }
 }
-
-const wrapper = document.getElementById("create-article-form");
-wrapper ? ReactDOM.render(<HelloWorld />, wrapper) : false;

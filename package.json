@@ -9,7 +9,8 @@
   "scripts": {
     "start": "webpack-dev-server --open --mode development",
     "build": "webpack --mode production",
-    "test": "karma start"
+    "lint": "eslint ./src/js/**/*",
+    "test": "npm run-script lint && karma start"
   },
   "repository": {
     "type": "git",
@@ -27,25 +28,40 @@
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.4",
+    "babel-plugin-istanbul": "^5.0.1",
     "chai": "^4.2.0",
     "enzyme": "^3.7.0",
     "enzyme-adapter-react-16": "^1.6.0",
+    "eslint": "^5.6.1",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-node": "^7.0.1",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
     "expect": "^23.6.0",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
+    "istanbul-instrumenter-loader": "^3.0.1",
     "karma": "^3.0.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-cli": "^1.0.1",
+    "karma-coverage": "^1.1.2",
+    "karma-coverage-istanbul-reporter": "^2.0.4",
     "karma-mocha": "^1.3.0",
+    "karma-remap-coverage": "^0.1.5",
+    "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^3.0.5",
     "mocha": "^5.2.0",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
+    "react-router-dom": "^4.3.1",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.1.9"
   },
   "dependencies": {
+    "eslint-config-standard-react": "^7.0.2",
+    "eslint-plugin-react": "^7.11.1",
     "karma-firefox-launcher": "^1.1.0",
     "karma-mocha-reporter": "^2.2.5"
   }
