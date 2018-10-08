@@ -55,12 +55,12 @@ class Migration(migrations.Migration):
                 ('startDate', models.DateField()),
                 ('endDate', models.DateField()),
                 ('status', models.CharField(choices=[('REQUESTED', 'Requested'), ('APPROVED', 'Approved'), ('CANCELLED', 'Cancelled'), ('TAKEN', 'Taken'), ('RETURNED', 'Returned')], default='REQUESTED', max_length=20)),
-                ('gearReserved', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='gear_management.Gear')),
+                ('gearReserved', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='api.Gear')),
             ],
         ),
         migrations.AddField(
             model_name='condition',
             name='gearID',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='gear_management.Gear'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='api.Gear'),
         ),
     ]
