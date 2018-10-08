@@ -1,8 +1,17 @@
-language: node_js
-node_js:
-  - "node"
-before_script:
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
-script:
-  - npm test -- --single-run
+matrix:
+  include:
+  - language: python
+    python: 3.5
+    env:
+      - DJANGO_VERSION=2.1.2
+    script:
+      - python3 src/django/manage.py test
+
+  - language: node_js
+    node_js:
+      - "node"
+    before_script: false
+    - export DISPLAY=:99.0
+    - sh -e /etc/init.d/xvfb start
+    script:
+    - npm test -- --single-run
