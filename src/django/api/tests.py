@@ -23,6 +23,7 @@ class GearCategoryTestCase(TestCase):
     def setUp(self):
         GearCategory.objects.create(categoryID="0", description="Sleeping Bags", symbol="SB")
         GearCategory.objects.create(categoryID="1", description="Tents", symbol="T")
+        GearCategory.objects.create(categoryID="2", description="Backpack") #No symbol should fail
 
     def test_get_category_gear_list(self):
         """Category gear list that is returned is correctly identified"""
