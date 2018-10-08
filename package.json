@@ -1,0 +1,52 @@
+{
+  "name": "virtual-outdoors-club",
+  "version": "1.0.0",
+  "description": "Gear Management and Rental System for the University of Alberta Outdoors Club",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {
+    "start": "webpack-dev-server --open --mode development",
+    "build": "webpack --mode production",
+    "test": "karma start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cmput401-fall2018/virtual-outdoors-club.git"
+  },
+  "keywords": [],
+  "author": "The Indoors Club",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cmput401-fall2018/virtual-outdoors-club/issues"
+  },
+  "homepage": "https://github.com/cmput401-fall2018/virtual-outdoors-club#readme",
+  "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.4",
+    "chai": "^4.2.0",
+    "enzyme": "^3.7.0",
+    "enzyme-adapter-react-16": "^1.6.0",
+    "expect": "^23.6.0",
+    "html-loader": "^0.5.5",
+    "html-webpack-plugin": "^3.2.0",
+    "karma": "^3.0.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-cli": "^1.0.1",
+    "karma-mocha": "^1.3.0",
+    "karma-webpack": "^3.0.5",
+    "mocha": "^5.2.0",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.9"
+  },
+  "dependencies": {
+    "karma-firefox-launcher": "^1.1.0",
+    "karma-mocha-reporter": "^2.2.5"
+  }
+}
