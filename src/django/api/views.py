@@ -1,6 +1,5 @@
 from django.shortcuts import render
-from .models import Gear
-from .models import GearCategory
+from .models import Gear, GearCategory
 from django.core import serializers
 from django.http import HttpResponse
 

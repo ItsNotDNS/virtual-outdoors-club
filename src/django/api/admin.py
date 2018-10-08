@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import Gear
-from .models import GearCategory
+from .models import Gear, GearCategory
 
 # Register your models here.
 admin.site.register(Gear)
