@@ -47,7 +47,7 @@ Django 2.1.1
  - Get [Homebrew](https://brew.sh/), if you haven't.
  - Instal Python3 `brew install python3` (This will most likely install Python 3.7, which should still be compatible with the project).
  - Install Django `pip3 install Django==2.1.2`
- - Install psycopyg2 `pip3 install psycopyg`
+ - Install psycopyg2 `pip3 install psycopg2`  
  - Install PostgreSQL `brew install postgres`
    - You can run start it by running `postgres -D /usr/local/var/postgres`
    - Run ```createdb `outdoors_club_db` ```
