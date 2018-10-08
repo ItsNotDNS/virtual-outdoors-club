@@ -5,16 +5,16 @@ from django.db import models
 # description set to optional
 class Gear(models.Model):
 	gearUUID = models.AutoField(primary_key = True)
-	gearID = models.CharField(max_length = 6)
-	gearType = models.CharField(max_length = 3)
-	available = models.BooleanField(default = True)
-	depositFee = models.DecimalField(max_digits = 10, decimal_places = 2)
+	gearID = models.CharField(max_length = 6, blank = False)
+	gearType = models.CharField(max_length = 3, blank = False)
+	available = models.BooleanField(default = True, blank = False)
+	depositFee = models.DecimalField(max_digits = 10, decimal_places = 2, blank = False)
 	description = models.CharField(max_length = 255, blank = True)
 
 class GearCategory(models.Model):
 	categoryID = models.AutoField(primary_key = True)
-	description = models.CharField(max_length = 100)
-	symbol = models.CharField(max_length = 3)
+	description = models.CharField(max_length = 100, blank = False)
+	symbol = models.CharField(max_length = 3, blank = False)
 
 class Condition(models.Model):
 	conditionID = models.AutoField(primary_key = True)
@@ -39,11 +39,11 @@ class Condition(models.Model):
 	
 class Reservation(models.Model):
 	reservationID = models.AutoField(primary_key = True)
-	reservedBy = models.EmailField()
-	approvedBy = models.CharField(max_length = 50)
-	gearReserved = models.ForeignKey(Gear, on_delete = models.PROTECT)
-	startDate = models.DateField()
-	endDate = models.DateField()
+	reservedBy = models.EmailField(blank = False)
+	approvedBy = models.CharField(max_length = 50, blank = False)
+	gearReserved = models.ForeignKey(Gear, on_delete = models.PROTECT, blank = False)
+	startDate = models.DateField(blank = False)
+	endDate = models.DateField(blank = False)
 
 	REQUESTED = 'REQUESTED'
 	APPROVED = 'APPROVED'
