@@ -33,7 +33,7 @@ Django 2.1.1
   > Python -V
   > pip -V
   ```
-- Run `pip install Django==2.1.1` to install Django
+- Run `pip install Django==2.1.2` to install Django
 - Download the pre-built psycopg2 [Windows binary](https://www.lfd.uci.edu/~gohlke/pythonlibs/#psycopg) for python3.5
 - Run `pip install psycopg2-2.7.5-cp35-cp35m-win_amd64.whl` for x64 systems
 - Download [PostgreSQL 9.5 for Windows](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads)
@@ -46,7 +46,7 @@ Django 2.1.1
 #### Mac
  - Get [Homebrew](https://brew.sh/), if you haven't.
  - Instal Python3 `brew install python3` (This will most likely install Python 3.7, which should still be compatible with the project).
- - Install Django `pip3 install Django==2.1.1`
+ - Install Django `pip3 install Django==2.1.2`
  - Install psycopyg2 `pip3 install psycopyg`
  - Install PostgreSQL `brew install postgres`
    - You can run start it by running `postgres -D /usr/local/var/postgres`
