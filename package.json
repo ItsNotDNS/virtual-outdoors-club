@@ -10,7 +10,7 @@
     "start": "webpack-dev-server --open --mode development",
     "build": "webpack --mode production",
     "lint": "eslint ./src/js/**/*",
-    "test": "npm run-script lint && karma start"
+    "test": "karma start"
   },
   "repository": {
     "type": "git",
@@ -27,6 +27,7 @@
     "@babel/core": "^7.1.2",
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
+    "axios": "^0.18.0",
     "babel-loader": "^8.0.4",
     "babel-plugin-istanbul": "^5.0.1",
     "chai": "^4.2.0",
@@ -63,6 +64,7 @@
     "eslint-config-standard-react": "^7.0.2",
     "eslint-plugin-react": "^7.11.1",
     "karma-firefox-launcher": "^1.1.0",
-    "karma-mocha-reporter": "^2.2.5"
+    "karma-mocha-reporter": "^2.2.5",
+    "reflux": "^6.4.1"
   }
 }
