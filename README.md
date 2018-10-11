@@ -13,7 +13,9 @@
 
 #### Testing
 
-You can run `npm test` to start the test runner. It will report all passing/failing tests. You do not need to close Karma, as when you save the files it will automatically run again.
+You can run `npm test` to start the test runner. It will report all passing/failing tests. You do not need to close Karma, as when you save the files it will automatically run again. This also runs a code-coverage check at the end of it, which requires every line of code to be tested at least once to not fail. 
+
+`npm run-script lint` will scan for styling errors and keep the codebase consistent. The build will fail if this fails.
 
 #### Deployment
 
@@ -57,4 +59,7 @@ Django 2.1.1
  - Install [pgAdmin4](https://www.pgadmin.org/download/pgadmin-4-macos/)
    - You should be able to add a new server, choose a name and the host is `127.0.0.1`
  - You should now be able to run `python3 src/django/manage.py runserver`
+ 
+### Testing
 
+You can run `python3 manage.py test` to run the django tests locally.
