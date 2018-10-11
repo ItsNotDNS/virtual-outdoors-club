@@ -3,8 +3,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./js/react/App";
+import "./scss/main.scss";
 
-const wrapper = document.getElementById("react-entrypoint");
-if (wrapper) {
-    ReactDOM.render(<App />, wrapper);
+const contentWrapper = document.getElementById("react-entrypoint");
+
+if (contentWrapper) {
+    ReactDOM.render(<App />, contentWrapper);
 }

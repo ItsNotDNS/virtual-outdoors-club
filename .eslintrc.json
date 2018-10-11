@@ -6,7 +6,9 @@
         "space-before-function-paren": [2, "never"],
         "indent": ["error", 4],
         "react/jsx-indent": ["error", 4],
-        "prefer-template": 2
+        "jsx-quotes": [2, "prefer-double"],
+        "prefer-template": 2,
+        "one-var": [2, "always"]
     },
     "globals": {
         "describe": false,
