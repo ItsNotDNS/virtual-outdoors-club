@@ -12,9 +12,9 @@ export default class App extends React.Component {
         return (
             <BrowserRouter>
                 <Switch>
-                    <Route exact path='/' component={HelloWorld} />
-                    <Route path='/gear' component={GearPage} />
-                    <Route path'/add-gear' component={AddGearForm} />
+                    <Route exact path="/" component={HelloWorld} />
+                    <Route path="/gear" component={GearPage} />
+                    <Route path="/add-gear" component={AddGearForm} />
                 </Switch>
             </BrowserRouter>
         );

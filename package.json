@@ -9,7 +9,7 @@
   "scripts": {
     "start": "webpack-dev-server --open --mode development",
     "build": "webpack --mode production",
-    "lint": "eslint ./src/js/**/*",
+    "lint": "eslint \"./src/js/**/*\"",
     "test": "karma start"
   },
   "repository": {
@@ -38,6 +38,7 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-node": "^7.0.1",
     "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-react": "^7.11.1",
     "eslint-plugin-standard": "^4.0.0",
     "expect": "^23.6.0",
     "html-loader": "^0.5.5",
@@ -62,7 +63,6 @@
   },
   "dependencies": {
     "eslint-config-standard-react": "^7.0.2",
-    "eslint-plugin-react": "^7.11.1",
     "karma-firefox-launcher": "^1.1.0",
     "karma-mocha-reporter": "^2.2.5",
     "prop-types": "^15.6.2",

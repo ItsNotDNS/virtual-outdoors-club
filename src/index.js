@@ -3,7 +3,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./js/react/App";
-import "./scss/main.scss";
+// import "./scss/main.scss";
 
 const contentWrapper = document.getElementById("react-entrypoint");
 

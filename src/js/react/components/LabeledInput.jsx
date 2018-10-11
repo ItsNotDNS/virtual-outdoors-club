@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {Form, Input, Label} from "semantic-ui-react";
+import { Form, Input, Label } from "semantic-ui-react";
 
 export default function LabeledInput(label, name) {
     return (
@@ -8,10 +8,10 @@ export default function LabeledInput(label, name) {
             <Label content={label} />
             <Input name={name} />
         </Form.Field>
-    )
+    );
 }
 
 PropTypes.LabeledInput = {
-    label : PropTypes.string.isRequired,
-    name : PropTypes.string.isRequired
+    label: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired
 };
