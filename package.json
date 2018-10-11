@@ -65,6 +65,7 @@
     "eslint-plugin-react": "^7.11.1",
     "karma-firefox-launcher": "^1.1.0",
     "karma-mocha-reporter": "^2.2.5",
-    "reflux": "^6.4.1"
+    "reflux": "^6.4.1",
+    "semantic-ui-react": "^0.82.5"
   }
 }
