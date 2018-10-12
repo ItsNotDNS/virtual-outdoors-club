@@ -2,7 +2,8 @@
     "presets": [["@babel/preset-env",{"modules":false}], "@babel/preset-react"],
     "env":{
       "test":{
-        "presets":["env"]
+        "presets": ["env"],
+        "plugins": ["istanbul"]
       }
     }
   }
