@@ -25,7 +25,7 @@ SECRET_KEY = '+slx3)t+0pw$e5b8yx%znh!%$f0je-!7kl61v8b_igf_fop%k^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['199.116.235.142', '127.0.0.1']
+ALLOWED_HOSTS = ['199.116.235.142', '127.0.0.1', "testserver"]
 
 
 # Application definition
@@ -46,12 +46,14 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware'
 ]
+
+# Allows all origins to call the Django server
+CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'outdoors_project.urls'
 
@@ -125,6 +127,3 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
-
-# Allows all origins to call the Django server
-CORS_ORIGIN_ALLOW_ALL = True
