@@ -3,7 +3,6 @@
 
 import React from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
-import HelloWorld from "./HelloWorld";
 import GearPage from "./gear/GearPage";
 // import NavBar from "./navigation/NavBar";
 
@@ -13,7 +12,6 @@ export default class App extends React.Component {
             <BrowserRouter>
                 <div>
                     <Switch>
-                        <Route exact path="/" component={HelloWorld} />
                         <Route path="/gear" component={GearPage} />
                     </Switch>
                 </div>

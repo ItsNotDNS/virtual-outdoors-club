@@ -1,19 +1,28 @@
 import Reflux from "reflux";
 import GearService from "../../services/GearService";
 
+function defaultState() {
+    return {
+        fetchedGearList: false, // inital check to fetch the gear list
+        error: false,
+        gearList: []
+    };
+}
+
 // create actions
 export const GearActions = Reflux.createActions([
-    "fetchGearList"
+    "reset", "fetchGearList"
 ]);
 
 export class GearStore extends Reflux.Store {
     constructor() {
         super();
-        this.state = {
-            fetchedGearList: false, // inital check to fetch the gear list
-            gearList: []
-        };
+        this.state = defaultState();
         this.listenables = GearActions; // listen for actions
+    }
+
+    onReset() {
+        this.setState(defaultState());
     }
 
     onFetchGearList() {
@@ -29,8 +38,9 @@ export class GearStore extends Reflux.Store {
                     gearList: data
                 });
             })
-            .catch(() => {
+            .catch((error) => {
                 console.error("There was an error fetching the gear list.");
+                this.setState({ error });
             });
     }
 };
