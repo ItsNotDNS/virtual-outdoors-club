@@ -1,51 +1,62 @@
-URL:             /get-gear-list
+URL:             /gear/list
+Description: Allows fetching of all gear currently in the database.
 Type of Request: GET
 Request Object:  None
 Return Object: List of gear   
-  {
-    gearId : Integer,
-    gearCode : String,
-    name : String,
-    availability : String,
-    status : String
-  }
-  
-URL:             /edit-gear
-Type of Request: POST
-Request Object:  
-  {
-    gearId : id,
-    <Gear info changed>
-  }
-Return Object:   None
+{
+  gearId : Integer,
+  gearCode : String,
+  name : String,
+  availability : String,
+  status : String
+}
 
-URL:             /delete-gear
+URL:             /gear/edit?id={value}
+Description: Allows user to edit gear's information (without deleting and re-adding).
 Type of Request: POST
 Request Object:  
-  {
-    gearId : id
-  }
-Return Object:   None
+{
+  <Gear info changed>
+}
+Return Object:   
+{
+  <new gear object as is in DB>
+}
 
-URL:             /checkout
-Type of Request: POST
-Request Object:  
-  {
-    email : String,
-    phoneNumber : Integer,
-    gear : [gear id(s)]
-  }
-Return Object:   None
+URL:             /gear/delete?id={value}
+Description: Allows a user to complete delete a piece of gear from the inventory.
+Type of Request: DELETE
+Request Object:  None
+Return Object:   Some sort of confirmation
 
-URL:             /cancel-reservation
+URL:             /reservations/create
+Description: Creates a reservation in the database
 Type of Request: POST
 Request Object:  
-  {
-    reservationId : id
-  }
-Return Object:   None
+{
+  email : String,
+  phoneNumber : Integer,
+  gear : [gear id(s)]
+}
+Return Object: 
+{
+  <object as is in db now>
+}
+
+URL:             /reservations/cancel
+Description: Allows a user to cancel a reservation by entering some infromation and their secret cancellation code.
+Type of Request: POST
+Request Object:  
+{
+  cancellationCode : String
+}
+Return Object:
+{
+  <some sort of confirmation>
+}
 
 URL:             /login
+Description: Allows a user to confirm their identity with the server to establish an authenticated session and grant access to restriced endpoints
 Type of Request: POST
 Request Object:  
   {
@@ -54,7 +65,8 @@ Request Object:
   }
 Return Object:   Authentication object
 
-URL:             /get-reservations
+URL:             /reservations/list
+Description: Fetch a list of all reservations
 Type of Request: GET
 Request Object:  None
 Return Object:   List of reservations
@@ -65,16 +77,30 @@ Return Object:   List of reservations
     endDate : String (or Integer)
   }
   
-URL:             /edit-reservation
+URL:             /reservations/edit?id={value}
+Description: Edit a specific reservation with some data
+Type of Request: POST
+Request Object:  
+{
+  <info we want to change>
+}
+Return Object:
+{
+  <data as in the db now>
+}
+
+URL:             /reservation/checkout
+Description: Allows an executive to hand out gear from the inventory
 Type of Request: POST
 Request Object:  
   {
     reservationId : id,
-    <info we want to change>
+    <list of matching gear with what is being handed out>
   }
 Return Object:   None
 
-URL:             /complete-reservation
+URL:             /reservation/checkin
+Description: Allows an executive to process returns of gear
 Type of Request: POST
 Request Object:  
   {
@@ -82,7 +108,8 @@ Request Object:
   }
 Return Object:   None
 
-URL:             /get-users
+URL:             /members/list
+Description: Get a list of members in the system
 Type of Request: GET
 Request Object:  None
 Return Object:   List of users
@@ -93,53 +120,65 @@ Return Object:   List of users
     status : String
   }
   
-URL:             /add-blacklist-user
+URL:             /members/upload
+Description: Upload the list of members
+Type of Request: GET
+Request Object:  List of Users
+[{ ... }, { ... }, ...]
+Return Object: Confirmation?
+  
+URL:             /blacklist/add
+Description: Add a member to the blacklist
+Type of Request: POST
+Request Object:  
+  {
+    userId : id,
+    email: String <should match a member in the system>
+  }
+Return Object: User as added to the database
+
+URL:             /blacklist/remove
+Description: Remove a member to from blacklist
 Type of Request: POST
 Request Object:  
   {
     userId : id
   }
+Return Object: Confirmation?
+
+URL:             /blacklist/list
+Description: Get a list of those on the blacklist
+Type of Request: GET
+Request Object: None
+Return Object: List of memebers
+
+URL:             /system?enabled={value}
+Description: Allows a user to enable/disable the system
+Type of Request: POST
+Request Object:  {}
 Return Object:   None
 
-URL:             /remove-blacklist-user
+URL:             /system/variables
+Description: Change system variables, do not need to send whole object, only new values
 Type of Request: POST
 Request Object:  
   {
-    userId : id
+    member: {
+      maxReservationLength: Integer,
+      maxTimeInFuture: Integer,
+      maxNumberItems: Integer,
+    },
+    executive: {
+      ... (etc)
+    }
   }
-Return Object:   None
+Return Object: Some confirmation, data as it appears in table now
 
 URL:             /download-(Report)
+Description: Not really sure what for
 Type of Request: GET
 Request Object:  
   {
     reportName : String 
   }
 Return Object:   File (Or data to show in browser)
-
-URL:             /disable-system
-Type of Request: POST
-Request Object:  None
-Return Object:   None
-
-URL:             /update-members
-Type of Request: POST
-Request Object:  
-  {
-    memberList : File
-  }
-Return Object:   None
-
-URL:             /change-system-variables
-Type of Request: POST
-Request Object:  
-  {
-    maxHoldLimitMembers : Integer,
-    maxHoldLimitExecutives : Integer,
-    
-    maxRentalsMembers : Integer,
-    maxRentalsExecutives : Integer,
-    
-    etc.
-  }
-Return Object:   None
