@@ -1,20 +1,21 @@
 from django.db import models
 
+class GearCategory(models.Model):
+    categoryID = models.AutoField(primary_key = True)
+    categoryDescription = models.CharField(max_length = 100)
+    symbol = models.CharField(max_length = 3)
+
+
 # gearID is unique for every gear. Deletion will reset all conditions in the table.
 # conditionHistory should be removed and history should be kept on a seperate table, referencing the gearID as the key
 # description set to optional
 class Gear(models.Model):
-	gearUUID = models.AutoField(primary_key = True)
-	gearID = models.CharField(max_length = 6, blank = False)
-	gearType = models.CharField(max_length = 3, blank = False)
+	gearID = models.AutoField(primary_key = True)
+	gearCode = models.CharField(max_length = 6, blank = False)
+	gearType = models.ForeignKey(GearCategory, on_delete = models.PROTECT)
 	available = models.BooleanField(default = True, blank = False)
 	depositFee = models.DecimalField(max_digits = 10, decimal_places = 2, blank = False)
-	description = models.CharField(max_length = 255, blank = True)
-
-class GearCategory(models.Model):
-	categoryID = models.AutoField(primary_key = True)
-	description = models.CharField(max_length = 100, blank = False)
-	symbol = models.CharField(max_length = 3, blank = False)
+	gearDescription = models.CharField(max_length = 255, blank = True)
 
 class Condition(models.Model):
 	conditionID = models.AutoField(primary_key = True)
