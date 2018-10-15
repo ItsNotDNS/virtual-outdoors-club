@@ -1,49 +1,48 @@
-from django.shortcuts import render
 from .models import Gear, GearCategory
-from django.core import serializers
-from django.http import HttpResponse, HttpResponseRedirect
-from django.db.models import Max
+from django.core import serializers, exceptions
+from django.http import HttpResponse
 from django.views import View
+from .serializers import GearSerializer
 
 # Create your views here.
 
+
 class GearView(View):
-    allowed_methods = ["GET", "POST"]
 
-    def get(request): # Get list of objects
+    def get(self, request):
         gear = Gear.objects.all()
-        data = serializers.serialize('json', gear)
-        return HttpResponse(data, content_type='application/json', status=200)
-    
-    def post(request, *args, **kwargs):    #Add object to list
-        # Checking if gearID and gearType are None
-        _gearID = request.POST.get("gearID", None)
-        _gearType = request.POST.get("gearType", None)
-        if(_gearID == None):
-            _gearID = 0
-            return HttpResponse("<h1>Invalid gearID or gearType<h1>", status=400)
-        if(_gearType == None):
-            _gearType = 0
-        gear = Gear.objects.get(pk=_gearID)
-        if(gear == None):   # Checking if gear category exists
-            return HttpResponse("<h1>Invalid gear category<h1>", status=400)
+        return HttpResponse(serializers.serialize("json", gear), content_type='application/json', status=200)
+
+    def post(self, request):
+        # Check for malformed request
+        serial = GearSerializer(data=request.POST)
+        if not serial.is_valid():
+            return HttpResponse("<h1>Malformed gear information<h1>", status=400)
+
+        data = serial.validated_data
+        # Checking if gear category exists
         try:
-            gear = Gear.objects.get(pk=gearID, gearType=_gearType)  #Crashes if doesn't exist
-            return HttpResponse("<h1>Duplicate gear ID in category<h1>", status=400)
-        except:   # Checking if item in gear category exists
+            Gear.objects.get(gearType=data['gearType'], gearCode=data['gearCode'])
+        except exceptions.MultipleObjectsReturned:  # Checking if item in gear category exists
+            return HttpResponse("<h1>Multiple copies of this gear in database<h1>", status=400)
+        except exceptions.ObjectDoesNotExist:
             pass
+        else:
+            return HttpResponse("<h1>Object already exists in database<h1>", status=400)
 
+        # Create the new gear object and save it to the db
         gear = Gear(
-                gearID=_gearID, 
-                gearType=_gearType,
-                available=True,
-                depositFee=request.POST.get("depositFee", 50.00),
-                description=request.POST.get("description", ""))
+            gearCode=data['gearCode'],
+            gearType=data['gearType'],
+            available=data['available'],
+            depositFee=data['depositFee'],
+            gearDescription=request.POST.get("gearDescription", ""))
         gear.save()
+        return HttpResponse(serializers.serialize("json", [gear, ]), content_type='application/json', status=200)
 
-        return HttpResponseRedirect("get-gear-list", status=200)
 
-def getGearCategoryList(request):
-    gearCategory = GearCategory.objects.all()
-    data = serializers.serialize('json', gearCategory)
-    return HttpResponse(data, content_type='application/json', status=200)
+class GearCategoryView(View):
+
+    def get(self, request):
+        gear = GearCategory.objects.all()
+        return HttpResponse(serializers.serialize("json", gear), content_type='application/json', status=200)

@@ -2,44 +2,97 @@ from django.test import TestCase, Client
 from .models import Gear, GearCategory
 
 # Create your tests here.
-'''
+
+
 class GearTestCase(TestCase):
+
+    # Create test data and save primary key of all objects
     def setUp(self):
-        Gear.objects.create(gearID="SB01", gearType="SB", depositFee=50.00, description="A sleeping bag")
-        Gear.objects.create(gearID="BP01", gearType="BP", depositFee=50.00, description="A backpack")
+        sb = GearCategory.objects.create(categoryDescription="A sleeping bag", symbol="SB")
+        bp = GearCategory.objects.create(categoryDescription="A backpack", symbol="BP")
+        Gear.objects.create(gearCode="SB01", gearType=sb, depositFee=50.00, gearDescription="A old red sleeping bag")
+        Gear.objects.create(gearCode="BP01", gearType=bp, depositFee=50.00, gearDescription="A black Dakine backpack")
+        self.client = Client()
+        self.sbpk = sb.pk
+        self.bppk = bp.pk
 
-    def test_get_gear_list(self):
-        """Gear list that is returned is correctly identified"""
-        gear = Gear.objects.all()
-        self.assertEqual(gear.count(), 2)
-        sb = gear.get(gearID="SB01")
-        bp = gear.get(gearID="BP01")
-        self.assertEqual(sb.description, "A sleeping bag")
-        self.assertEqual(bp.description, "A backpack")
+    def test_get(self):
+        response = self.client.get('/api/gear/')
+        self.assertEqual(response.status_code, 200)
 
-    def test_add_gear(self):
-        """Adds item to gear list"""
-        c = Client()
-#        response = c.post("/api/add-gear-category-list", request={"categoryID": 2, "description":"Sleeping Bags", "symbol":"SB"})  # Note: We currently don't have the add-gear-category-list function so this can't be checked
-#        assert(response.status_code == 200)
-        GearCategory.objects.create(categoryID=2, description="Sleeping Bags", symbol="SB") # Temporary until previous line can be uncommented
-        response = c.post("/api/add-gear-to-list", {"gearID": 2, "gearType": "SB"})
-        #assert(response.status_code >= 200 and response.status_code < 300)  #2xx is success
-        response = c.get("/api/get-gear-list")
-        gear = Gear.objects.all()
-        self.assertEqual(gear.count(), 3)
+        # Test json response
+        temp = [{"model": "api.gear", "pk": 1, "fields": {"gearCode": "SB01",
+                                                          "gearType": self.sbpk,
+                                                          "available": True,
+                                                          "depositFee": "50.00",
+                                                          "gearDescription": "A old red sleeping bag"}},
+
+                {"model": "api.gear", "pk": 2, "fields": {"gearCode": "BP01",
+                                                          "gearType": self.bppk,
+                                                          "available": True,
+                                                          "depositFee": "50.00",
+                                                          "gearDescription": "A black Dakine backpack"}}]
+
+        self.assertJSONEqual(str(response.content, encoding='utf8'), temp)
+
+    def test_post(self):
+        dummy = {'gearCode': 'SP02',
+                 'gearType': self.sbpk,
+                 'available': True,
+                 'depositFee': 50.00,
+                 'gearDescription': 'A new blue sleeping bag'}
+
+        correctReturn = [{"model": "api.gear", "pk": 5, "fields": {"gearCode": "SP02",
+                                                                   "gearType": self.sbpk,
+                                                                   "available": True,
+                                                                   "depositFee": "50.00",
+                                                                   "gearDescription": "A new blue sleeping bag"}}]
+        # Test the post request
+        request = self.client.post('/api/gear/', dummy)
+        self.assertEqual(request.status_code, 200)
+        self.assertJSONEqual(str(request.content, encoding='utf8'), correctReturn)
+
+        correctReturn = [{"model": "api.gear", "pk": 3, "fields": {"gearCode": "SB01",
+                                                                   "gearType": self.sbpk,
+                                                                   "available": True,
+                                                                   "depositFee": "50.00",
+                                                                   "gearDescription": "A old red sleeping bag"}},
+
+                         {"model": "api.gear", "pk": 4, "fields": {"gearCode": "BP01",
+                                                                   "gearType": self.bppk,
+                                                                   "available": True,
+                                                                   "depositFee": "50.00",
+                                                                   "gearDescription": "A black Dakine backpack"}},
+
+                         {"model": "api.gear", "pk": 5, "fields": {"gearCode": "SP02",
+                                                                   "gearType": self.sbpk,
+                                                                   "available": True,
+                                                                   "depositFee": "50.00",
+                                                                   "gearDescription": "A new blue sleeping bag"}}]
+        # Make sure the post was saved to the db
+        response = self.client.get('/api/gear/')
+        self.assertEqual(response.status_code, 200)
+        self.assertJSONEqual(str(response.content, encoding='utf8'), correctReturn)
+
 
 class GearCategoryTestCase(TestCase):
-    def setUp(self):
-        GearCategory.objects.create(categoryID=0, description="Sleeping Bags", symbol="SB")
-        GearCategory.objects.create(categoryID=1, description="Tents", symbol="T")
 
-    def test_get_category_gear_list(self):
-        """Category gear list that is returned is correctly identified"""
-        gearCategory = GearCategory.objects.all()
-        self.assertEqual(gearCategory.count(), 2)
-        sb = gearCategory.get(categoryID=0)
-        tent = gearCategory.get(categoryID=1)
-        self.assertEqual(sb.description, "Sleeping Bags")
-        self.assertEqual(tent.description, "Tents")
-'''
+    # Create test data and save primary key of all objects
+    def setUp(self):
+        bk = GearCategory.objects.create(categoryDescription="A book", symbol="BK")
+        wb = GearCategory.objects.create(categoryDescription="A water bottle", symbol="WB")
+        self.bkpk = bk.pk
+        self.wbpk = wb.pk
+
+    def test_get(self):
+        response = self.client.get('/api/gear/categories/')
+        self.assertEqual(response.status_code, 200)
+
+        # Test json response
+        temp = [{"model": "api.gearcategory", "pk": self.bkpk, "fields": {"categoryDescription": "A book",
+                                                                          "symbol": "BK"}},
+
+                {"model": "api.gearcategory", "pk": self.wbpk, "fields": {"categoryDescription": "A water bottle",
+                                                                          "symbol": "WB"}}]
+
+        self.assertJSONEqual(str(response.content, encoding='utf8'), temp)

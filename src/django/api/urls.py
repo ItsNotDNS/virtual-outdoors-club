@@ -1,9 +1,7 @@
-from django.urls import path
-
-from . import views
+from django.conf.urls import url
+from .views import GearView, GearCategoryView
 
 urlpatterns = [
-    path('add-gear-to-list', views.GearView.post, name='add-gear-to-list'),
-    path('get-gear-category-list', views.getGearCategoryList, name='get-gear-category-list'),
-    path('get-gear-list', views.GearView.get, name='get-gear-list'),
+    url(r'^gear/?$', GearView.as_view(), name="Gear"),
+    url(r'^gear/categories/?$', GearCategoryView.as_view(), name="Gear Category")
 ]
