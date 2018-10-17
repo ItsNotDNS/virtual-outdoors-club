@@ -1,5 +1,5 @@
 from django.test import TestCase, Client
-from .models import Gear, GearCategory
+from .models import Gear, GearCategory, Reservation
 import json
 
 # Create your tests here.
@@ -135,4 +135,31 @@ class GearCategoryTestCase(TestCase):
                 {"model": "api.gearcategory", "pk": self.wbpk, "fields": {"categoryDescription": "A water bottle",
                                                                           "symbol": "WB"}}]
 
-        self.assertJSONEqual(str(response.content, encoding="utf8"), temp)
+        self.assertJSONEqual(str(response.content, encoding='utf8'), temp)
+
+class ReservationTestCase(TestCase):
+
+    # Create test data and save primary key of all objects
+    def setUp(self):
+        spCat = GearCategory.objects.create(categoryDescription="Ski poles", symbol="SP")
+        sp = Gear.objects.create(gearCode="SP01", gearType=spCat, depositFee=12.00, gearDescription="Ski poles")
+        RSVP01 = Reservation.objects.create(reservedBy="abc123@ualberta.ca", approvedBy="Devon", gearReserved=sp, startDate="2018-03-19", endDate="2018-03-31", status="REQUESTED")
+        self.sppk = sp.pk
+        self.sp = sp
+
+    def test_get(self):
+        response = self.client.get('/api/reservation/')
+        self.assertEqual(response.status_code, 200)
+
+        # Test json response
+        temp = [{"model": "api.reservation", "pk": 1, "fields": {"reservedBy": "abc123@ualberta.ca",
+                                                                        "approvedBy": "Devon",
+                                                                        "status": "CHECKED OUT",
+                                                                        "gearReserved": 8,
+                                                                        "startDate": "2018-03-19",
+                                                                        "endDate": "2018-03-31",
+                                                                        "status": "REQUESTED"
+                                                                        }},
+                                                                                            ]
+        self.assertJSONEqual(str(response.content, encoding='utf8'), temp)
+       

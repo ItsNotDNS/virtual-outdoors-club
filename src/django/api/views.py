@@ -1,4 +1,4 @@
-from .models import Gear, GearCategory
+from .models import Gear, GearCategory, Reservation
 from django.core import serializers, exceptions
 from django.http import HttpResponse
 from django.views import View
@@ -81,3 +81,9 @@ class GearCategoryView(View):
         gear = GearCategory.objects.all()
         return HttpResponse(serializers.serialize("json", gear), content_type='application/json', status=200)
 
+
+class ReservationView(View):
+
+    def get(self, request):
+        reservation = Reservation.objects.all()
+        return HttpResponse(serializers.serialize("json", reservation), content_type='application/json', status=200)
