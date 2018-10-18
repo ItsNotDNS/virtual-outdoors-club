@@ -4,7 +4,6 @@
 import React from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import GearPage from "./gear/GearPage";
-// import NavBar from "./navigation/NavBar";
 
 export default class App extends React.Component {
     render() {

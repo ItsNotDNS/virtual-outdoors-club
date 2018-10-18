@@ -1,5 +1,7 @@
 from django.conf.urls import url
-from .views import GearView, GearCategoryView, ReservationView
+from .views.GearView import GearView
+from .views.GearCategoryView import GearCategoryView
+from .views.ReservationView import ReservationView
 
 urlpatterns = [
     url(r'^gear/?$', GearView.as_view(), name="Gear"),
