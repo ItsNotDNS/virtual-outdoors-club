@@ -125,7 +125,7 @@ Description: Upload the list of members
 Type of Request: GET
 Request Object:  List of Users
 [{ ... }, { ... }, ...]
-Return Object: Confirmation?
+Return Object: ConfirmationDialog?
   
 URL:             /blacklist/add
 Description: Add a member to the blacklist
@@ -144,7 +144,7 @@ Request Object:
   {
     userId : id
   }
-Return Object: Confirmation?
+Return Object: ConfirmationDialog?
 
 URL:             /blacklist/list
 Description: Get a list of those on the blacklist

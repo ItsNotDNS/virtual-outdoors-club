@@ -24,14 +24,22 @@ class GearCategoryView(APIView):
 
     def post(self, request):
         # handles addition of a gear category
-        postReq = request.POST
-        
-        newGearCategoryName = postReq.get("name", None)
-        
-        if not newGearCategoryName:
-            return RespError(400, "Malformed post data")
+        newGearCategory = loads(str(request.body, encoding='utf-8'))
+        requiredProperties = {
+            "name": False,
+        }
 
-        serial = GearCategorySerializer(data=postReq)
+        for key in newGearCategory:
+            if key not in requiredProperties:
+                return RespError(400, "'" + str(key) + "' is not valid in this POST method.")
+            else:
+                requiredProperties[key] = True
+
+        for key in requiredProperties:
+            if not requiredProperties[key]:
+                return RespError(400, "You are required to provide a '" + key + "' when creating a gear category.")
+
+        serial = GearCategorySerializer(data=newGearCategory)
         
         # check for invalid serial, i.e. malformed request
         if not serial.is_valid():
@@ -42,7 +50,7 @@ class GearCategoryView(APIView):
         # checking if the current gear category already exists
         if gearCategoryExists(data['name']):
             return RespError(409, 'The gear category already exists')
-            
+        
         # adding new gear category
         newGearCategory = GearCategory(name=data['name'])
             

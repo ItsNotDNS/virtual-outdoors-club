@@ -64,7 +64,7 @@ class GearView(APIView):
             return RespError(400, "The gear category '" + categoryName + "' does not exist.")
         newGear["category"] = category
 
-        # set the inital version
+        # set the initial version
         newGear["version"] = 1
 
         # use the serializer to do validation on the properties

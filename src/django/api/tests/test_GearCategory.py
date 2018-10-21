@@ -25,11 +25,11 @@ class GearCategoryTestCase(TestCase):
         self.assertEqual(response, expectedResponse)
 
     def test_post(self):
-        dummy = {"name": "tent"}
+        request = {"name": "tent"}
 
         # Test the post request
-        reponse = self.client.post("/api/gear/categories/", dummy).data
-        self.assertEqual(reponse, dummy)
+        response = self.client.post("/api/gear/categories/", request, content_type='application/json').data
+        self.assertEqual(response, request)
                                                                         
         # Make sure the post (addition of gear category) was saved to the db
         response = self.client.get("/api/gear/categories").data['data']

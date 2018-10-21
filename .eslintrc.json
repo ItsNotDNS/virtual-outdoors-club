@@ -1,5 +1,6 @@
 {
     "extends": ["standard", "standard-react"],
+    "plugins": ["react-native"],
     "rules": {
         "quotes": [2, "double"],
         "semi": [2, "always"],
@@ -7,8 +8,13 @@
         "indent": ["error", 4],
         "prefer-template": 2,
         "one-var": [2, "always"],
+        "no-var": "error",
+        "prefer-const": ["error"],
+        "no-console":"error",
         "jsx-quotes": [2, "prefer-double"],
         "react/jsx-indent": ["error", 4],
+        "react/jsx-indent-props": ["error", 4],
+        "react-native/no-inline-styles": ["error"],
         "react/jsx-no-bind": [2, {
             "ignoreDOMComponents": false,
             "ignoreRefs": false,

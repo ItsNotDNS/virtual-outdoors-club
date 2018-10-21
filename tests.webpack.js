@@ -14,3 +14,8 @@ components.keys().forEach(components);
 // This code sets up the ability for us to use Enzyme for testing
 // src: https://airbnb.io/enzyme/docs/installation/index.html
 configure({ adapter: new Adapter() });
+
+// prevent web requests
+window.XMLHttpRequest = () => {
+    throw Error("ensure you stub axios requests properly.");
+};

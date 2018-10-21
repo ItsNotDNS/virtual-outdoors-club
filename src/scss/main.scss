@@ -1,3 +1,22 @@
-.poop {
-    padding: 20px;
+.react-bootstrap-table {
+    height: 400px;
+    overflow: auto;
+}
+
+.page-margin {
+    margin: 1%;
+}
+
+.gear-view {
+    .btn-action-cell {
+        .left-btn {
+            width: 48%;
+            margin-right: 2%;
+        }
+
+        .right-btn {
+            width: 48%;
+            margin-left: 2%;
+        }
+    }
 }

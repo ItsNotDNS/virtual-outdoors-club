@@ -7,19 +7,6 @@ class System(models.Model):
     service = models.CharField(max_length = 100, blank = False)
     enabled = models.BooleanField(default = True)
 
-# TODO: Future models that are still in design.
-# actions allow permissions to the Admin or Executive to do more administrative actions
-#class Action(models.Model):
-#    actionName = models.CharField(max_length = 50, blank = False)
-# specifies abilities for the users
-#class Abilities(models.Model):
-#    actionID = models.ForeignKey(Action, on_delete = models.PROTECT)
-#    userID = models.ForeignKey(User, on_delete = models.PROTECT)
-# record the changes that an executive/admin has done that has a huge impact such as disabling rentals
-#class SystemHistory(models.Model):
-#    userID = models.ForeignKey(User, on_delete = models.PROTECT)
-#    action = models.CharField(max_length = 50, blank = False)
-
 # set a standard value for specific parameters in the system for members
 class UserVariability(models.Model):
     variable = models.CharField(max_length = 100, blank = False)
