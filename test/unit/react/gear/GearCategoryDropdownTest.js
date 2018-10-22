@@ -2,8 +2,8 @@ import React from "react";
 import { expect } from "chai";
 import { shallow } from "enzyme";
 import sinon from "sinon";
-import GearCategoryDropdown from "react/gearCategory/GearCategoryDropdown";
-import { GearCategoryActions } from "react/gearCategory/GearCategoryStore";
+import GearCategoryDropdown from "react/gear/GearCategoryDropdown";
+import { GearActions } from "react/gear/GearStore";
 
 const sandbox = sinon.createSandbox(),
     getShallowDropdown = (props = {}) => {
@@ -18,7 +18,7 @@ let actionsStub;
 
 describe("GearCategoryDropdown Tests", () => {
     beforeEach(() => {
-        actionsStub = sandbox.stub(GearCategoryActions); // Must stub actions to prevent making network calls
+        actionsStub = sandbox.stub(GearActions); // Must stub actions to prevent making network calls
     });
 
     afterEach(() => {

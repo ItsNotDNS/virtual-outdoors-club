@@ -60,6 +60,43 @@ class GearCategoryView(APIView):
         #success
         return Response(data)
 
+    def patch(self, request):
+        request = loads(str(request.body, encoding='utf-8'))
+        # These string values should be constants somewhere..
+
+        print(request)
+
+        currentName = request.get("name", None)
+        patch = request.get("patch", None)
+
+        if not currentName:
+            return RespError(400, "You must specify a category to patch.")
+
+        if not patch:
+            return RespError(400, "You must specify a 'patch' object with methods.")
+
+        newName = patch.get("name")
+
+        if not newName:
+            return RespError(400, "You must specify a new name to update to.")
+
+        currentCategory = gearCategoryExists(currentName)
+        newCategory = gearCategoryExists(newName)
+
+        if newCategory:
+            return RespError(400, "A category already exists with the name '" + newName + "'.")
+
+        # check validity
+        serial = GearCategorySerializer(data=patch)
+        if not serial.is_valid():
+            return serialValidation(serial)
+
+        currentCategory.name = newName
+
+        currentCategory.save()
+
+        return Response({"name": newName})
+
     # handles deletion of a gear category
     def delete(self, request):
         delReq = loads(str(request.body, encoding='utf8'))

@@ -33,6 +33,21 @@ describe("GearPage Tests", () => {
         expect(actionsStub.fetchGearList.calledOnce).to.be.true;
     });
 
+    it("calls fetchGearCategoryList on mount", () => {
+        const page = shallow(<GearPage />);
+        actionsStub.fetchGearCategoryList = sandbox.spy();
+
+        page.instance().componentDidMount();
+
+        expect(actionsStub.fetchGearCategoryList.calledOnce).to.be.true;
+
+        page.instance().state.fetchedGearCategoryList = true; // not set by the component
+
+        page.instance().componentDidMount();
+
+        expect(actionsStub.fetchGearCategoryList.calledOnce).to.be.true;
+    });
+
     it("creates a wrapper that passes CREATE to the callback", () => {
         const page = shallow(<GearPage />),
             cb = (value) => {

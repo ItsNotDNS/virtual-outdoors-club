@@ -6,7 +6,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import ButtonModalForm from "../components/ButtonModalForm";
 import LabeledInput from "../components/LabeledInput";
-import GearCategoryDropdown from "../gearCategory/GearCategoryDropdown";
+import GearCategoryDropdown from "./GearCategoryDropdown";
 
 export default class GearForm extends React.Component {
     constructor(props) {

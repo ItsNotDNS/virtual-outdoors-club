@@ -7,6 +7,15 @@ import axios from "axios";
 
 let getStub, postStub, patchStub, gearStore = new GearStore();
 const sandbox = sinon.createSandbox(),
+    mockCategoryList = [{
+        name: "book"
+    }, {
+        name: "compass"
+    }, {
+        name: "sleeping bag"
+    }, {
+        name: "backpack"
+    }],
     mockGearList = [{
         "id": 1,
         "depositFee": "30.00",
@@ -40,6 +49,13 @@ describe("GearStore Tests", () => {
     afterEach(() => {
         sandbox.restore();
         gearStore = new GearStore();
+    });
+
+    it("onUpdateDropdown", () => {
+        expect(gearStore.state.categoryDropdown.categorySelected).to.equal("");
+        const testCategory = mockCategoryList[0].name;
+        gearStore.onUpdateDropdown(testCategory);
+        expect(gearStore.state.categoryDropdown.categorySelected).to.equal(testCategory);
     });
 
     it("onFetchGearList - success path", () => {
@@ -251,6 +267,136 @@ describe("GearStore Tests", () => {
         return gearStore.onSubmitGearModal().then(() => {
             expect(gearStore.state.gearModal.error).to.be.true;
             expect(gearStore.state.gearModal.errorMessage).to.equal(error.response.data.message);
+        });
+    });
+
+    it("onFetchGearCategoryList - success", () => {
+        getStub.returns(Promise.resolve({ data: { data: mockCategoryList } }));
+
+        expect(gearStore.state.categoryList).to.deep.equal([]);
+        expect(gearStore.state.fetchedGearCategoryList).to.be.false;
+
+        return gearStore.onFetchGearCategoryList().then(() => {
+            expect(gearStore.state.categoryList).to.deep.equal(mockCategoryList);
+            expect(gearStore.state.fetchedGearCategoryList).to.be.true;
+        });
+    });
+
+    it("onOpenCategoryModal - create mode by default", () => {
+        expect(gearStore.state.categoryModal.show).to.be.false;
+        expect(gearStore.state.categoryModal.mode).to.equal(null);
+
+        gearStore.onOpenCategoryModal();
+
+        expect(gearStore.state.categoryModal.show).to.be.true;
+        expect(gearStore.state.categoryModal.mode).to.equal(Constants.modals.CREATING);
+    });
+
+    it("onOpenCategoryModal - editing", () => {
+        expect(gearStore.state.categoryModal.show).to.be.false;
+        expect(gearStore.state.categoryModal.mode).to.equal(null);
+
+        gearStore.onOpenCategoryModal(Constants.modals.EDITING, { category: mockCategoryList[0] });
+
+        expect(gearStore.state.categoryModal.show).to.be.true;
+        expect(gearStore.state.categoryModal.mode).to.equal(Constants.modals.EDITING);
+        expect(gearStore.state.categoryModal.originalName).to.equal(mockCategoryList[0].name);
+        expect(gearStore.state.categoryModal.category).to.equal(mockCategoryList[0].name);
+    });
+
+    it("categoryModalChanged - category", () => {
+        expect(gearStore.state.categoryModal.category).to.equal("");
+
+        gearStore.categoryModalChanged("category", "a new name");
+
+        expect(gearStore.state.categoryModal.category).to.equal("a new name");
+    });
+
+    it("onSubmitCategoryModal - prevent blank category", () => {
+        expect(gearStore.state.categoryModal.category).to.equal("");
+        gearStore.onSubmitCategoryModal();
+
+        expect(gearStore.state.categoryModal.error).to.be.true;
+        expect(gearStore.state.categoryModal.errorMessage).to.equal("You cannot leave the category name blank.");
+    });
+
+    it("onSubmitCategoryModal - create - success", () => {
+        gearStore.onOpenCategoryModal();
+        gearStore.categoryModalChanged("category", mockCategoryList[1].name);
+
+        postStub.returns(Promise.resolve({ data: mockCategoryList[0] }));
+
+        return gearStore.onSubmitCategoryModal().then(() => {
+            expect(gearStore.state.categoryModal.show).to.be.false;
+            expect(gearStore.state.categoryList).to.deep.equal([mockCategoryList[0]]);
+        });
+    });
+
+    it("onSubmitCategoryModal - create - error", () => {
+        const error = { response: { data: { message: "this is an error message" } } };
+        gearStore.onOpenCategoryModal();
+        gearStore.categoryModalChanged("category", mockCategoryList[1].name);
+
+        postStub.returns(Promise.reject(error));
+
+        return gearStore.onSubmitCategoryModal().then(() => {
+            expect(gearStore.state.categoryModal.show).to.be.true;
+            expect(gearStore.state.categoryList).to.deep.equal([]);
+            expect(gearStore.state.categoryModal.error).to.be.true;
+            expect(gearStore.state.categoryModal.errorMessage).to.equal(error.response.data.message);
+        });
+    });
+
+    it("onSubmitCategoryModal - edit - success", () => {
+        const newCategoryName = "this new name",
+            expectedResponse = JSON.parse(JSON.stringify(mockCategoryList)); // clone object
+
+        expectedResponse[1].name = newCategoryName; // set expected response
+
+        gearStore.state.categoryList = mockCategoryList; // set category list
+        gearStore.onOpenCategoryModal(Constants.modals.EDITING, { category: mockCategoryList[1] });
+
+        gearStore.categoryModalChanged("category", newCategoryName);
+
+        patchStub.returns(Promise.resolve({ data: { name: newCategoryName } }));
+        getStub.returns(Promise.resolve({ data: { data: mockGearList } })); // also gets the gear list again
+
+        return gearStore.onSubmitCategoryModal().then(() => {
+            expect(patchStub.calledWith(`${config.databaseHost}/gear/categories`, {
+                name: mockCategoryList[1].name,
+                patch: {
+                    name: newCategoryName
+                }
+            })).to.be.true;
+            expect(gearStore.state.gearList).to.deep.equal(mockGearList);
+            expect(gearStore.state.categoryList).to.deep.equal(expectedResponse);
+        });
+    });
+
+    it("onSubmitCategoryModal - edit - error", () => {
+        const error = { response: { data: { message: "this is an error message" } } },
+            newCategoryName = "this new name",
+            expectedResponse = JSON.parse(JSON.stringify(mockCategoryList)); // clone object
+
+        expectedResponse[1].name = newCategoryName; // set expected response
+
+        gearStore.state.categoryList = mockCategoryList; // set category list
+        gearStore.onOpenCategoryModal(Constants.modals.EDITING, { category: mockCategoryList[1] });
+
+        gearStore.categoryModalChanged("category", newCategoryName);
+
+        patchStub.returns(Promise.reject(error));
+
+        return gearStore.onSubmitCategoryModal().then(() => {
+            expect(patchStub.calledWith(`${config.databaseHost}/gear/categories`, {
+                name: mockCategoryList[1].name,
+                patch: {
+                    name: newCategoryName
+                }
+            })).to.be.true;
+            expect(gearStore.state.categoryModal.error).to.be.true;
+            expect(gearStore.state.categoryModal.errorMessage).to.equal(error.response.data.message);
+            expect(gearStore.state.categoryModal.show).to.be.true;
         });
     });
 });

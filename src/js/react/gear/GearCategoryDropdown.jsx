@@ -12,22 +12,22 @@ import {
     FormGroup
 } from "react-bootstrap";
 import {
-    GearCategoryActions,
-    GearCategoryStore
-} from "./GearCategoryStore";
+    GearActions,
+    GearStore
+} from "./GearStore";
 
 export default class GearCategoryDropdown extends Reflux.Component {
     constructor() {
         super();
 
-        this.store = GearCategoryStore;
+        this.store = GearStore;
 
         this.handleChange = this.handleChange.bind(this);
     }
 
     componentDidMount() {
         if (!this.state.fetchedGearCategoryList) {
-            GearCategoryActions.fetchGearCategoryList();
+            GearActions.fetchGearCategoryList();
         }
     }
 
@@ -36,7 +36,7 @@ export default class GearCategoryDropdown extends Reflux.Component {
             this.props.onChange(event);
         }
 
-        GearCategoryActions.updateDropdown(event.target.value);
+        GearActions.updateDropdown(event.target.value);
     }
 
     get dropdownOptions() {
@@ -53,7 +53,7 @@ export default class GearCategoryDropdown extends Reflux.Component {
                     name="gearCategory"
                     componentClass="select"
                     placeholder="select"
-                    value={this.props.value || this.state.dropdown.value}
+                    value={this.props.value || this.state.categoryDropdown.value}
                     onChange={this.handleChange}
                 >
                     <option key={0}>Select A Category</option>

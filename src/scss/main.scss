@@ -8,7 +8,20 @@
 }
 
 .gear-view {
+    .nav {
+        margin-bottom: 1%
+    }
+
+    .react-bootstrap-table {
+        overflow-wrap: break-word;
+
+        margin-top: 1%;
+        height: 100%;
+    }
+
     .btn-action-cell {
+        white-space: nowrap;
+
         .left-btn {
             width: 48%;
             margin-right: 2%;

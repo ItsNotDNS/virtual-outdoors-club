@@ -11,6 +11,9 @@ function defaultState() {
     return {
         fetchedGearList: false, // initial check to fetch the gear list
         error: false,
+        categoryDropdown: {
+            categorySelected: ""
+        },
         gearList: [],
         gearModal: {
             show: false,
@@ -23,17 +26,33 @@ function defaultState() {
             depositFee: "",
             gearCategory: "",
             gearDescription: ""
+        },
+        fetchedGearCategoryList: false,
+        categoryList: [],
+        categoryModal: {
+            show: false,
+            error: false,
+            errorMessage: "",
+            originalName: null,
+            mode: null,
+            category: ""
         }
     };
 }
 
 // create actions and export them for use
 export const GearActions = Reflux.createActions([
+    "updateDropdown",
     "fetchGearList",
     "openGearModal",
     "gearModalChanged",
     "submitGearModal",
-    "closeGearModal"
+    "closeGearModal",
+    "fetchGearCategoryList",
+    "openCategoryModal",
+    "categoryModalChanged",
+    "submitCategoryModal",
+    "closeCategoryModal"
 ]);
 
 export class GearStore extends Reflux.Store {
@@ -41,6 +60,13 @@ export class GearStore extends Reflux.Store {
         super();
         this.state = defaultState();
         this.listenables = GearActions; // listen for actions
+    }
+
+    // updates the selected object in the category dropdown
+    onUpdateDropdown(value) {
+        this.setState({
+            categoryDropdown: { categorySelected: value }
+        });
     }
 
     onFetchGearList() {
@@ -93,7 +119,7 @@ export class GearStore extends Reflux.Store {
     }
 
     // sets an error for the gearModal (i.e. no internet, etc)
-    onSetModalError(message) {
+    onSetGearModalError(message) {
         const newState = update(this.state, {
             gearModal: {
                 error: { $set: true },
@@ -108,7 +134,7 @@ export class GearStore extends Reflux.Store {
         const service = new GearService();
 
         if (this.state.gearModal.gearCategory === "") {
-            this.onSetModalError("You need to select a category.");
+            this.onSetGearModalError("You need to select a category.");
             return;
         }
 
@@ -123,7 +149,7 @@ export class GearStore extends Reflux.Store {
                         this.setState(newState);
                         this.onCloseGearModal();
                     } else {
-                        this.onSetModalError(error);
+                        this.onSetGearModalError(error);
                     }
                 });
         } else {
@@ -141,7 +167,7 @@ export class GearStore extends Reflux.Store {
                         this.setState(newState);
                         this.onCloseGearModal();
                     } else {
-                        this.onSetModalError(error);
+                        this.onSetGearModalError(error);
                     }
                 });
         }
@@ -150,18 +176,107 @@ export class GearStore extends Reflux.Store {
     // closes and returns the gear modal back to its default/closed values
     onCloseGearModal() {
         const newState = update(this.state, {
-            gearModal: {
-                show: { $set: false },
-                error: { $set: false },
-                errorMessage: { $set: "" },
-                mode: { $set: null },
-                id: { $set: null },
-                expectedVersion: { $set: null },
-                gearCode: { $set: "" },
-                depositFee: { $set: "" },
-                gearCategory: { $set: "" },
-                gearDescription: { $set: "" }
+            gearModal: { $set: defaultState().gearModal }
+        });
+        this.setState(newState);
+    }
+
+    // gets the gear category list from the back-end and sets it in the state
+    onFetchGearCategoryList() {
+        const service = new GearService();
+
+        // helps prevent calling this function too many times
+        this.setState({ fetchedGearCategoryList: true });
+
+        return service.fetchGearCategoryList()
+            .then((categories) => {
+            // todo: handle error case like in GearStore
+                this.setState({ categoryList: categories });
+            });
+    }
+
+    onOpenCategoryModal(mode = Constants.modals.CREATING, options = { category: {} }) {
+        const { name } = options.category,
+            newState = update(this.state, {
+                categoryModal: {
+                    show: { $set: true },
+                    mode: { $set: mode },
+                    originalName: { $set: name || null },
+                    category: { $set: name || "" }
+                }
+            });
+        this.setState(newState);
+    }
+
+    categoryModalChanged(field, value) {
+        const newState = update(this.state, {
+            categoryModal: {
+                [field]: { $set: value }
             }
+        });
+        this.setState(newState);
+    }
+
+    onSetCategoryModalError(message) {
+        const newState = update(this.state, {
+            categoryModal: {
+                error: { $set: true },
+                errorMessage: { $set: message }
+            }
+        });
+        this.setState(newState);
+    }
+
+    onSubmitCategoryModal() {
+        const service = new GearService();
+
+        if (this.state.categoryModal.category === "") {
+            this.onSetCategoryModalError("You cannot leave the category name blank.");
+            return;
+        }
+
+        if (this.state.categoryModal.mode === Constants.modals.CREATING) {
+            // creating a new piece of gear
+            return service.createCategory({ name: this.state.categoryModal.category })
+                .then(({ category, error }) => {
+                    if (category) {
+                        const newState = update(this.state, {
+                            categoryList: { $push: [category] }
+                        });
+                        this.setState(newState);
+                        this.onCloseCategoryModal();
+                    } else {
+                        this.onSetCategoryModalError(error);
+                    }
+                });
+        } else {
+            // else: Not creating a category
+            const { categoryModal: { originalName, category } } = this.state; // destructuring
+            return service.updateCategory({ originalName, newName: category })
+                .then(({ category, error }) => {
+                    const { categoryList, categoryModal: { originalName } } = this.state; // destructuring
+
+                    if (category) {
+                        const indexToUpdate = categoryList.findIndex((obj) => obj.name === originalName),
+                            newState = update(this.state, {
+                                categoryList: {
+                                    [indexToUpdate]: { $set: category }
+                                }
+                            });
+
+                        this.setState(newState);
+                        this.onCloseCategoryModal();
+                        return this.onFetchGearList(); // easier to call this than update all the gear data
+                    } else {
+                        this.onSetCategoryModalError(error);
+                    }
+                });
+        }
+    }
+
+    onCloseCategoryModal() {
+        const newState = update(this.state, {
+            categoryModal: { $set: defaultState().categoryModal }
         });
         this.setState(newState);
     }

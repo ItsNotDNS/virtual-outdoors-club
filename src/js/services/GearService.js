@@ -72,4 +72,33 @@ export default class GearService {
                 // return error; should be handled somehow..
             });
     }
+
+    createCategory({ name }) {
+        return this.service.post(`${config.databaseHost}/gear/categories`, { name })
+            .then((response) => {
+                return { category: response.data };
+            })
+            .catch((error) => {
+                return { error: error.response.data.message };
+            });
+    }
+
+    updateCategory({ originalName, newName }) {
+        return this.service.patch(`${config.databaseHost}/gear/categories`, {
+            name: originalName,
+            patch: {
+                name: newName
+            }
+        })
+            .then((response) => {
+                return { category: response.data };
+            })
+            .catch((error) => {
+                return { error: error.response.data.message };
+            });
+    }
+
+    deleteCategory({ name }) {
+        return this.service.delete(`${config.databaseHost}/gear/categories`, { name });
+    }
 };
