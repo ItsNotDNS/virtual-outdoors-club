@@ -68,7 +68,7 @@ describe("GearStore Tests", () => {
         return gearStore.onFetchGearList().then(() => {
             expect(gearStore.state.fetchedGearList).to.be.true;
             expect(gearStore.state.gearList).to.deep.equal(mockGearList);
-            expect(gearStore.state.error).to.be.false;
+            expect(gearStore.state.error).to.equal("");
         });
     });
 
@@ -84,6 +84,21 @@ describe("GearStore Tests", () => {
             expect(gearStore.state.fetchedGearList).to.be.true;
             expect(gearStore.state.gearList).to.deep.equal([]);
             expect(gearStore.state.error).to.equal(error.response.data.message);
+        });
+    });
+
+    it("onFetchGearList - error path without a response from server", () => {
+        const error = {},
+            promise = Promise.reject(error);
+
+        expect(gearStore.state.fetchedGearList).to.be.false;
+
+        getStub.returns(promise); // set stub to return mock data
+
+        return gearStore.onFetchGearList().then(() => {
+            expect(gearStore.state.fetchedGearList).to.be.true;
+            expect(gearStore.state.gearList).to.deep.equal([]);
+            expect(gearStore.state.error).to.contain("server is down");
         });
     });
 
@@ -279,6 +294,34 @@ describe("GearStore Tests", () => {
         return gearStore.onFetchGearCategoryList().then(() => {
             expect(gearStore.state.categoryList).to.deep.equal(mockCategoryList);
             expect(gearStore.state.fetchedGearCategoryList).to.be.true;
+        });
+    });
+
+    it("onFetchGearCategoryList - error", () => {
+        const error = { response: { data: { message: "this is an error message" } } };
+        getStub.returns(Promise.reject(error));
+
+        expect(gearStore.state.categoryList).to.deep.equal([]);
+        expect(gearStore.state.fetchedGearCategoryList).to.be.false;
+
+        return gearStore.onFetchGearCategoryList().then(() => {
+            expect(gearStore.state.categoryList).to.deep.equal([]);
+            expect(gearStore.state.fetchedGearCategoryList).to.be.true;
+            expect(gearStore.state.error).to.equal(error.response.data.message);
+        });
+    });
+
+    it("onFetchGearCategoryList - error without server response", () => {
+        const error = {};
+        getStub.returns(Promise.reject(error));
+
+        expect(gearStore.state.categoryList).to.deep.equal([]);
+        expect(gearStore.state.fetchedGearCategoryList).to.be.false;
+
+        return gearStore.onFetchGearCategoryList().then(() => {
+            expect(gearStore.state.categoryList).to.deep.equal([]);
+            expect(gearStore.state.fetchedGearCategoryList).to.be.true;
+            expect(gearStore.state.error).to.contain("server is down");
         });
     });
 

@@ -18,7 +18,10 @@ export default class GearService {
                 return { data: response.data.data };
             })
             .catch((error) => {
-                return { error: error.response.data.message };
+                if (error && error.response) {
+                    return { error: error.response.data.message };
+                }
+                return { error: "Looks like the server is down. Are you sure it's running?" }; // No response means server is down.
             });
     }
 
@@ -66,10 +69,13 @@ export default class GearService {
     fetchGearCategoryList() {
         return this.service.get(`${config.databaseHost}/gear/categories`)
             .then((response) => {
-                return response.data.data;
+                return { data: response.data.data };
             })
-            .catch(() => {
-                // return error; should be handled somehow..
+            .catch((error) => {
+                if (error && error.response) {
+                    return { error: error.response.data.message };
+                }
+                return { error: "Looks like the server is down. Are you sure it's running?" }; // No response means server is down.
             });
     }
 

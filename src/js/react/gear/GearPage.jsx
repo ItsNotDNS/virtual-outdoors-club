@@ -12,6 +12,7 @@ import GearTable from "./GearTable";
 import CategoryForm from "./CategoryForm";
 import CategoryTable from "./CategoryTable";
 import Constants from "../../constants/constants";
+import ErrorAlert from "../components/ErrorAlert";
 
 export default class GearPage extends Reflux.Component {
     constructor() {
@@ -36,6 +37,7 @@ export default class GearPage extends Reflux.Component {
     render() {
         return (
             <div className="gear-view">
+                <ErrorAlert show={!!this.state.error} errorMessage={this.state.error} />
                 <Tabs defaultActiveKey={1} id="gear-view-tabs">
                     <Tab eventKey={1} title="Gear">
                         <div className="row">

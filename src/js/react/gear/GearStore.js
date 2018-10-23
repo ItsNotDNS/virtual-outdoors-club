@@ -10,7 +10,7 @@ import Constants from "../../constants/constants";
 function defaultState() {
     return {
         fetchedGearList: false, // initial check to fetch the gear list
-        error: false,
+        error: "",
         categoryDropdown: {
             categorySelected: ""
         },
@@ -189,9 +189,16 @@ export class GearStore extends Reflux.Store {
         this.setState({ fetchedGearCategoryList: true });
 
         return service.fetchGearCategoryList()
-            .then((categories) => {
-            // todo: handle error case like in GearStore
-                this.setState({ categoryList: categories });
+            .then(({ data, error }) => {
+                if (data) {
+                    this.setState({
+                        categoryList: data
+                    });
+                } else {
+                    this.setState({
+                        error
+                    });
+                }
             });
     }
 
