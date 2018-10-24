@@ -72,26 +72,86 @@ Configuration under the branch production_setup allows to connect to the Postgre
 
 ## Steps
 
-1. Ensure that the Django server is running in Cybera (this will be automated in the future)
+- Ensure that the Django server is running in Cybera (this will be automated in the future)
 
-```python3 manage.py runserver 0.0.0.0:8000```
+  ```python3 manage.py runserver 0.0.0.0:8000```
 
-Note: If you would want to host on your own Cybera server and not the group server. You must add your IP from your own Cybera into the ```ALLOWED_HOSTS``` list that is found in ```django/outdoors_project/settings.py```
+  Note: If you would want to host on your own Cybera server and not the group server. You must add your IP from your own Cybera into the ```ALLOWED_HOSTS``` list that is found in ```django/outdoors_project/settings.py```
 
-2. Ensure that the React server is running in Cybera (this will be automated in the future)
+- Start the React server is running in Cybera (this will be automated in the future)
 
-```npm start``` or ```npm run-script build```
+  ```npm start``` or ```npm run-script build```
 
-3. You may also run the React server locally. You can use the same commands above
+  You may also run the React server locally. You can use the same commands above
 
-4. If you are running the React server in Cybera, you must access the UI through
+- If you are running the React server in Cybera, you must access the UI through
 
-```199.116.235.142:8081```
+  ```199.116.235.142:8081```
 
-Note: You must open the port 8081 or whatever port you choose that you want the server to be in. To do that, add the port into your security group in Cybera, IPv4 and IPv6.
+  Note: You must open the port 8081 or whatever port you choose that you want the server to be in. To do that, add the port into your security group in Cybera, IPv4 and IPv6.
 
-5. If you are running the React server locally, you can access it through either
+- If you are running the React server locally, you can access it through either
 
-```0.0.0.0:8081``` or ```127.0.0.1:8081``` or ```localhost:8081```
+  ```0.0.0.0:8081``` or ```127.0.0.1:8081``` or ```localhost:8081```
 
-6. Data shown in the production branch will be based off of Cybera's server (noted above). If you are testing with your local database, navigate to ```config.js``` under ```src/config``` and change only the IP address to ```127.0.0.1```
+  Data shown is initially off of Cybera's server (noted above). To test with your local database,
+navigate to ```config.js``` under ```src/config``` and change only the IP address to ```127.0.0.1```
+
+# Self-installation for React in Cybera
+
+Your Ubuntu will intially have no node or npm installed, you must install them if you wish to host your server from your local virtual server. Follow other guides to install all the requirements you need for Django as well.
+
+- Ensure everything is up to date 
+
+  ```sudo apt-get update```
+
+- The following installation commands will install deprecated versions of npm and node(LTS) respectively. Do not use.
+
+  ```sudo apt-get node```
+
+  ```sudo apt-get install npm```
+
+- Instead, we need to get them via package manager
+
+  ```sudo apt-get install python-software-properties```
+
+  ```wget -qO- https://deb.nodesource.com/setup_8.x | sudo -E bash -```
+
+- Ensure that your versions are correct
+
+  ```npm -v``` npm should be 6.4.1
+
+  ```node -v``` node (LTS) should be 8.12.0
+
+- Install all of the node dependencies
+
+  ```npm install```
+
+  If you do not install the required npm version, you will not be able to download the necessary dependencies
+
+  Ensure everything else is setup such as PostgreSQL, Django, and the security groups for your ports (see above guide and notes)
+
+# Project Structure
+
+Besides all of the dependencies required and stored in the project, there are three main folders that navigates to the code base and designs that were created:
+
+```/doc```
+
+  This directory contains all of the images and diagrams that plans the structure of the project. This includes, component diagrams, sequence diagrams, class diagrams, logical models, UI navigation diagrams, wireframes, and story maps
+  
+```/src```
+
+  This folder contains the backend and frontend codebases. Django is used as a backend framework and React is used as a frontend framework.
+  
+   ##### Django
+   
+   Django has their own file structure that must be followed. Inside ```/django``` there lies two folders. The folder ```/outdoors_project``` contains all of the settings that includes communication between different features such as CORS as well as network settings. ```/api``` contains all of the models, views, and urls used for the backend API for the server. It is also where all tests are stored for the backend.
+   
+   ##### React
+   
+   ```/js/react``` contains all of the UI components and forms that are seperated in groups (gear, reservation, etc.) These components interact with the Django backend to retrieve and input data by calling the service stored in ```/js/services```, where it contains the methods used to communicate to the backend. Connection to databases can be swapped with the configuartion file stored in ```/js/config```
+    
+
+```/test```
+
+Everything related to testing for the frontend specfically are started within this folder. To reinforce the concepts and importance of testing, test coverage is required before pull requests are available to be merged.
