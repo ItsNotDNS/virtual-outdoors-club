@@ -1,4 +1,5 @@
-const HtmlWebPackPlugin = require("html-webpack-plugin");
+const HtmlWebPackPlugin = require("html-webpack-plugin"),
+    PORT = process.env.PORT || 8081;
 
 module.exports = {
     resolve: {
@@ -7,7 +8,9 @@ module.exports = {
     },
     devServer: {
         // allows React-Router
-        historyApiFallback: true
+        historyApiFallback: true,
+        port: PORT,
+        host: "0.0.0.0"
     },
     module: {
         rules: [

@@ -1,3 +1,3 @@
 export default {
-    databaseHost: "http://127.0.0.1:8000/api"
+    databaseHost: "http://199.116.235.142:8000/api"
 };
