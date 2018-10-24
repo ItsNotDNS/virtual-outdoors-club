@@ -13,19 +13,30 @@ export default class CategoryTable extends React.Component {
         super();
 
         this.getActionCell = this.getActionCell.bind(this);
+        this.getDeleteAction = this.getDeleteAction.bind(this);
     }
 
     getEditAction(callback, name) {
         return () => callback(Constants.modals.EDITING, { category: { name } });
     }
 
+    getDeleteAction(callback, name) {
+        return () => callback(name);
+    }
+
     getActionCell(cellContent, row) {
         return (
             <div className="btn-action-cell">
-                <button className="btn btn-primary left-btn" onClick={this.getEditAction(this.props.onClickEdit, row.name)}>
+                <button
+                    className="btn btn-primary left-btn"
+                    onClick={this.getEditAction(this.props.onClickEdit, row.name)}
+                >
                     <i className="fas fa-pen" />
                 </button>
-                <button className="btn btn-danger right-btn">
+                <button
+                    className="btn btn-danger right-btn"
+                    onClick={this.getDeleteAction(this.props.onClickDelete, row.name)}
+                >
                     <i className="fas fa-trash-alt" />
                 </button>
             </div>
@@ -57,5 +68,6 @@ export default class CategoryTable extends React.Component {
 
 CategoryTable.propTypes = {
     onClickEdit: PropTypes.func.isRequired,
+    onClickDelete: PropTypes.func.isRequired,
     categories: PropTypes.array.isRequired
 };

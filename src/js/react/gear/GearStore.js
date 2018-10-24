@@ -37,7 +37,19 @@ function defaultState() {
             mode: null,
             category: ""
         },
-        shoppingList: []
+        shoppingList: [],
+        deleteGearModal: {
+            id: null,
+            show: false,
+            error: false,
+            errorMessage: ""
+        },
+        deleteGearCategoryModal: {
+            name: null,
+            show: false,
+            error: false,
+            errorMessage: ""
+        }
     };
 }
 
@@ -55,7 +67,14 @@ export const GearActions = Reflux.createActions([
     "submitCategoryModal",
     "closeCategoryModal",
     "addToShoppingCart",
-    "removeFromShoppingCart"
+    "removeFromShoppingCart",
+    "closeCategoryModal",
+    "submitDeleteGearModal",
+    "openDeleteGearModal",
+    "closeDeleteGearModal",
+    "submitDeleteGearCategoryModal",
+    "openDeleteGearCategoryModal",
+    "closeDeleteGearCategoryModal"
 ]);
 
 export class GearStore extends Reflux.Store {
@@ -306,6 +325,101 @@ export class GearStore extends Reflux.Store {
                 $set: this.state.shoppingList.filter((obj) =>
                     id !== obj.id)
             }
+        });
+        this.setState(newState);
+    }
+
+    onOpenDeleteGearModal(id) {
+        const newState = update(this.state, {
+            deleteGearModal: {
+                id: { $set: id },
+                show: { $set: true },
+                error: { $set: false },
+                errorMessage: { $set: "" }
+            }
+        });
+        this.setState(newState);
+    }
+
+    onSubmitDeleteGearModal() {
+        const service = new GearService();
+        return service.deleteGear(this.state.deleteGearModal.id)
+            .then((error) => {
+                if (error) {
+                    const newState = update(this.state, {
+                        deleteGearModal: {
+                            error: { $set: true },
+                            errorMessage: { $set: error.error }
+                        }
+                    });
+                    this.setState(newState);
+                } else {
+                    const newState = update(this.state, {
+                        gearList: {
+                            $set: this.state.gearList.filter(
+                                (obj) => {
+                                    return obj.id !== this.state.deleteGearModal.id;
+                                }
+                            )
+                        }
+                    });
+                    this.setState(newState);
+                    this.onCloseDeleteGearModal();
+                }
+            });
+    }
+
+    onCloseDeleteGearModal() {
+        const newState = update(this.state, {
+            deleteGearModal: { $set: defaultState().deleteGearModal }
+        });
+        this.setState(newState);
+    }
+
+    // opens the delete gear category modal
+    onOpenDeleteGearCategoryModal(name) {
+        const newState = update(this.state, {
+            deleteGearCategoryModal: {
+                name: { $set: name },
+                show: { $set: true },
+                error: { $set: false },
+                errorMessage: { $set: "" }
+            }
+        });
+        this.setState(newState);
+    }
+
+    onSubmitDeleteGearCategoryModal() {
+        const service = new GearService();
+        return service.deleteCategory(this.state.deleteGearCategoryModal.name)
+            .then((error) => {
+                if (error) {
+                    const newState = update(this.state, {
+                        deleteGearCategoryModal: {
+                            error: { $set: true },
+                            errorMessage: { $set: error.error }
+                        }
+                    });
+                    this.setState(newState);
+                } else {
+                    const newState = update(this.state, {
+                        categoryList: {
+                            $set: this.state.categoryList.filter(
+                                (obj) => {
+                                    return obj.name !== this.state.deleteGearCategoryModal.name;
+                                }
+                            )
+                        }
+                    });
+                    this.setState(newState);
+                    this.onCloseDeleteGearCategoryModal();
+                }
+            });
+    }
+
+    onCloseDeleteGearCategoryModal() {
+        const newState = update(this.state, {
+            deleteGearCategoryModal: { $set: defaultState().deleteGearCategoryModal }
         });
         this.setState(newState);
     }

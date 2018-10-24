@@ -59,10 +59,11 @@ export default class GearService {
             });
     }
 
-    // todo: rename the variable to "id"
-    // todo: fix this to actually fetch from endpoint
-    deleteGear({ gearId }) {
-        return this.service.delete(`${config.databaseHost}/gear`, { id: gearId });
+    deleteGear(gearId) {
+        return this.service.delete(`${config.databaseHost}/gear`, { params: { id: gearId } })
+            .catch((error) => {
+                return { error: error.response.data.message };
+            });
     }
 
     // fetch all categories including what they represent
@@ -104,7 +105,10 @@ export default class GearService {
             });
     }
 
-    deleteCategory({ name }) {
-        return this.service.delete(`${config.databaseHost}/gear/categories`, { name });
+    deleteCategory(name) {
+        return this.service.delete(`${config.databaseHost}/gear/categories`, { params: { name: name } })
+            .catch((error) => {
+                return { error: error.response.data.message };
+            });
     }
 };

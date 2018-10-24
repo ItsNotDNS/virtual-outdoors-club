@@ -20,17 +20,18 @@ const mockCategoryList = [{
         return shallow(
             <CategoryTable
                 onClickEdit={props.onClickEdit || emptyFunc}
-                gearList={props.gearList || []}
+                onClickDelete={props.onClickDelete || emptyFunc}
+                categories={props.categories || []}
             />
         );
     };
 
-describe("GearTable Tests", () => {
+describe("GearCategoryTable Tests", () => {
     it("generates an action column that uses the onClickEdit function passed in", () => {
         const editSpy = sinon.spy(),
             table = getShallowForm({
                 onClickEdit: editSpy,
-                gearList: mockCategoryList
+                categories: mockCategoryList
             }),
             actionCell = table.instance().getActionCell(null, mockCategoryList[0]),
             editBtn = actionCell.props.children[0];
@@ -40,5 +41,19 @@ describe("GearTable Tests", () => {
         expect(editSpy.calledWith(Constants.modals.EDITING, {
             category: { name: mockCategoryList[0].name }
         })).to.be.true;
+    });
+
+    it("generates an action column that uses the onClickDelete function passed in", () => {
+        const deleteSpy = sinon.spy(),
+            table = getShallowForm({
+                onClickDelete: deleteSpy,
+                categories: mockCategoryList
+            }),
+            actionCell = table.instance().getActionCell(null, mockCategoryList[0]),
+            deleteBtn = actionCell.props.children[1];
+
+        deleteBtn.props.onClick();
+
+        expect(deleteSpy.calledWith(mockCategoryList[0].name)).to.be.true;
     });
 });

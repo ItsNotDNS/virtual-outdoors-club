@@ -5,7 +5,7 @@ import sinon from "sinon";
 import { expect } from "chai";
 import axios from "axios";
 
-let getStub, postStub, patchStub, gearStore = new GearStore();
+let getStub, postStub, patchStub, deleteStub, gearStore = new GearStore();
 const sandbox = sinon.createSandbox(),
     mockCategoryList = [{
         name: "book"
@@ -44,6 +44,7 @@ describe("GearStore Tests", () => {
         getStub = sandbox.stub(axios, "get");
         postStub = sandbox.stub(axios, "post");
         patchStub = sandbox.stub(axios, "patch");
+        deleteStub = sandbox.stub(axios, "delete");
     });
 
     afterEach(() => {
@@ -455,5 +456,81 @@ describe("GearStore Tests", () => {
         expect(gearStore.state.shoppingList.length).to.equal(1);
         gearStore.onRemoveFromShoppingCart(mockGear);
         expect(gearStore.state.shoppingList.length).to.equal(0);
+    });
+
+    it("onOpenDeleteGearModal", () => {
+        expect(gearStore.state.deleteGearModal.show).to.be.false;
+
+        gearStore.onOpenDeleteGearModal(mockGearList[0].id);
+
+        expect(gearStore.state.deleteGearModal.show).to.be.true;
+        expect(gearStore.state.deleteGearModal.id).to.equal(mockGearList[0].id);
+    });
+
+    it("onSubmitDeleteGearModal - success path", () => {
+        const expectedGearList = JSON.parse(JSON.stringify(mockGearList));
+        expectedGearList.shift();
+        // set the gear list up with our mock data
+        gearStore.state.gearList = mockGearList;
+        gearStore.state.deleteGearModal.id = mockGearList[0].id;
+        deleteStub.returns(Promise.resolve());
+
+        return gearStore.onSubmitDeleteGearModal().then(() => {
+            expect(deleteStub.calledWith(`${config.databaseHost}/gear`, {
+                params: {
+                    id: mockGearList[0].id
+                }
+            })).to.be.true;
+            expect(gearStore.state.gearList).to.deep.equal(expectedGearList);
+        });
+    });
+
+    it("onSubmitDeleteGearModal - error path", () => {
+        const error = { response: { data: { message: "this is an error message" } } };
+        gearStore.state.deleteGearModal.id = mockGearList[0].id;
+        deleteStub.returns(Promise.reject(error));
+
+        return gearStore.onSubmitDeleteGearModal().then(() => {
+            expect(gearStore.state.deleteGearModal.error).to.be.true;
+            expect(gearStore.state.deleteGearModal.errorMessage).to.equal(error.response.data.message);
+        });
+    });
+
+    it("onOpenDeleteGearCategoryModal", () => {
+        expect(gearStore.state.deleteGearCategoryModal.show).to.be.false;
+
+        gearStore.onOpenDeleteGearCategoryModal(mockCategoryList[0].name);
+
+        expect(gearStore.state.deleteGearCategoryModal.show).to.be.true;
+        expect(gearStore.state.deleteGearCategoryModal.name).to.equal(mockCategoryList[0].name);
+    });
+
+    it("onSubmitDeleteGearCategoryModal - success path", () => {
+        const expectedCategoryList = JSON.parse(JSON.stringify(mockCategoryList));
+        expectedCategoryList.shift();
+        // set the gear list up with our mock data
+        gearStore.state.categoryList = mockCategoryList;
+        gearStore.state.deleteGearCategoryModal.name = mockCategoryList[0].name;
+        deleteStub.returns(Promise.resolve());
+
+        return gearStore.onSubmitDeleteGearCategoryModal().then(() => {
+            expect(deleteStub.calledWith(`${config.databaseHost}/gear/categories`, {
+                params: {
+                    name: mockCategoryList[0].name
+                }
+            })).to.be.true;
+            expect(gearStore.state.categoryList).to.deep.equal(expectedCategoryList);
+        });
+    });
+
+    it("onSubmitDeleteGearCategoryModal - error path", () => {
+        const error = { response: { data: { message: "this is an error message" } } };
+        gearStore.state.deleteGearCategoryModal.name = mockCategoryList[0].name;
+        deleteStub.returns(Promise.reject(error));
+
+        return gearStore.onSubmitDeleteGearCategoryModal().then(() => {
+            expect(gearStore.state.deleteGearCategoryModal.error).to.be.true;
+            expect(gearStore.state.deleteGearCategoryModal.errorMessage).to.equal(error.response.data.message);
+        });
     });
 });

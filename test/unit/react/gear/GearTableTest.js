@@ -33,6 +33,7 @@ const mockGearList = [{
         return shallow(
             <GearTable
                 onClickEdit={props.onClickEdit || emptyFunc}
+                onClickDelete={props.onClickDelete || emptyFunc}
                 gearList={props.gearList || []}
             />
         );
@@ -60,5 +61,19 @@ describe("GearTable Tests", () => {
                 gearCategory: mockGearList[0].category
             }
         })).to.be.true;
+    });
+
+    it("generates an action column that uses the onClickDelete function passed in", () => {
+        const deleteSpy = sinon.spy(),
+            table = getShallowForm({
+                onClickDelete: deleteSpy,
+                gearList: mockGearList
+            }),
+            actionCell = table.instance().getActionCell(null, mockGearList[0]),
+            deleteBtn = actionCell.props.children[1];
+
+        deleteBtn.props.onClick();
+
+        expect(deleteSpy.calledWith(mockGearList[0].id)).to.be.true;
     });
 });

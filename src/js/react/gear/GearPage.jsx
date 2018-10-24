@@ -13,6 +13,7 @@ import CategoryForm from "./CategoryForm";
 import CategoryTable from "./CategoryTable";
 import Constants from "../../constants/constants";
 import ErrorAlert from "../components/ErrorAlert";
+import ConfirmationDialog from "../components/ConfirmationDialog";
 
 export default class GearPage extends Reflux.Component {
     constructor() {
@@ -49,7 +50,13 @@ export default class GearPage extends Reflux.Component {
                         </div>
                         <div className="row">
                             <div className="col-md-12">
-                                <GearTable gearList={this.state.gearList} onClickEdit={GearActions.openGearModal} />
+                                <GearTable
+                                    gearList={this.state.gearList}
+                                    onClickEdit={GearActions.openGearModal}
+                                    onClickDelete={
+                                        GearActions.openDeleteGearModal
+                                    }
+                                />
                             </div>
                         </div>
                         <GearForm {...this.state.gearModal}
@@ -57,6 +64,13 @@ export default class GearPage extends Reflux.Component {
                             onChange={GearActions.gearModalChanged}
                             onSubmit={GearActions.submitGearModal}
                             onClose={GearActions.closeGearModal}
+                        />
+                        <ConfirmationDialog
+                            show={this.state.deleteGearModal.show}
+                            title="Delete Gear"
+                            message="Are you sure you want to delete this piece of gear?"
+                            onClose={GearActions.closeDeleteGearModal}
+                            onSubmit={GearActions.submitDeleteGearModal}
                         />
                     </Tab>
                     <Tab eventKey={2} title="Categories">
@@ -69,7 +83,11 @@ export default class GearPage extends Reflux.Component {
                         </div>
                         <div className="row">
                             <div className="col-md-12">
-                                <CategoryTable categories={this.state.categoryList} onClickEdit={GearActions.openCategoryModal} />
+                                <CategoryTable
+                                    categories={this.state.categoryList}
+                                    onClickEdit={GearActions.openCategoryModal}
+                                    onClickDelete={GearActions.openDeleteGearCategoryModal}
+                                />
                             </div>
                         </div>
                         <CategoryForm {...this.state.categoryModal}
@@ -77,6 +95,13 @@ export default class GearPage extends Reflux.Component {
                             onChange={GearActions.categoryModalChanged}
                             onSubmit={GearActions.submitCategoryModal}
                             onClose={GearActions.closeCategoryModal}
+                        />
+                        <ConfirmationDialog
+                            show={this.state.deleteGearCategoryModal.show}
+                            title="Delete Gear Category"
+                            message="Are you sure you want to delete this gear category?"
+                            onClose={GearActions.closeDeleteGearCategoryModal}
+                            onSubmit={GearActions.submitDeleteGearCategoryModal}
                         />
                     </Tab>
                 </Tabs>

@@ -28,13 +28,27 @@ export default class GearTable extends React.Component {
         return () => callback(Constants.modals.EDITING, { gear });
     }
 
+    getDeleteAction(callback, row) {
+        return () => callback(row.id);
+    }
+
     getActionCell(cellContent, row) {
         return (
             <div className="btn-action-cell">
-                <button className="btn btn-primary left-btn" onClick={this.getEditAction(this.props.onClickEdit, row)}>
+                <button
+                    className="btn btn-primary left-btn"
+                    onClick={
+                        this.getEditAction(this.props.onClickEdit, row)
+                    }
+                >
                     <i className="fas fa-pen" />
                 </button>
-                <button className="btn btn-danger right-btn">
+                <button
+                    className="btn btn-danger right-btn"
+                    onClick={
+                        this.getDeleteAction(this.props.onClickDelete, row)
+                    }
+                >
                     <i className="fas fa-trash-alt" />
                 </button>
             </div>
@@ -75,5 +89,6 @@ export default class GearTable extends React.Component {
 
 GearTable.propTypes = {
     onClickEdit: PropTypes.func.isRequired,
+    onClickDelete: PropTypes.func.isRequired,
     gearList: PropTypes.array.isRequired
 };

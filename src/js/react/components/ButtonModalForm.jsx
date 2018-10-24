@@ -44,7 +44,6 @@ export default class ButtonModalForm extends React.Component {
 ButtonModalForm.propTypes = {
     onSubmit: PropTypes.func.isRequired,
     onClose: PropTypes.func.isRequired,
-
     formTitle: PropTypes.string.isRequired,
     children: PropTypes.any.isRequired,
     show: PropTypes.bool.isRequired,
