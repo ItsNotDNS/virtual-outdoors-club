@@ -13,8 +13,8 @@ class GearTestCase(TestCase):
         sb = GearCategory.objects.create(name="sleeping bag")
         bp = GearCategory.objects.create(name="backpack")
 
-        Gear.objects.create(code="BP01", category=bp, depositFee=50.00, description="A black Dakine backpack", version=1)
-        Gear.objects.create(code="SB01", category=sb, depositFee=50.00, description="A old red sleeping bag", version=1)
+        self.gearObj1 = Gear.objects.create(code="BP01", category=bp, depositFee=50.00, description="A black Dakine backpack", version=1)
+        self.gearObj2 = Gear.objects.create(code="SB01", category=sb, depositFee=50.00, description="A old red sleeping bag", version=1)
         self.client = APIRequestFactory()
         self.sbpk = sb.pk
         self.bppk = bp.pk
@@ -144,4 +144,36 @@ class GearTestCase(TestCase):
         self.assertEqual(g.depositFee, Decimal(patch["depositFee"]))
         self.assertEqual(g.description, patch["description"])
         #self.assertEqual(g.code, patch["code"])
+
+    def test_delete(self):
+        dummy = {"id": self.gearObj2.pk} # 2 = id of code="SB01"
+
+        response = self.client.delete("/api/gear/", dummy, content_type="application/json").data
+        self.assertEqual(response, {"message": "Succesfully deleted gear: 'SB01'"})
+
+        response = self.client.get("/api/gear/", content_type='application/json').data["data"]
+        self.assertEqual(response, [{
+                "id": 1,
+                "code": "BP01",
+                "category": "backpack",
+                "checkedOut": False,
+                "depositFee": "50.00",
+                "description": "A black Dakine backpack",
+                #"condition": "NOT YET IMPLEMENTED",
+                "version": 1
+            }])
+
+    def test_delete_missingId(self):
+        dummy = {"code": "SB01"}
+        response = self.client.delete("/api/gear/", dummy, content_type="application/json").data
+        self.assertEqual(response, {"message": "Missing gear id in request"})
+
+    def test_delete_DNEGear(self):
+        lastGear = Gear.objects.latest('id')
+        dummy = {"id": lastGear.id+1} # try delete a gear with ID that DNE
+        response = self.client.delete("/api/gear/", dummy, content_type="application/json").data
+        self.assertEqual(response, {"message": "The gear item trying to be removed does not exist"})
+
+
+
 

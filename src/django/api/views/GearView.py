@@ -5,6 +5,7 @@ from .GearCategoryView import gearCategoryExists
 from rest_framework.views import APIView
 from .error import *
 import json
+from django.db.models import ProtectedError
 
 
 # returns False if no gear has that id, otherwise the gear with the id is returned
@@ -138,3 +139,26 @@ class GearView(APIView):
         gear.save()
 
         return Response(s.data)
+
+    def delete(self, request):
+        #only admins can delete gear from inventory: this check for admin is done in the frontend
+        #this function expects a 'id' key in the request 
+
+        delReq = json.loads(str(request.body, encoding='utf-8'))
+        if 'id' not in delReq:
+            return RespError(400, "Missing gear id in request")
+
+        try:
+            delGear = Gear.objects.get(id=delReq['id']) 
+            delGearCode = delGear.code
+        except ProtectedError:
+            return RespError(409, "You cannot remove gear that is currently being reserved")
+        except exceptions.ObjectDoesNotExist:
+            return RespError(404, "The gear item trying to be removed does not exist")
+
+        delGear.delete()
+        return RespError(200, "Succesfully deleted gear: " + "'" + delGearCode + "'")
+
+
+
+

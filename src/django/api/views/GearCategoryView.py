@@ -107,7 +107,7 @@ class GearCategoryView(APIView):
         try:
             delGearCategory = GearCategory.objects.get(name=delReq['name'])
         except ProtectedError:
-            return RespError(409, "You cannot remove a gear category that is currently being referenced by a piece if gear.")
+            return RespError(409, "You cannot remove a gear category that is currently being referenced by a piece of gear.")
         except exceptions.ObjectDoesNotExist:
             return RespError(404, "The gear category trying to be removed does not exist")
         
