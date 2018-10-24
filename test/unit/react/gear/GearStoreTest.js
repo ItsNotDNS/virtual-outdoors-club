@@ -442,4 +442,18 @@ describe("GearStore Tests", () => {
             expect(gearStore.state.categoryModal.show).to.be.true;
         });
     });
+
+    it("onAddToShoppingCart success", () => {
+        const mockGear = mockGearList[0];
+        gearStore.onAddToShoppingCart(mockGear);
+        expect(gearStore.state.shoppingList.length).to.equal(1);
+    });
+
+    it("onRemoveToShoppingCart success", () => {
+        const mockGear = mockGearList[0];
+        gearStore.onAddToShoppingCart(mockGear);
+        expect(gearStore.state.shoppingList.length).to.equal(1);
+        gearStore.onRemoveFromShoppingCart(mockGear);
+        expect(gearStore.state.shoppingList.length).to.equal(0);
+    });
 });

@@ -36,7 +36,8 @@ function defaultState() {
             originalName: null,
             mode: null,
             category: ""
-        }
+        },
+        shoppingList: []
     };
 }
 
@@ -52,7 +53,9 @@ export const GearActions = Reflux.createActions([
     "openCategoryModal",
     "categoryModalChanged",
     "submitCategoryModal",
-    "closeCategoryModal"
+    "closeCategoryModal",
+    "addToShoppingCart",
+    "removeFromShoppingCart"
 ]);
 
 export class GearStore extends Reflux.Store {
@@ -284,6 +287,25 @@ export class GearStore extends Reflux.Store {
     onCloseCategoryModal() {
         const newState = update(this.state, {
             categoryModal: { $set: defaultState().categoryModal }
+        });
+        this.setState(newState);
+    }
+
+    onAddToShoppingCart(row) {
+        if (!this.state.shoppingList.includes(row)) {
+            const newState = update(this.state, {
+                shoppingList: { $push: [row] }
+            });
+            this.setState(newState);
+        }
+    }
+
+    onRemoveFromShoppingCart({ id }) {
+        const newState = update(this.state, {
+            shoppingList: {
+                $set: this.state.shoppingList.filter((obj) =>
+                    id !== obj.id)
+            }
         });
         this.setState(newState);
     }
