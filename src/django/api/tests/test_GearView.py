@@ -1,7 +1,7 @@
 from django.test import TestCase
 from rest_framework.test import APIRequestFactory
 from decimal import Decimal
-from ..models import GearCategory, Gear
+from ..models import GearCategory, Gear, Condition
 
 
 class GearTestCase(TestCase):
@@ -12,33 +12,33 @@ class GearTestCase(TestCase):
         super().setUpClass()
         sb = GearCategory.objects.create(name="sleeping bag")
         bp = GearCategory.objects.create(name="backpack")
+        goodCon = Condition.objects.create(condition="RENTABLE")
 
-        self.gearObj1 = Gear.objects.create(code="BP01", category=bp, depositFee=50.00, description="A black Dakine backpack", version=1)
-        self.gearObj2 = Gear.objects.create(code="SB01", category=sb, depositFee=50.00, description="A old red sleeping bag", version=1)
+        self.gearObj1 = Gear.objects.create(code="BP01", category=bp, depositFee=50.00, description="A black Dakine backpack", condition=goodCon, version=1)
+        self.gearObj2 = Gear.objects.create(code="SB01", category=sb, depositFee=50.00, description="A old red sleeping bag", condition=goodCon, version=1)
         self.client = APIRequestFactory()
         self.sbpk = sb.pk
         self.bppk = bp.pk
+        self.goodCon = goodCon
 
     def test_get(self):
-        response = self.client.get("/api/gear/", content_type="applcation/json").data
+        response = self.client.get("/api/gear/", content_type="application/json").data
         expectedResponse = {
             "data": [{
                 "id": 1,
                 "code": "BP01",
                 "category": "backpack",
-                "checkedOut": False,
                 "depositFee": "50.00",
                 "description": "A black Dakine backpack",
-                #"condition": "NOT YET IMPLEMENTED",
+                "condition": "RENTABLE",
                 "version": 1
             }, {
                 "id": 2,
                 "code": "SB01",
                 "category": "sleeping bag",
                 "depositFee": "50.00",
-                "checkedOut": False,
                 "description": "A old red sleeping bag",
-                #"condition": "NOT YET IMPLEMENTED",
+                "condition": "RENTABLE",
                 "version": 1
             }]
         }
@@ -53,7 +53,8 @@ class GearTestCase(TestCase):
             "code": "SB02",
             "category": "sleeping bag",
             "depositFee": "50.00",
-            "description": "A new blue sleeping bag"
+            "description": "A new blue sleeping bag",
+            "condition": "RENTABLE",
         }
 
         expectedResponse = {
@@ -61,9 +62,8 @@ class GearTestCase(TestCase):
             "code": request["code"],
             "category": request["category"],
             "depositFee": request["depositFee"],
-            "checkedOut": False, # default value
             "description": request["description"],
-            #"condition": "NOT YET IMPLEMENTED",
+            "condition": "RENTABLE",
             "version": 1        # default value
         }
 
@@ -127,9 +127,8 @@ class GearTestCase(TestCase):
             "code": patch["code"],
             "category": patch["category"],
             "depositFee": patch["depositFee"],
-            "checkedOut": False,
             "description": patch["description"],
-            #"condition": "NOT YET IMPLEMENTED",
+            "condition": "RENTABLE",
             "version": request["expectedVersion"] + 1
         }
 
@@ -156,10 +155,9 @@ class GearTestCase(TestCase):
                 "id": 1,
                 "code": "BP01",
                 "category": "backpack",
-                "checkedOut": False,
                 "depositFee": "50.00",
                 "description": "A black Dakine backpack",
-                #"condition": "NOT YET IMPLEMENTED",
+                "condition": "RENTABLE",
                 "version": 1
             }])
 

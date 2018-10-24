@@ -4,38 +4,26 @@ from django.core.validators import MinValueValidator
 
 # system that enables particular parts of the system to be rendered available or disabled
 class System(models.Model):
-    service = models.CharField(max_length = 100, blank = False)
+    service = models.CharField(max_length = 100)
     enabled = models.BooleanField(default = True)
 
 # set a standard value for specific parameters in the system for members
 class UserVariability(models.Model):
-    variable = models.CharField(max_length = 100, blank = False)
-    value = models.IntegerField(blank = False)
+    variable = models.CharField(max_length = 100)
+    value = models.IntegerField()
 
 # storage for all of the current members in the club. Set to reset weekly-monthly
 # there should not be any emails in the list that are duplicates
 class Member(models.Model):
-    email = models.EmailField(blank = False, unique = True)
+    email = models.EmailField(unique = True)
 
 # storage for all of the blacklisted members in the club.
 class BlackList(models.Model):
-    email = models.EmailField(blank = False)
+    email = models.EmailField()
 
 # set a collection of available gear categories that are in the system
 class GearCategory(models.Model):
-    name = models.CharField(max_length=100, blank=False)
-
-# gearID is unique for every gear. Deletion will reset all conditions in the table.
-# conditionHistory should be removed and history should be kept on a seperate table, referencing the gearID as the key
-# description set to optional
-class Gear(models.Model):
-    id = models.AutoField(primary_key = True)
-    code = models.CharField(unique = True, max_length = 6, blank = False)
-    category = models.ForeignKey(GearCategory, on_delete = models.PROTECT, default = None)
-    checkedOut = models.BooleanField(default = False, blank = False)
-    depositFee = models.DecimalField(max_digits = 10, decimal_places = 2, blank = False, validators=[MinValueValidator(0)])
-    description = models.CharField(max_length = 255, blank = True)
-    version = models.IntegerField(blank = False)
+    name = models.CharField(max_length=100)
 
 # saves the type of conditions that a piece of gear would be returned as
 # model would properly hold the conditions and their respective IDs - non manipulative
@@ -43,28 +31,35 @@ class Condition(models.Model):
     RENTABLE = "EXCELLENT"
     FLAGGED = "FLAGGED"
     NEEDS_REPAIR = "NEEDS REPAIR"
+    DELETED = "DELETED"
 
     CONDITION_CHOICE = (
         (RENTABLE, 'Rentable'),
         (FLAGGED, 'Flagged'),
-        (NEEDS_REPAIR, 'Needs Repair')
+        (NEEDS_REPAIR, 'Needs Repair'),
+        (DELETED, "Deleted"),
     )
 
     conditionID = models.AutoField(primary_key = True)
     condition = models.CharField(max_length = 20, choices = CONDITION_CHOICE, default = None)
 
-# saves the history of each gear that has gone through the return process.
-class ConditionHistory(models.Model):
-    condition = models.ForeignKey(Condition, on_delete = models.PROTECT, default = None)
-    date = models.DateField(auto_now=True)
-    description = models.CharField(max_length = 500)
-    gearID = models.ForeignKey(Gear, on_delete = models.PROTECT)
+# gearID is unique for every gear. Deletion will reset all conditions in the table.
+# conditionHistory should be removed and history should be kept on a seperate table, referencing the gearID as the key
+# description set to optional
+class Gear(models.Model):
+    id = models.AutoField(primary_key = True)
+    code = models.CharField(unique = True, max_length = 6)
+    category = models.ForeignKey(GearCategory, on_delete = models.PROTECT, default = None)
+    depositFee = models.DecimalField(max_digits = 10, decimal_places = 2, validators=[MinValueValidator(0)])
+    description = models.CharField(max_length = 255, blank = True)
+    condition = models.ForeignKey(Condition, on_delete = models.PROTECT)
+    version = models.IntegerField(default=1)
 
 # holds the details of a certain reservation from a member and who approves it
 # upon return of the reservation, the status is then set to be returned
 # if members are removed with reservations - set member to be removed (handle elsewhere)
 # paid when pick up / day before
-class GearRequest(models.Model):
+class Reservation(models.Model):
     # these statuses happen in sequence
     REQUESTED = 'REQUESTED' # user has requested, unapproved by executives
     APPROVED = 'APPROVED'   # user has been approved by executive, but not paid
@@ -92,6 +87,7 @@ class GearRequest(models.Model):
     startDate = models.DateField()
     endDate = models.DateField()
     payment = JSONField(default = None)
+    gear = models.ManyToManyField(Gear)
     status = models.CharField(max_length = 20, choices = STATUS_CHOICE, default = REQUESTED)
     version = models.IntegerField(default = 1)
 
@@ -117,11 +113,6 @@ class Permission(models.Model):
     permissionID = models.AutoField(primary_key = True)
     permissionType = models.CharField(max_length = 30, choices = PERMISSION_CHOICE, default = None)
 
-# retain a list of reservations that is associated with the specific gear that a member requests
-class Reservation(models.Model):
-    reservationID = models.ForeignKey(GearRequest, on_delete = models.PROTECT, default = None)
-    gearID = models.ForeignKey(Gear, on_delete = models.PROTECT, default = None)
-
 # retain history of payment methods with each reservation
 class PaymentHistory(models.Model):
     CASH = "CASH"
@@ -133,6 +124,6 @@ class PaymentHistory(models.Model):
         (UNDECIDED, "Undecided"),
     )
 
-    reservationID = models.ForeignKey(GearRequest, on_delete = models.PROTECT, default = None)
+    reservationID = models.ForeignKey(Reservation, on_delete = models.PROTECT, default = None)
     paymentType = models.CharField(max_length = 20, choices = PAYMENT_CHOICE, default = None)
 

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Gear, GearCategory, Reservation, GearRequest
+from .models import Gear, GearCategory, Reservation, Condition
 
 
 class GearCategorySerializer(serializers.ModelSerializer):
@@ -11,19 +11,28 @@ class GearCategorySerializer(serializers.ModelSerializer):
         ]
 
 
+class ConditionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Condition
+        fields = [
+            "condition"
+        ]
+
+
 class GearSerializer(serializers.ModelSerializer):
     category = GearCategorySerializer(read_only=True)
+    condition = ConditionSerializer(read_only=True)
 
     class Meta:
         model = Gear
-        # should add condition when implemented
         fields = [
             "id",
             "code",
             "category",
             "depositFee",
-            "checkedOut",
             "description",
+            "condition",
             "version"
         ]
 
@@ -32,17 +41,18 @@ class GearSerializer(serializers.ModelSerializer):
         temp = {"id": rep["id"],
                 "code": rep["code"],
                 "category": rep["category"]["name"],
-                "checkedOut": rep["checkedOut"],
                 "depositFee": rep["depositFee"],
                 "description": rep["description"],
+                "condition": rep["condition"]["condition"],
                 "version": rep["version"]}
         return temp
 
 
-class GearRequestSerializer(serializers.ModelSerializer):
+class ReservationSerializer(serializers.ModelSerializer):
+    gear = GearSerializer(read_only=True, many=True)
 
     class Meta:
-        model = GearRequest
+        model = Reservation
         fields = [
             "id",
             "email",
@@ -51,31 +61,19 @@ class GearRequestSerializer(serializers.ModelSerializer):
             "startDate",
             "endDate",
             "status",
-        ]
-
-
-class ReservationSerializer(serializers.ModelSerializer):
-    reservationID = GearRequestSerializer(read_only=True)
-    gearID = GearSerializer(read_only=True)
-
-    class Meta:
-        model = Reservation
-        fields = [
-            "reservationID",
-            "gearID"
+            "gear",
         ]
 
     def to_representation(self, instance):
         rep = super().to_representation(instance)
-        rez = rep['reservationID']
-        temp = {"id": rez['id'],
-                "email": rez['email'],
-                "licenseName": rez['licenseName'],
-                "licenseAddress": rez['licenseAddress'],
-                "startDate": rez['startDate'],
-                "endDate": rez['endDate'],
-                "status": rez['status'],
-                "gear": [rep['gearID']]
+        temp = {"id": rep['id'],
+                "email": rep['email'],
+                "licenseName": rep['licenseName'],
+                "licenseAddress": rep['licenseAddress'],
+                "startDate": rep['startDate'],
+                "endDate": rep['endDate'],
+                "status": rep['status'],
+                "gear": [rep['gear']]
                 }
 
         return temp

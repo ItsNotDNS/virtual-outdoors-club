@@ -1,4 +1,4 @@
-from ..models import Gear
+from ..models import Gear, Condition
 from django.core import exceptions
 from ..serializers import GearSerializer
 from .GearCategoryView import gearCategoryExists
@@ -41,8 +41,8 @@ class GearView(APIView):
             "code": False,
             "category": False,
             "depositFee": False,
-            "description": False
-            #"condition": True (not yet implemented)
+            "description": False,
+            "condition": True,
         }
 
         # check for extra uncessessary keys
@@ -75,6 +75,7 @@ class GearView(APIView):
         if not sGear.is_valid():
             return serialValidation(sGear)
 
+        newGear["condition"] = Condition.objects.get(condition=newGear["condition"])
         g = Gear.objects.create(**newGear)
         sGear = GearSerializer(g)
         return Response(sGear.data)
