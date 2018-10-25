@@ -145,10 +145,8 @@ class GearTestCase(TestCase):
         #self.assertEqual(g.code, patch["code"])
 
     def test_delete(self):
-        dummy = {"id": self.gearObj2.pk} # 2 = id of code="SB01"
-
-        response = self.client.delete("/api/gear/", dummy, content_type="application/json").data
-        self.assertEqual(response, {"message": "Succesfully deleted gear: 'SB01'"})
+        response = self.client.delete("/api/gear?id=" + str(self.gearObj2.pk), content_type="application/json").data
+        self.assertEqual(response, {"message": "Successfully deleted gear: 'SB01'"})
 
         response = self.client.get("/api/gear/", content_type='application/json').data["data"]
         self.assertEqual(response, [{
@@ -162,12 +160,10 @@ class GearTestCase(TestCase):
             }])
 
     def test_delete_missingId(self):
-        dummy = {"code": "SB01"}
-        response = self.client.delete("/api/gear/", dummy, content_type="application/json").data
+        response = self.client.delete("/api/gear?code=SB02", content_type="application/json").data
         self.assertEqual(response, {"message": "Missing gear id in request"})
 
     def test_delete_DNEGear(self):
         lastGear = Gear.objects.latest('id')
-        dummy = {"id": lastGear.id+1} # try delete a gear with ID that DNE
-        response = self.client.delete("/api/gear/", dummy, content_type="application/json").data
+        response = self.client.delete("/api/gear?id=" + str(lastGear.id + 1), content_type="application/json").data
         self.assertEqual(response, {"message": "The gear item trying to be removed does not exist"})

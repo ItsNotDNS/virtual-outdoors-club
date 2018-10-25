@@ -4,7 +4,6 @@ from ..serializers import GearCategorySerializer
 from .error import *
 from django.db.models import ProtectedError
 from rest_framework.views import APIView
-from json import loads
 
 
 # Returns False or the category if it exists
@@ -21,11 +20,11 @@ class GearCategoryView(APIView):
         categories = GearCategory.objects.all()
         categories = GearCategorySerializer(categories, many=True)
 
-        return Response({'data': categories.data})
+        return Response({"data": categories.data})
 
+    # handles addition of a gear category
     def post(self, request):
-        # handles addition of a gear category
-        newGearCategory = loads(str(request.body, encoding='utf-8'))
+        newGearCategory = request.data
         requiredProperties = {
             "name": False,
         }
@@ -49,11 +48,11 @@ class GearCategoryView(APIView):
         data = serial.validated_data
          
         # checking if the current gear category already exists
-        if gearCategoryExists(data['name']):
-            return RespError(409, 'The gear category already exists')
+        if gearCategoryExists(data["name"]):
+            return RespError(409, "The gear category already exists")
         
         # adding new gear category
-        newGearCategory = GearCategory(name=data['name'])
+        newGearCategory = GearCategory(name=data["name"])
             
         #saving new gear category to database
         newGearCategory.save()
@@ -62,10 +61,7 @@ class GearCategoryView(APIView):
         return Response(data)
 
     def patch(self, request):
-        request = loads(str(request.body, encoding='utf-8'))
-        # These string values should be constants somewhere..
-
-        print(request)
+        request = request.data
 
         currentName = request.get("name", None)
         patch = request.get("patch", None)
@@ -100,18 +96,18 @@ class GearCategoryView(APIView):
 
     # handles deletion of a gear category
     def delete(self, request):
-        delReq = loads(str(request.body, encoding='utf8'))
-        if 'name' not in delReq:
-            return RespError(400, "Missing name in request")
+        nameToDelete = request.query_params.get("name", None)
+        if not nameToDelete:
+            return RespError(400, "You must specify a 'name' parameter to delete.")
 
-        # try deleting gear category in DB
+        # try to delete the category
         try:
-            delGearCategory = GearCategory.objects.get(name=delReq['name'])
+            delGearCategory = GearCategory.objects.get(name=nameToDelete)
         except ProtectedError:
             return RespError(409, "You cannot remove a gear category that is currently being referenced by a piece of gear.")
         except exceptions.ObjectDoesNotExist:
-            return RespError(404, "The gear category trying to be removed does not exist")
+            return RespError(400, "The gear category '" + nameToDelete + "' does not exist so it cannot be deleted.")
         
         delGearCategory.delete()
         
-        return RespError(200, "Deleted the category: '" + delReq['name'] + "'")
+        return RespError(200, "Deleted the category: '" + nameToDelete + "'")

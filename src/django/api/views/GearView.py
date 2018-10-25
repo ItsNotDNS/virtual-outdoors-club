@@ -4,7 +4,6 @@ from ..serializers import GearSerializer
 from .GearCategoryView import gearCategoryExists
 from rest_framework.views import APIView
 from .error import *
-import json
 from django.db.models import ProtectedError
 
 
@@ -36,7 +35,7 @@ class GearView(APIView):
         return Response({"data": allGear.data})
 
     def post(self, request):
-        newGear = json.loads(str(request.body, encoding='utf-8'))
+        newGear = request.data
         requiredProperties = {
             "code": False,
             "category": False,
@@ -81,7 +80,7 @@ class GearView(APIView):
         return Response(sGear.data)
 
     def patch(self, request):    #Edit object in list
-        request = json.loads(str(request.body, encoding='utf-8'))
+        request = request.data
         # These string values should be constants somewhere..
         allowedPatchMethods = {
             "code": True,
@@ -141,16 +140,16 @@ class GearView(APIView):
 
         return Response(s.data)
 
+    # only admins can delete gear from inventory: this check for admin is done in the frontend
+    # this function expects a 'id' key in the parameters of the request 
     def delete(self, request):
-        #only admins can delete gear from inventory: this check for admin is done in the frontend
-        #this function expects a 'id' key in the request 
+        idToDelete = request.query_params.get("id")
 
-        delReq = json.loads(str(request.body, encoding='utf-8'))
-        if 'id' not in delReq:
+        if not idToDelete:
             return RespError(400, "Missing gear id in request")
 
         try:
-            delGear = Gear.objects.get(id=delReq['id']) 
+            delGear = Gear.objects.get(id=idToDelete) 
             delGearCode = delGear.code
         except ProtectedError:
             return RespError(409, "You cannot remove gear that is currently being reserved")
@@ -158,4 +157,4 @@ class GearView(APIView):
             return RespError(404, "The gear item trying to be removed does not exist")
 
         delGear.delete()
-        return RespError(200, "Succesfully deleted gear: " + "'" + delGearCode + "'")
+        return RespError(200, "Successfully deleted gear: " + "'" + delGearCode + "'")

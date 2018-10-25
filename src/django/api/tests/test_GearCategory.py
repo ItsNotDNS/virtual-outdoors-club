@@ -37,9 +37,13 @@ class GearCategoryTestCase(TestCase):
         self.assertEqual(response, correctReturn)
     
     def test_delete(self):
-        dummy = {"name": "book"}
-        response = self.client.delete("/api/gear/categories/", dummy, content_type="application/json").data
+        response = self.client.delete("/api/gear/categories?name=book", content_type="application/json").data
         self.assertEqual(response, {"message": "Deleted the category: 'book'"})
 
         response = self.client.get("/api/gear/categories").data['data']
         self.assertEqual(response, [{'name': "Water bottle"}])
+
+    def test_delete_does_not_exist(self):
+        name = "somecategorythatshouldneverexist"
+        response = self.client.delete("/api/gear/categories?name=" + name, content_type="application/json").data
+        self.assertEqual(response, {"message": "The gear category '" + name + "' does not exist so it cannot be deleted."})
