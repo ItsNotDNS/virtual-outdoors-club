@@ -77,9 +77,11 @@ class ReservationView(APIView):
                 endDate=request["endDate"],
                 status=request["status"],
                 payment="Undecided",
-                )#ReservationSerializer(data=request)
+                )
         resv.save()
-        # if not resv.is_valid():
-        #   return serialValidation(resv)
+        for item in itemsRequested:
+            gear = Gear.objects.get(pk=item["id"])
+            resv.gear.add(gear)
+        resv.save()
 
         return Response(200)
