@@ -30,7 +30,8 @@ export default class GearService {
             code: gearCode,
             depositFee,
             description: gearDescription,
-            category: gearCategory
+            category: gearCategory,
+            condition: "RENTABLE"
         })
             .then((response) => {
                 return { gear: response.data };

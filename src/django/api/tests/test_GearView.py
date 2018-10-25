@@ -1,7 +1,7 @@
 from django.test import TestCase
 from rest_framework.test import APIRequestFactory
 from decimal import Decimal
-from ..models import GearCategory, Gear, Condition
+from ..models import GearCategory, Gear
 
 
 class GearTestCase(TestCase):
@@ -12,14 +12,12 @@ class GearTestCase(TestCase):
         super().setUpClass()
         sb = GearCategory.objects.create(name="sleeping bag")
         bp = GearCategory.objects.create(name="backpack")
-        goodCon = Condition.objects.create(condition="RENTABLE")
 
-        self.gearObj1 = Gear.objects.create(code="BP01", category=bp, depositFee=50.00, description="A black Dakine backpack", condition=goodCon, version=1)
-        self.gearObj2 = Gear.objects.create(code="SB01", category=sb, depositFee=50.00, description="A old red sleeping bag", condition=goodCon, version=1)
+        self.gearObj1 = Gear.objects.create(code="BP01", category=bp, depositFee=50.00, description="A black Dakine backpack", condition="RENTABLE", version=1)
+        self.gearObj2 = Gear.objects.create(code="SB01", category=sb, depositFee=50.00, description="A old red sleeping bag", condition="RENTABLE", version=1)
         self.client = APIRequestFactory()
         self.sbpk = sb.pk
         self.bppk = bp.pk
-        self.goodCon = goodCon
 
     def test_get(self):
         response = self.client.get("/api/gear/", content_type="application/json").data
@@ -94,18 +92,20 @@ class GearTestCase(TestCase):
         request = {
             "code": "SB02",
             "category": "sleeping bag",
-            "description": "A new blue sleeping bag"
+            "description": "A new blue sleeping bag",
+            "condition": "RENTABLE"
         }
 
         response = self.client.post("/api/gear/", request, content_type='application/json').data
         response = response["message"]
         self.assertTrue("provide a 'depositFee'" in response)
 
-        request["depositFee"] = "50.00"
+        request["depositFee"] = 12.00
         del request["category"]
 
         response = self.client.post("/api/gear/", request, content_type='application/json').data
         response = response["message"]
+
         self.assertTrue("provide a 'category'" in response)
 
     def test_patch(self):

@@ -1,4 +1,4 @@
-from ..models import Gear, Condition
+from ..models import Gear
 from django.core import exceptions
 from ..serializers import GearSerializer
 from .GearCategoryView import gearCategoryExists
@@ -41,7 +41,7 @@ class GearView(APIView):
             "category": False,
             "depositFee": False,
             "description": False,
-            "condition": True,
+            "condition": False,
         }
 
         # check for extra uncessessary keys
@@ -74,7 +74,6 @@ class GearView(APIView):
         if not sGear.is_valid():
             return serialValidation(sGear)
 
-        newGear["condition"] = Condition.objects.get(condition=newGear["condition"])
         g = Gear.objects.create(**newGear)
         sGear = GearSerializer(g)
         return Response(sGear.data)
@@ -157,4 +156,5 @@ class GearView(APIView):
             return RespError(404, "The gear item trying to be removed does not exist")
 
         delGear.delete()
+
         return RespError(200, "Successfully deleted gear: " + "'" + delGearCode + "'")

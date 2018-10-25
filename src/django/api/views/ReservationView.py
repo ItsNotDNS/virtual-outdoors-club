@@ -6,6 +6,7 @@ from .GearView import gearIdExists
 import json
 from datetime import datetime
 
+
 class ReservationView(APIView):
 
     # Gets list of all reservations
@@ -18,6 +19,10 @@ class ReservationView(APIView):
     # Attempt to create a new reservation
     def post(self, request):
         request = json.loads(str(request.body, encoding='utf-8'))
+        items = request.get("gear", None)
+
+        if not items:
+            return RespError(400, "No gear requested!")
 
         # Check email if part of member list
         # emailStr = request.get("email", None)
@@ -30,12 +35,12 @@ class ReservationView(APIView):
         if not startDate or not endDate:
             return RespError(400, "A start date and end date are both required.")
 
+        #startDate = datetime.strptime(startDate, "%Y-%m-%d")
 
         startDateAlt = datetime.strptime(startDate, "%Y-%m-%d")
 
         if startDateAlt <= datetime.now():
             return RespError(400, "Start dates must be in the future.")
-
 
         itemsRequested = request.get("gear", None)
         if not itemsRequested:
@@ -45,7 +50,7 @@ class ReservationView(APIView):
         deniedItems = []
 
         for item in itemsRequested:
-            if not gearIdExists(item["id"]): # Returns gear, not bool
+            if not gearIdExists(item): # Returns gear, not bool
                 deniedItems.append(item)
 
         # Get all requests that end after the start date of the request and end before the request end date
@@ -60,7 +65,7 @@ class ReservationView(APIView):
             gears = reservation.gear.all()
             for gear in gears:
                 for item in itemsRequested:
-                    if gear.id == item["id"]:
+                    if gear.id == item:
                        deniedItems.append(gear)
 
 
@@ -80,7 +85,7 @@ class ReservationView(APIView):
                 )
         resv.save()
         for item in itemsRequested:
-            gear = Gear.objects.get(pk=item["id"])
+            gear = Gear.objects.get(pk=item)
             resv.gear.add(gear)
         resv.save()
 

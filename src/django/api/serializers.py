@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Gear, GearCategory, Reservation, Condition
+from .models import Gear, GearCategory, Reservation
 
 
 class GearCategorySerializer(serializers.ModelSerializer):
@@ -11,18 +11,8 @@ class GearCategorySerializer(serializers.ModelSerializer):
         ]
 
 
-class ConditionSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Condition
-        fields = [
-            "condition"
-        ]
-
-
 class GearSerializer(serializers.ModelSerializer):
     category = GearCategorySerializer(read_only=True)
-    condition = ConditionSerializer(read_only=True)
 
     class Meta:
         model = Gear
@@ -43,13 +33,13 @@ class GearSerializer(serializers.ModelSerializer):
                 "category": rep["category"]["name"],
                 "depositFee": rep["depositFee"],
                 "description": rep["description"],
-                "condition": rep["condition"]["condition"],
+                "condition": rep["condition"],
                 "version": rep["version"]}
         return temp
 
 
 class ReservationSerializer(serializers.ModelSerializer):
-    gear = GearSerializer(read_only=True, many=True)
+    gear = GearSerializer(many=True, read_only=True)
 
     class Meta:
         model = Reservation
@@ -61,19 +51,5 @@ class ReservationSerializer(serializers.ModelSerializer):
             "startDate",
             "endDate",
             "status",
-            "gear",
+            "gear"
         ]
-
-    def to_representation(self, instance):
-        rep = super().to_representation(instance)
-        temp = {"id": rep['id'],
-                "email": rep['email'],
-                "licenseName": rep['licenseName'],
-                "licenseAddress": rep['licenseAddress'],
-                "startDate": rep['startDate'],
-                "endDate": rep['endDate'],
-                "status": rep['status'],
-                "gear": [rep['gear']]
-                }
-
-        return temp
