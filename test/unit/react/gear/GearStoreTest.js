@@ -37,7 +37,19 @@ const sandbox = sinon.createSandbox(),
         "description": "Tent for 4 people",
         "category": "tent",
         "version": 1
-    }];
+    }],
+    mockReservationInfo = { "email": "henry@email.com",
+        "licenseName": "Name on their license.",
+        "licenseAddress": "Address on their license.",
+        "startDate": "2018-10-25",
+        "endDate": "2018-10-28",
+        "items": [{
+            "id": 0,
+            "description": "Deuter 60+10 Blue (New Oct 2017)"
+        }, {
+            "id": 2,
+            "description": "GT01 - Jasper and Malgine Lake - 1:100,000 - Tyvek"
+        }] };
 
 describe("GearStore Tests", () => {
     beforeEach(() => {
@@ -448,13 +460,22 @@ describe("GearStore Tests", () => {
         const mockGear = mockGearList[0];
         gearStore.onAddToShoppingCart(mockGear);
         expect(gearStore.state.shoppingList.length).to.equal(1);
+        // gear already in the list should not be added
+        gearStore.onAddToShoppingCart(mockGear);
+        expect(gearStore.state.shoppingList.length).to.equal(1);
     });
 
     it("onRemoveToShoppingCart success", () => {
-        const mockGear = mockGearList[0];
-        gearStore.onAddToShoppingCart(mockGear);
+        expect(gearStore.state.checkoutDisabled).to.be.true;
+        gearStore.onAddToShoppingCart(mockGearList[0]);
+        gearStore.onAddToShoppingCart(mockGearList[1]);
+        expect(gearStore.state.checkoutDisabled).to.be.false;
+        expect(gearStore.state.shoppingList.length).to.equal(2);
+        gearStore.onRemoveFromShoppingCart(mockGearList[0]);
+        expect(gearStore.state.checkoutDisabled).to.be.false;
         expect(gearStore.state.shoppingList.length).to.equal(1);
-        gearStore.onRemoveFromShoppingCart(mockGear);
+        gearStore.onRemoveFromShoppingCart(mockGearList[1]);
+        expect(gearStore.state.checkoutDisabled).to.be.true;
         expect(gearStore.state.shoppingList.length).to.equal(0);
     });
 
@@ -473,7 +494,7 @@ describe("GearStore Tests", () => {
         // set the gear list up with our mock data
         gearStore.state.gearList = mockGearList;
         gearStore.state.deleteGearModal.id = mockGearList[0].id;
-        deleteStub.returns(Promise.resolve());
+        deleteStub.returns(Promise.resolve({ data: "Success" }));
 
         return gearStore.onSubmitDeleteGearModal().then(() => {
             expect(deleteStub.calledWith(`${config.databaseHost}/gear`, {
@@ -511,7 +532,7 @@ describe("GearStore Tests", () => {
         // set the gear list up with our mock data
         gearStore.state.categoryList = mockCategoryList;
         gearStore.state.deleteGearCategoryModal.name = mockCategoryList[0].name;
-        deleteStub.returns(Promise.resolve());
+        deleteStub.returns(Promise.resolve({ data: "Success" }));
 
         return gearStore.onSubmitDeleteGearCategoryModal().then(() => {
             expect(deleteStub.calledWith(`${config.databaseHost}/gear/categories`, {
@@ -531,6 +552,109 @@ describe("GearStore Tests", () => {
         return gearStore.onSubmitDeleteGearCategoryModal().then(() => {
             expect(gearStore.state.deleteGearCategoryModal.error).to.be.true;
             expect(gearStore.state.deleteGearCategoryModal.errorMessage).to.equal(error.response.data.message);
+        });
+    });
+
+    // tests for reservation
+    it("Reserve Gear Form - open and close", () => {
+        // initial state
+        expect(gearStore.state.reserveGearForm).to.deep.equal({
+            show: false,
+            error: false,
+            errorMessage: "Reservation failed",
+            items: [],
+            email: null,
+            licenseName: null,
+            licenseAddress: null,
+            startDate: null,
+            endDate: null
+        });
+
+        gearStore.onOpenReserveGearForm();
+
+        // should not open because shopping list is empty
+        expect(gearStore.state.reserveGearForm).to.deep.equal({
+            show: false,
+            error: false,
+            errorMessage: "Reservation failed",
+            items: [],
+            email: null,
+            licenseName: null,
+            licenseAddress: null,
+            startDate: null,
+            endDate: null
+        });
+
+        gearStore.state.shoppingList.push(mockGearList[0]);
+        gearStore.onOpenReserveGearForm();
+        expect(gearStore.state.reserveGearForm).to.deep.equal({
+            show: true,
+            error: false,
+            errorMessage: "Reservation failed",
+            items: [],
+            email: null,
+            licenseName: null,
+            licenseAddress: null,
+            startDate: null,
+            endDate: null
+        });
+
+        gearStore.onCloseReserveGearForm();
+
+        // returns to base state
+        expect(gearStore.state.reserveGearForm).to.deep.equal({
+            show: false,
+            error: false,
+            errorMessage: "Reservation failed",
+            items: [],
+            email: null,
+            licenseName: null,
+            licenseAddress: null,
+            startDate: null,
+            endDate: null
+        });
+    });
+
+    it("onReserveGearFormChanged - all fields update", () => {
+        expect(gearStore.state.reserveGearForm.email).to.equal(null);
+        gearStore.onReserveGearFormChanged("email", mockReservationInfo.email);
+        expect(gearStore.state.reserveGearForm.email).to.equal(mockReservationInfo.email);
+
+        expect(gearStore.state.reserveGearForm.licenseName).to.equal(null);
+        gearStore.onReserveGearFormChanged("licenseName", mockReservationInfo.licenseName);
+        expect(gearStore.state.reserveGearForm.licenseName).to.equal(mockReservationInfo.licenseName);
+
+        expect(gearStore.state.reserveGearForm.licenseAddress).to.equal(null);
+        gearStore.onReserveGearFormChanged("licenseAddress", mockReservationInfo.licenseAddress);
+        expect(gearStore.state.reserveGearForm.licenseAddress).to.equal(mockReservationInfo.licenseAddress);
+
+        expect(gearStore.state.reserveGearForm.startDate).to.equal(null);
+        gearStore.onReserveGearFormChanged("startDate", mockReservationInfo.startDate);
+        expect(gearStore.state.reserveGearForm.startDate).to.equal(mockReservationInfo.startDate);
+
+        expect(gearStore.state.reserveGearForm.endDate).to.equal(null);
+        gearStore.onReserveGearFormChanged("endDate", mockReservationInfo.endDate);
+        expect(gearStore.state.reserveGearForm.endDate).to.equal(mockReservationInfo.endDate);
+    });
+
+    it("onSubmitReserveGearForm - success path", () => {
+        gearStore.state.shoppingList.push(mockGearList[0]);
+        gearStore.onOpenReserveGearForm();
+        postStub.returns(Promise.resolve({}));
+        return gearStore.onSubmitReserveGearForm().then(() => {
+            expect(gearStore.state.reserveGearForm.show).to.be.false;
+            expect(gearStore.state.reserveGearForm.error).to.be.false;
+        });
+    });
+
+    it("onSubmitReserveGearForm - error path", () => {
+        const error = { response: { data: { message: "Error message" } } };
+        gearStore.state.shoppingList.push(mockGearList[0]);
+        gearStore.onOpenReserveGearForm();
+        postStub.returns(Promise.reject(error));
+        return gearStore.onSubmitReserveGearForm().then(() => {
+            expect(gearStore.state.reserveGearForm.error).to.be.true;
+            expect(gearStore.state.reserveGearForm.show).to.be.true;
         });
     });
 });

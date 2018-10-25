@@ -61,6 +61,9 @@ export default class GearService {
 
     deleteGear(gearId) {
         return this.service.delete(`${config.databaseHost}/gear`, { params: { id: gearId } })
+            .then((response) => {
+                return { deleteGear: response.data };
+            })
             .catch((error) => {
                 return { error: error.response.data.message };
             });
@@ -107,6 +110,28 @@ export default class GearService {
 
     deleteCategory(name) {
         return this.service.delete(`${config.databaseHost}/gear/categories`, { params: { name: name } })
+            .then((response) => {
+                return { deleteCategory: response.data };
+            })
+            .catch((error) => {
+                return { error: error.response.data.message };
+            });
+    }
+
+    submitReservation(reserveGearForm) {
+        const data = {
+            email: reserveGearForm.email,
+            licenseName: reserveGearForm.licenseName,
+            licenseAddress: reserveGearForm.licenseAddress,
+            startDate: reserveGearForm.startDate,
+            endDate: reserveGearForm.endDate,
+            status: "REQUESTED",
+            gear: reserveGearForm.items
+        };
+        return this.service.post(`${config.databaseHost}/reservation`, data)
+            .then((response) => {
+                return { reservation: response.data };
+            })
             .catch((error) => {
                 return { error: error.response.data.message };
             });

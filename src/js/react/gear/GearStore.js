@@ -49,7 +49,19 @@ function defaultState() {
             show: false,
             error: false,
             errorMessage: ""
-        }
+        },
+        reserveGearForm: {
+            show: false,
+            error: false,
+            errorMessage: "Reservation failed",
+            items: [],
+            email: null,
+            licenseName: null,
+            licenseAddress: null,
+            startDate: null,
+            endDate: null
+        },
+        checkoutDisabled: true
     };
 }
 
@@ -74,7 +86,12 @@ export const GearActions = Reflux.createActions([
     "closeDeleteGearModal",
     "submitDeleteGearCategoryModal",
     "openDeleteGearCategoryModal",
-    "closeDeleteGearCategoryModal"
+    "closeDeleteGearCategoryModal",
+    "removeFromShoppingCart",
+    "openReserveGearForm",
+    "reserveGearFormChanged",
+    "submitReserveGearForm",
+    "closeReserveGearForm"
 ]);
 
 export class GearStore extends Reflux.Store {
@@ -313,18 +330,24 @@ export class GearStore extends Reflux.Store {
     onAddToShoppingCart(row) {
         if (!this.state.shoppingList.includes(row)) {
             const newState = update(this.state, {
-                shoppingList: { $push: [row] }
+                shoppingList: { $push: [row] },
+                checkoutDisabled: { $set: false }
             });
             this.setState(newState);
         }
     }
 
     onRemoveFromShoppingCart({ id }) {
+        let newCheckoutDisabledValue = false;
+        if (this.state.shoppingList.length <= 1) {
+            newCheckoutDisabledValue = true;
+        }
         const newState = update(this.state, {
             shoppingList: {
                 $set: this.state.shoppingList.filter((obj) =>
                     id !== obj.id)
-            }
+            },
+            checkoutDisabled: { $set: newCheckoutDisabledValue }
         });
         this.setState(newState);
     }
@@ -344,12 +367,12 @@ export class GearStore extends Reflux.Store {
     onSubmitDeleteGearModal() {
         const service = new GearService();
         return service.deleteGear(this.state.deleteGearModal.id)
-            .then((error) => {
+            .then(({ error }) => {
                 if (error) {
                     const newState = update(this.state, {
                         deleteGearModal: {
                             error: { $set: true },
-                            errorMessage: { $set: error.error }
+                            errorMessage: { $set: error }
                         }
                     });
                     this.setState(newState);
@@ -392,12 +415,12 @@ export class GearStore extends Reflux.Store {
     onSubmitDeleteGearCategoryModal() {
         const service = new GearService();
         return service.deleteCategory(this.state.deleteGearCategoryModal.name)
-            .then((error) => {
+            .then(({ error }) => {
                 if (error) {
                     const newState = update(this.state, {
                         deleteGearCategoryModal: {
                             error: { $set: true },
-                            errorMessage: { $set: error.error }
+                            errorMessage: { $set: error }
                         }
                     });
                     this.setState(newState);
@@ -420,6 +443,61 @@ export class GearStore extends Reflux.Store {
     onCloseDeleteGearCategoryModal() {
         const newState = update(this.state, {
             deleteGearCategoryModal: { $set: defaultState().deleteGearCategoryModal }
+        });
+        this.setState(newState);
+    }
+
+    onOpenReserveGearForm() {
+        if (this.state.shoppingList.length > 0) {
+            const newState = update(this.state, {
+                reserveGearForm: {
+                    show: { $set: true },
+                    error: { $set: false }
+                }
+            });
+            this.setState(newState);
+        }
+    }
+
+    onReserveGearFormChanged(field, value) {
+        const newState = update(this.state, {
+            reserveGearForm: {
+                [field]: { $set: value }
+            }
+        });
+        this.setState(newState);
+    }
+
+    onSubmitReserveGearForm() {
+        const gearIdList = [], service = new GearService(),
+            newState = update(this.state, {
+                reserveGearForm: {
+                    items: { $set: gearIdList }
+                }
+            });
+        this.state.shoppingList.forEach(function(gear) {
+            gearIdList.push({ "id": gear.id });
+        });
+        this.setState(newState);
+        // todo add specific error message instead of a generic one
+        return service.submitReservation(this.state.reserveGearForm)
+            .then(({ error }) => {
+                if (error) {
+                    const newState = update(this.state, {
+                        reserveGearForm: {
+                            error: { $set: true }
+                        }
+                    });
+                    this.setState(newState);
+                } else {
+                    this.onCloseReserveGearForm();
+                }
+            });
+    }
+
+    onCloseReserveGearForm() {
+        const newState = update(this.state, {
+            reserveGearForm: { $set: defaultState().reserveGearForm }
         });
         this.setState(newState);
     }
