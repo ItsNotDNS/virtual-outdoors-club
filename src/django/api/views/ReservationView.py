@@ -1,6 +1,6 @@
 from .error import *
 from rest_framework.views import APIView
-from ..models import Reservation
+from ..models import Reservation, Member, Gear
 from ..serializers import ReservationSerializer
 from .GearView import gearIdExists
 import json
@@ -18,10 +18,6 @@ class ReservationView(APIView):
     # Attempt to create a new reservation
     def post(self, request):
         request = json.loads(str(request.body, encoding='utf-8'))
-        items = request.get("gear", None)
-
-        if(not items):
-            return RespError(400, "No gear requested!")
 
         # Check email if part of member list
         # emailStr = request.get("email", None)
@@ -34,10 +30,10 @@ class ReservationView(APIView):
         if not startDate or not endDate:
             return RespError(400, "A start date and end date are both required.")
 
-        startDate = datetime.strptime(startDate, "%Y-%m-%d")
-        endDate = datetime.strptime(endDate, "%Y-%m-%d")
 
-        if startDate <= datetime.now():
+        startDateAlt = datetime.strptime(startDate, "%Y-%m-%d")
+
+        if startDateAlt <= datetime.now():
             return RespError(400, "Start dates must be in the future.")
 
 
@@ -48,25 +44,29 @@ class ReservationView(APIView):
         # Perform check to see if items are available
         deniedItems = []
 
+        for item in itemsRequested:
+            if not gearIdExists(item["id"]): # Returns gear, not bool
+                deniedItems.append(item)
+
         # Get all requests that end after the start date of the request and end before the request end date
-        # qs1 = Reservation.objects.filter(endDate__day__gte=startDate).filter(endDate__day__lte=endDate)
+
+        qs1 = Reservation.objects.filter(endDate__gte=startDate).filter(endDate__lte=endDate)
 
         # Get all requests that start before the request ends and start after the request start date
-        # qs2 = Reservation.objects.filter(startDate__day__lte=endDate).filter(startDate__day__gte=startDate)
+        qs2 = Reservation.objects.filter(startDate__lte=endDate).filter(startDate__gte=startDate)
 
-        # relevantReservations = Reservation.objects.all.union(qs1, qs2)
-        # for item in items:
-        #   if not gearIdExists(item.id): # Returns gear, not bool
-        #     deniedItems.append(item)
+        relevantReservations = qs1.union(qs1, qs2)
+        for reservation in relevantReservations:
+            gears = reservation.gear.all()
+            for gear in gears:
+                for item in itemsRequested:
+                    if gear.id == item["id"]:
+                       deniedItems.append(gear)
 
-        # for reservation in relevantReservations:
-        #   for gear in reservation["gear"]:
-        #     if gear in itemsRequested:
-        #       deniedItems.append(gear)
 
         # Return those that are not available
         if len(deniedItems) > 0:
-            return RespError(409, "These items are unavailable: " + deniedItems)
+            return RespError(409, "These items are unavailable: " + str(deniedItems))
  
         # Make reservation
         resv = Reservation(
@@ -82,7 +82,4 @@ class ReservationView(APIView):
         # if not resv.is_valid():
         #   return serialValidation(resv)
 
-        # r = Reservation.objects.create(**request)
-        # resv = GearSerializer(r)
         return Response(200)
-        # return Response(resv.data)

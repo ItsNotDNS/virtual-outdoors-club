@@ -17,6 +17,7 @@ class ReservationTestCase(TestCase):
         gr.gear.add(sp)
         self.client = APIRequestFactory
         self.goodCon = goodCon
+        self.sp = sp
 
     def test_get(self):
         response = self.client.get('/api/reservation/').data['data']
@@ -40,11 +41,10 @@ class ReservationTestCase(TestCase):
     def test_post(self):
         reservationList = self.client.get("/api/reservation/", content_type='application/json').data["data"] # returned as {data: [...]}
         reservationListOriginalLen = len(reservationList)
-
         request = {
             'status': 'REQUESTED',
             'licenseAddress': 'Address on their license.',
-            'endDate': '2018-10-28',
+            'endDate': '2019-11-28',
             'licenseName': 'Name on their license.',
             'id': 1,
             'email': 'enry@email.com',
@@ -54,9 +54,9 @@ class ReservationTestCase(TestCase):
                       'version': 1,
                       'category': 'Ski poles',
                       "condition": 2,
-                      'id': 3,
+                      'id': self.sp.id,
                       'description': 'Ski poles'}],
-            'startDate': '2018-10-25'}
+            'startDate': '2019-11-25'}
 
         # Test POST (create new reservation)
         response = self.client.post("/api/reservation/", request, content_type='application/json').data
