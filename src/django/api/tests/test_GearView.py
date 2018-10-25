@@ -171,7 +171,3 @@ class GearTestCase(TestCase):
         dummy = {"id": lastGear.id+1} # try delete a gear with ID that DNE
         response = self.client.delete("/api/gear/", dummy, content_type="application/json").data
         self.assertEqual(response, {"message": "The gear item trying to be removed does not exist"})
-
-
-
-

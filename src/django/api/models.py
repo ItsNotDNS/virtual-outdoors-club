@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.postgres.fields import JSONField
 from django.core.validators import MinValueValidator
 
+
 # system that enables particular parts of the system to be rendered available or disabled
 class System(models.Model):
     service = models.CharField(max_length = 100)
@@ -12,18 +13,22 @@ class UserVariability(models.Model):
     variable = models.CharField(max_length = 100)
     value = models.IntegerField()
 
+
 # storage for all of the current members in the club. Set to reset weekly-monthly
 # there should not be any emails in the list that are duplicates
 class Member(models.Model):
     email = models.EmailField(unique = True)
 
+    
 # storage for all of the blacklisted members in the club.
 class BlackList(models.Model):
     email = models.EmailField()
 
+    
 # set a collection of available gear categories that are in the system
 class GearCategory(models.Model):
     name = models.CharField(max_length=100)
+
 
 # saves the type of conditions that a piece of gear would be returned as
 # model would properly hold the conditions and their respective IDs - non manipulative
@@ -43,6 +48,7 @@ class Condition(models.Model):
     conditionID = models.AutoField(primary_key = True)
     condition = models.CharField(max_length = 20, choices = CONDITION_CHOICE, default = None)
 
+
 # gearID is unique for every gear. Deletion will reset all conditions in the table.
 # conditionHistory should be removed and history should be kept on a seperate table, referencing the gearID as the key
 # description set to optional
@@ -55,11 +61,13 @@ class Gear(models.Model):
     condition = models.ForeignKey(Condition, on_delete = models.PROTECT)
     version = models.IntegerField(default=1)
 
+
 # holds the details of a certain reservation from a member and who approves it
 # upon return of the reservation, the status is then set to be returned
 # if members are removed with reservations - set member to be removed (handle elsewhere)
 # paid when pick up / day before
 class Reservation(models.Model):
+
     # these statuses happen in sequence
     REQUESTED = 'REQUESTED' # user has requested, unapproved by executives
     APPROVED = 'APPROVED'   # user has been approved by executive, but not paid
@@ -112,6 +120,7 @@ class Permission(models.Model):
 
     permissionID = models.AutoField(primary_key = True)
     permissionType = models.CharField(max_length = 30, choices = PERMISSION_CHOICE, default = None)
+
 
 # retain history of payment methods with each reservation
 class PaymentHistory(models.Model):

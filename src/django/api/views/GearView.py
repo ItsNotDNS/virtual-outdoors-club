@@ -159,7 +159,3 @@ class GearView(APIView):
 
         delGear.delete()
         return RespError(200, "Succesfully deleted gear: " + "'" + delGearCode + "'")
-
-
-
-

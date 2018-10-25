@@ -24,9 +24,9 @@ class ReservationView(APIView):
             return RespError(400, "No gear requested!")
 
         # Check email if part of member list
-#        emailStr = request.get("email", None)
-#        if not Member.objects.get(email=emailStr):
-#            return RespError(403, "Your email is not registered with the Outdoors Club. It can take a few days to process your membership after registering. Your membership may have lapsed. You can register at http://outdoorsclub.ca/signup/ if you are not a registered member.")
+        # emailStr = request.get("email", None)
+        # if not Member.objects.get(email=emailStr):
+        #   return RespError(403, "Your email is not registered with the Outdoors Club. It can take a few days to process your membership after registering. Your membership may have lapsed. You can register at http://outdoorsclub.ca/signup/ if you are not a registered member.")
 
         startDate = request.get("startDate", None)
         endDate = request.get("endDate", None)
@@ -49,20 +49,20 @@ class ReservationView(APIView):
         deniedItems = []
 
         # Get all requests that end after the start date of the request and end before the request end date
-#        qs1 = Reservation.objects.filter(endDate__day__gte=startDate).filter(endDate__day__lte=endDate)
+        # qs1 = Reservation.objects.filter(endDate__day__gte=startDate).filter(endDate__day__lte=endDate)
 
         # Get all requests that start before the request ends and start after the request start date
-#        qs2 = Reservation.objects.filter(startDate__day__lte=endDate).filter(startDate__day__gte=startDate)
+        # qs2 = Reservation.objects.filter(startDate__day__lte=endDate).filter(startDate__day__gte=startDate)
 
-#        relevantReservations = Reservation.objects.all.union(qs1, qs2)
-#        for item in items:
-#            if not gearIdExists(item.id): # Returns gear, not bool
-#                deniedItems.append(item)
-#
-#        for reservation in relevantReservations:
-#            for gear in reservation["gear"]:
-#                if gear in itemsRequested:
-#                    deniedItems.append(gear)
+        # relevantReservations = Reservation.objects.all.union(qs1, qs2)
+        # for item in items:
+        #   if not gearIdExists(item.id): # Returns gear, not bool
+        #     deniedItems.append(item)
+
+        # for reservation in relevantReservations:
+        #   for gear in reservation["gear"]:
+        #     if gear in itemsRequested:
+        #       deniedItems.append(gear)
 
         # Return those that are not available
         if len(deniedItems) > 0:
@@ -79,11 +79,10 @@ class ReservationView(APIView):
                 payment="Undecided",
                 )#ReservationSerializer(data=request)
         resv.save()
-#        if not resv.is_valid():
-#            return serialValidation(resv)
+        # if not resv.is_valid():
+        #   return serialValidation(resv)
 
-#        r = Reservation.objects.create(**request)
-#        resv = GearSerializer(r)
+        # r = Reservation.objects.create(**request)
+        # resv = GearSerializer(r)
         return Response(200)
-#        return Response(resv.data)
-
+        # return Response(resv.data)

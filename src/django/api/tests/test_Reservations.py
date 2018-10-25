@@ -2,6 +2,7 @@ from django.test import TestCase
 from ..models import Reservation, GearCategory, Gear, Condition
 from rest_framework.test import APIRequestFactory
 
+
 class ReservationTestCase(TestCase):
 
     # Create test data and save primary key of all objects
@@ -17,10 +18,8 @@ class ReservationTestCase(TestCase):
         self.client = APIRequestFactory
         self.goodCon = goodCon
 
-
     def test_get(self):
         response = self.client.get('/api/reservation/').data['data']
-
 
         correctResponse = [{'status': 'REQUESTED',
                             'licenseAddress': 'Address on their license.',
@@ -65,5 +64,3 @@ class ReservationTestCase(TestCase):
         # Test GET (created and added list)
         response = self.client.get("/api/reservation/", content_type='application/json').data["data"] # returned as {data: [...]}
         self.assertEqual(len(response), reservationListOriginalLen + 1) # len of GET should +1 original len
-
-
