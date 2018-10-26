@@ -86,9 +86,11 @@ Configuration under the branch production_setup allows to connect to the Postgre
 
 - If you are running the React server in Cybera, you must access the UI through
 
-  ```199.116.235.142:8081```
-
-  Note: You must open the port 8081 or whatever port you choose that you want the server to be in. To do that, add the port into your security group in Cybera, IPv4 and IPv6.
+  ```199.116.235.142:8081``` for the gear page
+  ```199.116.235.142:8081/rent``` for the reservation page
+  ```199.116.235.142:8000/api/process``` for Paypal functionality
+  
+  Note: You must open the port 8081 and 8000 or whatever port you choose that you want the server to be in. To do that, add the port into your security group in Cybera, IPv4 and IPv6.
 
 - If you are running the React server locally, you can access it through either
 
