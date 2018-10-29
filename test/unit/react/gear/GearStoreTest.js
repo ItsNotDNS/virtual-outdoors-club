@@ -642,8 +642,9 @@ describe("GearStore Tests", () => {
         gearStore.onOpenReserveGearForm();
         postStub.returns(Promise.resolve({}));
         return gearStore.onSubmitReserveGearForm().then(() => {
-            expect(gearStore.state.reserveGearForm.show).to.be.false;
             expect(gearStore.state.reserveGearForm.error).to.be.false;
+            expect(gearStore.state.reserveGearForm.show).to.be.false;
+            expect(gearStore.state.shoppingList.length).to.be.equals(0);
         });
     });
 

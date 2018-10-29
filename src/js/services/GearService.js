@@ -131,7 +131,7 @@ export default class GearService {
         };
         return this.service.post(`${config.databaseHost}/reservation`, data)
             .then((response) => {
-                return { reservation: response.data };
+                return { data: response.data };
             })
             .catch((error) => {
                 return { error: error.response.data.message };

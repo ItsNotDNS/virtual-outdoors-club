@@ -53,3 +53,16 @@ class ReservationSerializer(serializers.ModelSerializer):
             "status",
             "gear"
         ]
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        temp = {"id": rep["id"],
+                "email": rep["email"],
+                "licenseName": rep["licenseName"],
+                "licenseAddress": rep["licenseAddress"],
+                "startDate": rep["startDate"],
+                "endDate": rep["endDate"],
+                "status": rep["status"],
+                "gear": rep["gear"]
+                }
+        return temp

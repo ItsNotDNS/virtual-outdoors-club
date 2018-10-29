@@ -476,20 +476,24 @@ export class GearStore extends Reflux.Store {
                 }
             });
         this.state.shoppingList.forEach(function(gear) {
-            gearIdList.push({ "id": gear.id });
+            gearIdList.push(gear.id);
         });
         this.setState(newState);
-        // todo add specific error message instead of a generic one
         return service.submitReservation(this.state.reserveGearForm)
             .then(({ error }) => {
                 if (error) {
                     const newState = update(this.state, {
                         reserveGearForm: {
-                            error: { $set: true }
+                            error: { $set: true },
+                            errorMessage: { $set: error }
                         }
                     });
                     this.setState(newState);
                 } else {
+                    const newState = update(this.state, {
+                        shoppingList: { $set: defaultState().shoppingList }
+                    });
+                    this.setState(newState);
                     this.onCloseReserveGearForm();
                 }
             });

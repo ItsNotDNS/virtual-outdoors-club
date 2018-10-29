@@ -1,4 +1,5 @@
 from .error import *
+from django.core import exceptions
 from rest_framework.views import APIView
 from ..models import Reservation, Member, Gear
 from ..serializers import ReservationSerializer
@@ -7,23 +8,49 @@ import json
 from datetime import datetime
 
 
+
+def reservationIdExists(id):
+    try:
+        reservation = Reservation.objects.get(id=id)
+    except exceptions.ObjectDoesNotExist:
+        return False
+    return reservation
+
+
 class ReservationView(APIView):
 
     # Gets list of all reservations
-    def get(self, request):
+    def get(self, request, checkin):
         reservation = Reservation.objects.all()
         serial = ReservationSerializer(reservation, many=True)
 
         return Response({'data': serial.data})
 
     # Attempt to create a new reservation
-    def post(self, request):
+    def post(self, request, checkin):
+        
+        if(checkin):
+            request = json.loads(str(request.body, encoding='utf-8'))
+
+            idToUpdate = request.get("id", None)
+            if not idToUpdate: # if no 'id' was specified
+                return RespError(401, "You must specify an id to return.")
+
+            reservation = reservationIdExists(idToUpdate)
+            if not reservation:
+                return RespError(402, "There is no reservation with the id of '" + str(idToUpdate) + "'")
+    
+            reservation.status = "RETURNED"
+            reservation.save()
+           
+            return Response(200)
+
         request = json.loads(str(request.body, encoding='utf-8'))
-        items = request.get("gear", None)
+        itemsRequested = request.get("gear", None)
+        if not itemsRequested:
+            return RespError(403, "At least one item must be requested")
 
-        if not items:
-            return RespError(400, "No gear requested!")
-
+       
         # Check email if part of member list
         # emailStr = request.get("email", None)
         # if not Member.objects.get(email=emailStr):
@@ -33,20 +60,15 @@ class ReservationView(APIView):
         endDate = request.get("endDate", None)
 
         if not startDate or not endDate:
-            return RespError(400, "A start date and end date are both required.")
+            return RespError(401, "A start date and end date are both required.")
 
         #startDate = datetime.strptime(startDate, "%Y-%m-%d")
 
         startDateAlt = datetime.strptime(startDate, "%Y-%m-%d")
 
         if startDateAlt <= datetime.now():
-            return RespError(400, "Start dates must be in the future.")
+            return RespError(402, "Start dates must be in the future.")
 
-        itemsRequested = request.get("gear", None)
-        if not itemsRequested:
-            return RespError(400, "At least one item must be requested")
-
-        # Perform check to see if items are available
         deniedItems = []
 
         for item in itemsRequested:
@@ -71,7 +93,11 @@ class ReservationView(APIView):
 
         # Return those that are not available
         if len(deniedItems) > 0:
-            return RespError(409, "These items are unavailable: " + str(deniedItems))
+            returnStr = ""
+            for item in deniedItems:
+                returnStr += str(item.code)
+                returnStr += ", "
+            return RespError(409, "These items are unavailable: " + returnStr[:-1])
  
         # Make reservation
         resv = Reservation(
@@ -89,4 +115,9 @@ class ReservationView(APIView):
             resv.gear.add(gear)
         resv.save()
 
-        return Response(200)
+        sResv = ReservationSerializer(data=request)
+
+        if not sResv.is_valid():
+            return serialValidation(sResv)
+        data = sResv.validated_data
+        return Response(data)
