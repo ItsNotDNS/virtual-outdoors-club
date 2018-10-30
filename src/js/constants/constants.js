@@ -6,7 +6,7 @@
 
 export default {
     modals: {
-        EDITING: "editing",
-        CREATING: "creating"
+        EDITING: "Editing",
+        CREATING: "Creating"
     }
 };

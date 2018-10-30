@@ -37,7 +37,7 @@ export default class GearForm extends React.Component {
                     value={this.props.gearCode}
                 />
                 <LabeledInput
-                    label="Deposit amount"
+                    label="Deposit Fee"
                     name="depositFee"
                     placeholder="50.00"
                     onChange={this.handleChange}

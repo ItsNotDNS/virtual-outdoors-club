@@ -60,7 +60,7 @@ export default class GearPage extends Reflux.Component {
                             </div>
                         </div>
                         <GearForm {...this.state.gearModal}
-                            formTitle={`${this.state.gearModal.mode} gear`}
+                            formTitle={`${this.state.gearModal.mode} Gear`}
                             onChange={GearActions.gearModalChanged}
                             onSubmit={GearActions.submitGearModal}
                             onClose={GearActions.closeGearModal}
@@ -91,7 +91,7 @@ export default class GearPage extends Reflux.Component {
                             </div>
                         </div>
                         <CategoryForm {...this.state.categoryModal}
-                            formTitle={`${this.state.categoryModal.mode} category`}
+                            formTitle={`${this.state.categoryModal.mode} Category`}
                             onChange={GearActions.categoryModalChanged}
                             onSubmit={GearActions.submitCategoryModal}
                             onClose={GearActions.closeCategoryModal}
