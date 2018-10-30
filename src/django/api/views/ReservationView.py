@@ -97,7 +97,7 @@ class ReservationView(APIView):
             for item in deniedItems:
                 returnStr += str(item.code)
                 returnStr += ", "
-            return RespError(409, "These items are unavailable: " + returnStr[:-1])
+            return RespError(409, "These items are unavailable: " + returnStr[:-2])
  
         # Make reservation
         resv = Reservation(
