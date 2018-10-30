@@ -98,7 +98,7 @@ class GearTestCase(TestCase):
 
         response = self.client.post("/api/gear/", request, content_type='application/json').data
         response = response["message"]
-        self.assertTrue("provide a 'depositFee'" in response)
+        self.assertTrue("depositFee: This field is required." in response)
 
         request["depositFee"] = 12.00
         del request["category"]
@@ -106,7 +106,7 @@ class GearTestCase(TestCase):
         response = self.client.post("/api/gear/", request, content_type='application/json').data
         response = response["message"]
 
-        self.assertTrue("provide a 'category'" in response)
+        self.assertTrue("category: This field is required." in response)
 
     def test_patch(self):
         patch = {

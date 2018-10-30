@@ -12,7 +12,7 @@ class GearCategorySerializer(serializers.ModelSerializer):
 
 
 class GearSerializer(serializers.ModelSerializer):
-    category = GearCategorySerializer(read_only=True)
+    category = serializers.SlugRelatedField(queryset=GearCategory.objects.all(), slug_field='name')
 
     class Meta:
         model = Gear
@@ -25,17 +25,6 @@ class GearSerializer(serializers.ModelSerializer):
             "condition",
             "version"
         ]
-
-    def to_representation(self, instance):
-        rep = super().to_representation(instance)
-        temp = {"id": rep["id"],
-                "code": rep["code"],
-                "category": rep["category"]["name"],
-                "depositFee": rep["depositFee"],
-                "description": rep["description"],
-                "condition": rep["condition"],
-                "version": rep["version"]}
-        return temp
 
 
 class ReservationSerializer(serializers.ModelSerializer):
