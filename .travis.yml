@@ -16,12 +16,11 @@ install:
   - npm install
 
 script:
-  - cd src/django
-  - python manage.py test
+  - coverage run --source='.' src/django/manage.py test api
+  - coverage report --fail-under=85
   - psql -c "CREATE DATABASE outdoors_club_db"
-  - python manage.py migrate
-  - python manage.py runserver &
-  - cd ../../
+  - python src/django/manage.py migrate
+  - python src/django/manage.py runserver &
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
   - npm run-script lint

@@ -62,7 +62,7 @@ Django 2.1.1
  
 ### Testing
 
-You can run `python3 manage.py test` to run the django tests locally.
+You can run `python3 manage.py test` to run the django unit tests and `coverage run --source='.' manage.py test api` to collect coverage data. After `coverage report` to see this data.
 
 ### Production Server in Cybera
 
