@@ -46,4 +46,4 @@ script:
   # runs the front-end unit tests
   - npm test -- --single-run
   # runs the webdriver integration tests
-  - ./node_modules/.bin/wdio wdio.conf.js
+  # - ./node_modules/.bin/wdio wdio.conf.js

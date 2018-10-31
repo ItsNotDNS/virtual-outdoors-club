@@ -1,4 +1,5 @@
 from rest_framework.response import Response
+from django.http import JsonResponse
 
 
 # Returns a response for general errors
@@ -12,3 +13,7 @@ def serialValidation(serial):
     for key in errors:
         # report errors using the built in serializer error reporter
         return RespError(400, key + ": " + errors[key][0])
+
+
+def error_500(request):
+    return JsonResponse({"message": "Internal server error"}, status=500)
