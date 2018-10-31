@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "webpack-dev-server --open --mode development --progress --history-api-fallback",
-    "build": "webpack -p --mode production --progress && node server.js",
+    "build": "webpack -p --mode production --progress",
     "lint": "eslint \"./src/js/**/*\"",
     "test": "karma start"
   },
@@ -27,6 +27,7 @@
     "@babel/core": "^7.1.2",
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
+    "@babel/register": "^7.0.0",
     "@webpack-cli/serve": "^0.1.2",
     "autoprefixer": "^9.1.5",
     "axios": "^0.18.0",
@@ -76,6 +77,7 @@
     "reflux": "^6.4.1",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.1",
+    "wdio-mocha-framework": "^0.6.3",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.1.9"
@@ -90,6 +92,8 @@
     "react-datepicker": "^1.7.0",
     "react-onclickoutside": "^6.7.1",
     "react-popper": "^1.0.0-beta.6",
+    "selenium-standalone": "^6.15.3",
+    "webdriverio": "^4.14.0",
     "react-router-bootstrap": "^0.24.4",
     "sinon": "^6.3.5"
   }

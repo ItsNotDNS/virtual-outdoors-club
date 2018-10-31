@@ -166,3 +166,6 @@ coverage/
 
 # VSCode IDE Specifc
 .vscode
+
+# wdio
+errorShots/

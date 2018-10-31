@@ -41,7 +41,7 @@ export default class GearCategoryDropdown extends Reflux.Component {
 
     get dropdownOptions() {
         return this.state.categoryList.map((category, index) => {
-            return <option key={index}>{category.name}</option>;
+            return <option key={index} value={category.name}>{category.name}</option>;
         });
     }
 

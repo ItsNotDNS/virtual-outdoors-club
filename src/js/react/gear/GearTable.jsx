@@ -37,6 +37,7 @@ export default class GearTable extends React.Component {
             <div className="btn-action-cell">
                 <button
                     className="btn btn-primary left-btn"
+                    name={`edit-gear-${row.code}`}
                     onClick={
                         this.getEditAction(this.props.onClickEdit, row)
                     }
@@ -45,6 +46,7 @@ export default class GearTable extends React.Component {
                 </button>
                 <button
                     className="btn btn-danger right-btn"
+                    name={`delete-gear-${row.code}`}
                     onClick={
                         this.getDeleteAction(this.props.onClickDelete, row)
                     }

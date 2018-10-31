@@ -1,4 +1,5 @@
 const HtmlWebPackPlugin = require("html-webpack-plugin"),
+    webpack = require("webpack"),
     PORT = process.env.PORT || 8081;
 
 module.exports = {
@@ -56,6 +57,7 @@ module.exports = {
         new HtmlWebPackPlugin({
             template: "./src/index.html",
             filename: "./index.html"
-        })
+        }),
+        new webpack.EnvironmentPlugin(["DJANGO_HOST"])
     ]
 };

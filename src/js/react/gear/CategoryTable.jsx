@@ -35,6 +35,7 @@ export default class CategoryTable extends React.Component {
                 </button>
                 <button
                     className="btn btn-danger right-btn"
+                    name={`delete-category-${row.name.split(" ").join("-")}`}
                     onClick={this.getDeleteAction(this.props.onClickDelete, row.name)}
                 >
                     <i className="fas fa-trash-alt" />

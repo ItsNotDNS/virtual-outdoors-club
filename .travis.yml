@@ -6,22 +6,44 @@ node_js:
 
 addons:
   postgresql: "9.5"
+  chrome: stable
 
 env:
-  - DJANGO_VERSION=2.1.2 DB=postgresql
+  - DJANGO_VERSION=2.1.2 DB=postgresql DISPLAY=:99.0 CHROME_BIN=/usr/bin/google-chrome DJANGO_HOST=http://127.0.0.1:8000/api
 
 install:
-  - pyenv global 3.6.3
-  - pip install -r requirements.txt
+  # installs the packages specified in package.json
   - npm install
+  # Sets python to use v3.6.3 when 
+  - pyenv global 3.6.3
+  # installs the packages specified in requirements.txt
+  - pip install -r requirements.txt
+  # installs selenium
+  - ./node_modules/.bin/selenium-standalone install
+
+before_script:
+  # Allows us to run chrome
+  - sh -e /etc/init.d/xvfb start
+  # starts selenium in the background
+  - ./node_modules/.bin/selenium-standalone start &
+  # creates a new database called outdoors_club_db
+  - psql -c "CREATE DATABASE outdoors_club_db"
+  # runs django migrations
+  - python ./src/django/manage.py migrate
+  # builds and runs the dist in the background
+  - npm run-script build
+  - node server.js &
+  # runs the django server in the background
+  - python ./src/django/manage.py runserver &
 
 script:
-  - coverage run --source='.' src/django/manage.py test api
-  - coverage report --fail-under=85
-  - psql -c "CREATE DATABASE outdoors_club_db"
-  - python src/django/manage.py migrate
-  - python src/django/manage.py runserver &
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
+  # runs the Django/backend unit tests with a coverage reporter
+  - coverage run --source='src/django/api/views/' src/django/manage.py test api
+  # checks that coverage meets the requirments (>70%, aim for >85%)
+  - coverage report --fail-under=70
+  # enforces front-end code styling
   - npm run-script lint
+  # runs the front-end unit tests
   - npm test -- --single-run
+  # runs the webdriver integration tests
+  - ./node_modules/.bin/wdio wdio.conf.js

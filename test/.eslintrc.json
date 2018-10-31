@@ -1,5 +1,9 @@
 {
     "rules": {
         "no-unused-expressions": "off"
+    },
+    "globals": {
+        "browser": false,
+        "expect": false
     }
 }
