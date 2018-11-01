@@ -1,7 +1,6 @@
 from ..models import Gear
 from django.core import exceptions
 from ..serializers import GearSerializer
-from .GearCategoryView import gearCategoryExists
 from rest_framework.views import APIView
 from .error import *
 from django.db.models import ProtectedError

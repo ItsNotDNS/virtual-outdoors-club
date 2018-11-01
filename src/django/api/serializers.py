@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Gear, GearCategory, Reservation
+from datetime import datetime
 
 
 class GearCategorySerializer(serializers.ModelSerializer):
@@ -28,7 +29,6 @@ class GearSerializer(serializers.ModelSerializer):
 
 
 class ReservationSerializer(serializers.ModelSerializer):
-    gear = GearSerializer(many=True, read_only=True)
 
     class Meta:
         model = Reservation
@@ -43,15 +43,26 @@ class ReservationSerializer(serializers.ModelSerializer):
             "gear"
         ]
 
-    def to_representation(self, instance):
-        rep = super().to_representation(instance)
-        temp = {"id": rep["id"],
-                "email": rep["email"],
-                "licenseName": rep["licenseName"],
-                "licenseAddress": rep["licenseAddress"],
-                "startDate": rep["startDate"],
-                "endDate": rep["endDate"],
-                "status": rep["status"],
-                "gear": rep["gear"]
-                }
-        return temp
+    def validate_gear(self, attrs):
+        denied = []
+        for gear in attrs:
+            if Reservation.objects.filter(gear=gear).count():
+                denied.append(gear.pk)
+
+        if len(denied) != 0:
+            message = ""
+            for item in denied:
+                message += str(item)
+                message += ", "
+            raise serializers.ValidationError("These items are unavailable: " + message[:-2])
+
+        return attrs
+
+    def validate(self, data):
+        if data['startDate'] < datetime.now().date():
+            raise serializers.ValidationError("Start date must be in the future.")
+
+        if data['startDate'] > data['endDate']:
+            raise serializers.ValidationError("Start date must be before the end date")
+
+        return data
