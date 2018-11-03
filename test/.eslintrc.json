@@ -1,9 +1,11 @@
 {
     "rules": {
-        "no-unused-expressions": "off"
+        "no-unused-expressions": "off",
+        "react/prop-types": [0]
     },
     "globals": {
         "browser": false,
-        "expect": false
+        "expect": false,
+        "Blob": false
     }
 }

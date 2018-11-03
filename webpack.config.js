@@ -23,6 +23,15 @@ module.exports = {
                 }
             },
             {
+                test: /\.xlsx$/,
+                use: [
+                    {
+                        loader: "arraybuffer-loader",
+                        options: {}
+                    }
+                ]
+            },
+            {
                 test: /\.html$/,
                 use: [
                     {

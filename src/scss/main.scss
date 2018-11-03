@@ -3,6 +3,20 @@
     overflow: auto;
 }
 
+.file-button {
+    input {
+        width: 69%;
+        margin-right: 1%;
+        display: inline-block;
+    }
+
+    button {
+        position: absolute;
+        margin-right: 1%;
+        width: 29%;
+    }
+}
+
 .page-margin {
     margin: 1%;
 }
@@ -33,6 +47,26 @@
         }
     }
 }
+
+.member-view {
+    .table {
+        margin-top: 2%;
+    }
+
+    .alert {
+        margin-top: 2%;
+    }
+
+    .file-button {
+        margin-top: 2%;
+    }
+
+    .submit-button {
+        margin-top: 2%;
+        width: 50%;
+    }
+}
+
 
 body {
     padding-top: 70px;

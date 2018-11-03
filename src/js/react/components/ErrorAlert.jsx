@@ -20,5 +20,5 @@ export default function ErrorAlert({ show, errorMessage }) {
 
 ErrorAlert.propTypes = {
     show: PropTypes.bool.isRequired,
-    errorMessage: PropTypes.string.isRequired
+    errorMessage: PropTypes.string
 };

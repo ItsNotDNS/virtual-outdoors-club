@@ -10,6 +10,7 @@ import { Navbar, NavItem, Nav, NavDropdown, MenuItem, Button } from "react-boots
 import GearPage from "./gear/GearPage";
 import ReservationPage from "./reservation/ReservationPage";
 import RentPage from "./gear/RentPage";
+import MemberPage from "./members/MemberPage";
 
 export default class App extends React.Component {
     render() {
@@ -60,6 +61,7 @@ export default class App extends React.Component {
                     <Route path="/gear" component={GearPage} />
                     <Route path="/reservation" component={ReservationPage} />
                     <Route path="/rent" component={RentPage} />
+                    <Route path="/members" component={MemberPage} />
                 </div>
             </BrowserRouter>
         );
