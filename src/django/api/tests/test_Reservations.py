@@ -1,7 +1,7 @@
 from django.test import TestCase
 from ..models import Reservation, GearCategory, Gear
 from rest_framework.test import APIRequestFactory
-
+import datetime
 
 class ReservationTestCase(TestCase):
 
@@ -75,34 +75,109 @@ class ReservationTestCase(TestCase):
         self.assertEqual(response, correctResponse)
 
     def test_post(self):
-        reservationList = self.client.get("/api/reservation/", content_type='application/json').data["data"] # returned as {data: [...]}
+        reservationList = self.client.get("/api/reservation/", content_type='application/json').data["data"]
         reservationListOriginalLen = len(reservationList)
+
+        today = datetime.datetime.today()
 
         request = {
             "email": "henry@email.com",
             "licenseName": "Name on their license.",
             "licenseAddress": "Address on their license.",
-            "startDate": "2019-10-25",
-            "endDate": "2019-10-28",
+            "startDate": today.strftime("%Y-%m-%d"),
+            "endDate": (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
             "status": "REQUESTED",
             "gear": [self.bk.pk]
         }
 
         correctResponse = {
-            'startDate': '2019-10-25',
+            'startDate': today.strftime("%Y-%m-%d"),
             'id': 2,
             'email': 'henry@email.com',
-            'endDate': '2019-10-28',
+            'endDate': (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
             'gear': [self.bk.pk],
             'licenseName': 'Name on their license.',
             'status': 'REQUESTED',
             'licenseAddress': 'Address on their license.'
         }
 
+        # B = Booked dates
+        # F = Free dates
+
         # Test POST (create new reservation)
+        # F F F F F F
+        #   ^     ^
         response = self.client.post("/api/reservation", request, content_type="application/json").data
         self.assertEqual(response, correctResponse)
 
         # Test that the new reservation is in the DB
+        response = self.client.get("/api/reservation/", content_type='application/json').data["data"]
+        self.assertEqual(len(response), reservationListOriginalLen + 1)
+
+        # Test for new reservation with same dates
+        # F B B B B F
+        #   ^     ^
+        response = self.client.post("/api/reservation", request, content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+
+        # Test for overlapping endDate with startDate
+        # F B B B B F
+        # ^ ^
+        request['endDate'] = request['startDate']
+        request['startDate'] = (today - datetime.timedelta(days=1)).strftime("%Y-%m-%d")
+
+        response = self.client.post("/api/reservation", request, content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+
+        # Test for current startDate contained in new date range
+        # F B B B B F
+        # ^   ^
+        request['endDate'] = (today + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
+
+        response = self.client.post("/api/reservation", request, content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+
+        # Test current startDate overlapping with new startDate
+        # F B B B B F
+        #   ^ ^
+        request['startDate'] = today.strftime("%Y-%m-%d")
+
+        response = self.client.post("/api/reservation", request, content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+
+        # Test new reservation contained within current reservation
+        # F B B B B F
+        #     ^ ^
+        request['startDate'] = (today + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
+        request['endDate'] = (today + datetime.timedelta(days=2)).strftime("%Y-%m-%d")
+
+        response = self.client.post("/api/reservation", request, content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+
+        # Test current endDate overlapping with new endDate
+        # F B B B B F
+        #     ^   ^
+        request['endDate'] = (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d")
+
+        response = self.client.post("/api/reservation", request, content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+
+        # Test for current endDate contained within new date range
+        # F B B B B F
+        #     ^     ^
+        request['endDate'] = (today + datetime.timedelta(days=4)).strftime("%Y-%m-%d")
+
+        response = self.client.post("/api/reservation", request, content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+
+        # Test for current endDate overlapping with new startDate
+        # F B B B B F
+        #         ^ ^
+        request['startDate'] = (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d")
+
+        response = self.client.post("/api/reservation", request, content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+
+        # Test that no new reservations were created
         response = self.client.get("/api/reservation/", content_type='application/json').data["data"]
         self.assertEqual(len(response), reservationListOriginalLen + 1)

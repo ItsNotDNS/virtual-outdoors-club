@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Gear, GearCategory, Reservation
 from datetime import datetime
+from django.db.models import Q
 
 
 class GearCategorySerializer(serializers.ModelSerializer):
@@ -43,10 +44,22 @@ class ReservationSerializer(serializers.ModelSerializer):
             "gear"
         ]
 
-    def validate_gear(self, attrs):
+    def validate(self, data):
+        if data['startDate'] < datetime.now().date():
+            raise serializers.ValidationError("Start date must be in the future.")
+
+        if data['startDate'] > data['endDate']:
+            raise serializers.ValidationError("Start date must be before the end date")
+
         denied = []
-        for gear in attrs:
-            if Reservation.objects.filter(gear=gear).count():
+        dateFilter = Q(startDate__range=[data['startDate'], data['endDate']]) | \
+                     Q(endDate__range=[data['startDate'], data['endDate']]) | \
+                     Q(startDate__lte=data['startDate'], endDate__gte=data['endDate'])
+
+        overlappingRes = Reservation.objects.filter(dateFilter)
+
+        for gear in data['gear']:
+            if overlappingRes.filter(gear=gear).exists():
                 denied.append(gear.pk)
 
         if len(denied) != 0:
@@ -55,14 +68,5 @@ class ReservationSerializer(serializers.ModelSerializer):
                 message += str(item)
                 message += ", "
             raise serializers.ValidationError("These items are unavailable: " + message[:-2])
-
-        return attrs
-
-    def validate(self, data):
-        if data['startDate'] < datetime.now().date():
-            raise serializers.ValidationError("Start date must be in the future.")
-
-        if data['startDate'] > data['endDate']:
-            raise serializers.ValidationError("Start date must be before the end date")
 
         return data
