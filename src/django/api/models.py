@@ -11,7 +11,7 @@ class System(models.Model):
 
 # set a standard value for specific parameters in the system for members
 class UserVariability(models.Model):
-    variable = models.CharField(max_length = 100)
+    variable = models.CharField(max_length = 100, primary_key=True)
     value = models.IntegerField()
 
 

@@ -1,7 +1,17 @@
 from rest_framework import serializers
-from .models import Gear, GearCategory, Reservation
+from .models import Gear, GearCategory, Reservation, UserVariability
 from datetime import datetime
 from django.db.models import Q
+
+
+class UserVariabilitySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserVariability
+        fields = [
+            "variable",
+            "value",
+        ]
 
 
 class GearCategorySerializer(serializers.ModelSerializer):
@@ -50,7 +60,15 @@ class ReservationSerializer(serializers.ModelSerializer):
 
         if data['startDate'] > data['endDate']:
             raise serializers.ValidationError("Start date must be before the end date")
+        
+        try:
+            maxResvTime = UserVariability.objects.get(pk="maxReservationDays") 
+        except:
+            maxResvTime = 14
 
+        if (data['endDate'] - data['startDate']).days > maxResvTime:
+            raise serializers.ValidationError("Length of reservation must be less than " + str(maxResvTime))
+        
         denied = []
         dateFilter = Q(startDate__range=[data['startDate'], data['endDate']]) | \
                      Q(endDate__range=[data['startDate'], data['endDate']]) | \

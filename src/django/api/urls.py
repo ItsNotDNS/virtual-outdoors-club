@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from .views.GearView import GearView
 from .views.GearCategoryView import GearCategoryView
-from .views import PayPalView, ReservationView
+from .views import PayPalView, ReservationView, UserVariabilityView
 
 urlpatterns = [
     url(r'^gear/?$', GearView.as_view(), name="Gear"),
@@ -11,5 +11,6 @@ urlpatterns = [
     url(r'^reservation/cancel/?$', ReservationView.cancel, name="reservationCancel"),
     url(r'^process/?$', PayPalView.paypalView, ''),
     url(r'^return/?$', PayPalView.returnView, name="returnView"),
-    url(r'^cancel/?$', PayPalView.cancelView, name="cancelView")
+    url(r'^cancel/?$', PayPalView.cancelView, name="cancelView"),
+    url(r'^userVar/updateMaxReservation/?$', UserVariabilityView.updateMaxReservation, name="updateMaxReservation")
 ]
