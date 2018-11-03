@@ -7,12 +7,17 @@ import React from "react";
 import Table from "react-bootstrap-table-next";
 import PropTypes from "prop-types";
 import Constants from "../../constants/constants";
+import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit";
+import StatusSearchBar from "./StatusSearchBar";
 
+const { SearchBar } = Search;
 export default class GearTable extends React.Component {
     constructor() {
         super();
-
         this.getActionCell = this.getActionCell.bind(this);
+        this.state = {
+            filteredGearList: []
+        };
     }
 
     getEditAction(callback, row) {
@@ -71,6 +76,12 @@ export default class GearTable extends React.Component {
             dataField: "depositFee",
             text: "Fee"
         }, {
+            dataField: "condition",
+            text: "Condition"
+        }, {
+            dataField: "version",
+            text: "Version"
+        }, {
             text: "Actions",
             dataField: "isDummyField",
             isDummyField: true,
@@ -78,13 +89,41 @@ export default class GearTable extends React.Component {
         }];
     }
 
+    static getDerivedStateFromProps(props) {
+        return {
+            filteredGearList:
+                props.gearList.filter(
+                    (gear) => {
+                        return props.checkboxOptions[gear.condition];
+                    }
+                )
+        };
+    }
+
+    getComponents(props) {
+        return (
+            <div>
+                <div className="custom-search-field">
+                    <SearchBar {...props.searchProps} />
+                    <StatusSearchBar />
+                </div>
+                <Table
+                    {...props.baseProps}
+                />
+            </div>
+        );
+    }
+
     render() {
         return (
-            <Table
+            <ToolkitProvider
                 keyField="code"
+                data={this.state.filteredGearList}
                 columns={this.columns}
-                data={this.props.gearList}
-            />
+                search
+            >
+                {this.getComponents}
+            </ToolkitProvider>
         );
     }
 }
@@ -92,5 +131,6 @@ export default class GearTable extends React.Component {
 GearTable.propTypes = {
     onClickEdit: PropTypes.func.isRequired,
     onClickDelete: PropTypes.func.isRequired,
-    gearList: PropTypes.array.isRequired
+    gearList: PropTypes.array.isRequired,
+    checkboxOptions: PropTypes.object.isRequired
 };

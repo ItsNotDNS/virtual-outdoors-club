@@ -658,4 +658,20 @@ describe("GearStore Tests", () => {
             expect(gearStore.state.reserveGearForm.show).to.be.true;
         });
     });
+
+    it("status checkbox unchecked then checked", () => {
+        const mockCheckboxOptions = {
+            RENTABLE: true,
+            FLAGGED: true,
+            NEEDS_REPAIR: true,
+            DELETED: true
+        }
+        expect(gearStore.state.checkboxOptions).to.deep.equal(mockCheckboxOptions);
+        gearStore.onGearStatusCheckBoxChange(mockCheckboxOptions[0], false);
+        expect(gearStore.state.checkboxOptions[mockCheckboxOptions[0]]).to.be.false;
+        gearStore.onGearStatusCheckBoxChange(mockCheckboxOptions[0], true);
+        expect(gearStore.state.checkboxOptions[mockCheckboxOptions[0]]).to.be.true;
+    });
+
+
 });

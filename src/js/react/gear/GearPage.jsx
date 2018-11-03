@@ -56,6 +56,7 @@ export default class GearPage extends Reflux.Component {
                                     onClickDelete={
                                         GearActions.openDeleteGearModal
                                     }
+                                    checkboxOptions={this.state.checkboxOptions}
                                 />
                             </div>
                         </div>

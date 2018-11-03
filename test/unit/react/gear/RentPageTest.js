@@ -44,7 +44,7 @@ describe("RentPage Tests", () => {
     it("Renders RentPage successfully", () => {
         const page = shallow(<RentPage />);
         expect(page.find("ShoppingCartList").length).to.equals(1);
-        expect(page.find("RentGearList").length).to.equals(1);
+        expect(page.find("RentGearTable").length).to.equals(1);
     });
 
     it("calls fetchedGearList on mount", () => {
@@ -78,7 +78,7 @@ describe("RentPage Tests", () => {
 
     it("rental page shows rental gear list and shopping list", () => {
         const rentPage = shallow(<RentPage />);
-        expect(rentPage.text().includes("<RentGearList />", "<ShoppingCartList />")).to.be.true;
+        expect(rentPage.text().includes("<RentGearTable />", "<ShoppingCartList />")).to.be.true;
         expect(rentPage.text().includes("Member Information", "<ShoppingCartList />")).to.be.false;
     });
 
@@ -86,7 +86,7 @@ describe("RentPage Tests", () => {
         const rentPage = shallow(<RentPage />);
         rentPage.instance().state.reserveGearForm.show = true;
         const newRentPage = shallow(<RentPage />);
-        expect(newRentPage.text().includes("<RentGearList />", "<ShoppingCartList />")).to.be.false;
+        expect(newRentPage.text().includes("<RentGearTable />", "<ShoppingCartList />")).to.be.false;
         expect(newRentPage.text().includes("Member Information", "<ShoppingCartList />")).to.be.true;
     });
 

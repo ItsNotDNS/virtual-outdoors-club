@@ -7,8 +7,10 @@ import Reflux from "reflux";
 import BootstrapTable from "react-bootstrap-table-next";
 import { Button } from "react-bootstrap";
 import PropTypes from "prop-types";
+import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit";
 
-export default class RentGearList extends Reflux.Component {
+const { SearchBar } = Search;
+export default class RentGearTable extends Reflux.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -51,20 +53,35 @@ export default class RentGearList extends Reflux.Component {
         );
     }
 
+    getComponents(props) {
+        return (
+            <div>
+                <div className="custom-search-field">
+                    <SearchBar {...props.searchProps} />
+                </div>
+                <BootstrapTable
+                    hover
+                    {...props.baseProps}
+                />
+            </div>
+        );
+    }
+
     render() {
         return (
-            <BootstrapTable
-                striped
-                hover
+            <ToolkitProvider
                 keyField="id"
                 data={this.props.gearList}
                 columns={this.columns}
-            />
+                search
+            >
+                {this.getComponents}
+            </ToolkitProvider>
         );
     }
 };
 
-RentGearList.propTypes = {
+RentGearTable.propTypes = {
     addToCart: PropTypes.func.isRequired,
     gearList: PropTypes.array.isRequired
 };

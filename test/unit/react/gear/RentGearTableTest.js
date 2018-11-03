@@ -5,7 +5,7 @@ import RentGearTable from "react/gear/RentGearTable";
 import BootstrapTable from "react-bootstrap-table-next";
 import sinon from "sinon";
 
-describe("RentGearList Tests", () => {
+describe("RentGearTable Tests", () => {
     const mockGearList = [{
         "id": 1,
         "depositFee": "30.00",
@@ -28,17 +28,6 @@ describe("RentGearList Tests", () => {
         "category": "tent",
         "version": 1
     }];
-
-    it("Renders rent gear list without errors", () => {
-        let testSubmit = function() {},
-            component = shallow(
-                <RentGearTable
-                    gearList={mockGearList}
-                    addToCart={testSubmit}
-                />
-            );
-        expect(component.is(BootstrapTable)).to.be.true;
-    });
 
     it("generates a column that uses the addToCart function passed in", () => {
         const addSpy = sinon.spy(),

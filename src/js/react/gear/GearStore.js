@@ -61,7 +61,13 @@ function defaultState() {
             startDate: null,
             endDate: null
         },
-        checkoutDisabled: true
+        checkoutDisabled: true,
+        checkboxOptions: {
+            RENTABLE: true,
+            FLAGGED: true,
+            NEEDS_REPAIR: true,
+            DELETED: true
+        }
     };
 }
 
@@ -91,7 +97,8 @@ export const GearActions = Reflux.createActions([
     "openReserveGearForm",
     "reserveGearFormChanged",
     "submitReserveGearForm",
-    "closeReserveGearForm"
+    "closeReserveGearForm",
+    "gearStatusCheckBoxChange"
 ]);
 
 export class GearStore extends Reflux.Store {
@@ -502,6 +509,15 @@ export class GearStore extends Reflux.Store {
     onCloseReserveGearForm() {
         const newState = update(this.state, {
             reserveGearForm: { $set: defaultState().reserveGearForm }
+        });
+        this.setState(newState);
+    }
+
+    onGearStatusCheckBoxChange(checkboxKey, checkBoxChecked) {
+        const newState = update(this.state, {
+            checkboxOptions: {
+                [checkboxKey]: { $set: checkBoxChecked }
+            }
         });
         this.setState(newState);
     }

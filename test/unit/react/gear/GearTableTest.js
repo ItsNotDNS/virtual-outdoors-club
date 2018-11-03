@@ -35,6 +35,7 @@ const mockGearList = [{
                 onClickEdit={props.onClickEdit || emptyFunc}
                 onClickDelete={props.onClickDelete || emptyFunc}
                 gearList={props.gearList || []}
+                checkboxOptions={props.checkboxOptions || {}}
             />
         );
     };

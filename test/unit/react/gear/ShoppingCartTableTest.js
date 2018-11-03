@@ -5,7 +5,7 @@ import BootstrapTable from "react-bootstrap-table-next";
 import sinon from "sinon";
 import ShoppingCartList from "react/gear/ShoppingCartTable";
 
-describe("RentGearList Tests", () => {
+describe("RentGearTable Tests", () => {
     const mockGearList = [{
         "id": 1,
         "depositFee": "30.00",

@@ -6,7 +6,7 @@
 import React, { Fragment } from "react";
 import Reflux from "reflux";
 import { GearStore, GearActions } from "./GearStore";
-import RentGearList from "./RentGearTable";
+import RentGearTable from "./RentGearTable";
 import ShoppingCartList from "./ShoppingCartTable";
 import LabeledInput from "../components/LabeledInput";
 import DatePicker from "react-datepicker";
@@ -92,7 +92,7 @@ export default class RentPage extends Reflux.Component {
             return (
                 <Fragment>
                     Gear List
-                    <RentGearList
+                    <RentGearTable
                         gearList={this.state.gearList}
                         addToCart={GearActions.addToShoppingCart}
                     />
