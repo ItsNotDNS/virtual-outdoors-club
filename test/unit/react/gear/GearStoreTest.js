@@ -4,6 +4,8 @@ import config from "../../../../src/config/config";
 import sinon from "sinon";
 import { expect } from "chai";
 import axios from "axios";
+import GearService from "../../../../src/js/services/GearService";
+import { GearActions } from "../../../../src/js/react/gear/GearStore";
 
 let getStub, postStub, patchStub, deleteStub, gearStore = new GearStore();
 const sandbox = sinon.createSandbox(),
@@ -659,6 +661,74 @@ describe("GearStore Tests", () => {
         });
     });
 
+    it("onFileSelected - resets upload state if no file", () => {
+        gearStore.state.upload.error = "This is an error";
+        gearStore.onFileSelected();
+        expect(gearStore.state.upload.error).to.equal("");
+    });
+
+    it("onFileSelected - success path", () => {
+        const response = {
+                gear: [{
+                    gearCode: "HL01",
+                    depositFee: 50,
+                    gearDescription: "Petzl Black",
+                    gearCategory: "headlamp"
+                }],
+                categories: [
+                    "headlamp"
+                ]
+            },
+            promise = Promise.resolve(response);
+
+        sandbox.stub(GearService.prototype, "parseGearFile").returns(promise);
+
+        return gearStore.onFileSelected({ fake: "data" }).then(() => {
+            expect(gearStore.state.upload.gear).to.deep.equal(response.gear);
+            expect(gearStore.state.upload.categories).to.deep.equal(response.categories);
+        });
+    });
+
+    it("onFileSelected - error path", () => {
+        const errorMsg = "This is an error message",
+            error = new Error(errorMsg),
+            promise = Promise.reject(error);
+
+        sandbox.stub(GearService.prototype, "parseGearFile").returns(promise);
+
+        return gearStore.onFileSelected({ fake: "data" }).then(() => {
+            expect(gearStore.state.upload.error).to.equal(error.toString());
+        });
+    });
+
+    it("onUploadGearFile - returns a list of failed", () => {
+        const createGearStub = sandbox.stub(GearService.prototype, "createGear"),
+            gearList = [{
+                gearCode: "HL01",
+                depositFee: 50,
+                gearDescription: "Petzl Black",
+                gearCategory: "headlamp"
+            }, {
+                gearCode: "HL02",
+                depositFee: 49.99,
+                gearDescription: "Petzl Yellow Green",
+                gearCategory: "headlamp"
+            }];
+        sandbox.stub(GearService.prototype, "createCategory").returns(Promise.resolve());
+        sandbox.stub(GearActions, "fetchGearList");
+        sandbox.stub(GearActions, "fetchGearCategoryList");
+        createGearStub.withArgs(gearList[0]).returns(Promise.resolve({}));
+        createGearStub.withArgs(gearList[1]).returns(Promise.resolve({ error: "some error" }));
+
+        gearStore.state.upload.gear = gearList;
+        gearStore.state.upload.categories = ["headlamp"];
+
+        return gearStore.onUploadGearFile().then(() => {
+            expect(gearStore.state.upload.results.show).to.be.true;
+            expect(gearStore.state.upload.results.failed).to.deep.equal(["HL02"]);
+        });
+    });
+
     it("status checkbox unchecked then checked", () => {
         const mockCheckboxOptions = {
             RENTABLE: true,
@@ -672,6 +742,4 @@ describe("GearStore Tests", () => {
         gearStore.onGearStatusCheckBoxChange(mockCheckboxOptions[0], true);
         expect(gearStore.state.checkboxOptions[mockCheckboxOptions[0]]).to.be.true;
     });
-
-
 });

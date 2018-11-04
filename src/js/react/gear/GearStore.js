@@ -10,7 +10,18 @@ import Constants from "../../constants/constants";
 function defaultState() {
     return {
         fetchedGearList: false, // initial check to fetch the gear list
+        tabSelected: 1,
         error: "",
+        upload: {
+            gear: [],
+            categories: [],
+            warnings: [],
+            error: "",
+            results: {
+                show: false,
+                failed: []
+            }
+        },
         categoryDropdown: {
             categorySelected: ""
         },
@@ -73,6 +84,7 @@ function defaultState() {
 
 // create actions and export them for use
 export const GearActions = Reflux.createActions([
+    "tabSelected",
     "updateDropdown",
     "fetchGearList",
     "openGearModal",
@@ -98,6 +110,9 @@ export const GearActions = Reflux.createActions([
     "reserveGearFormChanged",
     "submitReserveGearForm",
     "closeReserveGearForm",
+    "fileSelected",
+    "uploadGearFile",
+    "getGearFile",
     "gearStatusCheckBoxChange"
 ]);
 
@@ -106,6 +121,12 @@ export class GearStore extends Reflux.Store {
         super();
         this.state = defaultState();
         this.listenables = GearActions; // listen for actions
+    }
+
+    onTabSelected(tab) {
+        this.setState({
+            tabSelected: tab
+        });
     }
 
     // updates the selected object in the category dropdown
@@ -511,6 +532,62 @@ export class GearStore extends Reflux.Store {
             reserveGearForm: { $set: defaultState().reserveGearForm }
         });
         this.setState(newState);
+    }
+
+    onFileSelected(file) {
+        const service = new GearService(),
+            newState = update(this.state, {
+                upload: { $set: defaultState().upload }
+            });
+
+        this.setState(newState); // prevent accidentally propagating old info
+
+        if (file) {
+            return service.parseGearFile(file)
+                .then(({ gear, categories, warnings }) => {
+                    const newState = update(this.state, {
+                        upload: {
+                            gear: { $set: gear },
+                            categories: { $set: categories },
+                            warnings: { $set: warnings }
+                        }
+                    });
+                    this.setState(newState);
+                })
+                .catch((error) => {
+                    const newState = update(this.state, {
+                        upload: {
+                            error: { $set: error.toString() }
+                        }
+                    });
+                    this.setState(newState);
+                });
+        }
+    }
+
+    onUploadGearFile() {
+        const { gear, categories } = this.state.upload,
+            service = new GearService();
+
+        return service.uploadGearFile(categories, gear)
+            .then(({ failed }) => {
+                const newState = update(this.state, {
+                    upload: {
+                        results: {
+                            show: { $set: true },
+                            failed: { $set: failed }
+                        }
+                    }
+                });
+                this.setState(newState);
+                GearActions.fetchGearList();
+                GearActions.fetchGearCategoryList();
+            });
+    }
+
+    onGetGearFile() {
+        const service = new GearService();
+        service.createGearFile(this.state.gearList);
     }
 
     onGearStatusCheckBoxChange(checkboxKey, checkBoxChecked) {

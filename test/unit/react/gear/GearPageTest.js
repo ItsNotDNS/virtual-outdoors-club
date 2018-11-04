@@ -2,7 +2,7 @@ import React from "react";
 import GearPage from "react/gear/GearPage";
 import { GearActions } from "react/gear/GearStore";
 import { expect } from "chai";
-import { shallow } from "enzyme";
+import { shallow, mount } from "enzyme";
 import sinon from "sinon";
 import Constants from "constants/constants";
 
@@ -55,5 +55,57 @@ describe("GearPage Tests", () => {
             };
 
         page.instance().wrapOpenModal(cb)();
+    });
+
+    it("displays error if upload.error set", () => {
+        const page = mount(<GearPage />);
+
+        page.setState({
+            tabSelected: 3
+        });
+        expect(page.find(".alert-danger")).to.have.length(0);
+        page.setState({
+            upload: { error: "this is bad", warnings: [], gear: [] }
+        });
+        expect(page.find(".alert-danger")).to.have.length(1);
+    });
+
+    it("displays warning if upload.warnings set", () => {
+        const page = mount(<GearPage />);
+
+        page.setState({
+            tabSelected: 3
+        });
+        expect(page.find(".alert-warning")).to.have.length(0);
+        page.setState({
+            upload: { error: "", warnings: ["row 532 has an issue"], gear: [] }
+        });
+        expect(page.find(".alert-warning")).to.have.length(1);
+    });
+
+    it("displays info if upload.gear set", () => {
+        const page = mount(<GearPage />);
+
+        page.setState({
+            tabSelected: 3
+        });
+        expect(page.find(".alert-info")).to.have.length(0);
+        page.setState({
+            upload: { error: "", warnings: [], gear: [{}], results: { show: false, failed: [] } }
+        });
+        expect(page.find(".alert-info")).to.have.length(1);
+    });
+
+    it("displays success if upload.results.show set", () => {
+        const page = mount(<GearPage />);
+
+        page.setState({
+            tabSelected: 3
+        });
+        expect(page.find(".alert-success")).to.have.length(0);
+        page.setState({
+            upload: { error: "", warnings: [], gear: [{}], results: { show: true, failed: [] } }
+        });
+        expect(page.find(".alert-success")).to.have.length(1);
     });
 });
