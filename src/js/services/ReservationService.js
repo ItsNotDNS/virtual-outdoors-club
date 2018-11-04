@@ -21,4 +21,24 @@ export default class ReservationService {
                 return { error: error.response.data.message };
             });
     }
+
+    fetchReservation(reservationId, email) {
+        return this.service.get(`${config.databaseHost}/reservation?id=${reservationId}&email=${email}`)
+            .then((response) => {
+                return { data: response.data };
+            }).catch((error) => {
+                return { error: error.response.data.message };
+            });
+    }
+
+    fetchPayPalForm(reservationId) {
+        return this.service.post(`${config.databaseHost}/process`, {
+            id: reservationId
+        })
+            .then((response) => {
+                return { data: response.data };
+            }).catch((error) => {
+                return { error: error.response.data.message };
+            });
+    }
 }

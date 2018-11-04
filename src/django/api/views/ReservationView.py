@@ -3,7 +3,7 @@ from django.core import exceptions
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from ..models import Reservation
-from ..serializers import ReservationSerializer
+from ..serializers import ReservationPOSTSerializer, ReservationGETSerializer
 
 
 def reservationIdExists(id):
@@ -18,10 +18,17 @@ class ReservationView(APIView):
 
     # Gets list of all reservations
     def get(self, request):
-        reservation = Reservation.objects.all()
-        serial = ReservationSerializer(reservation, many=True)
+        ID = request.query_params.get("id", None)
+        email = request.query_params.get("email", None)
 
-        return Response({'data': serial.data})
+        res = Reservation.objects.all()
+
+        # If the API call includes id and email parameters, begin a single search
+        if ID and email:
+            res = res.filter(id=ID, email=email)
+
+        serial = ReservationGETSerializer(res, many=True)
+        return Response({"data": serial.data})
 
     # Attempt to create a new reservation
     def post(self, request):
@@ -43,7 +50,7 @@ class ReservationView(APIView):
                 return RespError(400, "'" + str(key) + "' is not valid with this POST method, please resubmit the"
                                                        " request without it.")
 
-        sRes = ReservationSerializer(data=newRes)
+        sRes = ReservationPOSTSerializer(data=newRes)
 
         if not sRes.is_valid():
             return serialValidation(sRes)

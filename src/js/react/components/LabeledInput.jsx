@@ -7,7 +7,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { ControlLabel, FormControl, FormGroup } from "react-bootstrap";
 
-export default function LabeledInput({ label, name, placeholder, onChange, value }) {
+export default function LabeledInput({ label, name, placeholder, onChange, value, ...props }) {
     return (
         <FormGroup>
             <ControlLabel>{label}</ControlLabel>
@@ -17,6 +17,7 @@ export default function LabeledInput({ label, name, placeholder, onChange, value
                 placeholder={placeholder}
                 onChange={onChange}
                 value={value}
+                {...props}
             />
         </FormGroup>
     );

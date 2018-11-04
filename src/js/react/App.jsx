@@ -11,6 +11,7 @@ import GearPage from "./gear/GearPage";
 import ReservationPage from "./reservation/ReservationPage";
 import RentPage from "./gear/RentPage";
 import MemberPage from "./members/MemberPage";
+import PaymentPage from "./reservation/payment/PaymentPage";
 
 export default class App extends React.Component {
     render() {
@@ -62,6 +63,7 @@ export default class App extends React.Component {
                     <Route path="/reservation" component={ReservationPage} />
                     <Route path="/rent" component={RentPage} />
                     <Route path="/members" component={MemberPage} />
+                    <Route path="/pay" component={PaymentPage} />
                 </div>
             </BrowserRouter>
         );

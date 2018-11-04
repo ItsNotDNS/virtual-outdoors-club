@@ -14,7 +14,7 @@ env:
 install:
   # installs the packages specified in package.json
   - npm install
-  # Sets python to use v3.6.3 when 
+  # Sets python to use v3.6.3 when
   - pyenv global 3.6.3
   # installs the packages specified in requirements.txt
   - pip install -r requirements.txt
@@ -38,7 +38,7 @@ before_script:
 
 script:
   # runs the Django/backend unit tests with a coverage reporter
-  - coverage run --source='src/django/api/views/' src/django/manage.py test api
+  - coverage run --source='src/django/api/views/' --omit='src/django/api/views/PayPalView.py' src/django/manage.py test api
   # checks that coverage meets the requirments (>70%, aim for >85%)
   - coverage report --fail-under=70
   # enforces front-end code styling

@@ -29,7 +29,13 @@ class ReservationTestCase(TestCase):
                             'id': 1,
                             'email': 'enry@email.com',
                             # 'approvedBy': 'nobody',    #TODO re-add
-                            'gear': [4],
+                            'gear': [{'id': self.sp.pk,
+                                      'code': 'SP01',
+                                      'category': 'Ski poles',
+                                      'depositFee': '12.00',
+                                      'description': 'Ski poles',
+                                      'condition': 'RENTABLE',
+                                      'version': 1}],
                             'startDate': '2018-10-25',
                             'endDate': '2018-10-28'}]
 
@@ -47,7 +53,13 @@ class ReservationTestCase(TestCase):
             'licenseName': 'Name on their license.',
             'licenseAddress': 'Address on their license.',
             'status': 'RETURNED',
-            'gear': [self.sp.pk],
+            'gear': [{'id': self.sp.pk,
+                      'code': 'SP01',
+                      'category': 'Ski poles',
+                      'depositFee': '12.00',
+                      'description': 'Ski poles',
+                      'condition': 'RENTABLE',
+                      'version': 1}],
             'endDate': '2018-10-28',
             'startDate': '2018-10-25'}]
 
@@ -66,7 +78,13 @@ class ReservationTestCase(TestCase):
             'licenseName': 'Name on their license.',
             'licenseAddress': 'Address on their license.',
             'status': 'CANCELLED',
-            'gear': [self.sp.pk],
+            'gear': [{'id': self.sp.pk,
+                      'code': 'SP01',
+                      'category': 'Ski poles',
+                      'depositFee': '12.00',
+                      'description': 'Ski poles',
+                      'condition': 'RENTABLE',
+                      'version': 1}],
             'endDate': '2018-10-28',
             'startDate': '2018-10-25'
         }]

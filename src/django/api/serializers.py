@@ -39,7 +39,24 @@ class GearSerializer(serializers.ModelSerializer):
         ]
 
 
-class ReservationSerializer(serializers.ModelSerializer):
+class ReservationGETSerializer(serializers.ModelSerializer):
+    gear = GearSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Reservation
+        fields = [
+            "id",
+            "email",
+            "licenseName",
+            "licenseAddress",
+            "startDate",
+            "endDate",
+            "status",
+            "gear"
+        ]
+
+
+class ReservationPOSTSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Reservation
@@ -60,15 +77,15 @@ class ReservationSerializer(serializers.ModelSerializer):
 
         if data['startDate'] > data['endDate']:
             raise serializers.ValidationError("Start date must be before the end date")
-        
+
         try:
-            maxResvTime = UserVariability.objects.get(pk="maxReservationDays") 
-        except:
+            maxResvTime = UserVariability.objects.get(pk="maxReservationDays")
+        except UserVariability.DoesNotExist:
             maxResvTime = 14
 
         if (data['endDate'] - data['startDate']).days > maxResvTime:
             raise serializers.ValidationError("Length of reservation must be less than " + str(maxResvTime))
-        
+
         denied = []
         dateFilter = Q(startDate__range=[data['startDate'], data['endDate']]) | \
                      Q(endDate__range=[data['startDate'], data['endDate']]) | \
@@ -76,15 +93,16 @@ class ReservationSerializer(serializers.ModelSerializer):
 
         overlappingRes = Reservation.objects.filter(dateFilter)
 
-        for gear in data['gear']:
-            if overlappingRes.filter(gear=gear).exists():
-                denied.append(gear.pk)
+        if overlappingRes.exists():
+            for gear in data['gear']:
+                if overlappingRes.filter(gear=gear).exists():
+                    denied.append(gear.pk)
 
-        if len(denied) != 0:
-            message = ""
-            for item in denied:
-                message += str(item)
-                message += ", "
-            raise serializers.ValidationError("These items are unavailable: " + message[:-2])
+            if len(denied) != 0:
+                message = ""
+                for item in denied:
+                    message += str(item)
+                    message += ", "
+                raise serializers.ValidationError("These items are unavailable: " + message[:-2])
 
         return data
