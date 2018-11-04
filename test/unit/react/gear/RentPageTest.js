@@ -41,12 +41,6 @@ describe("RentPage Tests", () => {
         "version": 1
     }];
 
-    it("Renders RentPage successfully", () => {
-        const page = shallow(<RentPage />);
-        expect(page.find("ShoppingCartList").length).to.equals(1);
-        expect(page.find("RentGearTable").length).to.equals(1);
-    });
-
     it("calls fetchedGearList on mount", () => {
         const page = shallow(<RentPage />);
         actionsStub.fetchGearList = sandbox.spy();
@@ -76,20 +70,6 @@ describe("RentPage Tests", () => {
         expect(actionsStub.reserveGearFormChanged.calledWith(event.target.name, event.target.value)).to.be.true;
     });
 
-    it("rental page shows rental gear list and shopping list", () => {
-        const rentPage = shallow(<RentPage />);
-        expect(rentPage.text().includes("<RentGearTable />", "<ShoppingCartList />")).to.be.true;
-        expect(rentPage.text().includes("Member Information", "<ShoppingCartList />")).to.be.false;
-    });
-
-    it("rental page shows checkout form and shopping list", () => {
-        const rentPage = shallow(<RentPage />);
-        rentPage.instance().state.reserveGearForm.show = true;
-        const newRentPage = shallow(<RentPage />);
-        expect(newRentPage.text().includes("<RentGearTable />", "<ShoppingCartList />")).to.be.false;
-        expect(newRentPage.text().includes("Member Information", "<ShoppingCartList />")).to.be.true;
-    });
-
     it("handleStartDateChange calls reserveGearFormChanged", () => {
         const page = shallow(<RentPage />),
             mockDate = moment("2013-03-01", "YYYY-MM-DD");
@@ -104,5 +84,15 @@ describe("RentPage Tests", () => {
         actionsStub.reserveGearFormChanged = sandbox.spy();
         page.instance().handleEndDateChange(mockDate);
         expect(actionsStub.reserveGearFormChanged.calledOnce).to.be.true;
+    });
+
+    it("getShoppingCart success", () => {
+        const page = shallow(<RentPage />);
+        page.instance().state.shoppingList = [];
+        let rv = page.instance().getShoppingCart();
+        expect(rv.props.children).to.equal("Empty Shopping Cart");
+        page.instance().state.shoppingList = data;
+        rv = page.instance().getShoppingCart();
+        expect(rv.props.children === "Empty Shopping Cart").to.be.false;
     });
 });

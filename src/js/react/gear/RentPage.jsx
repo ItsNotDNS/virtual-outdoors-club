@@ -3,21 +3,28 @@
  * shopping cart, submit button for submitting reservations
  */
 
-import React, { Fragment } from "react";
+import React from "react";
 import Reflux from "reflux";
 import { GearStore, GearActions } from "./GearStore";
 import RentGearTable from "./RentGearTable";
-import ShoppingCartList from "./ShoppingCartTable";
+import ShoppingCartTable from "./ShoppingCartTable";
 import LabeledInput from "../components/LabeledInput";
 import DatePicker from "react-datepicker";
 import ErrorAlert from "../components/ErrorAlert";
+import { Button, Tab, Tabs } from "react-bootstrap";
+import ButtonModalForm from "../components/ButtonModalForm";
 
 export default class RentPage extends Reflux.Component {
     constructor() {
         super();
         this.store = GearStore;
 
+        this.state = {
+            showShoppingCart: false,
+            mobileMode: window.innerWidth <= 768
+        };
         this.handleChange = this.handleChange.bind(this);
+        this.getShoppingCart = this.getShoppingCart.bind(this);
     }
 
     componentDidMount() {
@@ -38,11 +45,41 @@ export default class RentPage extends Reflux.Component {
         GearActions.reserveGearFormChanged("endDate", date.format("YYYY-MM-DD"));
     }
 
-    getComponent() {
-        if (this.state.reserveGearForm.show) {
+    getShoppingCart() {
+        if (this.state.shoppingList.length > 0) {
             return (
-                <Fragment>
-                    Member Information
+                <ShoppingCartTable
+                    removeFromCart={GearActions.removeFromShoppingCart}
+                    shoppingList={this.state.shoppingList}
+                />
+            );
+        } else {
+            return (
+                <div>
+                    Empty Shopping Cart
+                </div>
+            );
+        }
+    }
+
+    render() {
+        return (
+            <div className="gear-view">
+                <Button
+                    className="btn btn-primary pull-right "
+                    disabled={this.state.checkoutDisabled}
+                    onClick={GearActions.openReserveGearForm}
+                >
+                    Checkout
+                </Button>
+                <ButtonModalForm
+                    formTitle="Reservation Form"
+                    onSubmit={GearActions.submitReserveGearForm}
+                    onClose={GearActions.closeReserveGearForm}
+                    show={this.state.reserveGearForm.show}
+                    error={false}
+                    errorMessage={"error"}
+                >
                     <ErrorAlert
                         show={this.state.reserveGearForm.error}
                         errorMessage={this.state.reserveGearForm.errorMessage}
@@ -62,65 +99,30 @@ export default class RentPage extends Reflux.Component {
                         name="licenseAddress"
                         onChange={this.handleChange}
                     />
-                    Start date
+                                Start date
                     <DatePicker
                         value={this.state.reserveGearForm.startDate}
                         onChange={this.handleStartDateChange}
                         dropdownMode="select"
                     />
-                    End date
+                                End date
                     <DatePicker
                         value={this.state.reserveGearForm.endDate}
                         onChange={this.handleEndDateChange}
                         dropdownMode="select"
                     />
-                    <button
-                        className="btn"
-                        onClick={GearActions.closeReserveGearForm}
-                    >
-                        Cancel
-                    </button>
-                    <button
-                        className="btn btn-primary"
-                        onClick={GearActions.submitReserveGearForm}
-                    >
-                        Reserve
-                    </button>
-                </Fragment>
-            );
-        } else {
-            return (
-                <Fragment>
-                    Gear List
-                    <RentGearTable
-                        gearList={this.state.gearList}
-                        addToCart={GearActions.addToShoppingCart}
-                    />
-                </Fragment>
-            );
-        }
-    }
-
-    render() {
-        return (
-            <div className="row">
-                <div className="col-md-6">
-                    {this.getComponent()}
-                </div>
-                <div className="col-md-6 ">
-                    <button
-                        className="btn btn-primary"
-                        disabled={this.state.checkoutDisabled}
-                        onClick={GearActions.openReserveGearForm}
-                    >
-                        Checkout
-                    </button>
-                    Shopping Cart
-                    <ShoppingCartList
-                        removeFromCart={GearActions.removeFromShoppingCart}
-                        shoppingList={this.state.shoppingList}
-                    />
-                </div>
+                </ButtonModalForm>
+                <Tabs defaultActiveKey={1} id="rent-view-tabs">
+                    <Tab eventKey={1} title="Gear">
+                        <RentGearTable
+                            gearList={this.state.gearList}
+                            addToCart={GearActions.addToShoppingCart}
+                        />
+                    </Tab>
+                    <Tab eventKey={2} title={`Shopping Cart (${this.state.shoppingList.length})`} >
+                        {this.getShoppingCart()}
+                    </Tab>
+                </Tabs>
             </div>
         );
     }

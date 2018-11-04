@@ -734,7 +734,7 @@ describe("GearStore Tests", () => {
             RENTABLE: true,
             FLAGGED: true,
             NEEDS_REPAIR: true,
-            DELETED: true
+            DELETED: false
         }
         expect(gearStore.state.checkboxOptions).to.deep.equal(mockCheckboxOptions);
         gearStore.onGearStatusCheckBoxChange(mockCheckboxOptions[0], false);

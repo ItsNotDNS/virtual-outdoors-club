@@ -16,14 +16,14 @@ export default class RentGearTable extends Reflux.Component {
         this.state = {
             categoryOptions: {}
         };
-        this.addButtonFormatter = this.addButtonFormatter.bind(this);
+        this.getActionCell = this.getActionCell.bind(this);
     }
 
     // columns for the gear table
     get columns() {
         return [{
             dataField: "code",
-            text: "ID",
+            text: "Gear ID",
             sort: true
         }, {
             dataField: "category",
@@ -35,20 +35,27 @@ export default class RentGearTable extends Reflux.Component {
             text: "Description",
             sort: true
         }, {
+            dataField: "depositFee",
+            text: "Deposit Fee",
+            sort: true
+        },
+        {
             dataField: "add",
             text: "Add",
-            formatter: this.addButtonFormatter
+            formatter: this.getActionCell
         }];
     }
 
-    getAddAction(callback, row) {
+    getAction(callback, row) {
         return () => callback(row);
     }
 
-    addButtonFormatter(cell, row) {
+    getActionCell(cell, row) {
         return (
-            <Button onClick={this.getAddAction(this.props.addToCart, row)}>
-                +
+            <Button
+                className="btn btn-primary addToCartButton"
+                onClick={this.getAction(this.props.addToCart, row)}>
+                <i className="fas fa-plus" />
             </Button>
         );
     }
@@ -60,7 +67,6 @@ export default class RentGearTable extends Reflux.Component {
                     <SearchBar {...props.searchProps} />
                 </div>
                 <BootstrapTable
-                    hover
                     {...props.baseProps}
                 />
             </div>

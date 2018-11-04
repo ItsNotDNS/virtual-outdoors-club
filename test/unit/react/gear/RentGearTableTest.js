@@ -36,12 +36,10 @@ describe("RentGearTable Tests", () => {
                     gearList={mockGearList}
                     addToCart={addSpy}
                 />),
-            cell = table.instance().addButtonFormatter(null, mockGearList[0]),
+            cell = table.instance().getActionCell(null, mockGearList[0]),
             addButton = cell.props;
 
         addButton.onClick();
-
         expect(addSpy.calledWith(mockGearList[0])).to.be.true;
     });
-
 });

@@ -65,7 +65,7 @@ export default class GearTable extends React.Component {
     get columns() {
         return [{
             dataField: "code",
-            text: "Gear Code"
+            text: "Gear ID"
         }, {
             dataField: "category",
             text: "Category"
@@ -78,9 +78,6 @@ export default class GearTable extends React.Component {
         }, {
             dataField: "condition",
             text: "Condition"
-        }, {
-            dataField: "version",
-            text: "Version"
         }, {
             text: "Actions",
             dataField: "isDummyField",

@@ -29,7 +29,6 @@ export default class StatusSearchBar extends React.Component {
                         Needs Repair
                 </Checkbox>
                 <Checkbox inline name="DELETED"
-                    defaultChecked
                     onClick={this.handleChange}
                 >
                         Deleted

@@ -3,7 +3,7 @@ import { expect } from "chai";
 import { shallow } from "enzyme";
 import BootstrapTable from "react-bootstrap-table-next";
 import sinon from "sinon";
-import ShoppingCartList from "react/gear/ShoppingCartTable";
+import ShoppingCartTable from "react/gear/ShoppingCartTable";
 
 describe("RentGearTable Tests", () => {
     const mockGearList = [{
@@ -32,7 +32,7 @@ describe("RentGearTable Tests", () => {
     it("Renders shopping cart without errors", () => {
         let testSubmit = function() {},
             component = shallow(
-                <ShoppingCartList
+                <ShoppingCartTable
                     gearList={mockGearList}
                     removeFromCart={testSubmit}
                 />
@@ -43,7 +43,7 @@ describe("RentGearTable Tests", () => {
     it("generates a column that uses the removeFromCart function passed in", () => {
         const removeSpy = sinon.spy(),
             table = shallow(
-                <ShoppingCartList
+                <ShoppingCartTable
                     shoppingList={mockGearList}
                     removeFromCart={removeSpy}
                 />),

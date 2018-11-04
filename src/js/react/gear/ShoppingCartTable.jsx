@@ -9,7 +9,7 @@ import { GearStore } from "../gear/GearStore";
 import { Button } from "react-bootstrap";
 import PropTypes from "prop-types";
 
-export default class ShoppingCartList extends Reflux.Component {
+export default class ShoppingCartTable extends Reflux.Component {
     constructor(props) {
         super(props);
         this.store = GearStore;
@@ -20,13 +20,22 @@ export default class ShoppingCartList extends Reflux.Component {
     get columns() {
         return [{
             dataField: "code",
-            text: "ID",
+            text: "Gear ID",
+            sort: true
+        }, {
+            dataField: "category",
+            text: "Category",
             sort: true
         }, {
             dataField: "description",
             text: "Description",
             sort: true
         }, {
+            dataField: "depositFee",
+            text: "Deposit Fee",
+            sort: true
+        },
+        {
             dataField: "remove",
             text: "Remove",
             formatter: this.removeButtonFormatter
@@ -39,10 +48,13 @@ export default class ShoppingCartList extends Reflux.Component {
 
     removeButtonFormatter(cell, row) {
         return (
-            <Button onClick={
-                this.getRemoveAction(this.props.removeFromCart, row)
-            }>
-                X
+            <Button
+                className="btn btn-danger removeFromCartButton"
+                onClick={
+                    this.getRemoveAction(this.props.removeFromCart, row)
+                }
+            >
+                <i className="far fa-trash-alt" />
             </Button>
         );
     }
@@ -50,8 +62,6 @@ export default class ShoppingCartList extends Reflux.Component {
     render() {
         return (
             <BootstrapTable
-                striped
-                hover
                 keyField="id"
                 data={this.props.shoppingList}
                 columns={this.columns}
@@ -60,7 +70,7 @@ export default class ShoppingCartList extends Reflux.Component {
     }
 };
 
-ShoppingCartList.propTypes = {
+ShoppingCartTable.propTypes = {
     shoppingList: PropTypes.array,
     removeFromCart: PropTypes.func.isRequired
 };

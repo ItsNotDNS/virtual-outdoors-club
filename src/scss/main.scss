@@ -1,5 +1,5 @@
 .react-bootstrap-table {
-    height: 400px;
+    max-height: 65vh;
     overflow: auto;
 }
 
@@ -35,7 +35,6 @@
         overflow-wrap: break-word;
 
         margin-top: 1%;
-        height: 100%;
     }
 
     .btn-action-cell {
@@ -88,4 +87,25 @@
 
 body {
     padding-top: 70px;
+}
+
+.panel.noborder {
+    border: none;
+    box-shadow: none;
+}
+.panel-body {
+    padding: 0px;
+}
+
+.checkoutButton {
+    margin-left: 2%;
+    margin-right: 5%;
+}
+
+.addToCartButton {
+    width: 100%;
+}
+
+.removeFromCartButton {
+    width: 100%;
 }

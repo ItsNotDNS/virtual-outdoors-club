@@ -77,7 +77,7 @@ function defaultState() {
             RENTABLE: true,
             FLAGGED: true,
             NEEDS_REPAIR: true,
-            DELETED: true
+            DELETED: false
         }
     };
 }
@@ -359,13 +359,20 @@ export class GearStore extends Reflux.Store {
         if (!this.state.shoppingList.includes(row)) {
             const newState = update(this.state, {
                 shoppingList: { $push: [row] },
-                checkoutDisabled: { $set: false }
+                checkoutDisabled: { $set: false },
+                gearList: {
+                    $set: this.state.gearList.filter(
+                        (gear) => {
+                            return gear.id !== row.id;
+                        }
+                    )
+                }
             });
             this.setState(newState);
         }
     }
 
-    onRemoveFromShoppingCart({ id }) {
+    onRemoveFromShoppingCart(row) {
         let newCheckoutDisabledValue = false;
         if (this.state.shoppingList.length <= 1) {
             newCheckoutDisabledValue = true;
@@ -373,9 +380,10 @@ export class GearStore extends Reflux.Store {
         const newState = update(this.state, {
             shoppingList: {
                 $set: this.state.shoppingList.filter((obj) =>
-                    id !== obj.id)
+                    row.id !== obj.id)
             },
-            checkoutDisabled: { $set: newCheckoutDisabledValue }
+            checkoutDisabled: { $set: newCheckoutDisabledValue },
+            gearList: { $push: [row] }
         });
         this.setState(newState);
     }
@@ -519,7 +527,8 @@ export class GearStore extends Reflux.Store {
                     this.setState(newState);
                 } else {
                     const newState = update(this.state, {
-                        shoppingList: { $set: defaultState().shoppingList }
+                        shoppingList: { $set: defaultState().shoppingList },
+                        checkoutDisabled: { $set: defaultState().checkoutDisabled }
                     });
                     this.setState(newState);
                     this.onCloseReserveGearForm();
