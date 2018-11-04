@@ -92,17 +92,23 @@ class ReservationPOSTSerializer(serializers.ModelSerializer):
                      Q(startDate__lte=data['startDate'], endDate__gte=data['endDate'])
 
         overlappingRes = Reservation.objects.filter(dateFilter)
-
+        
         if overlappingRes.exists():
+
+            # Remove the self reservation from overlappingRes. Used for patches
+            for res in overlappingRes:
+                if 'id' in self.initial_data and res.id == self.initial_data['id']:
+                        overlappingRes = overlappingRes.exclude(pk=self.initial_data['id'])
+
             for gear in data['gear']:
                 if overlappingRes.filter(gear=gear).exists():
                     denied.append(gear.pk)
 
-            if len(denied) != 0:
-                message = ""
-                for item in denied:
-                    message += str(item)
-                    message += ", "
-                raise serializers.ValidationError("These items are unavailable: " + message[:-2])
+                if len(denied) != 0:
+                    message = ""
+                    for item in denied:
+                        message += str(item)
+                        message += ", "
+                    raise serializers.ValidationError("These items are unavailable: " + message[:-2])
 
         return data

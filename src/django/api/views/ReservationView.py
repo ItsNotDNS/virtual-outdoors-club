@@ -59,6 +59,56 @@ class ReservationView(APIView):
 
         return Response(sRes.data)
 
+    # Edit gear in reservation
+    def patch(self, request):
+        request = request.data
+        allowedPatchMethods = {
+            "gear": True,
+        }
+
+        idToUpdate = request.get("id", None)
+        expectedVersion = request.get("expectedVersion", None)
+        patch = request.get("patch", None)
+
+        # The following 3 checks could be up-leveled to a generic PATCH-check function
+        if not idToUpdate:
+            return RespError(400, "You must specify an id to patch.")
+        
+        if not expectedVersion:
+            return RespError(400, "You must specify an 'expectedVersion'.")
+
+        if not patch:
+            return RespError(400, "You must specify a 'patch' object with methods.")
+
+        for key in patch:
+            if key not in allowedPatchMethods:
+                return RespError(400, "'" + key + "' is not a valid patch method.")
+
+        try:
+            resv = Reservation.objects.get(id=idToUpdate)
+        except Reservation.DoesNotExist:
+            return RespError(400, "There is no reservation with the id '" + str(idToUpdate) + "'")
+
+        # Check if reservation gear can be modified based on status
+        if resv.status not in ["REQUESTED", "APPROVED"]:
+            return RespError(400, "The reservation status must be REQUESTED or APPROVED to be modified")
+
+        for field in resv._meta.fields: # field = Api.Reservation.fieldName
+            f = str(field)
+            f = f[16:]  # truncates Api.Reservation. part out
+            if f != "gear":
+                patch[f] = getattr(resv, f)
+
+        sResv = ReservationPOSTSerializer(resv, data=patch)
+
+        if not sResv.is_valid():
+            return serialValidation(sResv)
+ 
+        resv.version += 1
+        sResv.save()
+
+        return Response(sResv.data)
+
 
 @api_view(['POST'])
 def checkin(request):
