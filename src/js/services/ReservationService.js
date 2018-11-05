@@ -25,7 +25,7 @@ export default class ReservationService {
     fetchReservation(reservationId, email) {
         return this.service.get(`${config.databaseHost}/reservation?id=${reservationId}&email=${email}`)
             .then((response) => {
-                return { data: response.data };
+                return { data: response.data.data[0] };
             }).catch((error) => {
                 return { error: error.response.data.message };
             });

@@ -93,7 +93,7 @@ describe("ReservationStore Tests", () => {
     });
 
     it("onFetchReservation - success path", () => {
-        const promise = Promise.resolve({ data: mockReservation });
+        const promise = Promise.resolve({ data: { data: [mockReservation] } });
 
         expect(reservationStore.state.reservation).to.deep.equal(emptyReservation);
 
