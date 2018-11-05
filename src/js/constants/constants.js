@@ -8,5 +8,9 @@ export default {
     modals: {
         EDITING: "Editing",
         CREATING: "Creating"
+    },
+    variability: {
+        EXECUTIVE: "exec",
+        MEMBER: "member"
     }
 };

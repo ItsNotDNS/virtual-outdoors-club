@@ -6,7 +6,6 @@ import { shallow, mount } from "enzyme";
 import sinon from "sinon";
 import Constants from "constants/constants";
 
-
 const sandbox = sinon.createSandbox();
 let actionsStub;
 

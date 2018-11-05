@@ -12,6 +12,7 @@ import ReservationPage from "./reservation/ReservationPage";
 import RentPage from "./gear/RentPage";
 import MemberPage from "./members/MemberPage";
 import PaymentPage from "./reservation/payment/PaymentPage";
+import VariabilityPage from "./variability/EditVariabilityPage";
 
 export default class App extends React.Component {
     render() {
@@ -64,6 +65,7 @@ export default class App extends React.Component {
                     <Route path="/rent" component={RentPage} />
                     <Route path="/members" component={MemberPage} />
                     <Route path="/pay" component={PaymentPage} />
+                    <Route path="/variability" component={VariabilityPage} />
                 </div>
             </BrowserRouter>
         );
