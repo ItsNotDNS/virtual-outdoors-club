@@ -24,14 +24,12 @@ describe("MemberService Tests", () => {
             service = new MemberService(),
             file = { fake: "data" };
 
-        service.parseMemberFile(file).then((result) => {
+        return service.parseMemberFile(file).then((result) => {
             expect(parseStub.calledOnce).to.be.true;
             expect(bufferStub.calledOnce).to.be.true;
             expect(result).to.deep.equal({
                 data: {
-                    buffer: {
-                        file
-                    }
+                    buffer: file
                 }
             });
         });

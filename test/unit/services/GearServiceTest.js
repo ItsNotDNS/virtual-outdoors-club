@@ -26,14 +26,12 @@ describe("GearService Tests", () => {
             service = new GearService(),
             file = { fake: "data" };
 
-        service.parseGearFile(file).then((result) => {
+        return service.parseGearFile(file).then((result) => {
             expect(parseStub.calledOnce).to.be.true;
             expect(bufferStub.calledOnce).to.be.true;
             expect(result).to.deep.equal({
                 data: {
-                    buffer: {
-                        file
-                    }
+                    buffer: file
                 }
             });
         });
