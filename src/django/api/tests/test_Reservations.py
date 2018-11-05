@@ -43,7 +43,35 @@ class ReservationTestCase(TestCase):
                             'startDate': today.strftime("%Y-%m-%d"),
                             'endDate': (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d")}]
 
+
         self.assertEqual(response, correctResponse)
+
+        # 2 valid ways of checking query params in GET/delete requests: 
+
+        # Way 1: response = self.client.get('/api/reservation/', {"id": 1, "email": "enry@email.com"}, content_type="application/json").data['data']
+        # Way 2 is the below format. Either one works, but be consistent.
+
+        # testing if get request with id and email parameters finds the appropriate reservations
+        response = self.client.get('/api/reservation/?id=1&email=enry@email.com', content_type="application/json").data['data']
+        self.assertEqual(response, correctResponse)
+
+        fromDate = (today - datetime.timedelta(days=1)).strftime("%Y-%m-%d") # get all reservations that start after this date.
+        toDate = (today + datetime.timedelta(days=5)).strftime("%Y-%m-%d") # get all reservations that end before this date
+        getReqStr = '/api/reservation/?' + 'from=' + fromDate + '&to=' + toDate
+        
+        # testing if get request with start and end dates finds the appropriate reservations
+        response = self.client.get(getReqStr, content_type="application/json").data['data']
+        self.assertEqual(response, correctResponse)
+        
+        getReqStr+='&email=enry@email.com'
+
+        # testing if get request with start and end dates with a specific email address finds the appropriate reservations
+        response = self.client.get(getReqStr, content_type="application/json").data['data']
+        self.assertEqual(response, correctResponse)
+
+        # testing if get request with just an email address gets all reservations by that email properly
+        response = self.client.get('/api/reservation/?email=enry@email.com', content_type="application/json").data['data']
+        self.assertEqual(response, correctResponse)        
 
     def test_checkin(self):
         request = {"id": 1}
