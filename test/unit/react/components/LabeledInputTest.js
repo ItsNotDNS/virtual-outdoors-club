@@ -8,7 +8,6 @@ describe("LabeledInput Tests", () => {
         const component = shallow(
             <LabeledInput name="testName" label="testLabel" />
         );
-
         expect(component.text()).equals("<FormGroup />");
     });
 });

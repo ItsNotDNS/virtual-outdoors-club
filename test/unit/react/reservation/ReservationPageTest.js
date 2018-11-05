@@ -2,7 +2,7 @@ import React from "react";
 import ReservationPage from "react/reservation/ReservationPage";
 import { ReservationActions } from "react/reservation/ReservationStore";
 import { expect } from "chai";
-import { shallow, mount } from "enzyme";
+import { shallow } from "enzyme";
 import sinon from "sinon";
 import Constants from "constants/constants";
 
@@ -34,7 +34,7 @@ describe("ReservationPage Tests", () => {
     });
 
     it("creates a wrapper that passes CREATE to the callback", () => {
-        const page = mount(<ReservationPage />),
+        const page = shallow(<ReservationPage />),
             cb = (value) => {
                 expect(value).to.equal(Constants.modals.CREATING);
             };

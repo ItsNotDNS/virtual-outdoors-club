@@ -34,13 +34,8 @@
 }
 
 .gear-view {
-    .nav {
-        margin-bottom: 1%
-    }
-
     .react-bootstrap-table {
         overflow-wrap: break-word;
-
         margin-top: 1%;
     }
 
@@ -92,8 +87,46 @@
     }
 }
 
-body {
-    padding-top: 70px;
+.login-view {
+    margin: 0%;
+    height: 100vh;
+}
+
+.nav-page-wrapper {
+    margin: 1%;
+}
+
+.img-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-height: 45vh;
+}
+
+.log-view {
+    height: 50%;
+}
+
+.page-header-view {
+    text-align: center;
+    color: black;
+}
+
+.page-header h1 small {
+    color: black;
+}
+
+@media screen and (max-width: 400px) {
+    .img-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        max-height: 40vh;
+    }
+
+    .page-header h1{
+        font-size: 23px;
+    }
 }
 
 .panel.noborder {
@@ -115,4 +148,10 @@ body {
 
 .removeFromCartButton {
     width: 100%;
+}
+
+.submit-button {
+    width: 100px;
+    display: block;
+    margin: auto;
 }

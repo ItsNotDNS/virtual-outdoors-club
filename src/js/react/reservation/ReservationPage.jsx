@@ -9,7 +9,6 @@ import ReservationTable from "./ReservationTable";
 export default class ReservationPage extends Reflux.Component {
     constructor() {
         super();
-
         this.store = ReservationStore;
     }
 

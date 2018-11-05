@@ -5,67 +5,54 @@
 
 import React from "react";
 import { BrowserRouter, Route } from "react-router-dom";
-import { LinkContainer } from "react-router-bootstrap";
-import { Navbar, NavItem, Nav, NavDropdown, MenuItem, Button } from "react-bootstrap";
+import LoginPage from "./login/LoginPage";
+import NavbarAdmin from "./components/NavbarAdmin";
 import GearPage from "./gear/GearPage";
 import ReservationPage from "./reservation/ReservationPage";
 import RentPage from "./gear/RentPage";
+import PropTypes from "prop-types";
 import MemberPage from "./members/MemberPage";
 import PaymentPage from "./reservation/payment/PaymentPage";
 import VariabilityPage from "./variability/EditVariabilityPage";
 
 export default class App extends React.Component {
+    constructor(props) {
+        super(props);
+        this.AdminWrapper = this.AdminWrapper.bind(this);
+    }
+
+    AdminWrapper(page) {
+        const Page = page,
+            Wrapper = (props) => {
+                return (
+                    <div>
+                        {props.location.pathname.includes("login") ? null : <NavbarAdmin />}
+                        <div className="nav-page-wrapper">
+                            <Page />
+                        </div>
+                    </div>
+                );
+            };
+        Wrapper.propTypes = {
+            location: PropTypes.shape({
+                pathname: PropTypes.string.isRequired
+            })
+        };
+        return Wrapper;
+    }
+
     render() {
         return (
             <BrowserRouter>
-                <div className="page-margin">
-                    <Navbar fluid fixedTop >
-                        <Navbar.Header>
-                            <Navbar.Brand>
-                                Administration
-                            </Navbar.Brand>
-                        </Navbar.Header>
-                        <Nav bsStyle="pills">
-                            <LinkContainer to="/gear">
-                                <NavItem eventKey={1}> Gear </NavItem>
-                            </LinkContainer>
-                            <LinkContainer to="/rent">
-                                <NavItem eventKey={2}> Rent </NavItem>
-                            </LinkContainer>
-                            <LinkContainer to="/reservation">
-                                <NavItem eventKey={3}> Reservations </NavItem>
-                            </LinkContainer>
-                            <LinkContainer to="#">
-                                <NavItem disabled eventKey={4}> Users </NavItem>
-                            </LinkContainer>
-                            <NavDropdown eventKey={5} title="Actions" id="nav-dropdown">
-                                <LinkContainer to="#">
-                                    <MenuItem disabled eventKey={5.1}>Enable/Disable Rental System</MenuItem>
-                                </LinkContainer>
-                                <LinkContainer to="#">
-                                    <MenuItem disabled eventKey={5.2}>Statistics</MenuItem>
-                                </LinkContainer>
-                                <LinkContainer to="#">
-                                    <MenuItem disabled eventKey={5.3}>System Variables</MenuItem>
-                                </LinkContainer>
-                                <LinkContainer to="#">
-                                    <MenuItem disabled eventKey={5.4}>Update Membership List</MenuItem>
-                                </LinkContainer>
-                            </NavDropdown>
-                        </Nav>
-                        <Navbar.Form pullRight>
-                            <LinkContainer to="#">
-                                <Button bsStyle="primary"> Logout </Button>
-                            </LinkContainer>
-                        </Navbar.Form>
-                    </Navbar>
-                    <Route exact path="/" component={GearPage} />
-                    <Route path="/gear" component={GearPage} />
-                    <Route path="/reservation" component={ReservationPage} />
-                    <Route path="/rent" component={RentPage} />
-                    <Route path="/members" component={MemberPage} />
-                    <Route path="/pay" component={PaymentPage} />
-                    <Route path="/variability" component={VariabilityPage} />
+                <div>
+                    <Route exact path="/" component={this.AdminWrapper(GearPage)} />
+                    <Route path="/gear" component={this.AdminWrapper(GearPage)} />
+                    <Route path="/reservation" component={this.AdminWrapper(ReservationPage)} />
+                    <Route path="/rent" component={this.AdminWrapper(RentPage)} />
+                    <Route path="/login" component={this.AdminWrapper(LoginPage)} />
+                    <Route path="/members" component={this.AdminWrapper(MemberPage)} />
+                    <Route path="/pay" component={this.AdminWrapper(PaymentPage)} />
+                    <Route path="/variability" component={this.AdminWrapper(VariabilityPage)} />
                 </div>
             </BrowserRouter>
         );
