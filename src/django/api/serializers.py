@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Gear, GearCategory, Reservation, UserVariability
+from .models import Gear, GearCategory, Reservation, UserVariability, Member
 from datetime import datetime
 from django.db.models import Q
 
@@ -11,6 +11,15 @@ class UserVariabilitySerializer(serializers.ModelSerializer):
         fields = [
             "variable",
             "value",
+        ]
+
+
+class MemberSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Member
+        fields = [
+            "email"
         ]
 
 
@@ -72,6 +81,14 @@ class ReservationPOSTSerializer(serializers.ModelSerializer):
         ]
 
     def validate(self, data):
+
+        if "email" not in data:
+            raise serializers.ValidationError("Requests must have an email")
+        try:
+            member = Member.objects.get(email=data["email"])
+        except Member.DoesNotExist:
+            raise serializers.ValidationError("Email for this request not in database!")
+
         if data['startDate'] < datetime.now().date():
             raise serializers.ValidationError("Start date must be in the future.")
 
