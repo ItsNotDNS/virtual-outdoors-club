@@ -101,7 +101,7 @@ class ReservationPOSTSerializer(serializers.ModelSerializer):
             maxResvTime = 14
 
         if (data['endDate'] - data['startDate']).days > maxResvTime:
-            raise serializers.ValidationError("Length of reservation must be less than " + str(maxResvTime))
+            raise serializers.ValidationError("Length of reservation must be less than " + str(maxResvTime) + " days")
 
         denied = []
         dateFilter = Q(startDate__range=[data['startDate'], data['endDate']]) | \
@@ -119,7 +119,7 @@ class ReservationPOSTSerializer(serializers.ModelSerializer):
 
             for gear in data['gear']:
                 if overlappingRes.filter(gear=gear).exists():
-                    denied.append(gear.pk)
+                    denied.append(gear.code)
 
                 if len(denied) != 0:
                     message = ""
