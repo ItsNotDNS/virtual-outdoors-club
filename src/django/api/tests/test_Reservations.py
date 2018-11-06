@@ -3,6 +3,7 @@ from ..models import Reservation, GearCategory, Gear, Member
 from rest_framework.test import APIRequestFactory
 import datetime
 
+
 class ReservationTestCase(TestCase):
 
     # Create test data and save primary key of all objects
@@ -47,15 +48,19 @@ class ReservationTestCase(TestCase):
 
         # 2 valid ways of checking query params in GET/delete requests: 
 
-        # Way 1: response = self.client.get('/api/reservation/', {"id": 1, "email": "enry@email.com"}, content_type="application/json").data['data']
+        # Way 1: response = self.client.get('/api/reservation/', {"id": 1, "email": "enry@email.com"},
+        # content_type="application/json").data['data']
+
         # Way 2 is the below format. Either one works, but be consistent.
 
         # testing if get request with id and email parameters finds the appropriate reservations
         response = self.client.get('/api/reservation/?id=1&email=enry@email.com', content_type="application/json").data['data']
         self.assertEqual(response, correctResponse)
 
-        fromDate = (today - datetime.timedelta(days=1)).strftime("%Y-%m-%d") # get all reservations that start after this date.
-        toDate = (today + datetime.timedelta(days=5)).strftime("%Y-%m-%d") # get all reservations that end before this date
+        # get all reservations that fall within/overap in this time range
+        fromDate = (today - datetime.timedelta(days=1)).strftime("%Y-%m-%d")
+        toDate = (today + datetime.timedelta(days=5)).strftime("%Y-%m-%d") 
+
         getReqStr = '/api/reservation/?' + 'from=' + fromDate + '&to=' + toDate
         
         # testing if get request with start and end dates finds the appropriate reservations
@@ -123,6 +128,68 @@ class ReservationTestCase(TestCase):
 
         response = self.client.get('/api/reservation/').data['data']
         self.assertEqual(response, correctResponse)
+
+        request = {"email": "enry@email.com"}
+
+        response = self.client.post('/api/reservation/cancel/', request, content_type='application/json')
+        self.assertEqual(response.status_code, 400)
+
+        request = {"id": -2}
+
+        response = self.client.post('/api/reservation/cancel/', request, content_type='application/json')
+        self.assertEqual(response.status_code, 404)
+
+        reservation = Reservation.objects.get(pk=1)
+        reservation.status = "TAKEN"
+        # reservation with ID = 1 now has status "TAKEN"; returns a status error code (406)
+
+        request = {"id": 1}
+
+        response = self.client.post('/api/reservation/cancel/', request, content_type='application/json')
+        self.assertEqual(response.status_code, 406)
+
+
+    def test_approve(self):
+        request = {"id": 1}
+        today = datetime.datetime.today()
+
+        response = self.client.post('/api/reservation/approve/', request, content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+
+        correctResponse = [{
+            'id': 1,
+            'email': 'enry@email.com',
+            'licenseName': 'Name on their license.',
+            'licenseAddress': 'Address on their license.',
+            'status': 'APPROVED',
+            'gear': [{'id': self.sp.pk,
+                      'code': 'SP01',
+                      'category': 'Ski poles',
+                      'depositFee': '12.00',
+                      'description': 'Ski poles',
+                      'condition': 'RENTABLE',
+                      'version': 1}],
+            'endDate': (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
+            'startDate': today.strftime("%Y-%m-%d")}]
+
+        response = self.client.get('/api/reservation/').data['data']
+        self.assertEqual(response, correctResponse)
+
+        request = {"email": "enry@email.com"}
+
+        response = self.client.post('/api/reservation/approve/', request, content_type='application/json')
+        self.assertEqual(response.status_code, 400)
+
+        request = {"id": -2}
+
+        response = self.client.post('/api/reservation/approve/', request, content_type='application/json')
+        self.assertEqual(response.status_code, 404)
+
+        # reservation with ID = 1 now has status "approved" because of the first test; the response should return a status error.
+        request = {"id": 1}
+
+        response = self.client.post('/api/reservation/approve/', request, content_type='application/json')
+        self.assertEqual(response.status_code, 406)
 
     def test_post(self):
         reservationList = self.client.get("/api/reservation/", content_type='application/json').data["data"]

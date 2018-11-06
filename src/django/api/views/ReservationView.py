@@ -6,13 +6,15 @@ from ..models import Reservation
 from ..tasks import cancelled
 from ..serializers import ReservationPOSTSerializer, ReservationGETSerializer
 import datetime
+from django.db.models import Q
 
 
 def reservationIdExists(id):
     try:
         reservation = Reservation.objects.get(id=id)
-    except exceptions.ObjectDoesNotExist:
+    except Reservation.DoesNotExist:
         return False
+
     return reservation
 
 
@@ -20,6 +22,7 @@ class ReservationView(APIView):
 
     # Gets list of all reservations or specific reservations, depending on parameters
     def get(self, request):
+
         # Look for the following parameters in GET request
         ID = request.query_params.get("id", None)
         email = request.query_params.get("email", None)
@@ -34,11 +37,21 @@ class ReservationView(APIView):
                 datetime.datetime.strptime(startDate, '%Y-%m-%d')
             except ValueError:
                 return RespError(400, "startDate is in an invalid date format. Make sure it's in the YYYY-MM-DD format.")
+
         if endDate is not None:
             try:
                 datetime.datetime.strptime(endDate, '%Y-%m-%d')
             except ValueError:
                 return RespError(400, "endDate is in an invalid date format. Make sure it's in the YYYY-MM-DD format.")
+
+        if ID is not None:
+            try:
+                int(ID)
+            except ValueError:
+                return RespError(400, "id must be an integer.")
+
+        dateFilter = Q(startDate__range=[startDate, endDate]) | Q(endDate__range=[startDate, endDate]) | \
+                     Q(startDate__lte=startDate, endDate__gte=endDate)
 
         # Find a single reservation with a specific ID, associated with by a specific email
         if ID and email:
@@ -48,11 +61,11 @@ class ReservationView(APIView):
 
         # Find all reservations in a specific date range if only the start and end dates are given
         elif (startDate and endDate) and not (ID or email):
-            res = res.filter(startDate__gte=startDate).filter(endDate__lte=endDate)
+            res = res.filter(dateFilter)
 
         # Find all reservations made by a certain email address in a certain date range
         elif startDate and endDate and email and (not ID):
-            res = res.filter(startDate__gte=startDate).filter(endDate__lte=endDate).filter(email=email)
+            res = res.filter(dateFilter).filter(email=email)
 
         # Find all reservations made by a certain email address
         elif email and not (ID or startDate or endDate):
@@ -69,7 +82,6 @@ class ReservationView(APIView):
         # Success: return requested data in GET request
         serial = ReservationGETSerializer(res, many=True)
         return Response({"data": serial.data})
-
 
     # Attempt to create a new reservation
     def post(self, request):
@@ -88,8 +100,8 @@ class ReservationView(APIView):
         # check for extra unnecessary keys
         for key in newRes:
             if key not in properties:
-                return RespError(400, "'" + str(key) + "' is not valid with this POST method, please resubmit the"
-                                                       " request without it.")
+                return RespError(400, "'" + str(key) + "' is not valid with this POST method, please resubmit the "
+                                                       "request without it.")
 
         sRes = ReservationPOSTSerializer(data=newRes)
 
@@ -155,7 +167,7 @@ class ReservationView(APIView):
 def checkin(request):
     request = request.data
 
-    if not request['id']:
+    if "id" not in request:
         return RespError(400, "You must specify an id to return.")
 
     reservation = reservationIdExists(request['id'])
@@ -172,19 +184,38 @@ def checkin(request):
 def cancel(request):
     request = request.data
 
-    if not request['id']:
-        return RespError(400, "You must specify an id to return.")
+    if "id" not in request:
+        return RespError(400, "You must specify a reservation id to cancel")
 
     reservation = reservationIdExists(request['id'])
     if not reservation:
-        return RespError(400, "There is no reservation with the id of '" + str(request['id']) + "'")
+        return RespError(404, "There is no reservation with the id of '" + str(request['id']) + "'")
 
     if reservation.status != "REQUESTED" and reservation.status != "APPROVED":
-        return RespError(400, "The reservation status must be REQUESTED or APPROVED")
+        return RespError(406, "The reservation status must be REQUESTED or APPROVED")
 
     reservation.status = "CANCELLED"
     reservation.save()
 
     cancelled(reservation)
+    return Response()
+
+
+@api_view(['POST'])
+def approve(request):
+    request = request.data
+
+    if "id" not in request:
+        return RespError(400, "You must specify a reservation id to approve")
+
+    reservation = reservationIdExists(request['id'])
+    if not reservation:
+        return RespError(404, "There is no reservation with the id of '" + str(request['id']) + "'")
+
+    if reservation.status != "REQUESTED":
+        return RespError(406, "The reservation status must be REQUESTED in order to be approved.")
+
+    reservation.status = "APPROVED"
+    reservation.save()
 
     return Response()

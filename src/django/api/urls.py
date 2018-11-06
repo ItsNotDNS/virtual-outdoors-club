@@ -9,6 +9,7 @@ urlpatterns = [
     url(r'^reservation/?$', ReservationView.ReservationView.as_view(), name="Reservation"),
     url(r'^reservation/checkin/?$', ReservationView.checkin, name="reservationCheckin"),
     url(r'^reservation/cancel/?$', ReservationView.cancel, name="reservationCancel"),
+    url(r'^reservation/approve/?$', ReservationView.approve, name="reservationApprove"),
     url(r'^process/?$', PayPalView.paypalView, ''),
     url(r'^return/?$', PayPalView.returnView, name="returnView"),
     url(r'^cancel/?$', PayPalView.cancelView, name="cancelView"),
