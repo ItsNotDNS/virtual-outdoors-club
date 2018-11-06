@@ -29,7 +29,7 @@ export default class App extends React.Component {
                     <div>
                         {props.location.pathname.includes("login") ? null : <NavbarAdmin />}
                         <div className="nav-page-wrapper">
-                            <Page />
+                            <Page {...props} />
                         </div>
                     </div>
                 );
@@ -53,7 +53,7 @@ export default class App extends React.Component {
                     <Route path="/login" component={this.AdminWrapper(LoginPage)} />
                     <Route path="/members" component={this.AdminWrapper(MemberPage)} />
                     <Route path="/accounts" component={this.AdminWrapper(AccountPage)} />
-                    <Route path="/pay" component={this.AdminWrapper(PaymentPage)} />
+                    <Route path="/pay" component={PaymentPage} />
                     <Route path="/variability" component={this.AdminWrapper(VariabilityPage)} />
                 </div>
             </BrowserRouter>
