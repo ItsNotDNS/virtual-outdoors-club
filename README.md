@@ -91,7 +91,9 @@ Configuration under the branch production_setup allows to connect to the Postgre
 - If you are running the React server in Cybera, you must access the UI through
 
   ```199.116.235.142:8081``` for the gear page
+  
   ```199.116.235.142:8081/rent``` for the reservation page
+  
   ```199.116.235.142:8000/api/process``` for Paypal functionality
   
   Note: You must open the port 8081 and 8000 or whatever port you choose that you want the server to be in. To do that, add the port into your security group in Cybera, IPv4 and IPv6.
@@ -137,6 +139,14 @@ Your Ubuntu will intially have no node or npm installed, you must install them i
 
   Ensure everything else is setup such as PostgreSQL, Django, and the security groups for your ports (see above guide and notes)
 
+- To run the Email worker in the background to allow automated emails to be sent out for reservations
+
+  ```python3 manage.py createworker```
+  
+  ```python3 manage.py runserver 0.0.0.0:8000 &``` or ```nohup python3 manage.py runserver 0.0.0.0:8000 &```
+  
+  ```python3 manage.py process_tasks &```
+  
 # Project Structure
 
 Besides all of the dependencies required and stored in the project, there are three main folders that navigates to the code base and designs that were created:
