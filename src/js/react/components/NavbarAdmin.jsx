@@ -23,8 +23,8 @@ export default class NavbarAdmin extends React.Component {
                         <LinkContainer to="/reservation">
                             <NavItem eventKey={3}> Reservations </NavItem>
                         </LinkContainer>
-                        <LinkContainer to="#">
-                            <NavItem disabled eventKey={4}> Users </NavItem>
+                        <LinkContainer to="/members">
+                            <NavItem eventKey={4}> Members </NavItem>
                         </LinkContainer>
                         <NavDropdown eventKey={5} title="Actions" id="nav-dropdown">
                             <LinkContainer to="#">
@@ -33,11 +33,11 @@ export default class NavbarAdmin extends React.Component {
                             <LinkContainer to="#">
                                 <MenuItem disabled eventKey={5.2}>Statistics</MenuItem>
                             </LinkContainer>
-                            <LinkContainer to="#">
-                                <MenuItem disabled eventKey={5.3}>System Variables</MenuItem>
+                            <LinkContainer to="/variability">
+                                <MenuItem eventKey={5.3}>System Variables</MenuItem>
                             </LinkContainer>
-                            <LinkContainer to="#">
-                                <MenuItem disabled eventKey={5.4}>Update Membership List</MenuItem>
+                            <LinkContainer to="/accounts">
+                                <MenuItem eventKey={5.4}>Manage Account</MenuItem>
                             </LinkContainer>
                         </NavDropdown>
                     </Nav>
