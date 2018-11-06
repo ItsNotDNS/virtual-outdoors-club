@@ -18,6 +18,7 @@ from django.urls import path, include
 from django.conf.urls import url, handler500
 from api.views.error import error_500
 
+
 urlpatterns = [
     url(r'^paypal/', include('paypal.standard.ipn.urls')),
     path('api/', include('api.urls')),

@@ -43,7 +43,6 @@ class ReservationTestCase(TestCase):
                             'startDate': today.strftime("%Y-%m-%d"),
                             'endDate': (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d")}]
 
-
         self.assertEqual(response, correctResponse)
 
         # 2 valid ways of checking query params in GET/delete requests: 
@@ -132,7 +131,7 @@ class ReservationTestCase(TestCase):
         today = datetime.datetime.today()
 
         request = {
-            "email": "henry@email.com",
+            "email": "enry@email.com",
             "licenseName": "Name on their license.",
             "licenseAddress": "Address on their license.",
             "startDate": today.strftime("%Y-%m-%d"),
@@ -144,7 +143,7 @@ class ReservationTestCase(TestCase):
         correctResponse = {
             'startDate': today.strftime("%Y-%m-%d"),
             'id': 2,
-            'email': 'henry@email.com',
+            'email': 'enry@email.com',
             'endDate': (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
             'gear': [self.bk.pk],
             'licenseName': 'Name on their license.',

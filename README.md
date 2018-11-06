@@ -28,22 +28,20 @@ Django 2.1.1
 ### Installation
 
 #### Windows
-- Install [Python 3.5](https://www.python.org/downloads/release/python-352/)
+- Install [Python 3.5+](https://www.python.org/downloads/)
 - [Add \python and \python\scripts to your system variables](https://www.java.com/en/download/help/path.xml)
 - Ensure python and pip are properly installed:
   ```
   > Python -V
   > pip -V
   ```
-- Run `pip install Django==2.1.2` to install Django
-- Download the pre-built psycopg2 [Windows binary](https://www.lfd.uci.edu/~gohlke/pythonlibs/#psycopg) for python3.5
-- Run `pip install psycopg2-2.7.5-cp35-cp35m-win_amd64.whl` for x64 systems
+- Run `pip install -r requirements.txt` to install all dependencies
 - Download [PostgreSQL 9.5 for Windows](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads)
 - Follow [this guide](https://www.youtube.com/watch?v=_qUpvRTqK0Y) up to 4:20 to install PostgreSQL
   
   NOTE: Make sure to create a db called `outdoors_club_db`
 
-- run `manage.py runserver` to ...
+- run `python manage.py runserver` to start the server locally and run `python manage.py process_tasks` to start the email worker.
 
 #### Mac
  - Get [Homebrew](https://brew.sh/), if you haven't.
@@ -58,11 +56,13 @@ Django 2.1.1
    - This will allow you to use pgAdmin4, and `manage.py`.
  - Install [pgAdmin4](https://www.pgadmin.org/download/pgadmin-4-macos/)
    - You should be able to add a new server, choose a name and the host is `127.0.0.1`
- - You should now be able to run `python3 src/django/manage.py runserver`
+ - You should now be able to run `python3 src/django/manage.py runserver` and `python src/django/manage.py process_tasks`
  
 ### Testing
 
-You can run `python3 manage.py test` to run the django unit tests and `coverage run --source='.' manage.py test api` to collect coverage data. After `coverage report` to see this data.
+You can run `python3 manage.py test` to run the django unit tests and `coverage run --source='.' manage.py test api` to collect coverage data. Afterwords `coverage report` to see this data.
+
+For testing the email worker locally run `python -m smtpd -n -c DebuggingServer localhost:1025`. This will intercept emails sent by the worker and display them in the console.
 
 ### Production Server in Cybera
 
@@ -71,6 +71,10 @@ Settings have been adjusted to handle incoming traffic to Cybera's server. You c
 Configuration under the branch production_setup allows to connect to the PostgreSQL database. It does NOT connect to your local database. Use meaningful data if you want to add items.
 
 ## Steps
+
+- Create the worker task
+    
+  ```python3 manage.py createworker```
 
 - Ensure that the Django server is running in Cybera (this will be automated in the future)
 

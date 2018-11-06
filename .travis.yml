@@ -16,6 +16,7 @@ install:
   - npm install
   # Sets python to use v3.6.3 when
   - pyenv global 3.6.3
+  - pip install --upgrade pip
   # installs the packages specified in requirements.txt
   - pip install -r requirements.txt
   # installs selenium
@@ -29,7 +30,8 @@ before_script:
   # creates a new database called outdoors_club_db
   - psql -c "CREATE DATABASE outdoors_club_db"
   # runs django migrations
-  - python ./src/django/manage.py migrate
+  - python src/django/manage.py migrate
+  - python src/django/manage.py createworker
   # builds and runs the dist in the background
   - npm run-script build
   - node server.js &
