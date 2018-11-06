@@ -14,6 +14,7 @@ import PropTypes from "prop-types";
 import MemberPage from "./members/MemberPage";
 import PaymentPage from "./reservation/payment/PaymentPage";
 import VariabilityPage from "./variability/EditVariabilityPage";
+import AccountPage from "./accounts/AccountsPage";
 
 export default class App extends React.Component {
     constructor(props) {
@@ -51,6 +52,7 @@ export default class App extends React.Component {
                     <Route path="/rent" component={this.AdminWrapper(RentPage)} />
                     <Route path="/login" component={this.AdminWrapper(LoginPage)} />
                     <Route path="/members" component={this.AdminWrapper(MemberPage)} />
+                    <Route path="/accounts" component={this.AdminWrapper(AccountPage)} />
                     <Route path="/pay" component={this.AdminWrapper(PaymentPage)} />
                     <Route path="/variability" component={this.AdminWrapper(VariabilityPage)} />
                 </div>

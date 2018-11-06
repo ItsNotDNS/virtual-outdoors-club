@@ -13,7 +13,7 @@ export default function LabeledInput({ label, name, placeholder, onChange, value
             <ControlLabel>{label}</ControlLabel>
             <FormControl
                 name={name}
-                type="text"
+                type={props.type || "text"}
                 placeholder={placeholder}
                 onChange={onChange}
                 value={value}

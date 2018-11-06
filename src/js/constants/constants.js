@@ -5,6 +5,10 @@
  */
 
 export default {
+    accounts: {
+        ADMIN: "admin",
+        EXECUTIVE: "executive"
+    },
     modals: {
         EDITING: "Editing",
         CREATING: "Creating"
