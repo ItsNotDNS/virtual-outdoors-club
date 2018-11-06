@@ -40,6 +40,8 @@ class GearCategoryView(APIView):
             if not requiredProperties[key]:
                 return RespError(400, "You are required to provide a '" + key + "' when creating a gear category.")
 
+        newGearCategory["name"] = newGearCategory["name"].title()
+
         serial = GearCategorySerializer(data=newGearCategory)
         
         # check for invalid serial, i.e. malformed request
