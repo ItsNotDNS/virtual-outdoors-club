@@ -13,9 +13,6 @@ const { SearchBar } = Search;
 export default class RentGearTable extends Reflux.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            categoryOptions: {}
-        };
         this.getActionCell = this.getActionCell.bind(this);
     }
 

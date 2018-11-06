@@ -78,6 +78,10 @@ function defaultState() {
             FLAGGED: true,
             NEEDS_REPAIR: true,
             DELETED: false
+        },
+        dateFilter: {
+            startDate: null,
+            endDate: null
         }
     };
 }
@@ -113,7 +117,9 @@ export const GearActions = Reflux.createActions([
     "fileSelected",
     "uploadGearFile",
     "getGearFile",
-    "gearStatusCheckBoxChange"
+    "gearStatusCheckBoxChange",
+    "dateFilterChanged",
+    "fetchGearListFromTo"
 ]);
 
 export class GearStore extends Reflux.Store {
@@ -606,5 +612,26 @@ export class GearStore extends Reflux.Store {
             }
         });
         this.setState(newState);
+    }
+
+    onDateFilterChanged(field, date) {
+        const newState = update(this.state, {
+            dateFilter: {
+                [field]: { $set: date }
+            }
+        });
+        this.setState(newState);
+    }
+
+    onFetchGearListFromTo(startDate, endDate) {
+        const service = new GearService();
+        return service.fetchGearListFromTo(startDate, endDate)
+            .then(({ data }) => {
+                if (data) {
+                    this.setState({
+                        gearList: data
+                    });
+                }
+            });
     }
 }

@@ -9,20 +9,15 @@ import { GearStore, GearActions } from "./GearStore";
 import RentGearTable from "./RentGearTable";
 import ShoppingCartTable from "./ShoppingCartTable";
 import LabeledInput from "../components/LabeledInput";
-import DatePicker from "react-datepicker";
 import ErrorAlert from "../components/ErrorAlert";
 import { Button, Tab, Tabs } from "react-bootstrap";
 import ButtonModalForm from "../components/ButtonModalForm";
+import DateRangePicker from "../components/DateRangePicker";
 
 export default class RentPage extends Reflux.Component {
     constructor() {
         super();
         this.store = GearStore;
-
-        this.state = {
-            showShoppingCart: false,
-            mobileMode: window.innerWidth <= 768
-        };
         this.handleChange = this.handleChange.bind(this);
         this.getShoppingCart = this.getShoppingCart.bind(this);
     }
@@ -33,16 +28,33 @@ export default class RentPage extends Reflux.Component {
         }
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.dateFilter !== this.state.dateFilter &&
+            this.state.dateFilter.startDate !== null &&
+            this.state.dateFilter.endDate != null) {
+            GearActions.fetchGearListFromTo(this.state.dateFilter.startDate,
+                this.state.dateFilter.endDate);
+        }
+    }
+
     handleChange(event) {
         GearActions.reserveGearFormChanged(event.target.name, event.target.value);
     };
 
     handleStartDateChange(date) {
-        GearActions.reserveGearFormChanged("startDate", date.format("YYYY-MM-DD"));
+        GearActions.reserveGearFormChanged("startDate", date);
     }
 
     handleEndDateChange(date) {
-        GearActions.reserveGearFormChanged("endDate", date.format("YYYY-MM-DD"));
+        GearActions.reserveGearFormChanged("endDate", date);
+    }
+
+    handleFilterStartDateChange(date) {
+        GearActions.dateFilterChanged("startDate", date);
+    }
+
+    handleFilterEndDateChange(date) {
+        GearActions.dateFilterChanged("endDate", date);
     }
 
     getShoppingCart() {
@@ -99,21 +111,19 @@ export default class RentPage extends Reflux.Component {
                         name="licenseAddress"
                         onChange={this.handleChange}
                     />
-                                Start date
-                    <DatePicker
-                        value={this.state.reserveGearForm.startDate}
-                        onChange={this.handleStartDateChange}
-                        dropdownMode="select"
-                    />
-                                End date
-                    <DatePicker
-                        value={this.state.reserveGearForm.endDate}
-                        onChange={this.handleEndDateChange}
-                        dropdownMode="select"
+                    <DateRangePicker
+                        setStartDate={this.handleStartDateChange}
+                        setEndDate={this.handleEndDateChange}
+                        horizontal={false}
                     />
                 </ButtonModalForm>
                 <Tabs defaultActiveKey={1} id="rent-view-tabs">
                     <Tab eventKey={1} title="Gear">
+                        <DateRangePicker
+                            setStartDate={this.handleFilterStartDateChange}
+                            setEndDate={this.handleFilterEndDateChange}
+                            horizontal
+                        />
                         <RentGearTable
                             gearList={this.state.gearList}
                             addToCart={GearActions.addToShoppingCart}

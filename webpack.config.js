@@ -59,6 +59,13 @@ module.exports = {
                 }, {
                     loader: "sass-loader" // compiles Sass to CSS
                 }]
+            }, {
+                test: /\.css$/,
+                use: [{
+                    loader: "style-loader" // inject CSS to page
+                }, {
+                    loader: "css-loader" // translates CSS into CommonJS modules
+                }]
             },
             {
                 test: /\.(png|jpg|gif)$/,

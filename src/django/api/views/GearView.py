@@ -1,9 +1,11 @@
-from ..models import Gear
+from ..models import Gear, Reservation
 from django.core import exceptions
 from ..serializers import GearSerializer
 from rest_framework.views import APIView
 from .error import *
 from django.db.models import ProtectedError
+from datetime import datetime
+from django.db.models import Q
 
 
 # returns False if no gear has that id, otherwise the gear with the id is returned
@@ -28,10 +30,30 @@ class GearView(APIView):
 
     # gets a list of all gear in the database and returns it as a list of json objects
     def get(self, request):
-        allGear = Gear.objects.all()
-        allGear = GearSerializer(allGear, many=True)
+        start = request.query_params.get("from", None)
+        end = request.query_params.get("to", None)
 
-        return Response({"data": allGear.data})
+        gear = Gear.objects.all()
+
+        if start and end:
+            try:
+                start = datetime.strptime(start, "%Y-%m-%d")
+                end = datetime.strptime(end, "%Y-%m-%d")
+            except ValueError:
+                return RespError(400, "Date must be in year-month-day format")
+
+            dateFilter = Q(startDate__range=[start, end]) | \
+                         Q(endDate__range=[start, end]) | \
+                         Q(startDate__lte=start, endDate__gte=end)
+
+            resGear = Reservation.objects.filter(dateFilter).values("gear")
+
+            if resGear.exists():
+                gear = gear.exclude(id__in=resGear)
+
+        gear = GearSerializer(gear, many=True)
+
+        return Response({"data": gear.data})
 
     def post(self, request):
         newGear = request.data

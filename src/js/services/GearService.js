@@ -270,4 +270,14 @@ export default class GearService {
         xlsx.utils.book_append_sheet(workbook, xlsx.utils.json_to_sheet(gearList), "Gear Sheet");
         xlsx.writeFile(workbook, `${moment().format("YYYY-MM-DD")}-gear-data.xlsx`);
     }
+
+    fetchGearListFromTo(startDate, endDate) {
+        return this.service.get(
+            `${config.databaseHost}/gear?from=${startDate}&to=${endDate}`
+        ).then((response) => {
+            return { data: response.data.data };
+        }).catch((error) => {
+            return { error: error.response.data.message };
+        });
+    }
 };

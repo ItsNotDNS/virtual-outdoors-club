@@ -95,4 +95,35 @@ describe("RentPage Tests", () => {
         rv = page.instance().getShoppingCart();
         expect(rv.props.children === "Empty Shopping Cart").to.be.false;
     });
+
+    it("handleFilterStartDateChange calls dateFilterChanged", () => {
+        const page = shallow(<RentPage />),
+            mockDate = moment("2013-03-01", "YYYY-MM-DD");
+        actionsStub.dateFilterChanged = sandbox.spy();
+        page.instance().handleFilterStartDateChange(mockDate);
+        expect(actionsStub.dateFilterChanged.calledOnce).to.be.true;
+    });
+
+    it("handleFilterEndDateChange calls dateFilterChanged", () => {
+        const page = shallow(<RentPage />),
+            mockDate = moment("2013-03-01", "YYYY-MM-DD");
+        actionsStub.dateFilterChanged = sandbox.spy();
+        page.instance().handleFilterEndDateChange(mockDate);
+        expect(actionsStub.dateFilterChanged.calledOnce).to.be.true;
+    });
+
+    it("componentDidUpdate success", () => {
+        const page = shallow(<RentPage />),
+            mockPrevProps = null,
+            mockPrevState = {};
+        actionsStub.fetchGearListFromTo = sandbox.spy();
+        page.instance().componentDidUpdate(mockPrevProps, mockPrevState);
+        expect(actionsStub.fetchGearListFromTo.calledOnce).to.be.false;
+        page.instance().state.dateFilter.startDate = "2013-03-01";
+        page.instance().componentDidUpdate(mockPrevProps, mockPrevState);
+        expect(actionsStub.fetchGearListFromTo.calledOnce).to.be.false;
+        page.instance().state.dateFilter.endDate = "2013-03-03";
+        page.instance().componentDidUpdate(mockPrevProps, mockPrevState);
+        expect(actionsStub.fetchGearListFromTo.calledOnce).to.be.true;
+    });
 });

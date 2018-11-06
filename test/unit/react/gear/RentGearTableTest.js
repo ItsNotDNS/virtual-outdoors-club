@@ -2,7 +2,6 @@ import React from "react";
 import { expect } from "chai";
 import { shallow } from "enzyme";
 import RentGearTable from "react/gear/RentGearTable";
-import BootstrapTable from "react-bootstrap-table-next";
 import sinon from "sinon";
 
 describe("RentGearTable Tests", () => {

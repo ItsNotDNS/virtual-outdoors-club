@@ -51,7 +51,29 @@ const sandbox = sinon.createSandbox(),
         }, {
             "id": 2,
             "description": "GT01 - Jasper and Malgine Lake - 1:100,000 - Tyvek"
-        }] };
+        }] },
+    mockReservationList = [
+        {
+            id: 1,
+            email: "email1",
+            licenseAddress: "address1",
+            licenseName: "name1",
+            startDate: "2018-11-01",
+            endDate: "2018-11-03",
+            gear: [mockGearList[0]],
+            status: "REQUESTED"
+        },
+        {
+            id: 2,
+            email: "email2",
+            licenseAddress: "address2",
+            licenseName: "name2",
+            startDate: "2018-11-09",
+            endDate: "2018-11-11",
+            gear: [mockGearList[0], mockGearList[1]],
+            status: "REQUESTED"
+        }
+    ];
 
 describe("GearStore Tests", () => {
     beforeEach(() => {
@@ -741,5 +763,37 @@ describe("GearStore Tests", () => {
         expect(gearStore.state.checkboxOptions[mockCheckboxOptions[0]]).to.be.false;
         gearStore.onGearStatusCheckBoxChange(mockCheckboxOptions[0], true);
         expect(gearStore.state.checkboxOptions[mockCheckboxOptions[0]]).to.be.true;
+    });
+
+    it("onDateFilterChanged success", () => {
+        const mockStartDate = "2018-01-01",
+            mockEndDate = "2018-01-02";
+        expect(gearStore.state.dateFilter.startDate).to.equal(null);
+        expect(gearStore.state.dateFilter.endDate).to.equal(null);
+        gearStore.onDateFilterChanged("startDate", mockStartDate);
+        expect(gearStore.state.dateFilter.startDate).to.equal(mockStartDate);
+        gearStore.onDateFilterChanged("endDate", mockEndDate);
+        expect(gearStore.state.dateFilter.endDate).to.equal(mockEndDate);
+    });
+
+    it("onFetchGearListFromTo - success", () => {
+        const mockStartDate = "2018-01-01",
+            mockEndDate = "2018-01-02";
+        getStub.returns(Promise.resolve({ data: { data: mockGearList } }));
+        gearStore.onFetchGearListFromTo(mockStartDate, mockEndDate);
+        return gearStore.onFetchGearListFromTo(mockStartDate, mockEndDate).then(() => {
+            expect(gearStore.state.gearList).to.be.equal(mockGearList);
+        });
+    });
+
+    it("onFetchGearListFromTo - error", () => {
+        const mockStartDate = "2018-01-01",
+            mockEndDate = "2018-01-02",
+            error = { response: { data: { message: "Error message" } } };
+        getStub.returns(Promise.reject(error));
+        gearStore.onFetchGearListFromTo(mockEndDate, mockStartDate);
+        return gearStore.onFetchGearListFromTo(mockEndDate, mockStartDate).then(() => {
+            expect(gearStore.state.gearList.length).to.be.equal(0);
+        });
     });
 });
