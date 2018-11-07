@@ -162,6 +162,21 @@ class ReservationView(APIView):
 
         return Response(sResv.data)
 
+@api_view(['POST'])
+def checkout(request):
+    request = request.data
+    reservation = reservationIdExists(request['id'])
+    if not reservation:
+        return RespError(400, "There is no reservation with the id of '" + str(request['id']) + "'")
+
+    if reservation.status == "PAID":
+        reservation.status = "TAKEN"
+    else:
+        return RespError(400, "The item must be paid for before it can be taken")
+    reservation.save()
+   
+    return Response()
+
 
 @api_view(['POST'])
 def checkin(request):
@@ -173,6 +188,9 @@ def checkin(request):
     reservation = reservationIdExists(request['id'])
     if not reservation:
         return RespError(400, "There is no reservation with the id of '" + str(request['id']) + "'")
+
+    if reservation.status not in ["REQUESTED", "APPROVED"]:
+        return RespError(400, "The reservation status must be REQUESTED or APPROVED")
 
     reservation.status = "RETURNED"
     reservation.save()

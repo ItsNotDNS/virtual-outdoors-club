@@ -7,6 +7,7 @@ urlpatterns = [
     url(r'^gear/?$', GearView.as_view(), name="Gear"),
     url(r'^gear/categories/?$', GearCategoryView.as_view(), name="Gear Category"),
     url(r'^reservation/?$', ReservationView.ReservationView.as_view(), name="Reservation"),
+    url(r'^reservation/checkout/?$', ReservationView.checkout, name="reservationCheckout"),
     url(r'^reservation/checkin/?$', ReservationView.checkin, name="reservationCheckin"),
     url(r'^reservation/cancel/?$', ReservationView.cancel, name="reservationCancel"),
     url(r'^reservation/approve/?$', ReservationView.approve, name="reservationApprove"),

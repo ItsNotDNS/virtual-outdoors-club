@@ -77,6 +77,37 @@ class ReservationTestCase(TestCase):
         response = self.client.get('/api/reservation/?email=enry@email.com', content_type="application/json").data['data']
         self.assertEqual(response, correctResponse)        
 
+
+    def test_checkout(self):
+        gr = Reservation.objects.get(pk=1)
+        gr.status = "PAID"
+        gr.save()
+        request = {"id": 1}
+        today = datetime.datetime.today()
+
+        response = self.client.post("/api/reservation/checkout/", request, content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+
+        correctResponse = [{
+            'id': 1,
+            'email': 'enry@email.com',
+            'licenseName': 'Name on their license.',
+            'licenseAddress': 'Address on their license.',
+            'status': 'TAKEN',
+            'gear': [{'id': self.sp.pk,
+                      'code': 'SP01',
+                      'category': 'Ski poles',
+                      'depositFee': '12.00',
+                      'description': 'Ski poles',
+                      'condition': 'RENTABLE',
+                      'version': 1}],
+            'endDate': (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
+            'startDate': today.strftime("%Y-%m-%d")}]
+
+        response = self.client.get('/api/reservation/').data['data']
+        self.assertEqual(response, correctResponse)
+
+
     def test_checkin(self):
         request = {"id": 1}
         today = datetime.datetime.today()
@@ -102,6 +133,12 @@ class ReservationTestCase(TestCase):
 
         response = self.client.get('/api/reservation/').data['data']
         self.assertEqual(response, correctResponse)
+
+        # Doing it again should return an error because the condition is different
+        response = self.client.post("/api/reservation/checkin/", request, content_type='application/json')
+        self.assertEqual(response.status_code, 400)
+
+       
 
     def test_cancel(self):
         request = {"id": 1}
