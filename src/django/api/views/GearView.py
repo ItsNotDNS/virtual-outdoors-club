@@ -71,7 +71,8 @@ class GearView(APIView):
             if key not in properties:
                 return RespError(400, "'" + str(key) + "' is not valid with this POST method, please resubmit the"
                                                        " request without it.")
-
+        category = newGear.get("category", None)
+        if category: newGear["category"] = category.title()
         sGear = GearSerializer(data=newGear)
 
         if not sGear.is_valid():

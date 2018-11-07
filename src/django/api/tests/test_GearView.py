@@ -10,8 +10,8 @@ class GearTestCase(TestCase):
     @classmethod
     def setUpClass(self):
         super().setUpClass()
-        sb = GearCategory.objects.create(name="sleeping bag")
-        bp = GearCategory.objects.create(name="backpack")
+        sb = GearCategory.objects.create(name="Sleeping Bag")
+        bp = GearCategory.objects.create(name="Backpack")
 
         self.gearObj1 = Gear.objects.create(code="BP01", category=bp, depositFee=50.00, description="A black Dakine backpack", condition="RENTABLE", version=1)
         self.gearObj2 = Gear.objects.create(code="SB01", category=sb, depositFee=50.00, description="A old red sleeping bag", condition="RENTABLE", version=1)
@@ -25,7 +25,7 @@ class GearTestCase(TestCase):
             "data": [{
                 "id": 1,
                 "code": "BP01",
-                "category": "backpack",
+                "category": "Backpack",
                 "depositFee": "50.00",
                 "description": "A black Dakine backpack",
                 "condition": "RENTABLE",
@@ -33,7 +33,7 @@ class GearTestCase(TestCase):
             }, {
                 "id": 2,
                 "code": "SB01",
-                "category": "sleeping bag",
+                "category": "Sleeping Bag",
                 "depositFee": "50.00",
                 "description": "A old red sleeping bag",
                 "condition": "RENTABLE",
@@ -49,7 +49,7 @@ class GearTestCase(TestCase):
 
         request = {
             "code": "SB02",
-            "category": "sleeping bag",
+            "category": "Sleeping Bag",
             "depositFee": "50.00",
             "description": "A new blue sleeping bag",
             "condition": "RENTABLE",
@@ -78,7 +78,7 @@ class GearTestCase(TestCase):
     def test_post_invalidKey(self):
         request = {
             "code": "SB02",
-            "category": "sleeping bag",
+            "category": "Sleeping Bag",
             "depositFee": "50.00",
             "descrip7tion": "A new blue sleeping bag"
         }
@@ -91,7 +91,7 @@ class GearTestCase(TestCase):
     def test_post_missingKeys(self):
         request = {
             "code": "SB02",
-            "category": "sleeping bag",
+            "category": "Sleeping Bag",
             "description": "A new blue sleeping bag",
             "condition": "RENTABLE"
         }
@@ -111,7 +111,7 @@ class GearTestCase(TestCase):
     def test_patch(self):
         patch = {
             "code": "SB02",
-            "category": "sleeping bag",
+            "category": "Sleeping Bag",
             "depositFee": "100.00",
             "description": "This backpack was actually a sleeping bag all along!",
             #"condition": "RENTABLE"
@@ -152,7 +152,7 @@ class GearTestCase(TestCase):
         self.assertEqual(response, [{
                 "id": 1,
                 "code": "BP01",
-                "category": "backpack",
+                "category": "Backpack",
                 "depositFee": "50.00",
                 "description": "A black Dakine backpack",
                 "condition": "RENTABLE",
