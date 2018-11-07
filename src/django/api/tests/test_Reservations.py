@@ -17,7 +17,7 @@ class ReservationTestCase(TestCase):
         bkCat = GearCategory.objects.create(name="Book")
         sp = Gear.objects.create(code="SP01", category=spCat, depositFee=12.00, description="Ski poles", condition="RENTABLE", version=1)
         bk = Gear.objects.create(code="BK01", category=bkCat, depositFee=12.00, description="some book", condition="RENTABLE", version=1)
-        gr = Reservation.objects.create(email="enry@email.com", licenseName="Name on their license.", licenseAddress="Address on their license.", approvedBy="nobody", startDate=today.strftime("%Y-%m-%d"), endDate=(today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"), payment={"nobody": "nobody"})
+        gr = Reservation.objects.create(email="enry@email.com", licenseName="Name on their license.", licenseAddress="Address on their license.", approvedBy="nobody", startDate=today.strftime("%Y-%m-%d"), endDate=(today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"))
         gr.gear.add(sp)
         gr.save()
         self.sp = sp

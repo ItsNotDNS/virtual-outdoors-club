@@ -75,7 +75,7 @@ class Reservation(models.Model):
     approvedBy = models.CharField(max_length = 50)
     startDate = models.DateField()
     endDate = models.DateField()
-    payment = JSONField(default = dict)
+    payment = models.CharField(max_length = 19, blank = True)
     gear = models.ManyToManyField(Gear)
     status = models.CharField(max_length = 20, choices = STATUS_CHOICE, default = "REQUESTED")
     version = models.IntegerField(default = 1)

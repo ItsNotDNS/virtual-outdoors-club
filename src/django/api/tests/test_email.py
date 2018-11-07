@@ -9,7 +9,7 @@ class EmailTest(TestCase):
     def setUp(self):
         self.gr = Reservation.objects.create(email="henry@email.com", licenseName="Name on their license.",
                                              licenseAddress="Address on their license.", approvedBy="nobody",
-                                             startDate="2018-10-25", endDate="2018-10-28", payment={"nobody": "nobody"})
+                                             startDate="2018-10-25", endDate="2018-10-28")
 
     def test_cancelled(self):
         # Send message.
