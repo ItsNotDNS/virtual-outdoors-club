@@ -13,6 +13,7 @@ import ErrorAlert from "../components/ErrorAlert";
 import { Button, Tab, Tabs } from "react-bootstrap";
 import ButtonModalForm from "../components/ButtonModalForm";
 import DateRangePicker from "../components/DateRangePicker";
+import { ToastContainer } from "react-toastify";
 
 export default class RentPage extends Reflux.Component {
     constructor() {
@@ -75,6 +76,16 @@ export default class RentPage extends Reflux.Component {
     render() {
         return (
             <div className="rent-view">
+                <ToastContainer
+                    className="reservation-success-toast"
+                    position="top-center"
+                    autoClose={4000}
+                    hideProgressBar
+                    closeOnClick
+                    pauseOnVisibilityChange={false}
+                    draggablePercent={80}
+                    pauseOnHover={false}
+                />
                 <Button
                     className="btn btn-primary pull-right "
                     disabled={this.state.checkoutDisabled}

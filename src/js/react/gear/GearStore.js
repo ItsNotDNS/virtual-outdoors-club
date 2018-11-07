@@ -6,6 +6,7 @@ import Reflux from "reflux";
 import GearService from "../../services/GearService";
 import update from "immutability-helper";
 import Constants from "../../constants/constants";
+import { toast } from "react-toastify";
 
 function defaultState() {
     return {
@@ -538,6 +539,7 @@ export class GearStore extends Reflux.Store {
                     });
                     this.setState(newState);
                     this.onCloseReserveGearForm();
+                    toast("Reservation Success");
                 }
             });
     }

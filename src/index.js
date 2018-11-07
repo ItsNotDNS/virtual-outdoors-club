@@ -5,6 +5,7 @@ import ReactDOM from "react-dom";
 import App from "./js/react/App";
 import "./scss/main";
 import "react-day-picker/lib/style.css";
+import "react-toastify/dist/ReactToastify.css";
 
 const contentWrapper = document.getElementById("react-entrypoint");
 
