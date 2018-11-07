@@ -61,7 +61,8 @@ class ReservationGETSerializer(serializers.ModelSerializer):
             "startDate",
             "endDate",
             "status",
-            "gear"
+            "gear",
+            "version"
         ]
 
 
@@ -77,7 +78,8 @@ class ReservationPOSTSerializer(serializers.ModelSerializer):
             "startDate",
             "endDate",
             "status",
-            "gear"
+            "gear",
+            "version"
         ]
 
     def validate(self, data):
@@ -128,4 +130,6 @@ class ReservationPOSTSerializer(serializers.ModelSerializer):
                         message += ", "
                     raise serializers.ValidationError("These items are unavailable: " + message[:-2])
 
+        if "version" in data:
+            data["version"] += 1
         return data

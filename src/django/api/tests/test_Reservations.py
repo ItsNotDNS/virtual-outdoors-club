@@ -42,7 +42,9 @@ class ReservationTestCase(TestCase):
                                       'condition': 'RENTABLE',
                                       'version': 1}],
                             'startDate': today.strftime("%Y-%m-%d"),
-                            'endDate': (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d")}]
+                            'endDate': (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
+                            'version': 1
+                            }]
 
         self.assertEqual(response, correctResponse)
 
@@ -102,7 +104,9 @@ class ReservationTestCase(TestCase):
                       'condition': 'RENTABLE',
                       'version': 1}],
             'endDate': (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
-            'startDate': today.strftime("%Y-%m-%d")}]
+            'startDate': today.strftime("%Y-%m-%d"),
+            'version': 1
+            }]
 
         response = self.client.get('/api/reservation/').data['data']
         self.assertEqual(response, correctResponse)
@@ -129,7 +133,9 @@ class ReservationTestCase(TestCase):
                       'condition': 'RENTABLE',
                       'version': 1}],
             'endDate': (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
-            'startDate': today.strftime("%Y-%m-%d")}]
+            'startDate': today.strftime("%Y-%m-%d"),
+            'version': 1
+            }]
 
         response = self.client.get('/api/reservation/').data['data']
         self.assertEqual(response, correctResponse)
@@ -161,7 +167,9 @@ class ReservationTestCase(TestCase):
                       'condition': 'RENTABLE',
                       'version': 1}],
             'endDate': (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
-            'startDate': today.strftime("%Y-%m-%d")}]
+            'startDate': today.strftime("%Y-%m-%d"),
+            'version': 1
+            }]
 
         response = self.client.get('/api/reservation/').data['data']
         self.assertEqual(response, correctResponse)
@@ -207,7 +215,9 @@ class ReservationTestCase(TestCase):
                       'condition': 'RENTABLE',
                       'version': 1}],
             'endDate': (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
-            'startDate': today.strftime("%Y-%m-%d")}]
+            'startDate': today.strftime("%Y-%m-%d"),
+            'version': 1
+            }]
 
         response = self.client.get('/api/reservation/').data['data']
         self.assertEqual(response, correctResponse)
@@ -252,7 +262,8 @@ class ReservationTestCase(TestCase):
             'gear': [self.bk.pk],
             'licenseName': 'Name on their license.',
             'status': 'REQUESTED',
-            'licenseAddress': 'Address on their license.'
+            'licenseAddress': 'Address on their license.',
+            'version': 1
         }
 
         # B = Booked dates
@@ -362,7 +373,8 @@ class ReservationTestCase(TestCase):
             'gear': patch["gear"],
             'licenseName': 'Name on their license.',
             'status': 'REQUESTED',
-            'licenseAddress': 'Address on their license.'
+            'licenseAddress': 'Address on their license.',
+            'version': 2
         }
 
         response = self.client.patch("/api/reservation", request, content_type="application/json").data
@@ -383,7 +395,8 @@ class ReservationTestCase(TestCase):
             "startDate": today.strftime("%Y-%m-%d"),
             "endDate": (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
             "status": "REQUESTED",
-            "gear": [self.bk.pk]
+            "gear": [self.bk.pk],
+            "version": 1
         }
 
         response = self.client.post("/api/reservation", request, content_type="application/json")
