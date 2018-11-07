@@ -1,5 +1,5 @@
 from django.test import TestCase
-from ..models import Reservation, GearCategory, Gear, Member
+from ..models import Reservation, GearCategory, Gear, Member, BlackList
 from rest_framework.test import APIRequestFactory
 import datetime
 
@@ -13,6 +13,8 @@ class ReservationTestCase(TestCase):
         today = datetime.datetime.today()
         Member.objects.create(email="enry@email.com")
         Member.objects.create(email="henry@email.com")
+        Member.objects.create(email="blackListed@email.com")
+        BlackList.objects.create(email="blackListed@email.com")
         spCat = GearCategory.objects.create(name="Ski poles")
         bkCat = GearCategory.objects.create(name="Book")
         sp = Gear.objects.create(code="SP01", category=spCat, depositFee=12.00, description="Ski poles", condition="RENTABLE", version=1)
@@ -402,5 +404,21 @@ class ReservationTestCase(TestCase):
         response = self.client.post("/api/reservation", request, content_type="application/json")
         self.assertEqual(response.status_code, 400)
 
+
+    def test_invalidEmail(self):
+        today = datetime.datetime.today()
+
+        request = {
+            "email": "blackListed@email.com",
+            "licenseName": "Name on their license.",
+            "licenseAddress": "Address on their license.",
+            "startDate": today.strftime("%Y-%m-%d"),
+            "endDate": (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
+            "status": "REQUESTED",
+            "gear": [self.bk.pk]
+        }
+
+        response = self.client.post("/api/reservation", request, content_type="application/json")
+        self.assertEqual(response.status_code, 400)
 
 

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Gear, GearCategory, Reservation, UserVariability, Member
+from .models import Gear, GearCategory, Reservation, UserVariability, Member, BlackList
 from datetime import datetime
 from django.db.models import Q
 
@@ -18,6 +18,15 @@ class MemberSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Member
+        fields = [
+            "email"
+        ]
+
+
+class BlackListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = BlackList
         fields = [
             "email"
         ]
@@ -90,6 +99,13 @@ class ReservationPOSTSerializer(serializers.ModelSerializer):
             member = Member.objects.get(email=data["email"])
         except Member.DoesNotExist:
             raise serializers.ValidationError("Email for this request not in database!")
+
+        try:    # Check if blacklisted email
+            blackListed = BlackList.objects.get(email=data["email"])
+            if blackListed:
+                raise serializers.ValidationError("This email is blacklisted!")
+        except BlackList.DoesNotExist:
+            pass
 
         if data['startDate'] < datetime.now().date():
             raise serializers.ValidationError("Start date must be in the future.")

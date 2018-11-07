@@ -23,7 +23,7 @@ class Member(models.Model):
 
 # storage for all of the blacklisted members in the club.
 class BlackList(models.Model):
-    email = models.EmailField()
+    email = models.EmailField(primary_key=True)
 
 
 # set a collection of available gear categories that are in the system
