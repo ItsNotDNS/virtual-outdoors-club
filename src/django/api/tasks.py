@@ -14,14 +14,14 @@ def worker():
 
     messages = []
     for res in reminder.all():
-        body = "Hey " + res.licenseName.split()[0] + ",\n\nThis is a automated email letting you know that you " \
+        body = "Hey " + res.licenseName.split()[0] + ",\n\nThis is an automated email letting you know that you " \
                 "need to return return these gear by tomorrow: \n"
 
         for gear in res.gear.all():
             body += gear.category.name + " " + gear.code + " - " + gear.description + "\n"
 
         body += "\nFailure to return these gear by tomorrow can result in blacklisting and forfeiting of your" \
-                " deposit. If you have concerns or questions please contact the University of Alberta Outdoors" \
+                " deposit. If you have concerns or questions, please contact the University of Alberta Outdoors" \
                 " Club as soon as possible so appropriate action can be taken to resolve the issue.\n\nThanks," \
                 "\nUniversity of Alberta Outdoors Club"
 
@@ -32,9 +32,9 @@ def worker():
 
 
 def cancelled(res):
-    body = "Hey " + res.licenseName.split()[0] + ",\n\nThis is a automated email letting you know that your" \
+    body = "Hey " + res.licenseName.split()[0] + ",\n\nThis is an automated email letting you know that your" \
            " reservation for " + str(res.startDate) + " to " + str(res.endDate) + " has been cancelled. If you have" \
-           " concerns or questions please contact the University of Alberta Outdoors Club as soon as possible so" \
+           " concerns or questions, please contact the University of Alberta Outdoors Club as soon as possible so" \
            " appropriate action can be taken to resolve the issue.\n\nThanks,\nUniversity of Alberta Outdoors Club"
 
     email([{"subject": "Reservation Cancelled", "body": body, "to": res.email}])
