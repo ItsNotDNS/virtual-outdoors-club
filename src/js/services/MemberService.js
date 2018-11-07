@@ -3,8 +3,38 @@
  * member API.
  */
 import xlsx from "xlsx";
+import axios from "axios";
+import config from "../../config/config";
 
 export default class MemberService {
+    getMemberList() {
+        return axios.get(`${config.databaseHost}/members`)
+            .then((response) => {
+                const list = response.data && response.data.data;
+                return { members: list };
+            })
+            .catch((error) => {
+                const message = (error.response && error.response.data &&
+                    error.response.data.message) || "An unexpected error occurred, try again later.";
+                return { error: message };
+            });
+    }
+
+    uploadMemberList(list) {
+        return axios.post(`${config.databaseHost}/members`, {
+            members: list
+        })
+            .then((response) => {
+                const list = response.data && response.data.data;
+                return { members: list };
+            })
+            .catch((error) => {
+                const message = (error.response && error.response.data &&
+                    error.response.data.message) || "An unexpected error occurred, try again later.";
+                return { error: message };
+            });
+    }
+
     // Parses a file to an array buffer
     _parseFileToBuffer(file) {
         return new Promise((resolve, reject) => {

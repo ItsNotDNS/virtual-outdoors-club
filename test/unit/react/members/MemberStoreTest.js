@@ -1,14 +1,20 @@
 import { expect } from "chai";
 import sinon from "sinon";
+import axios from "axios";
 import { MemberStore } from "react/members/MemberStore";
 import MemberService from "services/MemberService";
 
 const sandbox = sinon.createSandbox();
-let store = new MemberStore();
+let axiosGetStub, axiosPostStub, store;
 
 describe("MemberStore Tests", () => {
+    beforeEach(() => {
+        axiosGetStub = sandbox.stub(axios, "get");
+        axiosPostStub = sandbox.stub(axios, "post");
+        store = new MemberStore({ fetchOnConstruct: false });
+    });
+
     afterEach(() => {
-        store = new MemberStore();
         sandbox.restore();
     });
 
@@ -45,6 +51,94 @@ describe("MemberStore Tests", () => {
             expect(parseMemberFileStub.calledOnce).to.be.true;
             expect(store.state.upload.members).to.deep.equal(members);
             expect(store.state.upload.warnings).to.deep.equal(warnings);
+        });
+    });
+
+    it("fetchMemberList - sets fetching to true and sets memberList on fetch", () => {
+        const response = { data: { data: ["test@example.com"] } };
+        axiosGetStub.returns(Promise.resolve(response));
+
+        expect(store.state.fetchingMemberList).to.be.false;
+
+        store.fetchMemberList();
+
+        expect(store.state.fetchingMemberList).to.be.true;
+        expect(store.state.memberList).to.deep.equal([]);
+
+        return store.fetchMemberList().then(() => {
+            expect(store.state.fetchingMemberList).to.be.false;
+            expect(store.state.memberList).to.deep.equal(response.data.data);
+        });
+    });
+
+    it("fetchMemberList - error path and fetching variable", () => {
+        const error = { response: { data: { message: "this is an error" } } };
+        axiosGetStub.returns(Promise.reject(error));
+
+        expect(store.state.fetchingMemberList).to.be.false;
+
+        store.fetchMemberList();
+
+        expect(store.state.fetchingMemberList).to.be.true;
+        expect(store.state.memberList).to.deep.equal([]);
+
+        return store.fetchMemberList().then(() => {
+            expect(store.state.fetchingMemberList).to.be.false;
+            expect(store.state.memberList).to.deep.equal([]);
+            expect(store.state.error).to.equal(error.response.data.message);
+        });
+    });
+
+    it("fetchMemberList - bad error response is handled", () => {
+        const error = { bad: "error" };
+        axiosGetStub.returns(Promise.reject(error));
+
+        return store.fetchMemberList().then(() => {
+            expect(store.state.error).to.not.equal("");
+        });
+    });
+
+    it("onUploadMemberFile - doesn't call service if no member list", () => {
+        expect(store.state.upload.members).to.deep.equal([]);
+        expect(axiosPostStub.called).to.be.false;
+
+        const result = store.onUploadMemberFile();
+
+        // still not called
+        expect(axiosPostStub.called).to.be.false;
+        expect(result).to.equal(undefined);
+    });
+
+    it("onUploadMemberFile - success path", () => {
+        const memberList = [{
+                email: "you@me.com"
+            }],
+            response = { data: { data: memberList } };
+
+        axiosPostStub.returns(Promise.resolve(response));
+        store.state.upload.members = memberList;
+        expect(store.state.memberList).to.deep.equal([]);
+
+        return store.onUploadMemberFile().then(() => {
+            expect(store.state.upload.error).to.equal("");
+            expect(store.state.memberList).to.deep.equal(memberList);
+        });
+    });
+
+    it("onUploadMemberFile - error path", () => {
+        const memberList = [{
+                email: "you@me.com"
+            }],
+            errorMsg = "this is an error",
+            response = { response: { data: { message: errorMsg } } };
+
+        axiosPostStub.returns(Promise.reject(response));
+        store.state.upload.members = memberList;
+        expect(store.state.memberList).to.deep.equal([]);
+
+        return store.onUploadMemberFile().then(() => {
+            expect(store.state.upload.error).to.equal(errorMsg);
+            expect(store.state.memberList).to.deep.equal([]);
         });
     });
 });

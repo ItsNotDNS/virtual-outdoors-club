@@ -7,7 +7,8 @@ import axios from "axios";
 import GearService from "../../../../src/js/services/GearService";
 import { GearActions } from "../../../../src/js/react/gear/GearStore";
 
-let getStub, postStub, patchStub, deleteStub, gearStore = new GearStore();
+let getStub, postStub, patchStub, deleteStub,
+    gearStore = new GearStore();
 const sandbox = sinon.createSandbox(),
     mockCategoryList = [{
         name: "book"

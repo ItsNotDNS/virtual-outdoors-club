@@ -5,8 +5,12 @@ import MemberService from "../../services/MemberService";
 function defaultState() {
     return {
         tabSelected: 1,
+        fetchingMemberList: false,
+        fetchedMemberList: false,
+        error: "",
         memberList: [],
         upload: {
+            displaySuccess: false,
             members: [],
             warnings: [],
             error: ""
@@ -16,14 +20,20 @@ function defaultState() {
 
 export const MemberActions = Reflux.createActions([
     "tabSelected",
-    "fileSelected"
+    "fileSelected",
+    "uploadMemberFile"
 ]);
 
 export class MemberStore extends Reflux.Store {
-    constructor() {
+    constructor(options = {}) {
         super();
         this.state = defaultState();
         this.listenables = MemberActions; // listen for actions
+
+        // fetch member list when constructing store, unless explicitly stated
+        if (options.fetchOnConstruct !== false) {
+            this.fetchMemberList();
+        }
     }
 
     onTabSelected(tab) {
@@ -58,6 +68,61 @@ export class MemberStore extends Reflux.Store {
                             error: { $set: error.toString() }
                         }
                     });
+                    this.setState(newState);
+                });
+        }
+    }
+
+    fetchMemberList() {
+        const service = new MemberService();
+
+        this.setState({
+            fetchingMemberList: true,
+            fetchedMemberList: false
+        });
+
+        return service.getMemberList()
+            .then(({ members, error }) => {
+                let newState;
+                if (error) {
+                    newState = update(this.state, {
+                        error: { $set: error },
+                        fetchingMemberList: { $set: false },
+                        fetchedMemberList: { $set: true }
+                    });
+                } else {
+                    newState = update(this.state, {
+                        memberList: { $set: members },
+                        fetchingMemberList: { $set: false },
+                        fetchedMemberList: { $set: true }
+                    });
+                }
+                this.setState(newState);
+            });
+    }
+
+    onUploadMemberFile() {
+        const service = new MemberService(),
+            memberList = this.state.upload.members;
+
+        if (memberList.length) {
+            return service.uploadMemberList(memberList)
+                .then(({ members, error }) => {
+                    let newState;
+                    if (error) {
+                        newState = update(this.state, {
+                            upload: {
+                                error: { $set: error }
+                            }
+                        });
+                    } else {
+                        newState = update(this.state, {
+                            upload: {
+                                displaySuccess: { $set: true }
+                            },
+                            memberList: { $set: members }
+                        });
+                    }
                     this.setState(newState);
                 });
         }

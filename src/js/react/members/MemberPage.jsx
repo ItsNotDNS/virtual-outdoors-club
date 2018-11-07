@@ -10,6 +10,7 @@ export default class MemberPage extends Reflux.Component {
         super();
 
         this.getUploadTab = this.getUploadTab.bind(this);
+        this.getMembersTab = this.getMembersTab.bind(this);
 
         this.store = MemberStore;
     }
@@ -39,10 +40,10 @@ export default class MemberPage extends Reflux.Component {
         }
     }
 
-    getSuccessAlert(members) {
+    getInfoAlert(members) {
         if (members.length) {
             return (
-                <Alert bsStyle="success">
+                <Alert bsStyle="info">
                     <h4>Looking Good!</h4>
                     <p>{`Clicking upload below will set the ${members.length} members listed in the file as your current members.`}</p>
                 </Alert>
@@ -50,22 +51,40 @@ export default class MemberPage extends Reflux.Component {
         }
     }
 
+    getSuccessAlert(show) {
+        if (show) {
+            return (
+                <Alert bsStyle="success">
+                    <h4>File Successfully Uploaded!</h4>
+                    <p>Your member list is now updated.</p>
+                </Alert>
+            );
+        }
+    }
+
     getMembersTab() {
-        const mockData = [{
-            email: "fake@test.com"
-        }, {
-            email: "ok@go.com"
-        }];
-        return (
-            <MemberTable memberList={mockData} />
-        );
+        const { memberList, fetchingMemberList, fetchedMemberList } = this.state;
+
+        if (fetchingMemberList) {
+            return <h3 className="loading-message">Loading...</h3>;
+        } else if (fetchedMemberList && !memberList.length) {
+            return (
+                <div className="no-members-message">
+                    <h3>You have no members!</h3>
+                    <p>You can upload a member file under the "Upload" tab.</p>
+                </div>
+            );
+        } else if (fetchedMemberList && memberList.length) {
+            return <MemberTable memberList={memberList} />;
+        }
     }
 
     getUploadTab() {
-        const { members, warnings, error } = this.state.upload,
+        const { members, warnings, error, displaySuccess } = this.state.upload,
             alert = this.getErrorAlert(error) ||
+                this.getSuccessAlert(displaySuccess) ||
                 this.getWarningAlert(warnings) ||
-                this.getSuccessAlert(members);
+                this.getInfoAlert(members);
 
         return (
             <div>
@@ -78,6 +97,7 @@ export default class MemberPage extends Reflux.Component {
                     <button
                         className="btn btn-success submit-button"
                         disabled={!members.length}
+                        onClick={MemberActions.uploadMemberFile}
                     >
                             Upload
                     </button>
@@ -86,9 +106,23 @@ export default class MemberPage extends Reflux.Component {
         );
     }
 
+    getPageError(error) {
+        if (error) {
+            return (
+                <Alert bsStyle="success">
+                    <h4>There was an Error.</h4>
+                    <p>{error}</p>
+                </Alert>
+            );
+        }
+    }
+
     render() {
+        const { error } = this.state;
+
         return (
             <div className="member-view">
+                {this.getPageError(error)}
                 <Tabs activeKey={this.state.tabSelected}
                     onSelect={MemberActions.tabSelected}
                     id="member-view-tabs"

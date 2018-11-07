@@ -1,40 +1,43 @@
 from .error import *
 from django.core import exceptions
+from django.db import transaction
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from ..models import Member
 from ..serializers import MemberSerializer
-
+from .error import *
 
 class MemberView(APIView):
     def get(self, request):
-        request = request.data
-    
         members = Member.objects.all()
         members = MemberSerializer(members, many=True)
     
         return Response({"data": members.data})
     
     
-    # Updates the member list in the database by deleting the old one
-    # and replacing it with the request list
+    # Transaction that replaces the current member list with a new one
+    # if the atomic transaction fails, no changes are saved to the DB
+    @transaction.atomic
     def post(self, request):
         request = request.data
-    
-        if not request["members"]:
-            return RespError(400, "You must give a list of members")
-        members = request["members"]
-    
-        Member.objects.all().delete()   # Deletes entire member list
-    
-        for i in members:
-            if "email" not in i:
-                return RespError(400, "You must give an email for each member")
-            email = email=i["email"]
-            if len(email) < 1 or "@" not in email:
-                return RespError(400, str(email) + " is not in an email format")
-            member = Member.objects.create(email=email)
-            member.save()
-    
-        return Response(200)
+        members = request.get("members", None)
+        if not members:
+            return RespError(400, "You must provide a list of members.")
+
+        try:
+            with transaction.atomic():
+                Member.objects.all().delete()
+
+                serial = MemberSerializer(data=members, many=True)
+                if not serial.is_valid():
+                    for key in errors:
+                        raise Exception(key + ": " + errors[key][0])
+            
+                serial.save()
+
+        except Exception as e:
+            return RespError(400, str(e))
+
+        # return the same response as the GET endpoint
+        return self.get(request)
     
