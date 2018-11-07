@@ -67,16 +67,14 @@ export default class RentPage extends Reflux.Component {
             );
         } else {
             return (
-                <div>
-                    Empty Shopping Cart
-                </div>
+                <h3>Empty Shopping Cart</h3>
             );
         }
     }
 
     render() {
         return (
-            <div className="gear-view">
+            <div className="rent-view">
                 <Button
                     className="btn btn-primary pull-right "
                     disabled={this.state.checkoutDisabled}

@@ -1,6 +1,8 @@
 .react-bootstrap-table {
     max-height: 65vh;
     overflow: auto;
+    overflow-wrap: break-word;
+    margin-top: 1%;
 }
 
 .file-button {
@@ -34,11 +36,6 @@
 }
 
 .gear-view {
-    .react-bootstrap-table {
-        overflow-wrap: break-word;
-        margin-top: 1%;
-    }
-
     .btn-action-cell {
         white-space: nowrap;
 
@@ -62,10 +59,8 @@
         width: 50%;
     }
 
-    .DayPickerInput {
-        margin-top: 1%;
-        margin-left: 0.5%;
-        margin-right: 0.5%;
+    .nav {
+        margin-bottom: 1%;
     }
 }
 
@@ -82,7 +77,10 @@
 
 .custom-search-field {
     margin-top: 1%;
-    margin-right: 70%;
+    width: 40%;
+    @media only screen and (max-width: 768px) {
+        width: 80%;
+    }
 }
 
 .member-view {
@@ -146,25 +144,37 @@
     }
 }
 
-.panel.noborder {
-    border: none;
-    box-shadow: none;
-}
-.panel-body {
-    padding: 0px;
-}
+.rent-view {
+    .nav {
+        margin-bottom: 1%;
+    }
 
-.checkoutButton {
-    margin-left: 2%;
-    margin-right: 5%;
-}
+    .addToCartButton {
+        width: 100%;
+    }
 
-.addToCartButton {
-    width: 100%;
-}
+    .removeFromCartButton {
+        width: 100%;
+    }
 
-.removeFromCartButton {
-    width: 100%;
+    .checkoutButton {
+        margin-left: 2%;
+        margin-right: 5%;
+    }
+
+    .DayPickerInput {
+        margin-left: 0.5%;
+        margin-right: 0.5%;
+        @media only screen and (max-width: 768px) {
+            display: flex;
+        }
+        .DayPicker-Day {
+            border-radius: 0;
+        }
+        input {
+            text-align: center;
+        }
+    }
 }
 
 .submit-button {
