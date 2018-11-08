@@ -12,10 +12,11 @@ import { GearStore } from "../gear/GearStore";
 import DayPickerInput from "react-day-picker/DayPickerInput";
 import PropTypes from "prop-types";
 import { ControlLabel, FormGroup } from "react-bootstrap";
+import moment from "moment";
 
 export default class DateRangePicker extends Reflux.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.store = GearStore;
         this.endDayPickerInputRef = React.createRef();
 
@@ -62,6 +63,24 @@ export default class DateRangePicker extends Reflux.Component {
         return (<br />);
     }
 
+    static getDerivedStateFromProps(props, state) {
+        let startDate,
+            endDate;
+        if (state.from === undefined && state.to === undefined) {
+            if (props.startDate) {
+                startDate = moment(props.startDate).toDate();
+            }
+            if (props.endDate) {
+                endDate = moment(props.endDate).toDate();
+            }
+            return ({
+                from: startDate,
+                to: endDate
+            });
+        }
+        return null;
+    }
+
     render() {
         const { from, to } = this.state;
         return (
@@ -103,5 +122,7 @@ export default class DateRangePicker extends Reflux.Component {
 DateRangePicker.propTypes = {
     setStartDate: PropTypes.func.isRequired,
     setEndDate: PropTypes.func.isRequired,
-    horizontal: PropTypes.bool.isRequired
+    horizontal: PropTypes.bool.isRequired,
+    startDate: PropTypes.string,
+    endDate: PropTypes.string
 };

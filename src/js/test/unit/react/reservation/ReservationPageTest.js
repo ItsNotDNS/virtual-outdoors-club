@@ -39,6 +39,6 @@ describe("ReservationPage Tests", () => {
                 expect(value).to.equal(Constants.modals.CREATING);
             };
 
-        page.instance().render();
+        page.instance().wrapOpenModal(cb)();
     });
 });

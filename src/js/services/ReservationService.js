@@ -22,11 +22,32 @@ export default class ReservationService {
             });
     }
 
+    approveReservation(reservationID) {
+        return this.service.post(`${config.databaseHost}/reservation/approve`, {
+            id: reservationID
+        }).then((response) => {
+            return { approvedReservation: response.data };
+        })
+            .catch((error) => {
+                return { error: error.response.data.message };
+            });
+    }
+
     fetchReservation(reservationId, email) {
         return this.service.get(`${config.databaseHost}/reservation?id=${reservationId}&email=${email}`)
             .then((response) => {
                 return { data: response.data.data[0] };
             }).catch((error) => {
+                return { error: error.response.data.message };
+            });
+    }
+
+    cancelReservation(reservationID) {
+        return this.service.post(`${config.databaseHost}/reservation/cancel`, { id: reservationID })
+            .then((response) => {
+                return { cancelledReservation: response.data };
+            })
+            .catch((error) => {
                 return { error: error.response.data.message };
             });
     }

@@ -3,14 +3,37 @@
  */
 
 import Reflux from "reflux";
+import Constants from "../../constants/constants";
 import ReservationService from "../../services/ReservationService";
 import update from "immutability-helper";
 
 function defaultState() {
     return {
         fetchedReservationList: false,
-        error: false,
+        error: "",
+        statusDropdown: {
+            statusSelected: ""
+        },
         reservationList: [],
+        reservationModal: {
+            show: false,
+            error: false,
+            errorMessage: "",
+            mode: null,
+            id: null,
+            email: "",
+            licenseName: "",
+            licenseAddress: "",
+            startDate: "",
+            endDate: "",
+            status: ""
+        },
+        cancelReservationModal: {
+            id: null,
+            show: false,
+            error: false,
+            errorMessage: ""
+        },
         emailValidationForm: {
             id: null,
             email: null,
@@ -35,10 +58,21 @@ function defaultState() {
 // Create actions and export them for use
 export const ReservationActions = Reflux.createActions([
     "fetchReservationList",
+    "openReservationModal",
+    "openDeleteReservationModal",
+    "closeReservationModal",
+    "updateDropdown",
+    "submitReservationModal",
+    "approveReservation",
+    "openCancelReservationModal",
+    "submitCancelReservationModal",
+    "closeCancelReservationModal",
     "openEmailValidationForm",
     "emailValidationFormChanged",
     "fetchReservation",
-    "fetchPayPalForm"
+    "fetchPayPalForm",
+    "reservationModalChanged",
+    "setReservationModalError"
 ]);
 
 export class ReservationStore extends Reflux.Store {
@@ -69,6 +103,32 @@ export class ReservationStore extends Reflux.Store {
             });
     }
 
+    onOpenReservationModal(mode = Constants.modals.CREATING, options = { reservation: {} }) {
+        const { id, email, licenseName, licenseAddress, startDate, endDate, status } = options.reservation,
+            newState = update(this.state, {
+                reservationModal: {
+                    show: { $set: true },
+                    mode: { $set: mode },
+                    id: { $set: id || null },
+                    email: { $set: email || "" },
+                    licenseName: { $set: licenseName || "" },
+                    licenseAddress: { $set: licenseAddress || "" },
+                    startDate: { $set: startDate || "" },
+                    endDate: { $set: endDate || "" },
+                    status: { $set: status || "" }
+                }
+            });
+        this.setState(newState);
+    }
+
+    // Close the Reservation Modal
+    onCloseReservationModal() {
+        const newState = update(this.state, {
+            reservationModal: { $set: defaultState().reservationModal }
+        });
+        this.setState(newState);
+    }
+
     onOpenEmailValidationForm(reservationId) {
         const newState = update(this.state, {
             emailValidationForm: {
@@ -76,6 +136,36 @@ export class ReservationStore extends Reflux.Store {
             }
         });
         this.setState(newState);
+    }
+
+    onUpdateDropdown(value) {
+        this.setState({
+            statusDropdown: { statusSelected: value }
+        });
+    }
+
+    onApproveReservation() {
+        const service = new ReservationService();
+
+        return service.approveReservation(this.state.reservationModal.id)
+            .then(({ error }) => {
+                if (error) {
+                    const newState = update(this.state, {
+                        reservationModal: {
+                            error: { $set: true },
+                            errorMessage: { $set: error }
+                        }
+                    });
+                    this.setState(newState);
+                } else {
+                    const newState = update(this.state, {
+                        reservationModal: {
+                            status: { $set: "APPROVED" }
+                        }
+                    });
+                    this.setState(newState);
+                }
+            });
     }
 
     onEmailValidationFormChanged(field, value) {
@@ -110,6 +200,54 @@ export class ReservationStore extends Reflux.Store {
             });
     }
 
+    onOpenCancelReservationModal(id) {
+        const newState = update(this.state, {
+            cancelReservationModal: {
+                id: { $set: id },
+                show: { $set: true },
+                error: { $set: false },
+                errorMessage: { $set: "" }
+            }
+        });
+        this.setState(newState);
+    }
+
+    onSubmitCancelReservationModal() {
+        const service = new ReservationService();
+
+        return service.cancelReservation(this.state.cancelReservationModal.id)
+            .then(({ error }) => {
+                if (error) {
+                    const newState = update(this.state, {
+                        cancelReservationModal: {
+                            error: { $set: true },
+                            errorMessage: { $set: error }
+                        }
+                    });
+                    this.setState(newState);
+                } else {
+                    const newState = update(this.state, {
+                        reservationList: {
+                            $set: this.state.reservationList.filter(
+                                (obj) => {
+                                    return obj.id;
+                                }
+                            )
+                        }
+                    });
+                    this.setState(newState);
+                    this.onCloseCancelReservationModal();
+                }
+            });
+    }
+
+    onCloseCancelReservationModal() {
+        const newState = update(this.state, {
+            cancelReservationModal: { $set: defaultState().cancelReservationModal }
+        });
+        this.setState(newState);
+    }
+
     onFetchPayPalForm() {
         const service = new ReservationService();
 
@@ -130,4 +268,24 @@ export class ReservationStore extends Reflux.Store {
                 }
             });
     }
+
+    // updates the field values of the reservationModal
+    onReservationModalChanged(field, value) {
+        const newState = update(this.state, {
+            reservationModal: {
+                [field]: { $set: value }
+            }
+        });
+        this.setState(newState);
+    }
+
+    // onSetReservationModalError(message) {
+    //     const newState = update(this.state, {
+    //         reservationModal: {
+    //             error: { $set: true },
+    //             errorMessage: { $set: message }
+    //         }
+    //     });
+    //     this.setState(newState);
+    // }
 }

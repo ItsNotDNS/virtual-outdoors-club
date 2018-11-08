@@ -6,13 +6,15 @@ import React from "react";
 import PropTypes from "prop-types";
 import ButtonModalForm from "./ButtonModalForm";
 
-export default function ConfirmationDialog({ show, title, message, onClose, onSubmit }) {
+export default function ConfirmationDialog({ show, title, message, onClose, onSubmit, error, errorMessage }) {
     return (
         <ButtonModalForm
             show={show}
             formTitle={title}
             onSubmit={onSubmit}
             onClose={onClose}
+            error={error}
+            errorMessage={errorMessage}
         >
             {message}
         </ButtonModalForm>
@@ -24,5 +26,7 @@ ConfirmationDialog.propTypes = {
     title: PropTypes.string.isRequired,
     message: PropTypes.string.isRequired,
     onClose: PropTypes.func.isRequired,
-    onSubmit: PropTypes.func.isRequired
+    onSubmit: PropTypes.func.isRequired,
+    error: PropTypes.bool,
+    errorMessage: PropTypes.string
 };

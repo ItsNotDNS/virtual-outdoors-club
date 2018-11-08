@@ -4,6 +4,7 @@ import { shallow } from "enzyme";
 import DateRangePicker from "react/components/DateRangePicker";
 import DayPickerInput from "react-day-picker/DayPickerInput";
 import sinon from "sinon";
+import moment from "moment";
 
 describe("DateRangePicker Tests", () => {
     it("formatDate success", () => {
@@ -16,6 +17,8 @@ describe("DateRangePicker Tests", () => {
                     setStartDate={setStartDateSpy}
                     setEndDate={setEndDateSpy}
                     horizontal
+                    startDate={"2018-10-10"}
+                    endDate={"2018-10-14"}
                 />
             );
         expect(dateRangePicker.instance().formatDate("")).to.equal("");
