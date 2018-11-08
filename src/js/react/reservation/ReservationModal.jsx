@@ -148,19 +148,19 @@ export default class ReservationModal extends React.Component {
                 <Modal.Header closeButton>
                     <Modal.Title className="text-center">
                         <span className="pull-left">{data.status}</span>
-                        <span className="pull-left">{`Reservation #${data.id}`}</span>
+                        <span className="left-margin pull-left">{`Reservation #${data.id}`}</span>
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     {this.getModalAlert(alertMsg, alertType)}
                     <div className="row">
                         <div className="col-md-6">
-                            {this.getNameValueField("name", data.licenseName)}
-                            {this.getNameValueField("address", data.licenseAddress)}
+                            {this.getNameValueField("Name", data.licenseName)}
+                            {this.getNameValueField("Address", data.licenseAddress)}
                         </div>
                         <div className="col-md-6">
-                            {this.getNameValueField("start", data.startDate)}
-                            {this.getNameValueField("end", data.endDate)}
+                            {this.getNameValueField("Start", data.startDate)}
+                            {this.getNameValueField("End", data.endDate)}
                         </div>
                     </div>
                     <hr />

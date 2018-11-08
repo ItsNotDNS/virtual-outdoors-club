@@ -5,32 +5,8 @@
 import React from "react";
 import Table from "react-bootstrap-table-next";
 import PropTypes from "prop-types";
-import Constants from "../../constants/constants";
 
 export default class ReservationTable extends React.Component {
-    constructor() {
-        super();
-
-        this.getActionCell = this.getActionCell.bind(this);
-    }
-
-    getEditAction(callback, row) {
-        const reservation = {
-            id: row.id,
-            email: row.email,
-            licenseName: row.licenseName,
-            licenseAddress: row.licenseAddress,
-            startDate: row.startDate,
-            endDate: row.endDate,
-            status: row.status
-        };
-        return () => callback(Constants.modals.EDITING, { reservation });
-    }
-
-    getDeleteAction(callback, row) {
-        return () => callback(row.id);
-    }
-
     get columns() {
         return [{
             dataField: "licenseName",
