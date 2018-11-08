@@ -1,3 +1,6 @@
+/**
+ * Page for editing user variability
+ */
 import React from "react";
 import Reflux from "reflux";
 import LabeledInput from "../components/LabeledInput";

@@ -1,3 +1,8 @@
+/**
+ *Page for "Manage Account" with two tabs
+ * for changing password for execs, admins
+ */
+
 import React from "react";
 import Reflux from "reflux";
 import { Tabs, Tab, Alert } from "react-bootstrap";

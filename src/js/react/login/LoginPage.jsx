@@ -1,3 +1,7 @@
+/**
+ * Wrapper for login page
+ */
+
 import React from "react";
 import Reflux from "reflux";
 import LabeledInput from "../components/LabeledInput";

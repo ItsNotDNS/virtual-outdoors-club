@@ -1,3 +1,6 @@
+/**
+ * Form to show the user detailed information about their reservation
+ */
 import React from "react";
 import Reflux from "reflux";
 import PropTypes from "prop-types";

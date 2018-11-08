@@ -1,3 +1,7 @@
+/**
+ * Form to input email to verify it is the correct corresponding email,
+ * reservation and direct to the payment page
+ */
 import React from "react";
 import PropTypes from "prop-types";
 import LabeledInput from "../../components/LabeledInput";

@@ -1,3 +1,6 @@
+/**
+ * Checkboxes for gear status filtering
+ */
 import React from "react";
 import { Checkbox, FormGroup } from "react-bootstrap";
 import { GearActions } from "./GearStore";

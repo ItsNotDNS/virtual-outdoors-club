@@ -1,3 +1,6 @@
+/**
+ * Wrapper for paypal payment
+ */
 import React from "react";
 import Reflux from "reflux";
 import { ReservationActions, ReservationStore } from "../ReservationStore";

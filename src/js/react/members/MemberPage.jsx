@@ -1,3 +1,9 @@
+/**
+ * Wrapper for Member page with 2 tabs.
+ * Member tab: tab to view the list of members
+ * Upload tab: tab to upload a member list file
+ */
+
 import React from "react";
 import Reflux from "reflux";
 import { MemberStore, MemberActions } from "./MemberStore";

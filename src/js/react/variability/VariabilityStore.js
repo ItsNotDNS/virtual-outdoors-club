@@ -1,3 +1,6 @@
+/**
+ * Manages the state for the User variability page
+ */
 import Reflux from "reflux";
 import constants from "../../constants/constants";
 import update from "immutability-helper";

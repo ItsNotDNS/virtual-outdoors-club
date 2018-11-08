@@ -1,3 +1,11 @@
+/**
+ * Date picker for picking a start date and a end date
+ * can set a prop so it shows as horizontal or vertical.
+ * Accepts 2 callback function props for the caller to pass in to store the
+ * chosen date value.
+ * input, output date format: "YYYY-MM-DD"
+ */
+
 import React from "react";
 import Reflux from "reflux";
 import { GearStore } from "../gear/GearStore";

@@ -1,3 +1,7 @@
+/**
+ * Manages the state for the Manage Account page
+ */
+
 import Reflux from "reflux";
 import constants from "../../constants/constants";
 import update from "immutability-helper";
@@ -42,6 +46,7 @@ export class AccountsStore extends Reflux.Store {
 
         this.setState({ timeout: null });
 
+        // if the fields oldAdmin, newAdmin, confirmAdmin are filled in
         if (oldAdmin && newAdmin && confirmAdmin) {
             if (newAdmin !== confirmAdmin) {
                 this.setState(update(this.state, {

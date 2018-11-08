@@ -1,3 +1,6 @@
+/**
+ * Wrapper for opening file explorer to upload a file
+ */
 import React from "react";
 import PropTypes from "prop-types";
 

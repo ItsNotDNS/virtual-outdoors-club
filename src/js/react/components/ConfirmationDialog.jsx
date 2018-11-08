@@ -1,3 +1,7 @@
+/**
+ * Wrapper for ButtonModalForm with a simple confirmation
+ * message instead of form data
+ */
 import React from "react";
 import PropTypes from "prop-types";
 import ButtonModalForm from "./ButtonModalForm";

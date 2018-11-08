@@ -1,3 +1,6 @@
+/**
+ * Wrapper for Navigation bar in the Admin page
+ */
 import React from "react";
 import { LinkContainer } from "react-router-bootstrap";
 import { Navbar, NavItem, Nav, NavDropdown, MenuItem } from "react-bootstrap";

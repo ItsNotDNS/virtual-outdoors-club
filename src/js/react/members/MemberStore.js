@@ -1,3 +1,6 @@
+/**
+ * Manages the state for the Member page.
+ */
 import Reflux from "reflux";
 import update from "immutability-helper";
 import MemberService from "../../services/MemberService";
