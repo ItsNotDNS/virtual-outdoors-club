@@ -1,11 +1,11 @@
 import { GearStore } from "react/gear/GearStore";
 import Constants from "constants/constants";
-import config from "../../../../src/config/config";
+import config from "../../../../../config/config";
 import sinon from "sinon";
 import { expect } from "chai";
 import axios from "axios";
-import GearService from "../../../../src/js/services/GearService";
-import { GearActions } from "../../../../src/js/react/gear/GearStore";
+import GearService from "../../../../services/GearService";
+import { GearActions } from "../../../../react/gear/GearStore";
 
 let getStub, postStub, patchStub, deleteStub,
     gearStore = new GearStore();
