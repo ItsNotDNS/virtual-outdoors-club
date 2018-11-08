@@ -16,5 +16,15 @@ export default {
     variability: {
         EXECUTIVE: "exec",
         MEMBER: "member"
+    },
+    reservations: {
+        status: {
+            "REQUESTED": "REQUESTED",
+            "APPROVED": "APPROVED",
+            "PAID": "PAID",
+            "TAKEN": "TAKEN",
+            "RETURNED": "RETURNED",
+            "CANCELLED": "CANCELLED"
+        }
     }
 };

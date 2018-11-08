@@ -186,3 +186,17 @@
 .reservation-success-toast {
     text-align: center;
 }
+
+.bottom-margin {
+    margin: 2%;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.reservation-view {
+    .react-bootstrap-table {
+        cursor: pointer;
+    }
+}

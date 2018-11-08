@@ -216,7 +216,9 @@ def cancel(request):
     reservation.save()
 
     cancelled(reservation)
-    return Response()
+
+    serial = ReservationGETSerializer(reservation)
+    return Response(serial.data)
 
 
 @api_view(['POST'])
@@ -236,4 +238,6 @@ def approve(request):
     reservation.status = "APPROVED"
     reservation.save()
 
-    return Response()
+    serial = ReservationGETSerializer(reservation)
+
+    return Response(serial.data)

@@ -3,12 +3,12 @@
  */
 
 import Reflux from "reflux";
-import Constants from "../../constants/constants";
 import ReservationService from "../../services/ReservationService";
 import update from "immutability-helper";
 
 function defaultState() {
     return {
+        // Reservation Page State
         fetchedReservationList: false,
         error: "",
         statusDropdown: {
@@ -17,23 +17,12 @@ function defaultState() {
         reservationList: [],
         reservationModal: {
             show: false,
-            error: false,
-            errorMessage: "",
-            mode: null,
-            id: null,
-            email: "",
-            licenseName: "",
-            licenseAddress: "",
-            startDate: "",
-            endDate: "",
-            status: ""
+            alertMsg: "",
+            alertType: "",
+            data: {},
+            edit: {}
         },
-        cancelReservationModal: {
-            id: null,
-            show: false,
-            error: false,
-            errorMessage: ""
-        },
+        // Payment State
         emailValidationForm: {
             id: null,
             email: null,
@@ -57,6 +46,11 @@ function defaultState() {
 
 // Create actions and export them for use
 export const ReservationActions = Reflux.createActions([
+    "openReservationModal",
+    "closeReservationModal",
+    "approveReservation",
+    "cancelReservation",
+    "editReservation",
     "fetchReservationList",
     "openReservationModal",
     "openDeleteReservationModal",
@@ -82,6 +76,97 @@ export class ReservationStore extends Reflux.Store {
         this.listenables = ReservationActions; // listen for actions
     }
 
+    onOpenReservationModal(reservationInfo) {
+        this.setState(update(this.state, {
+            reservationModal: {
+                show: { $set: true },
+                data: { $set: reservationInfo }
+            }
+        }));
+    }
+
+    onCloseReservationModal() {
+        this.setState(update(this.state, {
+            reservationModal: { $set: defaultState().reservationModal }
+        }));
+    }
+
+    onApproveReservation() {
+        const id = this.state.reservationModal.data.id,
+            service = new ReservationService();
+
+        service.approveReservation(id)
+            .then(({ error, reservation }) => {
+                if (error) {
+                    this.setState(update(this.state, {
+                        reservationModal: {
+                            alertMsg: { $set: error },
+                            alertType: { $set: "danger" }
+                        }
+                    }));
+                } else {
+                    const newList = this.state.reservationList.map((item) => {
+                        return id === item.id ? reservation : item;
+                    });
+                    this.setState(update(this.state, {
+                        reservationList: { $set: newList },
+                        reservationModal: {
+                            alertMsg: { $set: "This reservation is now approved!" },
+                            alertType: { $set: "success" },
+                            data: { $set: reservation }
+                        }
+                    }));
+                }
+            });
+    }
+
+    onCancelReservation() {
+        const id = this.state.reservationModal.data.id,
+            service = new ReservationService();
+
+        service.cancelReservation(id)
+            .then(({ error, reservation }) => {
+                if (error) {
+                    this.setState(update(this.state, {
+                        reservationModal: {
+                            alertMsg: { $set: error },
+                            alertType: { $set: "danger" }
+                        }
+                    }));
+                } else {
+                    const newList = this.state.reservationList.map((item) => {
+                        return id === item.id ? reservation : item;
+                    });
+                    this.setState(update(this.state, {
+                        reservationList: { $set: newList },
+                        reservationModal: {
+                            alertMsg: { $set: "This reservation is now cancelled." },
+                            alertType: { $set: "success" },
+                            data: { $set: reservation }
+                        }
+                    }));
+                }
+            });
+    }
+
+    onEditReservation({ startDate, endDate, gear }) {
+        const edit = {};
+
+        if (startDate) {
+            edit.startDate = { $set: startDate };
+        }
+        if (endDate) {
+            edit.endDate = { $set: endDate };
+        }
+        if (gear) {
+            edit.gear = { $set: gear };
+        }
+
+        this.setState(update(this.state, {
+            reservationModal: { edit }
+        }));
+    }
+
     onFetchReservationList() {
         const service = new ReservationService();
 
@@ -103,32 +188,6 @@ export class ReservationStore extends Reflux.Store {
             });
     }
 
-    onOpenReservationModal(mode = Constants.modals.CREATING, options = { reservation: {} }) {
-        const { id, email, licenseName, licenseAddress, startDate, endDate, status } = options.reservation,
-            newState = update(this.state, {
-                reservationModal: {
-                    show: { $set: true },
-                    mode: { $set: mode },
-                    id: { $set: id || null },
-                    email: { $set: email || "" },
-                    licenseName: { $set: licenseName || "" },
-                    licenseAddress: { $set: licenseAddress || "" },
-                    startDate: { $set: startDate || "" },
-                    endDate: { $set: endDate || "" },
-                    status: { $set: status || "" }
-                }
-            });
-        this.setState(newState);
-    }
-
-    // Close the Reservation Modal
-    onCloseReservationModal() {
-        const newState = update(this.state, {
-            reservationModal: { $set: defaultState().reservationModal }
-        });
-        this.setState(newState);
-    }
-
     onOpenEmailValidationForm(reservationId) {
         const newState = update(this.state, {
             emailValidationForm: {
@@ -142,30 +201,6 @@ export class ReservationStore extends Reflux.Store {
         this.setState({
             statusDropdown: { statusSelected: value }
         });
-    }
-
-    onApproveReservation() {
-        const service = new ReservationService();
-
-        return service.approveReservation(this.state.reservationModal.id)
-            .then(({ error }) => {
-                if (error) {
-                    const newState = update(this.state, {
-                        reservationModal: {
-                            error: { $set: true },
-                            errorMessage: { $set: error }
-                        }
-                    });
-                    this.setState(newState);
-                } else {
-                    const newState = update(this.state, {
-                        reservationModal: {
-                            status: { $set: "APPROVED" }
-                        }
-                    });
-                    this.setState(newState);
-                }
-            });
     }
 
     onEmailValidationFormChanged(field, value) {

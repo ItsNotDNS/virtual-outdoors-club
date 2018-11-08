@@ -31,59 +31,27 @@ export default class ReservationTable extends React.Component {
         return () => callback(row.id);
     }
 
-    getActionCell(cellContent, row) {
-        return (
-            <div className="btn-action-cell">
-                <button
-                    className="btn btn-primary left-btn"
-                    onClick={
-                        this.getEditAction(this.props.onClickEdit, row)
-                    }
-                >
-                    <i className="fas fa-pen" />
-                </button>
-                <button
-                    className="btn btn-danger right-btn"
-                    onClick={
-                        this.getDeleteAction(this.props.onClickDelete, row)
-                    }
-                >
-                    <i className="fas fa-trash-alt" />
-                </button>
-            </div>
-        );
-    }
-
     get columns() {
         return [{
-            sort: true,
-            dataField: "id",
-            text: "Reservation ID"
+            dataField: "licenseName",
+            text: "Name"
         }, {
             sort: true,
             dataField: "email",
             text: "Email"
         }, {
-            sort: true,
-            dataField: "licenseName",
-            text: "Name"
+            dataField: "gear[]",
+            text: "Items",
+            formatter: (row, data) => <div>{data.gear.length}</div>
         }, {
-            sort: true,
-            dataField: "status",
-            text: "Status"
-        }, {
-            sort: true,
             dataField: "startDate",
             text: "Start Date"
         }, {
-            sort: true,
             dataField: "endDate",
             text: "End Date"
         }, {
-            text: "Actions",
-            dataField: "isDummyField",
-            isDummyField: true,
-            formatter: this.getActionCell
+            dataField: "status",
+            text: "Status"
         }];
     }
 
@@ -93,13 +61,20 @@ export default class ReservationTable extends React.Component {
                 keyField="id"
                 columns={this.columns}
                 data={this.props.reservationList}
+                hover
+                selectRow={{
+                    mode: "radio",
+                    hideSelectColumn: true, // hides the radio button
+                    clickToSelect: true,    // allows user to click row, not a button
+                    // prevent errors if onSelectRow isn't defined
+                    onSelect: (row) => this.props.onSelectRow && this.props.onSelectRow(row)
+                }}
             />
         );
     }
 }
 
 ReservationTable.propTypes = {
-    onClickEdit: PropTypes.func.isRequired,
-    onClickDelete: PropTypes.func.isRequired,
+    onSelectRow: PropTypes.func,
     reservationList: PropTypes.array.isRequired
 };

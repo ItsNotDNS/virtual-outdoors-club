@@ -22,32 +22,11 @@ export default class ReservationService {
             });
     }
 
-    approveReservation(reservationID) {
-        return this.service.post(`${config.databaseHost}/reservation/approve`, {
-            id: reservationID
-        }).then((response) => {
-            return { approvedReservation: response.data };
-        })
-            .catch((error) => {
-                return { error: error.response.data.message };
-            });
-    }
-
     fetchReservation(reservationId, email) {
         return this.service.get(`${config.databaseHost}/reservation?id=${reservationId}&email=${email}`)
             .then((response) => {
                 return { data: response.data.data[0] };
             }).catch((error) => {
-                return { error: error.response.data.message };
-            });
-    }
-
-    cancelReservation(reservationID) {
-        return this.service.post(`${config.databaseHost}/reservation/cancel`, { id: reservationID })
-            .then((response) => {
-                return { cancelledReservation: response.data };
-            })
-            .catch((error) => {
                 return { error: error.response.data.message };
             });
     }
@@ -60,6 +39,32 @@ export default class ReservationService {
                 return { data: response.data };
             }).catch((error) => {
                 return { error: error.response.data.message };
+            });
+    }
+
+    approveReservation(id) {
+        return this.service.post(`${config.databaseHost}/reservation/approve`, { id })
+            .then((response) => {
+                const reservation = response.data;
+                return { reservation };
+            })
+            .catch((error) => {
+                const message = (error.response && error.response.data &&
+                    error.response.data.message) || "An unexpected error occurred, try again later.";
+                return { error: message };
+            });
+    }
+
+    cancelReservation(id) {
+        return this.service.post(`${config.databaseHost}/reservation/cancel`, { id })
+            .then((response) => {
+                const reservation = response.data;
+                return { reservation };
+            })
+            .catch((error) => {
+                const message = (error.response && error.response.data &&
+                    error.response.data.message) || "An unexpected error occurred, try again later.";
+                return { error: message };
             });
     }
 }

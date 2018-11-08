@@ -25,7 +25,10 @@
         "react/no-unused-prop-types": [2, {
             "skipShapeProps": false
         }],
-        "react/prop-types": [2]
+        "react/prop-types": [2],
+        "no-multi-spaces": [2, {
+            "ignoreEOLComments": true
+        }]
     },
     "globals": {
         "describe": false,
