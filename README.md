@@ -1,5 +1,5 @@
 # virtual-outdoors-club
-[![Build Status](https://travis-ci.com/cmput401-fall2018/virtual-outdoors-club.svg?token=D7BVdytPqFpYCfpFy5pz&branch=master)](https://travis-ci.com/cmput401-fall2018/virtual-outdoors-club)
+[![Build Status](https://travis-ci.com/cmput401-fall2018/virtual-outdoors-club.svg?token=D7BVdytPqFpYCfpFy5pz&branch=master)](https://travis-ci.com/cmput401-fall2018/virtual-outdoors-club) - [Cybera Server](http://199.116.235.142:8081/)
 # Setup
 
 ## React
