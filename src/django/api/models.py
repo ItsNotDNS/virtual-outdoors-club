@@ -18,7 +18,7 @@ class UserVariability(models.Model):
 # storage for all of the current members in the club. Set to reset weekly-monthly
 # there should not be any emails in the list that are duplicates
 class Member(models.Model):
-    email = models.EmailField(unique = True)
+    email = models.EmailField(primary_key=True)
 
 
 # storage for all of the blacklisted members in the club.

@@ -11,23 +11,23 @@ export default class MemberTable extends React.Component {
     constructor() {
         super();
 
-        this.getBlacklistAddCell = this.getBlacklistAddCell.bind(this);
+        this.getBlacklistRemoveCell = this.getBlacklistRemoveCell.bind(this);
     }
 
     wrapOnClick(clickFunction, data) {
         return () => clickFunction(data);
     }
 
-    getBlacklistAddCell(cellContent, row) {
-        const { addToBlacklist } = this.props;
+    getBlacklistRemoveCell(cellContent, row) {
+        const { removeFromBlacklist } = this.props;
         return (
             <div className="btn-action-cell">
                 <button
-                    className="btn btn-primary"
+                    className="btn btn-danger"
                     name={`add-blacklist-${row.email}`}
-                    onClick={this.wrapOnClick(addToBlacklist, row)}
+                    onClick={this.wrapOnClick(removeFromBlacklist, row)}
                 >
-                    <i className="fas fa-user-slash" />
+                    <i className="fas fa-user-times" />
                 </button>
             </div>
         );
@@ -38,10 +38,10 @@ export default class MemberTable extends React.Component {
             dataField: "email",
             text: "Member Email"
         }, {
-            text: "Add to Blacklist",
+            text: "Remove from Blacklist",
             dataField: "isDummyField",
             isDummyField: true,
-            formatter: this.getBlacklistAddCell,
+            formatter: this.getBlacklistRemoveCell,
             headerStyle: {
                 width: "20%"
             }
@@ -61,5 +61,5 @@ export default class MemberTable extends React.Component {
 
 MemberTable.propTypes = {
     memberList: PropTypes.array.isRequired,
-    addToBlacklist: PropTypes.func.isRequired
+    removeFromBlacklist: PropTypes.func.isRequired
 };

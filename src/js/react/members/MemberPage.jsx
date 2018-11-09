@@ -10,6 +10,7 @@ import { MemberStore, MemberActions } from "./MemberStore";
 import { Alert, Tabs, Tab } from "react-bootstrap";
 import FileButton from "../components/FileButton";
 import MemberTable from "./MemberTable";
+import BlacklistTable from "./BlacklistTable";
 
 export default class MemberPage extends Reflux.Component {
     constructor() {
@@ -72,7 +73,7 @@ export default class MemberPage extends Reflux.Component {
         const { memberList, fetchingMemberList, fetchedMemberList } = this.state;
 
         if (fetchingMemberList) {
-            return <h3 className="loading-message">Loading...</h3>;
+            return <h3 className="member-loading-message">Loading...</h3>;
         } else if (fetchedMemberList && !memberList.length) {
             return (
                 <div className="no-members-message">
@@ -81,7 +82,42 @@ export default class MemberPage extends Reflux.Component {
                 </div>
             );
         } else if (fetchedMemberList && memberList.length) {
-            return <MemberTable memberList={memberList} />;
+            return (
+                <div>
+                    <h2>Member List</h2>
+                    <p>These are the members that can reserve gear.</p>
+                    <MemberTable
+                        memberList={memberList}
+                        addToBlacklist={MemberActions.addToBlacklist}
+                    />
+                </div>
+            );
+        }
+    }
+
+    getBlackListTab() {
+        const { blacklist, fetchingBlacklist, fetchedBlacklist } = this.state;
+
+        if (fetchingBlacklist) {
+            return <h3 className="blacklist-loading-message">Loading...</h3>;
+        } else if (fetchedBlacklist && !blacklist.length) {
+            return (
+                <div className="no-blacklist-message">
+                    <h3>You have no blacklisted members!</h3>
+                    <p>You can add a blacklisted member by pressing the add button on the right side of the member's table.</p>
+                </div>
+            );
+        } else if (fetchedBlacklist && blacklist.length) {
+            return (
+                <div>
+                    <h2>Blacklist</h2>
+                    <p>Here are the emails that cannot reserve gear, regardless of if they are on your member list.</p>
+                    <BlacklistTable
+                        memberList={blacklist}
+                        removeFromBlacklist={MemberActions.removeFromBlacklist}
+                    />
+                </div>
+            );
         }
     }
 
@@ -115,7 +151,7 @@ export default class MemberPage extends Reflux.Component {
     getPageError(error) {
         if (error) {
             return (
-                <Alert bsStyle="success">
+                <Alert bsStyle="danger">
                     <h4>There was an Error.</h4>
                     <p>{error}</p>
                 </Alert>
@@ -136,7 +172,10 @@ export default class MemberPage extends Reflux.Component {
                     <Tab eventKey={1} title="Members">
                         {this.getMembersTab()}
                     </Tab>
-                    <Tab eventKey={2} title="Upload">
+                    <Tab eventKey={2} title="Blacklist">
+                        {this.getBlackListTab()}
+                    </Tab>
+                    <Tab eventKey={3} title="Upload">
                         {this.getUploadTab()}
                     </Tab>
                 </Tabs>

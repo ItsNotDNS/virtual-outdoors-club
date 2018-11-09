@@ -8,10 +8,13 @@ import MemberService from "../../services/MemberService";
 function defaultState() {
     return {
         tabSelected: 1,
+        error: "",
         fetchingMemberList: false,
         fetchedMemberList: false,
-        error: "",
         memberList: [],
+        fetchingBlacklist: false,
+        fetchedBlacklist: false,
+        blacklist: [],
         upload: {
             displaySuccess: false,
             members: [],
@@ -24,7 +27,9 @@ function defaultState() {
 export const MemberActions = Reflux.createActions([
     "tabSelected",
     "fileSelected",
-    "uploadMemberFile"
+    "uploadMemberFile",
+    "addToBlacklist",
+    "removeFromBlacklist"
 ]);
 
 export class MemberStore extends Reflux.Store {
@@ -36,6 +41,7 @@ export class MemberStore extends Reflux.Store {
         // fetch member list when constructing store, unless explicitly stated
         if (options.fetchOnConstruct !== false) {
             this.fetchMemberList();
+            this.fetchBlacklist();
         }
     }
 
@@ -74,6 +80,34 @@ export class MemberStore extends Reflux.Store {
                     this.setState(newState);
                 });
         }
+    }
+
+    fetchBlacklist() {
+        const service = new MemberService();
+
+        this.setState({
+            fetchingBlacklist: true,
+            fetchedBlacklist: false
+        });
+
+        return service.getBlacklist()
+            .then(({ members, error }) => {
+                let newState;
+                if (error) {
+                    newState = update(this.state, {
+                        error: { $set: error },
+                        fetchingBlacklist: { $set: false },
+                        fetchedBlacklist: { $set: true }
+                    });
+                } else {
+                    newState = update(this.state, {
+                        blacklist: { $set: members },
+                        fetchingBlacklist: { $set: false },
+                        fetchedBlacklist: { $set: true }
+                    });
+                }
+                this.setState(newState);
+            });
     }
 
     fetchMemberList() {
@@ -129,5 +163,45 @@ export class MemberStore extends Reflux.Store {
                     this.setState(newState);
                 });
         }
+    }
+
+    onAddToBlacklist(memberToBlacklist) {
+        const service = new MemberService();
+
+        return service.blacklistMember(memberToBlacklist)
+            .then(({ error, blacklistedMember }) => {
+                const { memberList } = this.state;
+                if (error) {
+                    this.setState(update(this.state, {
+                        error: { $set: error }
+                    }));
+                } else {
+                    // remove member from local memberList (filter), add member to local blacklist
+                    this.setState(update(this.state, {
+                        memberList: { $set: memberList.filter((member) => member.email !== blacklistedMember.email) },
+                        blacklist: { $push: [blacklistedMember] }
+                    }));
+                }
+            });
+    }
+
+    onRemoveFromBlacklist({ email }) {
+        const service = new MemberService();
+
+        return service.whitelistMember(email)
+            .then(({ error }) => {
+                const { blacklist } = this.state;
+                if (error) {
+                    this.setState(update(this.state, {
+                        error: { $set: error }
+                    }));
+                } else {
+                    // remove member from blacklist
+                    this.setState(update(this.state, {
+                        blacklist: { $set: blacklist.filter((member) => member.email !== email) }
+                    }));
+                    this.fetchMemberList(); // fetch the member list, because it could have changed (can't detect)
+                }
+            });
     }
 }

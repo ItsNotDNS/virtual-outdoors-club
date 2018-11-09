@@ -13,6 +13,7 @@ describe("MemberPage Tests", () => {
 
         // stub MemberStore to prevent network calls
         sandbox.stub(MemberStore.prototype, "fetchMemberList");
+        sandbox.stub(MemberStore.prototype, "fetchBlacklist");
     });
 
     afterEach(() => {
@@ -71,7 +72,7 @@ describe("MemberPage Tests", () => {
         expect(page.find(".alert-success")).to.have.length(1);
     });
 
-    it("displays loading, no members, or table depending on state", () => {
+    it("member list: displays loading, no members, or table depending on state", () => {
         const page = mount(<Page />);
 
         page.setState({
@@ -80,7 +81,7 @@ describe("MemberPage Tests", () => {
             memberList: []
         });
 
-        expect(page.find(".loading-message")).to.have.length(0);
+        expect(page.find(".member-loading-message")).to.have.length(0);
         expect(page.find(".no-members-message")).to.have.length(0);
         expect(page.find("table")).to.have.length(0);
 
@@ -90,7 +91,7 @@ describe("MemberPage Tests", () => {
             memberList: []
         });
 
-        expect(page.find(".loading-message"), "should find message").to.have.length(1);
+        expect(page.find(".member-loading-message"), "should find message").to.have.length(1);
         expect(page.find(".no-members-message"), "shouldn't find no-members").to.have.length(0);
         expect(page.find("table"), "shouldn't find table").to.have.length(0);
 
@@ -100,7 +101,7 @@ describe("MemberPage Tests", () => {
             memberList: []
         });
 
-        expect(page.find(".loading-message")).to.have.length(0);
+        expect(page.find(".member-loading-message")).to.have.length(0);
         expect(page.find(".no-members-message")).to.have.length(1);
         expect(page.find("table")).to.have.length(0);
 
@@ -110,8 +111,53 @@ describe("MemberPage Tests", () => {
             memberList: [{ email: "example@test.com" }]
         });
 
-        expect(page.find(".loading-message")).to.have.length(0);
+        expect(page.find(".member-loading-message")).to.have.length(0);
         expect(page.find(".no-members-message")).to.have.length(0);
+        expect(page.find("table")).to.have.length(1);
+    });
+
+    it("blacklist list: displays loading, no members, or table depending on state", () => {
+        const page = mount(<Page />);
+
+        page.setState({
+            tabSelected: 2,
+            fetchingBlacklist: false,
+            fetchedBlacklist: false,
+            blacklist: []
+        });
+
+        expect(page.find(".blacklist-loading-message")).to.have.length(0);
+        expect(page.find(".no-blacklist-message")).to.have.length(0);
+        expect(page.find("table")).to.have.length(0);
+
+        page.setState({
+            fetchingBlacklist: true,
+            fetchedBlacklist: false,
+            blacklist: []
+        });
+
+        expect(page.find(".blacklist-loading-message"), "should find message").to.have.length(1);
+        expect(page.find(".no-blacklist-message"), "shouldn't find no-members").to.have.length(0);
+        expect(page.find("table"), "shouldn't find table").to.have.length(0);
+
+        page.setState({
+            fetchingBlacklist: false,
+            fetchedBlacklist: true,
+            blacklist: []
+        });
+
+        expect(page.find(".blacklist-loading-message")).to.have.length(0);
+        expect(page.find(".no-blacklist-message")).to.have.length(1);
+        expect(page.find("table")).to.have.length(0);
+
+        page.setState({
+            fetchingBlacklist: false,
+            fetchedBlacklist: true,
+            blacklist: [{ email: "example@test.com" }]
+        });
+
+        expect(page.find(".blacklist-loading-message")).to.have.length(0);
+        expect(page.find(".no-blacklist-message")).to.have.length(0);
         expect(page.find("table")).to.have.length(1);
     });
 });

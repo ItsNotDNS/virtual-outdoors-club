@@ -20,6 +20,19 @@ export default class MemberService {
             });
     }
 
+    getBlacklist() {
+        return axios.get(`${config.databaseHost}/members/blacklist`)
+            .then((response) => {
+                const list = response.data && response.data.data;
+                return { members: list };
+            })
+            .catch((error) => {
+                const message = (error.response && error.response.data &&
+                    error.response.data.message) || "An unexpected error occurred, try again later.";
+                return { error: message };
+            });
+    }
+
     uploadMemberList(list) {
         return axios.post(`${config.databaseHost}/members`, {
             members: list
@@ -28,6 +41,29 @@ export default class MemberService {
                 const list = response.data && response.data.data;
                 return { members: list };
             })
+            .catch((error) => {
+                const message = (error.response && error.response.data &&
+                    error.response.data.message) || "An unexpected error occurred, try again later.";
+                return { error: message };
+            });
+    }
+
+    blacklistMember(member) {
+        return axios.post(`${config.databaseHost}/members/blacklist`, member)
+            .then((response) => {
+                return { blacklistedMember: response.data };
+            })
+            .catch((error) => {
+                const message = (error.response && error.response.data &&
+                    error.response.data.message) || "An unexpected error occurred, try again later.";
+                return { error: message };
+            });
+    }
+
+    whitelistMember(email) {
+        return axios.delete(`${config.databaseHost}/members/blacklist`, {
+            params: { email }
+        })
             .catch((error) => {
                 const message = (error.response && error.response.data &&
                     error.response.data.message) || "An unexpected error occurred, try again later.";

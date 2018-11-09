@@ -3,13 +3,14 @@ from django.core import exceptions
 from django.db import transaction
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
-from ..models import Member
+from ..models import Member, BlackList
 from ..serializers import MemberSerializer
 from .error import *
 
 class MemberView(APIView):
     def get(self, request):
-        members = Member.objects.all()
+        blacklistedEmails = BlackList.objects.all().values_list("email", flat=True)
+        members = Member.objects.all().exclude(pk__in=blacklistedEmails)
         members = MemberSerializer(members, many=True)
     
         return Response({"data": members.data})

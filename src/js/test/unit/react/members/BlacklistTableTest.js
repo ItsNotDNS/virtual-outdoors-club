@@ -1,10 +1,10 @@
 import React from "react";
-import Table from "react/members/MemberTable";
+import Table from "react/members/BlacklistTable";
 import { expect } from "chai";
 import { shallow } from "enzyme";
 import sinon from "sinon";
 
-describe("MemberTable Tests", () => {
+describe("BlacklistTable Tests", () => {
     it("wraps click function", () => {
         const memberList = [
                 { email: "test@example.com" }

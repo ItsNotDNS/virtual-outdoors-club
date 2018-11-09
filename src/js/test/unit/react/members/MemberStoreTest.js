@@ -5,12 +5,13 @@ import { MemberStore } from "react/members/MemberStore";
 import MemberService from "services/MemberService";
 
 const sandbox = sinon.createSandbox();
-let axiosGetStub, axiosPostStub, store;
+let axiosGetStub, axiosPostStub, axiosDeleteStub, store;
 
 describe("MemberStore Tests", () => {
     beforeEach(() => {
         axiosGetStub = sandbox.stub(axios, "get");
         axiosPostStub = sandbox.stub(axios, "post");
+        axiosDeleteStub = sandbox.stub(axios, "delete");
         store = new MemberStore({ fetchOnConstruct: false });
     });
 
@@ -98,6 +99,50 @@ describe("MemberStore Tests", () => {
         });
     });
 
+    it("fetchBlacklist - sets fetching to true and sets memberList on fetch", () => {
+        const response = { data: { data: ["test@example.com"] } };
+        axiosGetStub.returns(Promise.resolve(response));
+
+        expect(store.state.fetchingBlacklist).to.be.false;
+
+        store.fetchBlacklist();
+
+        expect(store.state.fetchingBlacklist).to.be.true;
+        expect(store.state.blacklist).to.deep.equal([]);
+
+        return store.fetchBlacklist().then(() => {
+            expect(store.state.fetchingBlacklist).to.be.false;
+            expect(store.state.blacklist).to.deep.equal(response.data.data);
+        });
+    });
+
+    it("fetchBlacklist - error path and fetching variable", () => {
+        const error = { response: { data: { message: "this is an error" } } };
+        axiosGetStub.returns(Promise.reject(error));
+
+        expect(store.state.fetchingBlacklist).to.be.false;
+
+        store.fetchBlacklist();
+
+        expect(store.state.fetchingBlacklist).to.be.true;
+        expect(store.state.blacklist).to.deep.equal([]);
+
+        return store.fetchMemberList().then(() => {
+            expect(store.state.fetchingBlacklist).to.be.false;
+            expect(store.state.blacklist).to.deep.equal([]);
+            expect(store.state.error).to.equal(error.response.data.message);
+        });
+    });
+
+    it("fetchBlacklist - bad error response is handled", () => {
+        const error = { bad: "error" };
+        axiosGetStub.returns(Promise.reject(error));
+
+        return store.fetchBlacklist().then(() => {
+            expect(store.state.error).to.not.equal("");
+        });
+    });
+
     it("onUploadMemberFile - doesn't call service if no member list", () => {
         expect(store.state.upload.members).to.deep.equal([]);
         expect(axiosPostStub.called).to.be.false;
@@ -139,6 +184,52 @@ describe("MemberStore Tests", () => {
         return store.onUploadMemberFile().then(() => {
             expect(store.state.upload.error).to.equal(errorMsg);
             expect(store.state.memberList).to.deep.equal([]);
+        });
+    });
+
+    it("onAddToBlacklist - success path", () => {
+        const member = { email: "someEmail@test.com" },
+            response = { data: member };
+        store.state.memberList = [member];
+        axiosPostStub.returns(Promise.resolve(response));
+        store.onAddToBlacklist(member).then(() => {
+            expect(store.state.memberList).to.deep.equal([]);
+            expect(store.state.blacklist).to.deep.equal([member]);
+        });
+    });
+
+    it("onRemoveFromBlacklist - error path", () => {
+        const member = { email: "someEmail@test.com" },
+            response = { response: { data: { message: "some message" } } };
+        store.state.memberList = [member];
+        axiosPostStub.returns(Promise.reject(response));
+        store.onAddToBlacklist(member).then(() => {
+            expect(store.state.memberList).to.deep.equal([member]);
+            expect(store.state.blacklist).to.deep.equal([]);
+            expect(store.state.error).to.equal(response.data.message);
+        });
+    });
+
+    it("onRemoveFromBlacklist - success path", () => {
+        const member = { email: "someEmail@test.com" }
+        store.state.blacklist = [member];
+        axiosDeleteStub.returns(Promise.resolve());
+        axiosGetStub.returns(Promise.resolve({ data: { data: [member] } }));
+        store.onRemoveFromBlacklist(member).then(() => {
+            expect(store.state.memberList).to.deep.equal([member]);
+            expect(store.state.blacklist).to.deep.equal([]);
+        });
+    });
+
+    it("onAddToBlacklist - error path", () => {
+        const member = { email: "someEmail@test.com" },
+            response = { response: { data: { message: "some message" } } };
+        store.state.memberList = [member];
+        axiosDeleteStub.returns(Promise.reject(response));
+        store.onRemoveFromBlacklist(member).then(() => {
+            expect(store.state.memberList).to.deep.equal([member]);
+            expect(store.state.blacklist).to.deep.equal([]);
+            expect(store.state.error).to.equal(response.data.message);
         });
     });
 });
