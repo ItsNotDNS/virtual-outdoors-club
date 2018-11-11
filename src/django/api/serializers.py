@@ -126,7 +126,7 @@ class ReservationPOSTSerializer(serializers.ModelSerializer):
                      Q(endDate__range=[data['startDate'], data['endDate']]) | \
                      Q(startDate__lte=data['startDate'], endDate__gte=data['endDate'])
 
-        overlappingRes = Reservation.objects.filter(dateFilter)
+        overlappingRes = Reservation.objects.filter(dateFilter).exclude(status="CANCELLED").exclude(status="RETURNED")
         
         if overlappingRes.exists():
 
