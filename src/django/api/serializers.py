@@ -92,6 +92,9 @@ class ReservationPOSTSerializer(serializers.ModelSerializer):
         ]
 
     def validate(self, data):
+        DAYSINADVANCETOMAKERESV = "membermaxFuture"  # how far in advance a resv can be made
+        MAXRESVDAYS = "membermaxLength"  # Max days a resv can be
+        MAXRENTALS = "membermaxRentals"  # Max rentals
 
         if "email" not in data:
             raise serializers.ValidationError("Requests must have an email")
@@ -114,12 +117,26 @@ class ReservationPOSTSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Start date must be before the end date")
 
         try:
-            maxResvTime = UserVariability.objects.get(pk="maxReservationDays")
+            maxTimeInAdvance = UserVariability.objects.get(pk=DAYSINADVANCETOMAKERESV).value
+        except:
+            maxTimeInAdvance = 1
+        if (data['startDate'] - datetime.now().date()).days > maxTimeInAdvance:
+            raise serializers.ValidationError("Start date cannot be more than " + str(maxTimeInAdvance) + " days in advance")
+
+        try:
+            maxResvTime = UserVariability.objects.get(pk=MAXRESVDAYS).value
         except UserVariability.DoesNotExist:
             maxResvTime = 14
-
         if (data['endDate'] - data['startDate']).days > maxResvTime:
             raise serializers.ValidationError("Length of reservation must be less than " + str(maxResvTime) + " days")
+
+        try:
+            maxResvs = UserVariability.objects.get(pk=MAXRENTALS).value
+        except UserVariability.DoesNotExist:
+            maxResvs = 2
+        userReservations = Reservation.objects.filter(email=data["email"]).exclude(status="RETURNED")
+        if len(userReservations) >= maxResvs:
+            raise serializers.ValidationError("You cannot have more than " + str(maxResvs) + " reservations")
 
         denied = []
         dateFilter = Q(startDate__range=[data['startDate'], data['endDate']]) | \

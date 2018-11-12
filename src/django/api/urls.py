@@ -15,7 +15,7 @@ urlpatterns = [
     url(r'^process/?$', PayPalView.paypalView, ''),
     url(r'^return/?$', PayPalView.returnView, name="returnView"),
     url(r'^cancel/?$', PayPalView.cancelView, name="cancelView"),
-    url(r'^userVar/updateMaxReservation/?$', UserVariabilityView.updateMaxReservation, name="updateMaxReservation"),
+    url(r'^system/variability/?$', UserVariabilityView.updateValues, name="updateValues"),
     url(r'^members/blacklist/?$', BlackListView.BlackListView.as_view(), name="BlackList"),
     url(r'^members/?$', MemberView.MemberView.as_view(), name="Members")
 ]

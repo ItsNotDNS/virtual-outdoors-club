@@ -405,7 +405,7 @@ class ReservationTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
 
 
-    def test_invalidEmail(self):
+    def test_blackListedEmail(self):
         today = datetime.datetime.today()
 
         request = {
@@ -421,4 +421,45 @@ class ReservationTestCase(TestCase):
         response = self.client.post("/api/reservation", request, content_type="application/json")
         self.assertEqual(response.status_code, 400)
 
+    def test_postTooFarInFuture(self):
+        today = datetime.datetime.today()
+
+        request = {
+            "email": "enry@email.com",
+            "licenseName": "Name on their license.",
+            "licenseAddress": "Address on their license.",
+            "startDate": (today + datetime.timedelta(days=22)).strftime("%Y-%m-%d"),
+            "endDate": (today + datetime.timedelta(days=28)).strftime("%Y-%m-%d"),
+            "status": "REQUESTED",
+            "gear": [self.bk.pk]
+        }
+
+        response = self.client.post("/api/reservation", request, content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+
+
+    def test_tooManyReservations(self):
+        # A reservation is already created in the startup, so this is already at the limit
+        request = {
+            "member": {
+                "maxRentals": 1
+            }
+        }
+        response = self.client.post("/api/system/variability", request, content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+
+        today = datetime.datetime.today()
+
+        request = {
+            "email": "enry@email.com",
+            "licenseName": "Name on their license.",
+            "licenseAddress": "Address on their license.",
+            "startDate": (today).strftime("%Y-%m-%d"),
+            "endDate": (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
+            "status": "REQUESTED",
+            "gear": [self.bk.pk]
+        }
+
+        response = self.client.post("/api/reservation", request, content_type="application/json")
+        self.assertEqual(response.status_code, 400)
 
