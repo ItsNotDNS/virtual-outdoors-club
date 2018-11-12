@@ -109,21 +109,26 @@ export default class RentPage extends Reflux.Component {
                         label="Email"
                         name="email"
                         onChange={this.handleChange}
+                        value={this.state.reserveGearForm.email}
                     />
                     <LabeledInput
                         label="Legal Name (as on a government issued ID)"
                         name="licenseName"
                         onChange={this.handleChange}
+                        value={this.state.reserveGearForm.licenseName}
                     />
                     <LabeledInput
                         label="Home Address (as on a government issued ID)"
                         name="licenseAddress"
                         onChange={this.handleChange}
+                        value={this.state.reserveGearForm.licenseAddress}
                     />
                     <DateRangePicker
                         setStartDate={this.handleStartDateChange}
                         setEndDate={this.handleEndDateChange}
                         horizontal={false}
+                        startDate={this.state.dateFilter.startDate}
+                        endDate={this.state.dateFilter.endDate}
                     />
                 </ButtonModalForm>
                 <Tabs defaultActiveKey={1} id="rent-view-tabs">

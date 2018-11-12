@@ -588,9 +588,9 @@ describe("GearStore Tests", () => {
             error: false,
             errorMessage: "Reservation failed",
             items: [],
-            email: null,
-            licenseName: null,
-            licenseAddress: null,
+            email: "",
+            licenseName: "",
+            licenseAddress: "",
             startDate: null,
             endDate: null
         });
@@ -603,9 +603,9 @@ describe("GearStore Tests", () => {
             error: false,
             errorMessage: "Reservation failed",
             items: [],
-            email: null,
-            licenseName: null,
-            licenseAddress: null,
+            email: "",
+            licenseName: "",
+            licenseAddress: "",
             startDate: null,
             endDate: null
         });
@@ -617,9 +617,9 @@ describe("GearStore Tests", () => {
             error: false,
             errorMessage: "Reservation failed",
             items: [],
-            email: null,
-            licenseName: null,
-            licenseAddress: null,
+            email: "",
+            licenseName: "",
+            licenseAddress: "",
             startDate: null,
             endDate: null
         });
@@ -632,24 +632,24 @@ describe("GearStore Tests", () => {
             error: false,
             errorMessage: "Reservation failed",
             items: [],
-            email: null,
-            licenseName: null,
-            licenseAddress: null,
+            email: "",
+            licenseName: "",
+            licenseAddress: "",
             startDate: null,
             endDate: null
         });
     });
 
     it("onReserveGearFormChanged - all fields update", () => {
-        expect(gearStore.state.reserveGearForm.email).to.equal(null);
+        expect(gearStore.state.reserveGearForm.email).to.equal("");
         gearStore.onReserveGearFormChanged("email", mockReservationInfo.email);
         expect(gearStore.state.reserveGearForm.email).to.equal(mockReservationInfo.email);
 
-        expect(gearStore.state.reserveGearForm.licenseName).to.equal(null);
+        expect(gearStore.state.reserveGearForm.licenseName).to.equal("");
         gearStore.onReserveGearFormChanged("licenseName", mockReservationInfo.licenseName);
         expect(gearStore.state.reserveGearForm.licenseName).to.equal(mockReservationInfo.licenseName);
 
-        expect(gearStore.state.reserveGearForm.licenseAddress).to.equal(null);
+        expect(gearStore.state.reserveGearForm.licenseAddress).to.equal("");
         gearStore.onReserveGearFormChanged("licenseAddress", mockReservationInfo.licenseAddress);
         expect(gearStore.state.reserveGearForm.licenseAddress).to.equal(mockReservationInfo.licenseAddress);
 

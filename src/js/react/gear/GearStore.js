@@ -67,9 +67,9 @@ function defaultState() {
             error: false,
             errorMessage: "Reservation failed",
             items: [],
-            email: null,
-            licenseName: null,
-            licenseAddress: null,
+            email: "",
+            licenseName: "",
+            licenseAddress: "",
             startDate: null,
             endDate: null
         },
@@ -546,7 +546,10 @@ export class GearStore extends Reflux.Store {
 
     onCloseReserveGearForm() {
         const newState = update(this.state, {
-            reserveGearForm: { $set: defaultState().reserveGearForm }
+            reserveGearForm: {
+                show: { $set: false },
+                error: { $set: false }
+            }
         });
         this.setState(newState);
     }
@@ -619,6 +622,9 @@ export class GearStore extends Reflux.Store {
     onDateFilterChanged(field, date) {
         const newState = update(this.state, {
             dateFilter: {
+                [field]: { $set: date }
+            },
+            reserveGearForm: {
                 [field]: { $set: date }
             }
         });
