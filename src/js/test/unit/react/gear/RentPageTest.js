@@ -116,14 +116,14 @@ describe("RentPage Tests", () => {
         const page = shallow(<RentPage />),
             mockPrevProps = null,
             mockPrevState = {};
-        actionsStub.fetchGearListFromTo = sandbox.spy();
+        actionsStub.fetchRentableListFromTo = sandbox.spy();
         page.instance().componentDidUpdate(mockPrevProps, mockPrevState);
-        expect(actionsStub.fetchGearListFromTo.calledOnce).to.be.false;
+        expect(actionsStub.fetchRentableListFromTo.calledOnce).to.be.false;
         page.instance().state.dateFilter.startDate = "2013-03-01";
         page.instance().componentDidUpdate(mockPrevProps, mockPrevState);
-        expect(actionsStub.fetchGearListFromTo.calledOnce).to.be.false;
+        expect(actionsStub.fetchRentableListFromTo.calledOnce).to.be.false;
         page.instance().state.dateFilter.endDate = "2013-03-03";
         page.instance().componentDidUpdate(mockPrevProps, mockPrevState);
-        expect(actionsStub.fetchGearListFromTo.calledOnce).to.be.true;
+        expect(actionsStub.fetchRentableListFromTo.calledOnce).to.be.true;
     });
 });

@@ -83,7 +83,8 @@ function defaultState() {
         dateFilter: {
             startDate: null,
             endDate: null
-        }
+        },
+        rentableList: []
     };
 }
 
@@ -120,7 +121,8 @@ export const GearActions = Reflux.createActions([
     "getGearFile",
     "gearStatusCheckBoxChange",
     "dateFilterChanged",
-    "fetchGearListFromTo"
+    "fetchGearListFromTo",
+    "fetchRentableListFromTo"
 ]);
 
 export class GearStore extends Reflux.Store {
@@ -154,7 +156,8 @@ export class GearStore extends Reflux.Store {
             .then(({ data, error }) => {
                 if (data) {
                     this.setState({
-                        gearList: data
+                        gearList: data,
+                        rentableList: data
                     });
                 } else {
                     this.setState({
@@ -638,6 +641,18 @@ export class GearStore extends Reflux.Store {
                 if (data) {
                     this.setState({
                         gearList: data
+                    });
+                }
+            });
+    }
+
+    onFetchRentableListFromTo(startDate, endDate) {
+        const service = new GearService();
+        return service.fetchGearListFromTo(startDate, endDate)
+            .then(({ data }) => {
+                if (data) {
+                    this.setState({
+                        rentableList: data
                     });
                 }
             });

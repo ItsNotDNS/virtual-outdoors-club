@@ -33,7 +33,7 @@ export default class RentPage extends Reflux.Component {
         if (prevState.dateFilter !== this.state.dateFilter &&
             this.state.dateFilter.startDate !== null &&
             this.state.dateFilter.endDate != null) {
-            GearActions.fetchGearListFromTo(this.state.dateFilter.startDate,
+            GearActions.fetchRentableListFromTo(this.state.dateFilter.startDate,
                 this.state.dateFilter.endDate);
         }
     }
@@ -139,7 +139,7 @@ export default class RentPage extends Reflux.Component {
                             horizontal
                         />
                         <RentGearTable
-                            gearList={this.state.gearList}
+                            gearList={this.state.rentableList}
                             addToCart={GearActions.addToShoppingCart}
                         />
                     </Tab>
