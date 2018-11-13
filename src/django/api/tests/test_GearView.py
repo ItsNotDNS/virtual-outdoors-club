@@ -147,7 +147,7 @@ class GearTestCase(TestCase):
     def test_delete(self):
         response = self.client.delete("/api/gear?id=" + str(self.gearObj2.pk), content_type="application/json").data
         self.assertEqual(response, {"message": "Successfully deleted gear: 'SB01'"})
-
+        
         response = self.client.get("/api/gear/", content_type='application/json').data["data"]
         self.assertEqual(response, [{
                 "id": 1,
@@ -156,6 +156,14 @@ class GearTestCase(TestCase):
                 "depositFee": "50.00",
                 "description": "A black Dakine backpack",
                 "condition": "RENTABLE",
+                "version": 1
+            }, {
+                "id": 2,
+                "code": "SB01",
+                "category": "Sleeping Bag",
+                "depositFee": "50.00",
+                "description": "A old red sleeping bag",
+                "condition": "DELETED",
                 "version": 1
             }])
 

@@ -137,12 +137,13 @@ class GearView(APIView):
 
         try:
             delGear = Gear.objects.get(id=idToDelete) 
-            delGearCode = delGear.code
         except ProtectedError:
             return RespError(409, "You cannot remove gear that is currently being reserved")
         except exceptions.ObjectDoesNotExist:
             return RespError(404, "The gear item trying to be removed does not exist")
 
-        delGear.delete()
+        delGearCode = delGear.code
+        delGear.condition = "DELETED" 
+        delGear.save()
 
         return RespError(200, "Successfully deleted gear: " + "'" + delGearCode + "'")
