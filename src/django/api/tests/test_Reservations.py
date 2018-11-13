@@ -350,6 +350,36 @@ class ReservationTestCase(TestCase):
         self.assertEqual(len(response), reservationListOriginalLen + 1)
 
 
+      # Test that canceling releases hold on gear
+        request = {"id": 2} 
+        response = self.client.post('/api/reservation/cancel/', request, content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        request = {
+            "email": "enry@email.com",
+            "licenseName": "Name on their license.",
+            "licenseAddress": "Address on their license.",
+            "startDate": today.strftime("%Y-%m-%d"),
+            "endDate": (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
+            "status": "REQUESTED",
+            "gear": [self.bk.pk]
+        }
+
+        correctResponse = {
+            'startDate': today.strftime("%Y-%m-%d"),
+            'id': 3,
+            'email': 'enry@email.com',
+            'endDate': (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
+            'gear': [self.bk.pk],
+            'licenseName': 'Name on their license.',
+            'status': 'REQUESTED',
+            'licenseAddress': 'Address on their license.',
+            'version': 1
+        }
+
+        response = self.client.post("/api/reservation", request, content_type="application/json").data
+        self.assertEqual(response, correctResponse)
+
+
     def test_patch(self):
 
         reservationList = self.client.get("/api/reservation/", content_type='application/json').data["data"]

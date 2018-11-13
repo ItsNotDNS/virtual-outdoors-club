@@ -134,7 +134,7 @@ class ReservationPOSTSerializer(serializers.ModelSerializer):
             maxResvs = UserVariability.objects.get(pk=MAXRENTALS).value
         except UserVariability.DoesNotExist:
             maxResvs = 2
-        userReservations = Reservation.objects.filter(email=data["email"]).exclude(status="RETURNED")
+        userReservations = Reservation.objects.filter(email=data["email"]).exclude(status="RETURNED").exclude(status="CANCELLED")
         if len(userReservations) >= maxResvs:
             raise serializers.ValidationError("You cannot have more than " + str(maxResvs) + " reservations")
 
