@@ -67,4 +67,14 @@ export default class ReservationService {
                 return { error: message };
             });
     }
+
+    fetchReservationListFromTo(startDate, endDate) {
+        return this.service.get(
+            `${config.databaseHost}/reservation?from=${startDate}&to=${endDate}`
+        ).then((response) => {
+            return { data: response.data.data };
+        }).catch((error) => {
+            return { error: error.response.data.message };
+        });
+    }
 }

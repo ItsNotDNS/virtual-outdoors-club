@@ -5,10 +5,24 @@
 import React from "react";
 import Table from "react-bootstrap-table-next";
 import PropTypes from "prop-types";
+import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit";
+
+const { SearchBar } = Search;
 
 export default class ReservationTable extends React.Component {
+    constructor(props) {
+        super(props);
+        this.getComponents = this.getComponents.bind(this);
+    }
+
     get columns() {
         return [{
+            sort: true,
+            dataField: "id",
+            text: "Reservation ID"
+        },
+        {
+            sort: true,
             dataField: "licenseName",
             text: "Name"
         }, {
@@ -16,36 +30,56 @@ export default class ReservationTable extends React.Component {
             dataField: "email",
             text: "Email"
         }, {
+            sort: true,
             dataField: "gear[]",
             text: "Items",
             formatter: (row, data) => <div>{data.gear.length}</div>
         }, {
+            sort: true,
             dataField: "startDate",
             text: "Start Date"
         }, {
+            sort: true,
             dataField: "endDate",
             text: "End Date"
         }, {
+            sort: true,
             dataField: "status",
             text: "Status"
         }];
     }
 
+    getComponents(props) {
+        return (
+            <div>
+                <div className="custom-search-field">
+                    <SearchBar {...props.searchProps} />
+                </div>
+                <Table
+                    {...props.baseProps}
+                    hover
+                    selectRow={{
+                        mode: "radio",
+                        hideSelectColumn: true, // hides the radio button
+                        clickToSelect: true,    // allows user to click row, not a button
+                        // prevent errors if onSelectRow isn't defined
+                        onSelect: (row) => this.props.onSelectRow && this.props.onSelectRow(row)
+                    }}
+                />
+            </div>
+        );
+    }
+
     render() {
         return (
-            <Table
+            <ToolkitProvider
+                search
                 keyField="id"
                 columns={this.columns}
                 data={this.props.reservationList}
-                hover
-                selectRow={{
-                    mode: "radio",
-                    hideSelectColumn: true, // hides the radio button
-                    clickToSelect: true,    // allows user to click row, not a button
-                    // prevent errors if onSelectRow isn't defined
-                    onSelect: (row) => this.props.onSelectRow && this.props.onSelectRow(row)
-                }}
-            />
+            >
+                {this.getComponents}
+            </ToolkitProvider>
         );
     }
 }

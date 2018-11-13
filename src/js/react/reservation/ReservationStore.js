@@ -40,7 +40,11 @@ function defaultState() {
             gear: []
         },
         fetchedPayPalForm: false,
-        payPalForm: null
+        payPalForm: null,
+        dateFilter: {
+            startDate: null,
+            endDate: null
+        }
     };
 }
 
@@ -66,7 +70,9 @@ export const ReservationActions = Reflux.createActions([
     "fetchReservation",
     "fetchPayPalForm",
     "reservationModalChanged",
-    "setReservationModalError"
+    "setReservationModalError",
+    "dateFilterChanged",
+    "fetchReservationListFromTo"
 ]);
 
 export class ReservationStore extends Reflux.Store {
@@ -323,4 +329,25 @@ export class ReservationStore extends Reflux.Store {
     //     });
     //     this.setState(newState);
     // }
+
+    onDateFilterChanged(field, date) {
+        const newState = update(this.state, {
+            dateFilter: {
+                [field]: { $set: date }
+            }
+        });
+        this.setState(newState);
+    }
+
+    onFetchReservationListFromTo(startDate, endDate) {
+        const service = new ReservationService();
+        return service.fetchReservationListFromTo(startDate, endDate)
+            .then(({ data }) => {
+                if (data) {
+                    this.setState({
+                        reservationList: data
+                    });
+                }
+            });
+    }
 }

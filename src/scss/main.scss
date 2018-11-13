@@ -205,6 +205,20 @@
     .react-bootstrap-table {
         cursor: pointer;
     }
+
+    .DayPickerInput {
+        margin-left: 0.5%;
+        margin-right: 0.5%;
+        @media only screen and (max-width: 768px) {
+            display: flex;
+        }
+        .DayPicker-Day {
+            border-radius: 0;
+        }
+        input {
+            text-align: center;
+        }
+    }
 }
 
 .left-margin {
