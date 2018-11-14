@@ -32,8 +32,8 @@ before_deploy:
 - ssh-add /tmp/key_outdoors
 after_success:
 - npm run-script build
-- scp -r -i key_outdoors /dist ubuntu@199.116.235.142:/home/ubuntu/virtual-outdoors-club/dist
-- ssh -i key_outdoors ubuntu@199.116.235.142
+- scp -r -i /tmp/key_outdoors /dist ubuntu@199.116.235.142:/home/ubuntu/virtual-outdoors-club/dist
+- ssh -i /tmp/key_outdoors ubuntu@199.116.235.142
 - kill $(lsof -ti :4444)
 - kill $(lsof -ti :8000)
 - kill $(lsof -ti :8081)
