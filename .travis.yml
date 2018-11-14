@@ -37,8 +37,7 @@ script:
   # - openssl aes-256-cbc -K $encrypted_de17c20e6bb1_key -iv $encrypted_de17c20e6bb1_iv -in deploy_rsa.enc -out ../.ssh/deploy_rsa -d
   - chmod 600 /tmp/key_outdoors.pem
   - ssh-add /tmp/key_outdoors.pem
-after_success:
-  - scp -r /dist ubuntu@199.116.235.142:/home/ubuntu/virtual-outdoors-club
+  - scp -r ./dist ubuntu@199.116.235.142:/home/ubuntu/virtual-outdoors-club
   - ssh -i /tmp/key_outdoors.pem ubuntu@199.116.235.142 'bash -s' < scripts/build_script.sh
   - echo "Success Script"
 # Below are the requirements to run automation on travis-ci
