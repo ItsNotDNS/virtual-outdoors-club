@@ -20,19 +20,19 @@ before_script:
 - python src/django/manage.py migrate
 - python src/django/manage.py createworker
 script:
-- coverage run --source='src/django/api/views/' --omit='src/django/api/views/PayPalView.py'
-  src/django/manage.py test api
-- coverage report --fail-under=70
-- npm run-script lint
-- npm test -- --single-run
+# - coverage run --source='src/django/api/views/' --omit='src/django/api/views/PayPalView.py'
+#   src/django/manage.py test api
+# - coverage report --fail-under=70
+# - npm run-script lint
+# - npm test -- --single-run
 before_deploy:
 - openssl aes-256-cbc -K $encrypted_<...>_key -iv $encrypted_<...>_iv -in key_outdoors.enc -out /tmp/key_outdoors -d
 - eval "$(ssh-agent -s)"
 - chmod 600 /tmp/key_outdoors
 - ssh-add /tmp/key_outdoors
 after_success:
-- npm run-script build
-- scp -r -i /tmp/key_outdoors /dist ubuntu@199.116.235.142:/home/ubuntu/virtual-outdoors-club/dist
+# - npm run-script build
+- scp -i /tmp/key_outdoors README.md ubuntu@199.116.235.142:/home/ubuntu
 - ssh -i /tmp/key_outdoors ubuntu@199.116.235.142
 - kill $(lsof -ti :4444)
 - kill $(lsof -ti :8000)
