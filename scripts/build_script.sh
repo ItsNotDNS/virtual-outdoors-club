@@ -9,6 +9,7 @@ pkill -f npm
 pkill -f node
 pkill -f manage.py
 pip install -r requirements.txt
+npm install
 python ./src/django/manage.py runserver 0.0.0.0:8000 &
 python ./src/django/manage.py process_tasks &
 node server.js &
