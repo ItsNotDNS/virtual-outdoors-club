@@ -20,9 +20,13 @@ before_script:
 - python src/django/manage.py migrate
 - python src/django/manage.py createworker
 script:
+# encryption of cybera
 - openssl aes-256-cbc -K $encrypted_3b91031844f4_key -iv $encrypted_3b91031844f4_iv -in key_outdoors.pem.enc -out /tmp/key_outdoors -d
 - eval "$(ssh-agent -s)"
-- chmod 700 /tmp/key_outdoors
+- echo "$SSH_AUTH_SOCK"
+# encryption of git
+# - openssl aes-256-cbc -K $encrypted_de17c20e6bb1_key -iv $encrypted_de17c20e6bb1_iv -in deploy_rsa.enc -out ../.ssh/deploy_rsa -d
+- chmod 600 /tmp/key_outdoors
 - ssh-add /tmp/key_outdoors
 - scp README.md ubuntu@199.116.235.142:/home/ubuntu
 - ssh -i /tmp/key_outdoors ubuntu@199.116.235.142
