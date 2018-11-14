@@ -20,17 +20,11 @@ before_script:
 - python src/django/manage.py migrate
 - python src/django/manage.py createworker
 script:
-- echo "script"
 - openssl aes-256-cbc -K $encrypted_e8f9f979370e_key -iv $encrypted_e8f9f979370e_iv -in key_outdoors.pem.enc -out /tmp/key_outdoors -d
 - eval "$(ssh-agent -s)"
 - chmod 600 /tmp/key_outdoors
 - ssh-add /tmp/key_outdoors
-- echo $(ssh-add -l)
-- echo "$(ssh-add -l)"
 - scp README.md ubuntu@199.116.235.142:/home/ubuntu
-- echo "$(cat README.md)"
-- echo $(cat /tmp/key_outdoors)
-- echo "$(cat /tmp/key_outdoors)"
 - ssh -i /tmp/key_outdoors ubuntu@199.116.235.142
 - kill $(lsof -ti :4444)
 - kill $(lsof -ti :8000)
