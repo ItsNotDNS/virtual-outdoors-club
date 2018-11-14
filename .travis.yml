@@ -26,24 +26,36 @@ before_script:
   - python src/django/manage.py migrate
   - python src/django/manage.py createworker
 script:
-# encryption of cybera
-- openssl aes-256-cbc -K $encrypted_de17c20e6bb1_key -iv $encrypted_de17c20e6bb1_iv -in key_outdoors.pem.enc -out /tmp/key_outdoors.pem -d
-- eval "$(ssh-agent -s)"
-- echo "$SSH_AUTH_SOCK"
-# encryption of git
-# - openssl aes-256-cbc -K $encrypted_de17c20e6bb1_key -iv $encrypted_de17c20e6bb1_iv -in deploy_rsa.enc -out ../.ssh/deploy_rsa -d
-- chmod 600 /tmp/key_outdoors.pem
-- ssh-add /tmp/key_outdoors.pem
-- scp README.md ubuntu@199.116.235.142:/home/ubuntu
-- ssh -i /tmp/key_outdoors.pem ubuntu@199.116.235.142
-- kill $(lsof -ti :4444)
-- kill $(lsof -ti :8000)
-- kill $(lsof -ti :8081)
-- nohup python src/django/manage.py runserver 0.0.0.0:8000 &
-- python src/django/manage.py process_tasks &
+  # encryption of cybera
+  - openssl aes-256-cbc -K $encrypted_de17c20e6bb1_key -iv $encrypted_de17c20e6bb1_iv -in key_outdoors.pem.enc -out /tmp/key_outdoors.pem -d
+  - eval "$(ssh-agent -s)"
+  - echo "$SSH_AUTH_SOCK"
+  # encryption of git
+  # - openssl aes-256-cbc -K $encrypted_de17c20e6bb1_key -iv $encrypted_de17c20e6bb1_iv -in deploy_rsa.enc -out ../.ssh/deploy_rsa -d
+  - chmod 600 /tmp/key_outdoors.pem
+  - ssh-add /tmp/key_outdoors.pem
+  # - scp README.md ubuntu@199.116.235.142:/home/ubuntu
+  
+after_success:
+  - ssh -i /tmp/key_outdoors.pem ubuntu@199.116.235.142 'bash -s' < scripts/build_script.sh
 # - coverage run --source='src/django/api/views/' --omit='src/django/api/views/PayPalView.py'
 #   src/django/manage.py test api
 # - coverage report --fail-under=70
 # - npm run-script lint
 # - npm test -- --single-run
 # after_success:
+
+  # Below are the requirements to run automation on travis-ci
+# travis-ci is unrelaiable, so this doesn't work 100% of the time
+
+# # installs selenium
+# - ./node_modules/.bin/selenium-standalone install
+# # starts selenium in the background
+# - ./node_modules/.bin/selenium-standalone start &
+# # builds and runs the dist in the background
+# - npm run-script build
+# - node server.js &
+# # runs the django server in the background
+# - python ./src/django/manage.py runserver &
+# # runs the webdriver integration tests
+# - ./node_modules/.bin/wdio wdio.conf.js
