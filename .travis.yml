@@ -39,7 +39,7 @@ script:
   - ssh-add /tmp/key_outdoors.pem
   # - scp README.md ubuntu@199.116.235.142:/home/ubuntu
 after_success:
-  - scp -r /dist ubuntu@199.116.235.142:/home/ubuntu/virtual-outdoors-club/dist
+  - scp -r /dist ubuntu@199.116.235.142:/home/ubuntu/virtual-outdoors-club
   - ssh -i /tmp/key_outdoors.pem ubuntu@199.116.235.142 'bash -s' < scripts/build_script.sh
 
 # Below are the requirements to run automation on travis-ci
