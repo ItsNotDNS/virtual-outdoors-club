@@ -7,6 +7,10 @@ git pull
 pkill -f npm
 pkill -f node
 pkill -f manage.py
+rm -rf ./dist
+mkdir dist
+mv tmp dist
+rm -rf tmp
 pip install -r requirements.txt
 python ./src/django/manage.py runserver 0.0.0.0:8000 &
 python ./src/django/manage.py process_tasks &
