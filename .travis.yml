@@ -21,12 +21,6 @@ before_script:
 - python src/django/manage.py createworker
 script:
 - echo "script"
-# - coverage run --source='src/django/api/views/' --omit='src/django/api/views/PayPalView.py'
-#   src/django/manage.py test api
-# - coverage report --fail-under=70
-# - npm run-script lint
-# - npm test -- --single-run
-after_success:
 - openssl aes-256-cbc -K $encrypted_e8f9f979370e_key -iv $encrypted_e8f9f979370e_iv -in key_outdoors.pem.enc -out /tmp/key_outdoors -d
 - eval "$(ssh-agent -s)"
 - chmod 600 /tmp/key_outdoors
@@ -43,3 +37,9 @@ after_success:
 - kill $(lsof -ti :8081)
 - nohup python src/django/manage.py runserver 0.0.0.0:8000 &
 - python src/django/manage.py process_tasks &
+# - coverage run --source='src/django/api/views/' --omit='src/django/api/views/PayPalView.py'
+#   src/django/manage.py test api
+# - coverage report --fail-under=70
+# - npm run-script lint
+# - npm test -- --single-run
+# after_success:
