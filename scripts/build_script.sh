@@ -1,8 +1,11 @@
 source outdoorsclubenv/bin/activate
 cd virtual-outdoors-club
-git pull
+eval "$(ssh-agent -s)"
+echo "$SSH_AUTH_SOCK"
+ssh-add ../.ssh/deploy_rsa
+git pull origin master
 git checkout master
-git pull
+git pull origin master
 kill $(lsof -t -i :4444)
 kill $(lsof -t -i :8000)
 kill $(lsof -t -i :8081)
