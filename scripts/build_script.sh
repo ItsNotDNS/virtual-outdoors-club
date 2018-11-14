@@ -1,5 +1,5 @@
 #!/bin/bash
-ssh -i /tmp/key_outdoors.pem ubuntu@199.116.235.142 'bash -s' <<- "EOT"
+ssh -i /tmp/key_outdoors.pem ubuntu@199.116.235.142 <<EOF
     source outdoorsclubenv/bin/activate
     cd virtual-outdoors-club
     pkill -f agent
@@ -16,7 +16,7 @@ ssh -i /tmp/key_outdoors.pem ubuntu@199.116.235.142 'bash -s' <<- "EOT"
     rm -rf tmp
     pip install -r requirements.txt
     python ./src/django/manage.py process_tasks &
-    node server.js &
+    node server.js & > ../node_output.txt
     python ./src/django/manage.py runserver 0.0.0.0:8000 &
-    travis_terminate 0
-EOT
+    exit 0 && exit > ../exit_output.txt
+EOF
