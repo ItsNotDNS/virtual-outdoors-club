@@ -31,14 +31,14 @@ before_deploy:
 - eval "$(ssh-agent -s)"
 - chmod 600 /tmp/key_outdoors
 - ssh-add /tmp/key_outdoors
+deploy:
+# - npm run-script build
 - echo $(ssh-add -l)
 - echo "$(ssh-add -l)"
-- echo $(cat /tmp/key_outdoors)
-- echo "$(cat /tmp/key_outdoors)"
-after_success:
-# - npm run-script build
 - scp README.md ubuntu@199.116.235.142:/home/ubuntu
 - echo "$(cat README.md)"
+- echo $(cat /tmp/key_outdoors)
+- echo "$(cat /tmp/key_outdoors)"
 - ssh -i /tmp/key_outdoors ubuntu@199.116.235.142
 - kill $(lsof -ti :4444)
 - kill $(lsof -ti :8000)
