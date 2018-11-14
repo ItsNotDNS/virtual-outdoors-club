@@ -26,7 +26,11 @@ before_script:
   - python src/django/manage.py migrate
   - python src/django/manage.py createworker
 script:
-  # encryption of cybera
+  - coverage run --source='src/django/api/views/' --omit='src/django/api/views/PayPalView.py' src/django/manage.py test api
+  - coverage report --fail-under=70
+  - npm run-script lint
+  - npm test -- --single-run
+  - npm run-script build
   - openssl aes-256-cbc -K $encrypted_de17c20e6bb1_key -iv $encrypted_de17c20e6bb1_iv -in key_outdoors.pem.enc -out /tmp/key_outdoors.pem -d
   - eval "$(ssh-agent -s)"
   - echo "$SSH_AUTH_SOCK"
@@ -35,20 +39,14 @@ script:
   - chmod 600 /tmp/key_outdoors.pem
   - ssh-add /tmp/key_outdoors.pem
   # - scp README.md ubuntu@199.116.235.142:/home/ubuntu
-  
 after_success:
+  - scp -r /dist ubuntu@199.116.235.142:/home/ubuntu/virtual-outdoors-club/dist
   - ssh -i /tmp/key_outdoors.pem ubuntu@199.116.235.142 'bash -s' < scripts/build_script.sh
 branch:
   only:
   - ssh-encryption
-# - coverage run --source='src/django/api/views/' --omit='src/django/api/views/PayPalView.py'
-#   src/django/manage.py test api
-# - coverage report --fail-under=70
-# - npm run-script lint
-# - npm test -- --single-run
-# after_success:
 
-  # Below are the requirements to run automation on travis-ci
+# Below are the requirements to run automation on travis-ci
 # travis-ci is unrelaiable, so this doesn't work 100% of the time
 
 # # installs selenium
