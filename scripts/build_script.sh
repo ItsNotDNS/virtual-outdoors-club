@@ -5,7 +5,7 @@ ssh -i /tmp/key_outdoors.pem ubuntu@199.116.235.142 'bash -s' <<- "EOF"
     pkill -f agent
     eval "$(ssh-agent -s)"
     ssh-add ../.ssh/deploy_rsa
-    git checkout master
+    git checkout ssh-encryption
     git pull
     pkill -f npm
     pkill -f node
