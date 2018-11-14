@@ -14,4 +14,4 @@ app.get("*", function(req, res) {
 
 app.listen(port);
 
-console.log(`Production Server Running: 199.116.235.142:${port}`);
+// console.log(`Production Server Running: 199.116.235.142:${port}`);
