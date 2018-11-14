@@ -27,13 +27,14 @@ script:
 # - npm run-script lint
 # - npm test -- --single-run
 before_deploy:
-- openssl aes-256-cbc -K $encrypted_<...>_key -iv $encrypted_<...>_iv -in key_outdoors.enc -out /tmp/key_outdoors -d
+- openssl aes-256-cbc -K $encrypted_<...>_key -iv $encrypted_<...>_iv -in key_outdoors.pem.enc -out /tmp/key_outdoors -d
 - eval "$(ssh-agent -s)"
 - chmod 600 /tmp/key_outdoors
 - ssh-add /tmp/key_outdoors
 after_success:
 # - npm run-script build
 - scp README.md ubuntu@199.116.235.142:/home/ubuntu
+- echo "$(cat README.md)"
 - ssh -i /tmp/key_outdoors ubuntu@199.116.235.142
 - kill $(lsof -ti :4444)
 - kill $(lsof -ti :8000)
