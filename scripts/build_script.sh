@@ -1,4 +1,4 @@
-ssh -i /tmp/key_outdoors.pem ubuntu@199.116.235.142 'bash -s' << ENDHERE
+ssh -i /tmp/key_outdoors.pem ubuntu@199.116.235.142 'bash -s && exit' << ENDHERE
     source outdoorsclubenv/bin/activate
     cd virtual-outdoors-club
     eval "$(ssh-agent -s)"
@@ -16,5 +16,4 @@ ssh -i /tmp/key_outdoors.pem ubuntu@199.116.235.142 'bash -s' << ENDHERE
     python ./src/django/manage.py runserver 0.0.0.0:8000 &
     python ./src/django/manage.py process_tasks &
     node server.js &
-    exit
 ENDHERE
