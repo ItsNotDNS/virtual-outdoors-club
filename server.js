@@ -12,6 +12,8 @@ app.get("*", function(req, res) {
     res.sendFile("index.html", { root: path.join(__dirname, "dist/") });
 });
 
-app.listen(port);
+app.listen(port, function() {
+    console.log("Callback function");
+});
 
 // console.log(`Production Server Running: 199.116.235.142:${port}`);
