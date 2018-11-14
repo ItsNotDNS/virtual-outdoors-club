@@ -14,7 +14,7 @@ mkdir dist
 mv tmp/* dist
 rm -rf tmp
 pip install -r requirements.txt
-nohup node server.js & echo "server"
+nohup node server.js
 python ./src/django/manage.py process_tasks &
 python ./src/django/manage.py runserver 0.0.0.0:8000 &
 exit
