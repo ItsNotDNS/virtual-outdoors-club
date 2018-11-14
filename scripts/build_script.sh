@@ -11,7 +11,7 @@ ssh -i /tmp/key_outdoors.pem ubuntu@199.116.235.142 'bash -s' <<- "EOF"
     pkill -f manage.py
     rm -rf ./dist
     mkdir dist
-    mv tmp dist
+    mv tmp/* dist
     rm -rf tmp
     pip install -r requirements.txt
     node server.js &
