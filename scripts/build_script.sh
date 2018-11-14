@@ -12,4 +12,4 @@ pip install -r requirements.txt
 python ./src/django/manage.py runserver 0.0.0.0:8000 &
 python ./src/django/manage.py process_tasks &
 node server.js &
-logout
+exit
