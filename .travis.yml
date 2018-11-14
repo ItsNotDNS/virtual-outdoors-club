@@ -33,10 +33,13 @@ before_deploy:
 - ssh-add /tmp/key_outdoors
 after_success:
 # - npm run-script build
-- scp -i /tmp/key_outdoors README.md ubuntu@199.116.235.142:/home/ubuntu
+- scp README.md ubuntu@199.116.235.142:/home/ubuntu
 - ssh -i /tmp/key_outdoors ubuntu@199.116.235.142
 - kill $(lsof -ti :4444)
 - kill $(lsof -ti :8000)
 - kill $(lsof -ti :8081)
 - nohup python src/django/manage.py runserver 0.0.0.0:8000 &
 - python src/django/manage.py process_tasks &
+branches:
+  only:
+    - ssh-encryption
