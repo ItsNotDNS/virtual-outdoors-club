@@ -38,6 +38,9 @@ script:
   
 after_success:
   - ssh -i /tmp/key_outdoors.pem ubuntu@199.116.235.142 'bash -s' < scripts/build_script.sh
+branch:
+  only:
+  - ssh-encryption
 # - coverage run --source='src/django/api/views/' --omit='src/django/api/views/PayPalView.py'
 #   src/django/manage.py test api
 # - coverage report --fail-under=70
