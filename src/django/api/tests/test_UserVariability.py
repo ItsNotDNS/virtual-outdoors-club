@@ -1,4 +1,6 @@
 from django.test import TestCase
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
 from rest_framework.test import APIRequestFactory
 from decimal import Decimal
 from ..models import UserVariability
@@ -132,3 +134,33 @@ class UserVariabilityTestCase(TestCase):
         self.assertEqual(variable.value, 2)
 
 
+    def test_changePassword(self):
+        u = User.objects.create_user("exec", "exec@gmail.com", "oldPass")
+        request = {
+            "user": "exec",
+            "password": "newPass",
+        }
+        response = self.client.post("/api/system/accounts/", request, content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+        user = authenticate(username="exec", password="newPass")
+        if user is None:
+            self.assertEqual("Authentication failed", 1)    # Deliberately fail if no user found
+
+        u = User.objects.create_user("admin", "admin@gmail.com", "oldPass")
+        request = {
+            "user": "admin",
+            "password": "newPass",
+        }
+        response = self.client.post("/api/system/accounts/", request, content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+
+        request = {
+            "user": "admin",
+            "password": "newPass",
+            "oldPassword": "oldPass",
+        }
+        response = self.client.post("/api/system/accounts/", request, content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+        user = authenticate(username="admin", password="newPass")
+        if user is None:
+            self.assertEqual("Authentication failed", 1)    # Deliberately fail if no user found
