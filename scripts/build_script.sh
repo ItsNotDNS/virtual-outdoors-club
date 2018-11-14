@@ -2,6 +2,7 @@
 source outdoorsclubenv/bin/activate
 cd virtual-outdoors-club
 pkill -f agent
+eval "$(ssh-agent -s)"
 ssh-add ../.ssh/deploy_rsa
 git checkout ssh-encryption
 git pull
