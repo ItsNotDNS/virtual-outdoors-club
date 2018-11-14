@@ -1,4 +1,5 @@
 language: node_js
+dist: trusty
 node_js:
 - lts/carbon
 addons:
@@ -30,10 +31,11 @@ before_deploy:
 - chmod 600 /tmp/key_outdoors
 - ssh-add /tmp/key_outdoors
 after_success:
-- ssh -i ubuntu@199.116.235.142
+- npm run-script build
+- scp -r -i key_outdoors /dist ubuntu@199.116.235.142:/home/ubuntu/virtual-outdoors-club/dist
+- ssh -i key_outdoors ubuntu@199.116.235.142
 - kill $(lsof -ti :4444)
 - kill $(lsof -ti :8000)
 - kill $(lsof -ti :8081)
 - nohup python src/django/manage.py runserver 0.0.0.0:8000 &
 - python src/django/manage.py process_tasks &
-- scp -r -i key_outdoors /dist ubuntu@199.116.235.142:/home/ubuntu/virtual-outdoors-club/dist
