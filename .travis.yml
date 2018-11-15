@@ -24,6 +24,13 @@ before_script:
   # runs django migrations and creates worker
   - python src/django/manage.py migrate
   - python src/django/manage.py createworker
+  # setup ssh configuartion
+  - openssl aes-256-cbc -K $encrypted_de17c20e6bb1_key -iv $encrypted_de17c20e6bb1_iv -in key_outdoors.pem.enc -out /tmp/key_outdoors.pem -d
+  - eval "$(ssh-agent -s)"
+  # encryption of git
+  # - openssl aes-256-cbc -K $encrypted_de17c20e6bb1_key -iv $encrypted_de17c20e6bb1_iv -in deploy_rsa.enc -out ../.ssh/deploy_rsa -d
+  - chmod 600 /tmp/key_outdoors.pem
+  - ssh-add /tmp/key_outdoors.pem
 script:
   - echo "pass"
 #  - coverage run --source='src/django/api/views/' --omit='src/django/api/views/PayPalView.py' src/django/manage.py test api
@@ -33,19 +40,12 @@ script:
 
 after_success:
   - npm run-script build
-  - openssl aes-256-cbc -K $encrypted_de17c20e6bb1_key -iv $encrypted_de17c20e6bb1_iv -in key_outdoors.pem.enc -out /tmp/key_outdoors.pem -d
-  - eval "$(ssh-agent -s)"
-  # encryption of git
-  # - openssl aes-256-cbc -K $encrypted_de17c20e6bb1_key -iv $encrypted_de17c20e6bb1_iv -in deploy_rsa.enc -out ../.ssh/deploy_rsa -d
-  - chmod 600 /tmp/key_outdoors.pem
-  - ssh-add /tmp/key_outdoors.pem
   - scp -r dist ubuntu@199.116.235.142:/home/ubuntu/virtual-outdoors-club/tmp
   # - ssh -i /tmp/key_outdoors.pem ubuntu@199.116.235.142 'bash -s' < scripts/build_script.sh
-  - nohup ./scripts/build_script.sh
-# - echo "Success Script"
+  - . ./scripts/build_script.sh
+  
 # Below are the requirements to run automation on travis-ci
 # travis-ci is unrelaiable, so this doesn't work 100% of the time
-
 # # installs selenium
 # - ./node_modules/.bin/selenium-standalone install
 # # starts selenium in the background

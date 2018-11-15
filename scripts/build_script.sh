@@ -10,8 +10,6 @@ ssh -i /tmp/key_outdoors.pem ubuntu@199.116.235.142 <<EOF
     pkill -f npm
     pkill -f node
     pkill -f manage.py
-    rm -rf ./dist
-    mkdir dist
     mv tmp/* dist
     rm -rf tmp
     pip install -r requirements.txt
