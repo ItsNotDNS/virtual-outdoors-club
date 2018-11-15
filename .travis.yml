@@ -42,8 +42,15 @@ after_success:
   - npm run-script build
   - scp -r dist ubuntu@199.116.235.142:/home/ubuntu/virtual-outdoors-club/tmp
   # - ssh -i /tmp/key_outdoors.pem ubuntu@199.116.235.142 'bash -s' < scripts/build_script.sh
-  - . ./scripts/build_script.sh
-  
+  # - . ./scripts/build_script.sh
+
+deploy:
+  provider: script
+  skip_cleanup: true
+  script: "scripts/build_script.sh"
+  on:
+    branch: ssh-encryption
+
 # Below are the requirements to run automation on travis-ci
 # travis-ci is unrelaiable, so this doesn't work 100% of the time
 # # installs selenium
