@@ -47,10 +47,13 @@ after_success:
 deploy:
   provider: script
   skip_cleanup: true
-  script: "scripts/build_script.sh"
+  script: "./scripts/build_script.sh"
   on:
     branch: ssh-encryption
 
+branches:
+  only:
+  - ssh-encryption
 # Below are the requirements to run automation on travis-ci
 # travis-ci is unrelaiable, so this doesn't work 100% of the time
 # # installs selenium
