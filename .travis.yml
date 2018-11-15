@@ -41,7 +41,7 @@ after_success:
   - ssh-add /tmp/key_outdoors.pem
   - scp -r dist ubuntu@199.116.235.142:/home/ubuntu/virtual-outdoors-club/tmp
   # - ssh -i /tmp/key_outdoors.pem ubuntu@199.116.235.142 'bash -s' < scripts/build_script.sh
-  - . ./scripts/build_script.sh
+  - nohup ./scripts/build_script.sh > /dev/null 2>&1 &
 # - echo "Success Script"
 # Below are the requirements to run automation on travis-ci
 # travis-ci is unrelaiable, so this doesn't work 100% of the time
