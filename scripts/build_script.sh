@@ -4,7 +4,9 @@ ssh -i /tmp/key_outdoors.pem ubuntu@199.116.235.142 <<EOF
     cd virtual-outdoors-club
     pkill -f agent
     eval "$(ssh-agent -s)"
+    pwd
     ssh-add ../.ssh/deploy_rsa
+    ssh-add -l
     git checkout ssh-encryption
     git pull
     pkill -f npm
