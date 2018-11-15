@@ -423,16 +423,19 @@ export class GearStore extends Reflux.Store {
                     });
                     this.setState(newState);
                 } else {
-                    const newState = update(this.state, {
-                        gearList: {
-                            $set: this.state.gearList.filter(
-                                (obj) => {
-                                    return obj.id !== this.state.deleteGearModal.id;
+                    for (let i = 0; i < this.state.gearList.length; i++) {
+                        if (this.state.gearList[i].id === this.state.deleteGearModal.id) {
+                            const newState = update(this.state, {
+                                gearList: {
+                                    [i]: {
+                                        condition: { $set: "DELETED" }
+                                    }
                                 }
-                            )
+                            });
+                            this.setState(newState);
+                            break;
                         }
-                    });
-                    this.setState(newState);
+                    }
                     this.onCloseDeleteGearModal();
                 }
             });
