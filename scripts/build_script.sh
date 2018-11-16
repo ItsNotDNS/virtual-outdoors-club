@@ -16,7 +16,7 @@ ssh -i /tmp/key_outdoors.pem ubuntu@199.116.235.142 <<EOF
     rm -rf tmp
     pip install -r requirements.txt
     nohup python ./src/django/manage.py process_tasks &
-    nohup node server.js & disown
+    nohup node server.js &
     nohup python ./src/django/manage.py runserver 0.0.0.0:8000 &
     exit 0 && exit
 EOF
