@@ -15,15 +15,21 @@ class ReservationTestCase(TestCase):
         Member.objects.create(email="henry@email.com")
         Member.objects.create(email="blackListed@email.com")
         BlackList.objects.create(email="blackListed@email.com")
-        spCat = GearCategory.objects.create(name="Ski poles")
-        bkCat = GearCategory.objects.create(name="Book")
-        sp = Gear.objects.create(code="SP01", category=spCat, depositFee=12.00, description="Ski poles", condition="RENTABLE", version=1)
-        bk = Gear.objects.create(code="BK01", category=bkCat, depositFee=12.00, description="some book", condition="RENTABLE", version=1)
-        gr = Reservation.objects.create(email="enry@email.com", licenseName="Name on their license.", licenseAddress="Address on their license.", approvedBy="nobody", startDate=today.strftime("%Y-%m-%d"), endDate=(today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"))
-        gr.gear.add(sp)
+        self.spCat = GearCategory.objects.create(name="Ski poles")
+        self.bkCat = GearCategory.objects.create(name="Book")
+        self.sp = Gear.objects.create(code="SP01", category=self.spCat, depositFee=12.00, description="Ski poles",
+                                      condition="RENTABLE", version=1)
+
+        self.bk = Gear.objects.create(code="BK01", category=self.bkCat, depositFee=12.00, description="some book",
+                                      condition="RENTABLE", version=1)
+
+        gr = Reservation.objects.create(email="enry@email.com", licenseName="Name on their license.",
+                                        licenseAddress="Address on their license.", approvedBy="nobody",
+                                        startDate=today.strftime("%Y-%m-%d"),
+                                        endDate=(today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"))
+
+        gr.gear.add(self.sp)
         gr.save()
-        self.sp = sp
-        self.bk = bk
         self.client = APIRequestFactory
 
     def test_get(self):
@@ -73,7 +79,8 @@ class ReservationTestCase(TestCase):
         
         getReqStr+='&email=enry@email.com'
 
-        # testing if get request with start and end dates with a specific email address finds the appropriate reservations
+        # testing if get request with start and end dates with a specific email address
+        # finds the appropriate reservations
         response = self.client.get(getReqStr, content_type="application/json").data['data']
         self.assertEqual(response, correctResponse)
 
@@ -89,8 +96,33 @@ class ReservationTestCase(TestCase):
         request = {"id": 1}
         today = datetime.datetime.today()
 
+        # test to try checkout a reservation with a gear item that is in another reservation
+        # that is not returned or cancelled
+        newRes = Reservation.objects.create(email="enry@email.com", licenseName="Name on their license.",
+                                            licenseAddress="Address on their license.", approvedBy="nobody",
+                                            startDate=(today-datetime.timedelta(days=9)).strftime("%Y-%m-%d"),
+                                            endDate=(today - datetime.timedelta(days=1)).strftime("%Y-%m-%d"))
+
+        newRes.gear.add(self.sp)
+        newRes.gear.add(self.bk)
+        newRes.status = "TAKEN"
+        newRes.save()
+
+        # test fails with 406 error, as reservation with id = 1 has gear item with code "SP01", which is also in the
+        # above reservation. The above reservation is before today - the day of the checkout -
+        # but has status = "TAKEN", causing the 406 error.
+        response = self.client.post("/api/reservation/checkout/", request, content_type='application/json')
+        self.assertEqual(response.status_code, 406)
+
+        # When the status of the above reservation gets changed to cancelled or returned, the reservation with
+        # id = 1 will be succesfully checked out.
+        newRes.status = "RETURNED"
+        newRes.save()
+
+        # test to checkout a reservation succesfully
         response = self.client.post("/api/reservation/checkout/", request, content_type='application/json')
         self.assertEqual(response.status_code, 200)
+        newRes.delete()
 
         correctResponse = [{
             'id': 1,
@@ -110,13 +142,38 @@ class ReservationTestCase(TestCase):
             'version': 1
             }]
 
+        # tests if status of succesfully checked out reservation is "TAKEN" or not
         response = self.client.get('/api/reservation/').data['data']
         self.assertEqual(response, correctResponse)
 
+        # order of the next 2 tests matters, as the check for unrentable gear is done before the check for a
+        # unpaid reservation
+
+        # test to try and checkout a reservation that is not paid for
+        gr.status = "APPROVED"
+        response = self.client.post("/api/reservation/checkout/", request, content_type='application/json')
+        self.assertEqual(response.status_code, 406)
+
+        # test to try and checkout a reservation with gear that is not rentable
+        sp = Gear.objects.create(code="SP02", category=self.spCat, depositFee=12.00, description="Ski poles",
+                                 condition="DELETED", version=1)
+        gr.gear.add(sp)
+        response = self.client.post("/api/reservation/checkout/", request, content_type='application/json')
+        self.assertEqual(response.status_code, 403)
+
+        # test to try and checkout a reservation that DNE
+        request = {"id": -1}
+        response = self.client.post("/api/reservation/checkout/", request, content_type='application/json')
+        self.assertEqual(response.status_code, 400)
 
     def test_checkin(self):
-        request = {"id": 1}
         today = datetime.datetime.today()
+
+        #test for a succesful checkin of a reservation
+        request = {"id": 1}
+        reservation = Reservation.objects.get(pk=1)
+        reservation.status = "TAKEN"
+        reservation.save()
 
         response = self.client.post("/api/reservation/checkin/", request, content_type='application/json')
         self.assertEqual(response.status_code, 200)
@@ -139,14 +196,27 @@ class ReservationTestCase(TestCase):
             'version': 1
             }]
 
+        # tests if status of checked in reservation is "RETURNED" or not
         response = self.client.get('/api/reservation/').data['data']
         self.assertEqual(response, correctResponse)
 
-        # Doing it again should return an error because the condition is different
-        response = self.client.post("/api/reservation/checkin/", request, content_type='application/json')
+        # test for if reservation ID is not provided in the request
+        request = {"email": "enry@email.com"}
+        response = self.client.post('/api/reservation/checkin/', request, content_type='application/json')
         self.assertEqual(response.status_code, 400)
 
-       
+        # test for if a reservation ID that does not exist is input in the request
+        request = {"id": -2}
+        response = self.client.post('/api/reservation/checkin/', request, content_type='application/json')
+        self.assertEqual(response.status_code, 404)
+
+        # test for if a reservation that does not have the "TAKEN" status is attempted to be checked in 
+        reservation.status = "CANCELLED"
+        reservation.save()
+        request = {"id": 1}
+        response = self.client.post('/api/reservation/checkin/', request, content_type='application/json')
+        self.assertEqual(response.status_code, 406)
+
 
     def test_cancel(self):
         request = {"id": 1}
@@ -234,7 +304,8 @@ class ReservationTestCase(TestCase):
         response = self.client.post('/api/reservation/approve/', request, content_type='application/json')
         self.assertEqual(response.status_code, 404)
 
-        # reservation with ID = 1 now has status "approved" because of the first test; the response should return a status error.
+        # reservation with ID = 1 now has status "approved" because of the first test; the response should
+        # return a status error.
         request = {"id": 1}
 
         response = self.client.post('/api/reservation/approve/', request, content_type='application/json')
@@ -258,7 +329,7 @@ class ReservationTestCase(TestCase):
 
         correctResponse = {
             'startDate': today.strftime("%Y-%m-%d"),
-            'id': 2,
+            'id': 3,
             'email': 'enry@email.com',
             'endDate': (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
             'gear': [self.bk.pk],
@@ -351,7 +422,7 @@ class ReservationTestCase(TestCase):
 
 
       # Test that canceling releases hold on gear
-        request = {"id": 2} 
+        request = {"id": 3} 
         response = self.client.post('/api/reservation/cancel/', request, content_type='application/json')
         self.assertEqual(response.status_code, 200)
         request = {
@@ -366,7 +437,7 @@ class ReservationTestCase(TestCase):
 
         correctResponse = {
             'startDate': today.strftime("%Y-%m-%d"),
-            'id': 3,
+            'id': 4,
             'email': 'enry@email.com',
             'endDate': (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
             'gear': [self.bk.pk],

@@ -7,6 +7,7 @@ from ..tasks import cancelled
 from ..serializers import ReservationPOSTSerializer, ReservationGETSerializer
 import datetime
 from django.db.models import Q
+import datetime
 
 
 def reservationIdExists(id):
@@ -169,10 +170,28 @@ def checkout(request):
     if not reservation:
         return RespError(400, "There is no reservation with the id of '" + str(request['id']) + "'")
 
+    gearList = reservation.gear.all()  
+    for gear in gearList:
+        if gear.condition != "RENTABLE":
+            return RespError(403, "The gear with the id of '" + str(gear.id) + "' is not RENTABLE")
+        try: 
+            # the below query does the following: 
+            # Finds all reservations with a gear item in the reservation attempted to be checked out.
+            # then, find the latest reservation before the current day by endDate. 
+            # If endDates are the same, find by the latest startDate.
+            latestResWithGearItem = Reservation.objects.filter(gear=gear).filter(endDate__lte=datetime.datetime.today()).latest('endDate', 'startDate')
+            
+            if latestResWithGearItem.status != "CANCELLED" and latestResWithGearItem.status != "RETURNED":
+                return RespError(406, "The gear with the id of '" + str(gear.id) + "' in the reservation with the id of '" + str(latestResWithGearItem.id) + "' must have status CANCELLED or RETURNED")
+        except Reservation.DoesNotExist:
+            # no other reservation currently with the gear item.
+            pass
+
     if reservation.status == "PAID":
         reservation.status = "TAKEN"
     else:
-        return RespError(400, "The item must be paid for before it can be taken")
+        return RespError(406, "The reservation status must be PAID before it can be checked out")
+
     reservation.save()
    
     return Response()
@@ -187,10 +206,10 @@ def checkin(request):
 
     reservation = reservationIdExists(request['id'])
     if not reservation:
-        return RespError(400, "There is no reservation with the id of '" + str(request['id']) + "'")
+        return RespError(404, "There is no reservation with the id of '" + str(request['id']) + "'")
 
-    if reservation.status not in ["REQUESTED", "APPROVED"]:
-        return RespError(400, "The reservation status must be REQUESTED or APPROVED")
+    if reservation.status != "TAKEN":
+        return RespError(406, "The reservation status must be TAKEN")
 
     reservation.status = "RETURNED"
     reservation.save()
