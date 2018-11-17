@@ -3,7 +3,7 @@ from django.core import exceptions
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from ..models import Reservation
-from ..tasks import cancelled
+from ..tasks import cancelled, approved
 from ..serializers import ReservationPOSTSerializer, ReservationGETSerializer
 import datetime
 from django.db.models import Q
@@ -256,6 +256,8 @@ def approve(request):
 
     reservation.status = "APPROVED"
     reservation.save()
+
+    approved(reservation)
 
     serial = ReservationGETSerializer(reservation)
 
