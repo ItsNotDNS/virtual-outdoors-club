@@ -329,7 +329,7 @@ class ReservationTestCase(TestCase):
 
         correctResponse = {
             'startDate': today.strftime("%Y-%m-%d"),
-            'id': 3,
+            'id': 4,
             'email': 'enry@email.com',
             'endDate': (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
             'gear': [self.bk.pk],
@@ -422,7 +422,7 @@ class ReservationTestCase(TestCase):
 
 
       # Test that canceling releases hold on gear
-        request = {"id": 3} 
+        request = {"id": 4} 
         response = self.client.post('/api/reservation/cancel/', request, content_type='application/json')
         self.assertEqual(response.status_code, 200)
         request = {
@@ -437,7 +437,7 @@ class ReservationTestCase(TestCase):
 
         correctResponse = {
             'startDate': today.strftime("%Y-%m-%d"),
-            'id': 4,
+            'id': 5,
             'email': 'enry@email.com',
             'endDate': (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
             'gear': [self.bk.pk],
@@ -459,7 +459,8 @@ class ReservationTestCase(TestCase):
         today = datetime.datetime.today()
 
         patch = {
-            "gear": [self.sp.pk, self.bk.pk]
+            "gear": [self.sp.pk, self.bk.pk],
+            "startDate": (today + datetime.timedelta(days=1)).strftime("%Y-%m-%d"),
         }
 
         request = {
@@ -469,7 +470,7 @@ class ReservationTestCase(TestCase):
         }
 
         correctResponse = {
-            'startDate': today.strftime("%Y-%m-%d"),
+            'startDate': (today + datetime.timedelta(days=1)).strftime("%Y-%m-%d"),
             'id': 1,
             'email': 'enry@email.com',
             'endDate': (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
@@ -487,6 +488,37 @@ class ReservationTestCase(TestCase):
         response = self.client.get("/api/reservation/", content_type='application/json').data["data"]
         self.assertEqual(len(response), reservationListOriginalLen)
 
+#
+        spCat1 = GearCategory.objects.create(name="Ski poles")
+        sp1 = Gear.objects.create(code="SP02", category=spCat1, depositFee=14.00, description="Ski poles", condition="RENTABLE", version=1)
+
+        request = {
+            "email": "henry@email.com",
+            "licenseName": "Name on their license.",
+            "licenseAddress": "Address on their license.",
+            "startDate": (today + datetime.timedelta(days=1)).strftime("%Y-%m-%d"),
+            "endDate": (today + datetime.timedelta(days=7)).strftime("%Y-%m-%d"),
+            "status": "REQUESTED",
+            "gear": [sp1.pk]
+        }
+
+        response = self.client.post("/api/reservation", request, content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+
+
+        patch = {
+            "gear": [self.sp.pk, self.bk.pk, sp1.pk],
+            "startDate": (today + datetime.timedelta(days=1)).strftime("%Y-%m-%d"),
+        }
+
+        request = {
+            "id": 1,
+            "expectedVersion": 2,
+            "patch": patch,
+        }
+
+        response = self.client.patch("/api/reservation", request, content_type="application/json")
+        self.assertEqual(response.status_code, 400)
 
     def test_invalidEmail(self):
         today = datetime.datetime.today()

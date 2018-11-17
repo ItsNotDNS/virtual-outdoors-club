@@ -118,6 +118,8 @@ class ReservationView(APIView):
         request = request.data
         allowedPatchMethods = {
             "gear": True,
+            "startDate": True,
+            "endDate": True,
         }
 
         idToUpdate = request.get("id", None)
@@ -150,7 +152,7 @@ class ReservationView(APIView):
         for field in resv._meta.fields: # field = Api.Reservation.fieldName
             f = str(field)
             f = f[16:]  # truncates Api.Reservation. part out
-            if f != "gear":
+            if f not in patch:
                 patch[f] = getattr(resv, f)
 
         sResv = ReservationPOSTSerializer(resv, data=patch)
