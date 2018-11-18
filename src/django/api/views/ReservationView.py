@@ -1,11 +1,9 @@
 from .error import *
-from django.core import exceptions
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from ..models import Reservation
 from ..tasks import cancelled, approved
 from ..serializers import ReservationPOSTSerializer, ReservationGETSerializer
-import datetime
 from django.db.models import Q
 import datetime
 
@@ -165,9 +163,14 @@ class ReservationView(APIView):
 
         return Response(sResv.data)
 
+
 @api_view(['POST'])
 def checkout(request):
     request = request.data
+
+    if "id" not in request:
+        return RespError(400, "There needs to be a reservation id to checkout.")
+
     reservation = reservationIdExists(request['id'])
     if not reservation:
         return RespError(400, "There is no reservation with the id of '" + str(request['id']) + "'")
@@ -184,13 +187,19 @@ def checkout(request):
             latestResWithGearItem = Reservation.objects.filter(gear=gear).filter(endDate__lte=datetime.datetime.today()).latest('endDate', 'startDate')
             
             if latestResWithGearItem.status != "CANCELLED" and latestResWithGearItem.status != "RETURNED":
-                return RespError(406, "The gear with the id of '" + str(gear.id) + "' in the reservation with the id of '" + str(latestResWithGearItem.id) + "' must have status CANCELLED or RETURNED")
+                return RespError(406, "The gear with the id of '" + str(gear.id) + "' in the reservation with the id "
+                                      "of '" + str(latestResWithGearItem.id) + "' must have"
+                                      " status CANCELLED or RETURNED")
+
         except Reservation.DoesNotExist:
             # no other reservation currently with the gear item.
             pass
 
     if reservation.status == "PAID":
         reservation.status = "TAKEN"
+    elif "cash" in request:
+        reservation.status = "TAKEN"
+        reservation.payment = "CASH"
     else:
         return RespError(406, "The reservation status must be PAID before it can be checked out")
 
@@ -216,7 +225,11 @@ def checkin(request):
     reservation.status = "RETURNED"
     reservation.save()
 
-    return Response()
+    msg = ""
+    if reservation.payment == "CASH":
+        msg = "Please return the cash deposit"
+
+    return Response(msg)
 
 
 @api_view(['POST'])

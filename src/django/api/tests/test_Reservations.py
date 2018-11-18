@@ -88,11 +88,7 @@ class ReservationTestCase(TestCase):
         response = self.client.get('/api/reservation/?email=enry@email.com', content_type="application/json").data['data']
         self.assertEqual(response, correctResponse)        
 
-
     def test_checkout(self):
-        gr = Reservation.objects.get(pk=1)
-        gr.status = "PAID"
-        gr.save()
         request = {"id": 1}
         today = datetime.datetime.today()
 
@@ -118,6 +114,19 @@ class ReservationTestCase(TestCase):
         # id = 1 will be succesfully checked out.
         newRes.status = "RETURNED"
         newRes.save()
+
+        # test for checkout with cash
+        request['cash'] = True
+        response = self.client.post("/api/reservation/checkout/", request, content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+
+        gr = Reservation.objects.get(id=1)
+        self.assertEqual(gr.payment, 'CASH')
+
+        gr.payment = ""
+        gr.status = "PAID"
+        gr.save()
+        del request['cash']
 
         # test to checkout a reservation succesfully
         response = self.client.post("/api/reservation/checkout/", request, content_type='application/json')
@@ -151,6 +160,7 @@ class ReservationTestCase(TestCase):
 
         # test to try and checkout a reservation that is not paid for
         gr.status = "APPROVED"
+
         response = self.client.post("/api/reservation/checkout/", request, content_type='application/json')
         self.assertEqual(response.status_code, 406)
 
@@ -217,7 +227,6 @@ class ReservationTestCase(TestCase):
         response = self.client.post('/api/reservation/checkin/', request, content_type='application/json')
         self.assertEqual(response.status_code, 406)
 
-
     def test_cancel(self):
         request = {"id": 1}
         today = datetime.datetime.today()
@@ -264,7 +273,6 @@ class ReservationTestCase(TestCase):
 
         response = self.client.post('/api/reservation/cancel/', request, content_type='application/json')
         self.assertEqual(response.status_code, 406)
-
 
     def test_approve(self):
         request = {"id": 1}
