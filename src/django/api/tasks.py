@@ -16,7 +16,7 @@ def worker():
     messages = []
     for res in reminder.all():
         body = "Hey " + res.licenseName.split()[0] + ",\n\nThis is an automated email letting you know that you " \
-                "need to return return these gear by tomorrow: \n"
+               "must return the gear listed below by tomorrow: \n"
 
         for gear in res.gear.all():
             body += gear.category.name + " " + gear.code + " - " + gear.description + "\n"
@@ -27,6 +27,17 @@ def worker():
                 "\nUniversity of Alberta Outdoors Club"
 
         messages.append({"body": body, "subject": "Gear Return Reminder", "to": [res.email]})
+
+    payment = Reservation.objects.filter(startDate=tomorrow, status="APPROVED")
+
+    # TODO: REPLACE LINK ADDRESS WITH PROPER ADDRESS
+    for res in payment.all():
+        body = "Hey " + res.licenseName.split()[0] + ",\n\nThis is an automated email letting you know that you " \
+               "can now pay for your reservation. Please follow the link below to pay with PayPal:\n\n " \
+               "127.0.0.1:8081/pay?id=" + res.id + " \n\nYou can also choose to pay for this reservation tomorrow " \
+               "when you go to pick it up with cash or PayPal still.\n\nThanks,\nUniversity of Alberta Outdoors Club"
+
+        messages.append({"body": body, "subject": "Reservation Payment", "to": [res.email]})
 
     if len(messages) > 0:
         EmailThread(messages).start()
