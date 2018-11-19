@@ -6,6 +6,13 @@ import xlsx from "xlsx";
 import axios from "axios";
 import config from "../../config/config";
 
+// allows us to return a predictable and consistent response for all errors.
+const genericCatch = (error) => {
+    const message = (error.response && error.response.data &&
+        error.response.data.message) || "An unexpected error occurred, try again later.";
+    return { error: message };
+};
+
 export default class MemberService {
     getMemberList() {
         return axios.get(`${config.databaseHost}/members`)
@@ -13,11 +20,7 @@ export default class MemberService {
                 const list = response.data && response.data.data;
                 return { members: list };
             })
-            .catch((error) => {
-                const message = (error.response && error.response.data &&
-                    error.response.data.message) || "An unexpected error occurred, try again later.";
-                return { error: message };
-            });
+            .catch(genericCatch);
     }
 
     getBlacklist() {
@@ -26,11 +29,7 @@ export default class MemberService {
                 const list = response.data && response.data.data;
                 return { members: list };
             })
-            .catch((error) => {
-                const message = (error.response && error.response.data &&
-                    error.response.data.message) || "An unexpected error occurred, try again later.";
-                return { error: message };
-            });
+            .catch(genericCatch);
     }
 
     uploadMemberList(list) {
@@ -41,11 +40,7 @@ export default class MemberService {
                 const list = response.data && response.data.data;
                 return { members: list };
             })
-            .catch((error) => {
-                const message = (error.response && error.response.data &&
-                    error.response.data.message) || "An unexpected error occurred, try again later.";
-                return { error: message };
-            });
+            .catch(genericCatch);
     }
 
     blacklistMember(member) {
@@ -53,22 +48,14 @@ export default class MemberService {
             .then((response) => {
                 return { blacklistedMember: response.data };
             })
-            .catch((error) => {
-                const message = (error.response && error.response.data &&
-                    error.response.data.message) || "An unexpected error occurred, try again later.";
-                return { error: message };
-            });
+            .catch(genericCatch);
     }
 
     whitelistMember(email) {
         return axios.delete(`${config.databaseHost}/members/blacklist`, {
             params: { email }
         })
-            .catch((error) => {
-                const message = (error.response && error.response.data &&
-                    error.response.data.message) || "An unexpected error occurred, try again later.";
-                return { error: message };
-            });
+            .catch(genericCatch);
     }
 
     // Parses a file to an array buffer

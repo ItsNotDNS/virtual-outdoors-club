@@ -143,6 +143,11 @@ class ReservationView(APIView):
         except Reservation.DoesNotExist:
             return RespError(400, "There is no reservation with the id '" + str(idToUpdate) + "'")
 
+        if expectedVersion < resv.version:
+            return RespError(400, "The version you are trying to update is out of date.")
+        elif expectedVersion > resv.version:
+            return RespError(400, "The version you are trying to update doesn't exist yet.")
+
         # Check if reservation gear can be modified based on status
         if resv.status not in ["REQUESTED", "APPROVED"]:
             return RespError(400, "The reservation status must be REQUESTED or APPROVED to be modified")
@@ -160,6 +165,7 @@ class ReservationView(APIView):
 
         resv.version += 1
         sResv.save()
+        sResv = ReservationGETSerializer(resv)
 
         return Response(sResv.data)
 

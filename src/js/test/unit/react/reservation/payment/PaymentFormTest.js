@@ -47,11 +47,6 @@ describe("PaymentForm Tests", () => {
     afterEach(() => {
         sandbox.restore();
     });
-    it("renders", () => {
-        const form = getShallowForm(mockReservation);
-
-        expect(form.text()).to.equal("Pay for Reservation-99<LabeledInput /><LabeledInput /><LabeledInput /><LabeledInput /><LabeledInput /><LabeledInput /><ListGroup />");
-    });
 
     it("calls fetchPayPalForm on mount", () => {
         const form = getShallowForm(mockReservation);

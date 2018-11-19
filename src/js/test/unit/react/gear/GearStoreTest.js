@@ -139,7 +139,7 @@ describe("GearStore Tests", () => {
         return gearStore.onFetchGearList().then(() => {
             expect(gearStore.state.fetchedGearList).to.be.true;
             expect(gearStore.state.gearList).to.deep.equal([]);
-            expect(gearStore.state.error).to.contain("server is down");
+            expect(gearStore.state.error).to.contain("try again later");
         });
     });
 
@@ -362,7 +362,7 @@ describe("GearStore Tests", () => {
         return gearStore.onFetchGearCategoryList().then(() => {
             expect(gearStore.state.categoryList).to.deep.equal([]);
             expect(gearStore.state.fetchedGearCategoryList).to.be.true;
-            expect(gearStore.state.error).to.contain("server is down");
+            expect(gearStore.state.error).to.contain("try again later");
         });
     });
 

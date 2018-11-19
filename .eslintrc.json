@@ -22,9 +22,7 @@
             "allowFunctions": false,
             "allowBind": false
         }],
-        "react/no-unused-prop-types": [2, {
-            "skipShapeProps": false
-        }],
+        "react/no-unused-prop-types": [0],
         "react/prop-types": [2],
         "no-multi-spaces": [2, {
             "ignoreEOLComments": true

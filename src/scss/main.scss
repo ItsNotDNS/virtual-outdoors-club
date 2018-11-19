@@ -194,7 +194,10 @@
 }
 
 .bottom-margin {
-    margin: 2%;
+    margin-bottom: 2%;
+}
+.top-margin {
+    margin-top: 2%;
 }
 
 .full-width {
@@ -221,6 +224,40 @@
     }
 }
 
+.clickable {
+    :hover {
+        cursor: pointer;
+        color: red;
+    }
+}
+
+.gray-out {
+    color: lightgray;
+}
+
+.right-margin {
+    margin-right: 2%;
+}
+
 .left-margin {
     margin-left: 2%;
+}
+
+.date-left {
+    .DayPickerInput {
+        float: left!important;
+        input {
+            width: 100%;
+        }
+    }
+}
+
+.date-right {
+    .DayPickerInput {
+        float: right!important;
+        input {
+            text-align: right;
+            width: 100%;
+        }
+    }
 }

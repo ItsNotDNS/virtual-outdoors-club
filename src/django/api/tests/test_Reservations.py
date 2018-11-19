@@ -2,7 +2,7 @@ from django.test import TestCase
 from ..models import Reservation, GearCategory, Gear, Member, BlackList
 from rest_framework.test import APIRequestFactory
 import datetime
-
+import json
 
 class ReservationTestCase(TestCase):
 
@@ -482,7 +482,26 @@ class ReservationTestCase(TestCase):
             'id': 1,
             'email': 'enry@email.com',
             'endDate': (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
-            'gear': patch["gear"],
+            'gear': [
+                {   
+                    'id': self.sp.pk,
+                    'code': 'SP01',
+                    'category': 'Ski poles',
+                    'depositFee': '12.00',
+                    'description': 'Ski poles',
+                    'condition': 'RENTABLE',
+                    'version': 1
+                },
+                {
+                    'id': self.bk.pk,
+                    'code': 'BK01',
+                    'category': 'Book',
+                    'depositFee': '12.00',
+                    'description': 'some book',
+                    'condition': 'RENTABLE',
+                    'version': 1
+                }
+            ],
             'licenseName': 'Name on their license.',
             'status': 'REQUESTED',
             'licenseAddress': 'Address on their license.',
@@ -495,7 +514,6 @@ class ReservationTestCase(TestCase):
         # Test that num of reservations is the same in the DB
         response = self.client.get("/api/reservation/", content_type='application/json').data["data"]
         self.assertEqual(len(response), reservationListOriginalLen)
-
 #
         spCat1 = GearCategory.objects.create(name="Ski poles")
         sp1 = Gear.objects.create(code="SP02", category=spCat1, depositFee=14.00, description="Ski poles", condition="RENTABLE", version=1)
@@ -527,6 +545,27 @@ class ReservationTestCase(TestCase):
 
         response = self.client.patch("/api/reservation", request, content_type="application/json")
         self.assertEqual(response.status_code, 400)
+
+    # BUGFIX-TEST: You can pass in any expectedVersion and it results in a patch
+    # even if the expected version doesn't match
+    def test_patch_expectedVersionMatters(self):
+        reservation = self.client.get("/api/reservation").data["data"][0]
+        gear = self.client.get("/api/gear").data["data"][0]
+
+        patch = {
+            "id": reservation["id"],
+            "expectedVersion": reservation["version"] + 10, # Should fail because this is not the current version 
+            "patch": {
+                "gear": [gear["id"]]
+            }
+        }
+
+        response = self.client.patch("/api/reservation", patch, content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+
+        patch["expectedVersion"] = reservation["version"]
+        response = self.client.patch("/api/reservation", patch, content_type="application/json")
+        self.assertEqual(response.status_code, 200)
 
     def test_invalidEmail(self):
         today = datetime.datetime.today()

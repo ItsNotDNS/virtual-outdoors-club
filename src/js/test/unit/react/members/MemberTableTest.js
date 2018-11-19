@@ -6,10 +6,16 @@ import sinon from "sinon";
 
 describe("MemberTable Tests", () => {
     it("wraps click function", () => {
-        const memberList = [
+        const emptyfunc = () => {},
+            memberList = [
                 { email: "test@example.com" }
             ],
-            table = shallow(<Table memberList={memberList} />),
+            table = shallow(
+                <Table
+                    memberList={memberList}
+                    addToBlackList={emptyfunc}
+                />
+            ),
             spy = sinon.spy(),
             wrapper = table.instance().wrapOnClick(spy, memberList);
 
