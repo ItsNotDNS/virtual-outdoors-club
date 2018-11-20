@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.postgres.fields import JSONField
 from django.core.validators import MinValueValidator
+from simple_history.models import HistoricalRecords
 
 
 # system that enables particular parts of the system to be rendered available or disabled
@@ -50,6 +51,7 @@ class Gear(models.Model):
     description = models.CharField(max_length = 255, blank = True)
     condition = models.CharField(max_length=20, choices=CONDITION_CHOICE, blank = True, default="RENTABLE")
     version = models.IntegerField(default=1)
+    history = HistoricalRecords()
 
 
 # holds the details of a certain reservation from a member and who approves it
@@ -79,6 +81,7 @@ class Reservation(models.Model):
     gear = models.ManyToManyField(Gear)
     status = models.CharField(max_length = 20, choices = STATUS_CHOICE, default = "REQUESTED")
     version = models.IntegerField(default = 1)
+    history = HistoricalRecords()
 
 
 # contains the permissions available that the Admin can delegate towards the executive accounts

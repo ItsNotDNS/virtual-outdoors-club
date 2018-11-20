@@ -53,7 +53,7 @@ class GearSerializer(serializers.ModelSerializer):
             "depositFee",
             "description",
             "condition",
-            "version"
+            "version",
         ]
 
 
@@ -71,7 +71,7 @@ class ReservationGETSerializer(serializers.ModelSerializer):
             "endDate",
             "status",
             "gear",
-            "version"
+            "version",
         ]
 
 
@@ -88,7 +88,7 @@ class ReservationPOSTSerializer(serializers.ModelSerializer):
             "endDate",
             "status",
             "gear",
-            "version"
+            "version",
         ]
 
     def validate(self, data):

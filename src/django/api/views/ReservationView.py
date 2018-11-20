@@ -27,6 +27,7 @@ class ReservationView(APIView):
         email = request.query_params.get("email", None)
         startDate = request.query_params.get("from", None)
         endDate = request.query_params.get("to", None)
+        gearId = request.query_params.get("gearId", None)
 
         res = Reservation.objects.all()
 
@@ -48,6 +49,12 @@ class ReservationView(APIView):
                 int(ID)
             except ValueError:
                 return RespError(400, "id must be an integer.")
+
+        if gearId is not None:
+            try:
+                int(gearId)
+            except ValueError:
+                return RespError(400, "gearId must be an integer.")
 
         dateFilter = Q(startDate__range=[startDate, endDate]) | Q(endDate__range=[startDate, endDate]) | \
                      Q(startDate__lte=startDate, endDate__gte=endDate)
@@ -73,6 +80,10 @@ class ReservationView(APIView):
         # Find ALL reservations if all parameters are missing
         elif not ID and not email and not startDate and not endDate:
             pass
+
+        # Return all resv in which this gear has been in
+        elif gearId and not (ID or email or startDate or endDate):
+            res = res.filter(gear__id=gearId)
 
         # if there is some other combination of parameters in the get request, return error
         else:
@@ -168,6 +179,19 @@ class ReservationView(APIView):
         sResv = ReservationGETSerializer(resv)
 
         return Response(sResv.data)
+
+
+@api_view(['GET'])
+def getHistory(request):
+    ID = request.query_params.get("id", None)
+
+    try:
+        res = Reservation.objects.get(id=ID)
+    except Reservation.DoesNotExist:
+        return RespError(400, "There is no reservation with the id '" + str(ID) + "'")
+    res = res.history.all()
+    serial = ReservationGETSerializer(res, many=True)
+    return Response({"data": serial.data})
 
 
 @api_view(['POST'])

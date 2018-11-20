@@ -2,6 +2,7 @@ from ..models import Gear, Reservation
 from django.core import exceptions
 from ..serializers import GearSerializer
 from rest_framework.views import APIView
+from rest_framework.decorators import api_view
 from .error import *
 from django.db.models import ProtectedError
 from datetime import datetime
@@ -50,9 +51,8 @@ class GearView(APIView):
 
             if resGear.exists():
                 gear = gear.exclude(id__in=resGear)
-
+        
         gear = GearSerializer(gear, many=True)
-
         return Response({"data": gear.data})
 
     def post(self, request):
@@ -147,3 +147,19 @@ class GearView(APIView):
         delGear.save()
 
         return RespError(200, "Successfully deleted gear: " + "'" + delGearCode + "'")
+
+
+@api_view(['GET'])
+def getHistory(request):
+    ID = request.query_params.get("id", None)
+
+    if ID:
+        gear = gearIdExists(ID)
+        gear = gear.history.all()
+    else:
+        return RespError(400, "Must give the ID to search for")
+
+    gear = GearSerializer(gear, many=True)
+    return Response({"data": gear.data})
+
+

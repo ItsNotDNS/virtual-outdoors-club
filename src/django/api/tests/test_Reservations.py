@@ -88,6 +88,30 @@ class ReservationTestCase(TestCase):
         response = self.client.get('/api/reservation/?email=enry@email.com', content_type="application/json").data['data']
         self.assertEqual(response, correctResponse)        
 
+
+        # Test getting all reservations gear was in
+        response = self.client.get('/api/reservation/?gearId=1', content_type="application/json").data['data']
+        self.assertEqual(response, correctResponse)        
+
+        
+    def test_getHistory(self):
+        patch = {
+            "gear": [self.sp.pk, self.bk.pk]
+        }
+
+        request = {
+            "id": 1,
+            "expectedVersion": 1,
+            "patch": patch,
+        }
+
+        response = self.client.patch("/api/reservation", request, content_type="application/json").data
+
+        # testing get history request with id
+        response = self.client.get('/api/reservation/history/?id=1', content_type="application/json").data
+        self.assertEqual(len(response["data"]), 3)
+
+
     def test_checkout(self):
         request = {"id": 1}
         today = datetime.datetime.today()

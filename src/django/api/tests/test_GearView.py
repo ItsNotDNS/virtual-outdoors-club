@@ -43,6 +43,65 @@ class GearTestCase(TestCase):
 
         self.assertEqual(response, expectedResponse)
 
+    def test_gearHistory(self):
+        response = self.client.get("/api/gear/history/?id=1", content_type="application/json").data
+
+        expectedResponse = {
+            "data": [{
+                "id": 1,
+                "code": "BP01",
+                "category": "Backpack",
+                "depositFee": "50.00",
+                "description": "A black Dakine backpack",
+                "condition": "RENTABLE",
+                "version": 1
+            }]
+        }
+        self.assertEqual(response, expectedResponse)
+
+        # Patch and check history again
+        patch = {
+            "code": "SB02",
+            "category": "Sleeping Bag",
+            "depositFee": "100.00",
+            "description": "This backpack was actually a sleeping bag all along!",
+            #"condition": "RENTABLE"
+        }
+        request = {
+            "id": 1,
+            "expectedVersion": 1,
+            "patch": patch
+        }
+        # check response data
+        response = self.client.patch("/api/gear", request, content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+
+        # Check if model history kept properly
+        response = self.client.get("/api/gear/history/?id=1", content_type="application/json").data
+        expectedResponse = {
+            "data": [{
+                "id": 1,
+                "code": "SB02",
+                "category": "Sleeping Bag",
+                "depositFee": "100.00",
+                "description": "This backpack was actually a sleeping bag all along!",
+                "condition": "RENTABLE",
+                "version": 2
+                }, {
+                "id": 1,
+                "code": "BP01",
+                "category": "Backpack",
+                "depositFee": "50.00",
+                "description": "A black Dakine backpack",
+                "condition": "RENTABLE",
+                "version": 1
+                },
+            ]
+        }
+
+        self.assertEqual(response, expectedResponse)
+
+
     def test_post(self):
         gearList = self.client.get("/api/gear/", content_type='application/json').data["data"] # returned as {data: [...]}
         gearListOriginalLen = len(gearList)
