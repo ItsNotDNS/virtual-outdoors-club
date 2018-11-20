@@ -23,7 +23,7 @@ class GearTestCase(TestCase):
         response = self.client.get("/api/gear/", content_type="application/json").data
         expectedResponse = {
             "data": [{
-                "id": 1,
+                "id": 2,
                 "code": "BP01",
                 "category": "Backpack",
                 "depositFee": "50.00",
@@ -31,7 +31,7 @@ class GearTestCase(TestCase):
                 "condition": "RENTABLE",
                 "version": 1
             }, {
-                "id": 2,
+                "id": 3,
                 "code": "SB01",
                 "category": "Sleeping Bag",
                 "depositFee": "50.00",
@@ -44,11 +44,11 @@ class GearTestCase(TestCase):
         self.assertEqual(response, expectedResponse)
 
     def test_gearHistory(self):
-        response = self.client.get("/api/gear/history/?id=1", content_type="application/json").data
+        response = self.client.get("/api/gear/history/?id=2", content_type="application/json").data
 
         expectedResponse = {
             "data": [{
-                "id": 1,
+                "id": 2,
                 "code": "BP01",
                 "category": "Backpack",
                 "depositFee": "50.00",
@@ -68,7 +68,7 @@ class GearTestCase(TestCase):
             #"condition": "RENTABLE"
         }
         request = {
-            "id": 1,
+            "id": 2,
             "expectedVersion": 1,
             "patch": patch
         }
@@ -77,10 +77,10 @@ class GearTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
         # Check if model history kept properly
-        response = self.client.get("/api/gear/history/?id=1", content_type="application/json").data
+        response = self.client.get("/api/gear/history/?id=2", content_type="application/json").data
         expectedResponse = {
             "data": [{
-                "id": 1,
+                "id": 2,
                 "code": "SB02",
                 "category": "Sleeping Bag",
                 "depositFee": "100.00",
@@ -88,7 +88,7 @@ class GearTestCase(TestCase):
                 "condition": "RENTABLE",
                 "version": 2
                 }, {
-                "id": 1,
+                "id": 2,
                 "code": "BP01",
                 "category": "Backpack",
                 "depositFee": "50.00",
@@ -115,7 +115,7 @@ class GearTestCase(TestCase):
         }
 
         expectedResponse = {
-            "id": gearListOriginalLen + 1,
+            "id": gearListOriginalLen + 2,
             "code": request["code"],
             "category": request["category"],
             "depositFee": request["depositFee"],
@@ -176,7 +176,7 @@ class GearTestCase(TestCase):
             #"condition": "RENTABLE"
         }
         request = {
-            "id": 1,
+            "id": 2,
             "expectedVersion": 1,
             "patch": patch
         }
@@ -209,7 +209,7 @@ class GearTestCase(TestCase):
         
         response = self.client.get("/api/gear/", content_type='application/json').data["data"]
         self.assertEqual(response, [{
-                "id": 1,
+                "id": 2,
                 "code": "BP01",
                 "category": "Backpack",
                 "depositFee": "50.00",
@@ -217,9 +217,9 @@ class GearTestCase(TestCase):
                 "condition": "RENTABLE",
                 "version": 1
             }, {
-                "id": 2,
+                "id": 3,
                 "code": "SB01",
-                "category": "Sleeping Bag",
+                "category": None,
                 "depositFee": "50.00",
                 "description": "A old red sleeping bag",
                 "condition": "DELETED",

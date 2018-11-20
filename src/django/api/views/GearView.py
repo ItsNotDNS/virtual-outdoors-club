@@ -115,7 +115,7 @@ class GearView(APIView):
         try:
             gear = Gear.objects.get(id=idToUpdate)
         except Gear.DoesNotExist:
-            return RespError(400, "There is no gear with th id '" + str(idToUpdate) + "'")
+            return RespError(400, "There is no gear with the id '" + str(idToUpdate) + "'")
 
         gear.version += 1
         sGear = GearSerializer(gear, data=patch)
@@ -144,6 +144,7 @@ class GearView(APIView):
 
         delGearCode = delGear.code
         delGear.condition = "DELETED" 
+        delGear.category = None
         delGear.save()
 
         return RespError(200, "Successfully deleted gear: " + "'" + delGearCode + "'")
@@ -155,6 +156,8 @@ def getHistory(request):
 
     if ID:
         gear = gearIdExists(ID)
+        if not gear:
+            return RespError(400, "Gear ID does not exist")
         gear = gear.history.all()
     else:
         return RespError(400, "Must give the ID to search for")
