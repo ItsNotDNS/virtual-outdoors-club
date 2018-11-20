@@ -1,6 +1,6 @@
 from django.core import mail
 from django.test import TestCase
-from ..tasks import cancelled
+from ..tasks import cancelled, approved
 from ..models import Reservation
 
 
@@ -21,3 +21,14 @@ class EmailTest(TestCase):
 
         # Verify that the subject of the first message is correct.
         self.assertEqual(mail.outbox[0].subject, 'Reservation Cancelled')
+
+    def test_approved(self):
+        # Send message.
+
+        approved(self.gr)
+
+        # Test that one message has been sent.
+        self.assertEqual(len(mail.outbox), 1)
+
+        # Verify that the subject of the first message is correct.
+        self.assertEqual(mail.outbox[0].subject, 'Reservation Approved')

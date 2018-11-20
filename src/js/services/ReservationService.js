@@ -6,6 +6,13 @@
 import axios from "axios";
 import config from "../../config/config";
 
+// allows us to return a predictable and consistent response for all errors.
+const genericCatch = (error) => {
+    const message = (error.response && error.response.data &&
+        error.response.data.message) || "An unexpected error occurred, try again later.";
+    return { error: message };
+};
+
 export default class ReservationService {
     constructor(options = {}) {
         this.service = (options && options.service) || axios;
@@ -17,18 +24,14 @@ export default class ReservationService {
                 // response data is wrapped in response object by the gear list
                 return { data: response.data.data };
             })
-            .catch((error) => {
-                return { error: error.response.data.message };
-            });
+            .catch(genericCatch);
     }
 
     fetchReservation(reservationId, email) {
         return this.service.get(`${config.databaseHost}/reservation?id=${reservationId}&email=${email}`)
             .then((response) => {
                 return { data: response.data.data[0] };
-            }).catch((error) => {
-                return { error: error.response.data.message };
-            });
+            }).catch(genericCatch);
     }
 
     fetchPayPalForm(reservationId) {
@@ -37,9 +40,7 @@ export default class ReservationService {
         })
             .then((response) => {
                 return { data: response.data };
-            }).catch((error) => {
-                return { error: error.response.data.message };
-            });
+            }).catch(genericCatch);
     }
 
     approveReservation(id) {
@@ -48,11 +49,7 @@ export default class ReservationService {
                 const reservation = response.data;
                 return { reservation };
             })
-            .catch((error) => {
-                const message = (error.response && error.response.data &&
-                    error.response.data.message) || "An unexpected error occurred, try again later.";
-                return { error: message };
-            });
+            .catch(genericCatch);
     }
 
     cancelReservation(id) {
@@ -61,11 +58,16 @@ export default class ReservationService {
                 const reservation = response.data;
                 return { reservation };
             })
-            .catch((error) => {
-                const message = (error.response && error.response.data &&
-                    error.response.data.message) || "An unexpected error occurred, try again later.";
-                return { error: message };
-            });
+            .catch(genericCatch);
+    }
+
+    updateReservation(id, expectedVersion, patch) {
+        return this.service.patch(`${config.databaseHost}/reservation`, { id, expectedVersion, patch })
+            .then((response) => {
+                const reservation = response.data;
+                return { reservation };
+            })
+            .catch(genericCatch);
     }
 
     fetchReservationListFromTo(startDate, endDate) {

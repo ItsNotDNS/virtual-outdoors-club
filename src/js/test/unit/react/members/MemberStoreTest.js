@@ -192,7 +192,7 @@ describe("MemberStore Tests", () => {
             response = { data: member };
         store.state.memberList = [member];
         axiosPostStub.returns(Promise.resolve(response));
-        store.onAddToBlacklist(member).then(() => {
+        return store.onAddToBlacklist(member).then(() => {
             expect(store.state.memberList).to.deep.equal([]);
             expect(store.state.blacklist).to.deep.equal([member]);
         });
@@ -203,20 +203,20 @@ describe("MemberStore Tests", () => {
             response = { response: { data: { message: "some message" } } };
         store.state.memberList = [member];
         axiosPostStub.returns(Promise.reject(response));
-        store.onAddToBlacklist(member).then(() => {
+        return store.onAddToBlacklist(member).then(() => {
             expect(store.state.memberList).to.deep.equal([member]);
             expect(store.state.blacklist).to.deep.equal([]);
-            expect(store.state.error).to.equal(response.data.message);
+            expect(store.state.error).to.equal(response.response.data.message);
         });
     });
 
     it("onRemoveFromBlacklist - success path", () => {
-        const member = { email: "someEmail@test.com" }
+        const member = { email: "someEmail@test.com" };
         store.state.blacklist = [member];
         axiosDeleteStub.returns(Promise.resolve());
         axiosGetStub.returns(Promise.resolve({ data: { data: [member] } }));
-        store.onRemoveFromBlacklist(member).then(() => {
-            expect(store.state.memberList).to.deep.equal([member]);
+        expect(store.state.blacklist).to.deep.equal([member]);
+        return store.onRemoveFromBlacklist(member).then(() => {
             expect(store.state.blacklist).to.deep.equal([]);
         });
     });
@@ -226,10 +226,10 @@ describe("MemberStore Tests", () => {
             response = { response: { data: { message: "some message" } } };
         store.state.memberList = [member];
         axiosDeleteStub.returns(Promise.reject(response));
-        store.onRemoveFromBlacklist(member).then(() => {
+        return store.onRemoveFromBlacklist(member).then(() => {
             expect(store.state.memberList).to.deep.equal([member]);
             expect(store.state.blacklist).to.deep.equal([]);
-            expect(store.state.error).to.equal(response.data.message);
+            expect(store.state.error).to.equal(response.response.data.message);
         });
     });
 });

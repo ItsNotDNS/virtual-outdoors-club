@@ -41,7 +41,7 @@ export default class PaymentForm extends Reflux.Component {
     }
 
     render() {
-        const title = `Pay for Reservation-${this.props.id.toString()}`;
+        const title = `Reservation #${this.props.id.toString()} Information`;
         return (
             <div className="centre-half">
                 <h3>{title}</h3>
@@ -59,7 +59,7 @@ export default class PaymentForm extends Reflux.Component {
                     value={this.props.endDate} />
 
                 {this.getGearList()}
-                <div className="col-md-4" dangerouslySetInnerHTML={this.createPayPalForm()} />
+                <div className="col-md-4 text-center" dangerouslySetInnerHTML={this.createPayPalForm()} />
             </div>
         );
     }

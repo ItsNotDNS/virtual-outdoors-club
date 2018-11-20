@@ -8,6 +8,13 @@ import xlsx from "xlsx";
 import config from "../../config/config";
 import moment from "moment";
 
+// allows us to return a predictable and consistent response for all errors.
+const genericCatch = (error) => {
+    const message = (error.response && error.response.data &&
+        error.response.data.message) || "An unexpected error occurred, try again later.";
+    return { error: message };
+};
+
 export default class GearService {
     constructor(options = {}) {
         this.service = (options && options.service) || axios;
@@ -21,12 +28,7 @@ export default class GearService {
                 // response data is wrapped in response object by the gear list
                 return { data: response.data.data };
             })
-            .catch((error) => {
-                if (error && error.response) {
-                    return { error: error.response.data.message };
-                }
-                return { error: "Looks like the server is down. Are you sure it's running?" }; // No response means server is down.
-            });
+            .catch(genericCatch);
     }
 
     createGear({ gearCode, depositFee, gearDescription, gearCategory }) {
@@ -40,9 +42,7 @@ export default class GearService {
             .then((response) => {
                 return { gear: response.data };
             })
-            .catch((error) => {
-                return { error: error.response.data.message };
-            });
+            .catch(genericCatch);
     }
 
     updateGear({ id, expectedVersion, gearCode, depositFee, gearDescription, gearCategory }) {
@@ -59,9 +59,7 @@ export default class GearService {
             .then((response) => {
                 return { gear: response.data };
             })
-            .catch((error) => {
-                return { error: error.response.data.message };
-            });
+            .catch(genericCatch);
     }
 
     deleteGear(gearId) {
@@ -69,9 +67,7 @@ export default class GearService {
             .then((response) => {
                 return { deleteGear: response.data };
             })
-            .catch((error) => {
-                return { error: error.response.data.message };
-            });
+            .catch(genericCatch);
     }
 
     // fetch all categories including what they represent
@@ -80,12 +76,7 @@ export default class GearService {
             .then((response) => {
                 return { data: response.data.data };
             })
-            .catch((error) => {
-                if (error && error.response) {
-                    return { error: error.response.data.message };
-                }
-                return { error: "Looks like the server is down. Are you sure it's running?" }; // No response means server is down.
-            });
+            .catch(genericCatch);
     }
 
     createCategory({ name }) {
@@ -93,9 +84,7 @@ export default class GearService {
             .then((response) => {
                 return { category: response.data };
             })
-            .catch((error) => {
-                return { error: error.response.data.message };
-            });
+            .catch(genericCatch);
     }
 
     updateCategory({ originalName, newName }) {
@@ -108,9 +97,7 @@ export default class GearService {
             .then((response) => {
                 return { category: response.data };
             })
-            .catch((error) => {
-                return { error: error.response.data.message };
-            });
+            .catch(genericCatch);
     }
 
     deleteCategory(name) {
@@ -118,9 +105,7 @@ export default class GearService {
             .then((response) => {
                 return { deleteCategory: response.data };
             })
-            .catch((error) => {
-                return { error: error.response.data.message };
-            });
+            .catch(genericCatch);
     }
 
     submitReservation(reserveGearForm) {
@@ -137,9 +122,7 @@ export default class GearService {
             .then((response) => {
                 return { data: response.data };
             })
-            .catch((error) => {
-                return { error: error.response.data.message };
-            });
+            .catch(genericCatch);
     }
 
     // Parses a file to an array buffer
@@ -276,8 +259,6 @@ export default class GearService {
             `${config.databaseHost}/gear?from=${startDate}&to=${endDate}`
         ).then((response) => {
             return { data: response.data.data };
-        }).catch((error) => {
-            return { error: error.response.data.message };
-        });
+        }).catch(genericCatch);
     }
 };

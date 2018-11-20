@@ -1,5 +1,5 @@
 from django.test import TestCase
-from ..models import GearCategory
+from ..models import GearCategory, Gear
 from rest_framework.test import APIRequestFactory
 
 '''
@@ -14,9 +14,10 @@ class GearCategoryTestCase(TestCase):
     @classmethod
     def setUpClass(self):
         super().setUpClass()
-        GearCategory.objects.create(name="Book")
+        self.bk = GearCategory.objects.create(name="Book")
         GearCategory.objects.create(name="Water Bottle")
-        self.client = APIRequestFactory
+        self.gearObj1 = Gear.objects.create(code="BK01", category=self.bk, depositFee=22.00, description="The Necronomicon", condition="RENTABLE", version=1) 
+        self.client = APIRequestFactory()
 
     def test_get(self):
         response = self.client.get("/api/gear/categories/", content_type="application/json").data['data']
@@ -37,11 +38,19 @@ class GearCategoryTestCase(TestCase):
         self.assertEqual(response, correctReturn)
     
     def test_delete(self):
+        response = self.client.delete("/api/gear/categories?name=Book", content_type="application/json")
+        self.assertEqual(response.status_code, 409) # Cannot delete, still used for item category somewhere
+
+        pk = self.gearObj1.pk
+        response = self.client.delete("/api/gear?id=" + str(pk), content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+
         response = self.client.delete("/api/gear/categories?name=Book", content_type="application/json").data
         self.assertEqual(response, {"message": "Deleted the category: 'Book'"})
 
         response = self.client.get("/api/gear/categories").data['data']
         self.assertEqual(response, [{'name': "Water Bottle"}])
+
 
     def test_delete_does_not_exist(self):
         name = "somecategorythatshouldneverexist"

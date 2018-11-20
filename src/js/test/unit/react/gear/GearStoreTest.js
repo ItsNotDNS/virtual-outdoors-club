@@ -25,6 +25,7 @@ const sandbox = sinon.createSandbox(),
         "code": "BK01",
         "description": "Book about hiking",
         "category": "book",
+        "condition": "RENTABLE",
         "version": 1
     }, {
         "id": 2,
@@ -32,6 +33,7 @@ const sandbox = sinon.createSandbox(),
         "code": "BK02",
         "description": "Mountains 101",
         "category": "book",
+        "condition": "RENTABLE",
         "version": 3
     }, {
         "id": 3,
@@ -39,6 +41,7 @@ const sandbox = sinon.createSandbox(),
         "code": "TN01",
         "description": "Tent for 4 people",
         "category": "tent",
+        "condition": "RENTABLE",
         "version": 1
     }],
     mockReservationInfo = { "email": "henry@email.com",
@@ -136,7 +139,7 @@ describe("GearStore Tests", () => {
         return gearStore.onFetchGearList().then(() => {
             expect(gearStore.state.fetchedGearList).to.be.true;
             expect(gearStore.state.gearList).to.deep.equal([]);
-            expect(gearStore.state.error).to.contain("server is down");
+            expect(gearStore.state.error).to.contain("try again later");
         });
     });
 
@@ -359,7 +362,7 @@ describe("GearStore Tests", () => {
         return gearStore.onFetchGearCategoryList().then(() => {
             expect(gearStore.state.categoryList).to.deep.equal([]);
             expect(gearStore.state.fetchedGearCategoryList).to.be.true;
-            expect(gearStore.state.error).to.contain("server is down");
+            expect(gearStore.state.error).to.contain("try again later");
         });
     });
 
@@ -514,8 +517,8 @@ describe("GearStore Tests", () => {
     });
 
     it("onSubmitDeleteGearModal - success path", () => {
-        const expectedGearList = JSON.parse(JSON.stringify(mockGearList));
-        expectedGearList.shift();
+        const expectedGearList = mockGearList;
+        expectedGearList[0].condition = "DELETED"
         // set the gear list up with our mock data
         gearStore.state.gearList = mockGearList;
         gearStore.state.deleteGearModal.id = mockGearList[0].id;

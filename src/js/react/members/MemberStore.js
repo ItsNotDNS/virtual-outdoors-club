@@ -189,11 +189,11 @@ export class MemberStore extends Reflux.Store {
         const service = new MemberService();
 
         return service.whitelistMember(email)
-            .then(({ error }) => {
+            .then((response) => {
                 const { blacklist } = this.state;
-                if (error) {
+                if (response && response.error) {
                     this.setState(update(this.state, {
-                        error: { $set: error }
+                        error: { $set: response.error }
                     }));
                 } else {
                     // remove member from blacklist

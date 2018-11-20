@@ -8,7 +8,7 @@ from .error import RespError
 from ..models import Reservation
 from decimal import Decimal
 import time
-
+import datetime
 
 @csrf_exempt
 def returnView(request):
@@ -33,6 +33,12 @@ def paypalView(request):
         res = Reservation.objects.get(id=data['id'])
     except Reservation.DoesNotExist:
         return RespError(400, "There is no reservation with the id of '" + str(data['id']) + "'")
+
+    if res.status == "PAID":
+        return RespError(400, "Reservation already paid for")
+
+    if res.startDate < (datetime.date.today() + datetime.timedelta(days=1)):
+        return RespError(400, "The earliest you can pay for a reservation is the day before the start date")
 
     amount = Decimal()
     for gear in res.gear.all():

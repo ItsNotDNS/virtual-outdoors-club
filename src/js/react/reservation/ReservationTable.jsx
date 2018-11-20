@@ -13,15 +13,11 @@ export default class ReservationTable extends React.Component {
     constructor(props) {
         super(props);
         this.getComponents = this.getComponents.bind(this);
+        this.onSelectRow = this.onSelectRow.bind(this);
     }
 
     get columns() {
         return [{
-            sort: true,
-            dataField: "id",
-            text: "Reservation ID"
-        },
-        {
             sort: true,
             dataField: "licenseName",
             text: "Name"
@@ -49,6 +45,10 @@ export default class ReservationTable extends React.Component {
         }];
     }
 
+    onSelectRow(row) {
+        this.props.onSelectRow && this.props.onSelectRow(row);
+    }
+
     getComponents(props) {
         return (
             <div>
@@ -63,7 +63,7 @@ export default class ReservationTable extends React.Component {
                         hideSelectColumn: true, // hides the radio button
                         clickToSelect: true,    // allows user to click row, not a button
                         // prevent errors if onSelectRow isn't defined
-                        onSelect: (row) => this.props.onSelectRow && this.props.onSelectRow(row)
+                        onSelect: this.onSelectRow
                     }}
                 />
             </div>
