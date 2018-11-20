@@ -16,6 +16,26 @@ class UserVariabilityTestCase(TestCase):
         self.maxLength = "maxLength"
         self.maxFuture = "maxFuture"
         self.maxRentals = "maxRentals"
+        UserVariability.objects.create(variable="membermaxLength", value="14")
+        UserVariability.objects.create(variable="membermaxFuture", value="7")
+        UserVariability.objects.create(variable="membermaxRentals", value="3")
+        UserVariability.objects.create(variable="executivemaxLength", value="21")
+        UserVariability.objects.create(variable="executivemaxFuture", value="14")
+        UserVariability.objects.create(variable="executivemaxRentals", value="5")
+
+    def test_get(self):
+
+        correctResponse = [
+                {"variable": "membermaxLength", "value": 14},
+                {"variable": "membermaxFuture", "value": 7},
+                {"variable": "membermaxRentals", "value": 3},
+                {"variable": "executivemaxLength", "value": 21},
+                {"variable": "executivemaxFuture", "value": 14},
+                {"variable": "executivemaxRentals", "value": 5},
+        ]
+        response = self.client.get("/api/system/variability/", content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(correctResponse, response.data["data"])
 
     def test_setMaxResvValue(self):
 

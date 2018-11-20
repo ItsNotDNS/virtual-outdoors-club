@@ -14,7 +14,7 @@ export default {
         CREATING: "Creating"
     },
     variability: {
-        EXECUTIVE: "exec",
+        EXECUTIVE: "executive",
         MEMBER: "member"
     },
     reservations: {
