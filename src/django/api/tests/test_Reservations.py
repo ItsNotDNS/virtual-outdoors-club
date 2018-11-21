@@ -374,7 +374,7 @@ class ReservationTestCase(TestCase):
 
         correctResponse = {
             'startDate': today.strftime("%Y-%m-%d"),
-            'id': 4,
+            'id': 5,
             'email': 'enry@email.com',
             'endDate': (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
             'gear': [self.bk.pk],
@@ -467,7 +467,7 @@ class ReservationTestCase(TestCase):
 
 
       # Test that canceling releases hold on gear
-        request = {"id": 4} 
+        request = {"id": 5} 
         response = self.client.post('/api/reservation/cancel/', request, content_type='application/json')
         self.assertEqual(response.status_code, 200)
         request = {
@@ -482,7 +482,7 @@ class ReservationTestCase(TestCase):
 
         correctResponse = {
             'startDate': today.strftime("%Y-%m-%d"),
-            'id': 5,
+            'id': 6,
             'email': 'enry@email.com',
             'endDate': (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
             'gear': [self.bk.pk],
@@ -560,7 +560,7 @@ class ReservationTestCase(TestCase):
             "licenseName": "Name on their license.",
             "licenseAddress": "Address on their license.",
             "startDate": (today + datetime.timedelta(days=1)).strftime("%Y-%m-%d"),
-            "endDate": (today + datetime.timedelta(days=7)).strftime("%Y-%m-%d"),
+            "endDate": (today + datetime.timedelta(days=5)).strftime("%Y-%m-%d"),
             "status": "REQUESTED",
             "gear": [sp1.pk]
         }
@@ -582,6 +582,36 @@ class ReservationTestCase(TestCase):
 
         response = self.client.patch("/api/reservation", request, content_type="application/json")
         self.assertEqual(response.status_code, 400)
+
+
+        # Make second resv and test editing it
+        request = {
+            "email": "henry@email.com",
+            "licenseName": "Name on their license.",
+            "licenseAddress": "Address on their license.",
+            "startDate": (today + datetime.timedelta(days=6)).strftime("%Y-%m-%d"),
+            "endDate": (today + datetime.timedelta(days=11)).strftime("%Y-%m-%d"),
+            "status": "REQUESTED",
+            "gear": [sp1.pk]
+        }
+
+        response = self.client.post("/api/reservation", request, content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+
+        patch = {
+            "gear": [self.sp.pk, self.bk.pk],
+            "startDate": (today + datetime.timedelta(days=7)).strftime("%Y-%m-%d"),
+        }
+
+        request = {
+            "id": 4,
+            "expectedVersion": 1,
+            "patch": patch,
+        }
+        response = self.client.patch("/api/reservation", request, content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+
+
 
     # BUGFIX-TEST: You can pass in any expectedVersion and it results in a patch
     # even if the expected version doesn't match

@@ -119,7 +119,7 @@ class ReservationPOSTSerializer(serializers.ModelSerializer):
         try:
             maxTimeInAdvance = UserVariability.objects.get(pk=DAYSINADVANCETOMAKERESV).value
         except:
-            maxTimeInAdvance = 1
+            maxTimeInAdvance = 7
         if (data['startDate'] - datetime.now().date()).days > maxTimeInAdvance:
             raise serializers.ValidationError("Start date cannot be more than " + str(maxTimeInAdvance) + " days in advance")
 
@@ -135,6 +135,9 @@ class ReservationPOSTSerializer(serializers.ModelSerializer):
         except UserVariability.DoesNotExist:
             maxResvs = 2
         userReservations = Reservation.objects.filter(email=data["email"]).exclude(status="RETURNED").exclude(status="CANCELLED")
+        if 'id' in self.initial_data:
+            userReservations = userReservations.exclude(id=self.initial_data["id"])
+
         if len(userReservations) >= maxResvs:
             raise serializers.ValidationError("You cannot have more than " + str(maxResvs) + " reservations")
 
@@ -148,10 +151,9 @@ class ReservationPOSTSerializer(serializers.ModelSerializer):
         if overlappingRes.exists():
 
             # Remove the self reservation from overlappingRes. Used for patches
-            for res in overlappingRes:
-                if 'id' in self.initial_data and res.id == self.initial_data['id']:
-                        overlappingRes = overlappingRes.exclude(pk=self.initial_data['id'])
-
+            if 'id' in self.initial_data:
+                overlappingRes = overlappingRes.exclude(pk=self.initial_data["id"])
+                       
             for gear in data['gear']:
                 if overlappingRes.filter(gear=gear).exists():
                     denied.append(gear.code)
