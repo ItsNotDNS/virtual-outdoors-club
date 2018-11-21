@@ -155,6 +155,19 @@ class ReservationTestCase(TestCase):
         # test to checkout a reservation succesfully
         response = self.client.post("/api/reservation/checkout/", request, content_type='application/json')
         self.assertEqual(response.status_code, 200)
+
+        # test to checkout a reservation that has an endDate before today 
+        # newRes has a startDate of today-9 days by default
+        newReq = {"id": newRes.pk}
+        response = response = self.client.post("/api/reservation/checkout/", newReq, content_type='application/json')
+        self.assertEqual(response.status_code, 406)
+
+        # test to checkout a reservation that has an startDate after today 
+        newRes.endDate = (today+datetime.timedelta(days=7)).strftime("%Y-%m-%d")
+        newRes.startDate = (today+datetime.timedelta(days=1)).strftime("%Y-%m-%d")
+        response = response = self.client.post("/api/reservation/checkout/", newReq, content_type='application/json')
+        self.assertEqual(response.status_code, 406)
+
         newRes.delete()
 
         correctResponse = [{

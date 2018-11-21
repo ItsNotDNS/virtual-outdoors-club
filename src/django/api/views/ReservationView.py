@@ -205,21 +205,29 @@ def checkout(request):
     if not reservation:
         return RespError(400, "There is no reservation with the id of '" + str(request['id']) + "'")
 
+    today = datetime.date.today()
+    if reservation.endDate < today:
+        return RespError(406, "You cannot checkout a reservation that ends before today; please fix the endDate and try again.")
+
+    if reservation.startDate > today:
+        return RespError(406, "You cannot checkout a reservation that starts after today; please fix the startDate and try again.")
+
     gearList = reservation.gear.all()  
     for gear in gearList:
         if gear.condition != "RENTABLE":
-            return RespError(403, "The gear with the id of '" + str(gear.id) + "' is not RENTABLE")
+            return RespError(403, "The gear item + '" + str(gear.code) + "' is not RENTABLE, and thus can't be checked out."
+                            + " To still proceed with checking out, remove the gear item from this reservation.")
         try: 
             # the below query does the following: 
             # Finds all reservations with a gear item in the reservation attempted to be checked out.
             # then, find the latest reservation before the current day by endDate. 
             # If endDates are the same, find by the latest startDate.
-            latestResWithGearItem = Reservation.objects.filter(gear=gear).filter(endDate__lte=datetime.datetime.today()).latest('endDate', 'startDate')
-            
+            latestResWithGearItem = Reservation.objects.filter(gear=gear).filter(endDate__lte=today).latest('endDate', 'startDate')
+
             if latestResWithGearItem.status != "CANCELLED" and latestResWithGearItem.status != "RETURNED":
-                return RespError(406, "The gear with the id of '" + str(gear.id) + "' in the reservation with the id "
-                                      "of '" + str(latestResWithGearItem.id) + "' must have"
-                                      " status CANCELLED or RETURNED")
+                return RespError(406, str(gear.code) + " is currently held in another reservation (id #" + str(latestResWithGearItem.id) +
+                                "), because that reservation hasn't been marked as returned or cancelled. You must remove the gear item"
+                                "from this reservation in order to proceed.") 
 
         except Reservation.DoesNotExist:
             # no other reservation currently with the gear item.
