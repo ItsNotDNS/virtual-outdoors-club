@@ -3,7 +3,9 @@ from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from ..models import Reservation
 from ..tasks import cancelled, approved
+from ..views.PayPalView import process
 from ..serializers import ReservationPOSTSerializer, ReservationGETSerializer
+from decimal import Decimal
 from django.db.models import Q
 import datetime
 
@@ -250,8 +252,8 @@ def checkout(request):
 def checkin(request):
     request = request.data
 
-    if "id" not in request:
-        return RespError(400, "You must specify an id to return.")
+    if "id" not in request and "amount" not in request:
+        return RespError(400, "You must specify an id to return and the amount you wish to capture.")
 
     reservation = reservationIdExists(request['id'])
     if not reservation:
@@ -260,12 +262,25 @@ def checkin(request):
     if reservation.status != "TAKEN":
         return RespError(406, "The reservation status must be TAKEN")
 
-    reservation.status = "RETURNED"
-    reservation.save()
+    try:
+        amount = Decimal(request['amount'])
+    except ValueError:
+        return RespError(400, "'" + request['amount'] + "' is not a valid decimal")
+
+    if amount < 0:
+        return RespError(400, "Capture amount must be greater than or equal to zero.")
 
     msg = ""
-    if reservation.payment == "CASH":
-        msg = "Please return the cash deposit"
+    if reservation.payment != "CASH":
+        status = process(reservation, amount)
+
+        if status:
+            return RespError(400, status)
+    else:
+        msg = "Please return cash deposit"
+
+    reservation.status = "RETURNED"
+    reservation.save()
 
     return Response(msg)
 

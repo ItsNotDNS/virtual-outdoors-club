@@ -215,9 +215,10 @@ class ReservationTestCase(TestCase):
         today = datetime.datetime.today()
 
         #test for a succesful checkin of a reservation
-        request = {"id": 1}
+        request = {"id": 1, "amount": 0}
         reservation = Reservation.objects.get(pk=1)
         reservation.status = "TAKEN"
+        reservation.payment = "CASH"
         reservation.save()
 
         response = self.client.post("/api/reservation/checkin/", request, content_type='application/json')
