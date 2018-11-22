@@ -93,7 +93,6 @@ class ReservationTestCase(TestCase):
         response = self.client.get('/api/reservation/?gearId=1', content_type="application/json").data['data']
         self.assertEqual(response, correctResponse)        
 
-        
     def test_getHistory(self):
         patch = {
             "gear": [self.sp.pk, self.bk.pk]
@@ -110,7 +109,6 @@ class ReservationTestCase(TestCase):
         # testing get history request with id
         response = self.client.get('/api/reservation/history/?id=1', content_type="application/json").data
         self.assertEqual(len(response["data"]), 3)
-
 
     def test_checkout(self):
         request = {"id": 1}
@@ -495,7 +493,6 @@ class ReservationTestCase(TestCase):
         response = self.client.post("/api/reservation", request, content_type="application/json").data
         self.assertEqual(response, correctResponse)
 
-
     def test_patch(self):
 
         reservationList = self.client.get("/api/reservation/", content_type='application/json').data["data"]
@@ -611,8 +608,6 @@ class ReservationTestCase(TestCase):
         response = self.client.patch("/api/reservation", request, content_type="application/json")
         self.assertEqual(response.status_code, 200)
 
-
-
     # BUGFIX-TEST: You can pass in any expectedVersion and it results in a patch
     # even if the expected version doesn't match
     def test_patch_expectedVersionMatters(self):
@@ -651,7 +646,6 @@ class ReservationTestCase(TestCase):
         response = self.client.post("/api/reservation", request, content_type="application/json")
         self.assertEqual(response.status_code, 400)
 
-
     def test_blackListedEmail(self):
         today = datetime.datetime.today()
 
@@ -684,7 +678,6 @@ class ReservationTestCase(TestCase):
         response = self.client.post("/api/reservation", request, content_type="application/json")
         self.assertEqual(response.status_code, 400)
 
-
     def test_tooManyReservations(self):
         # A reservation is already created in the startup, so this is already at the limit
         request = {
@@ -709,4 +702,3 @@ class ReservationTestCase(TestCase):
 
         response = self.client.post("/api/reservation", request, content_type="application/json")
         self.assertEqual(response.status_code, 400)
-

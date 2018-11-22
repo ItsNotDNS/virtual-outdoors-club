@@ -11,6 +11,11 @@ def worker():
     today = datetime.datetime.today()
     tomorrow = (today + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
 
+    # Remove approved but unclaimed reservations
+    oldres = Reservation.objects.filter(endDate=today)
+    (oldres.filter(status="APPROVED") | oldres.filter(status="REQUESTED")).update(status="CANCELLED")
+
+    # Create due date reminder
     reminder = Reservation.objects.filter(endDate=tomorrow, status="TAKEN")
 
     messages = []
@@ -28,6 +33,7 @@ def worker():
 
         messages.append({"body": body, "subject": "Gear Return Reminder", "to": [res.email]})
 
+    # Create payment email
     payment = Reservation.objects.filter(startDate=tomorrow, status="APPROVED")
 
     # TODO: REPLACE LINK ADDRESS WITH PROPER ADDRESS
