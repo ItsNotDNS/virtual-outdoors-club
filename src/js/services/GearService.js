@@ -222,10 +222,11 @@ export default class GearService {
     }
 
     uploadGearFile(categories, gearList) {
-        const categoryPromises = categories.map((name) => this.createCategory({ name })),
-            gearPromises = gearList.map((gear) => this.createGear(gear));
+        const categoryPromises = categories.map((name) => this.createCategory({ name }));
 
-        return Promise.all(categoryPromises).then((categoryData) => {
+        return Promise.all(categoryPromises).then(() => {
+            const gearPromises = gearList.map((gear) => this.createGear(gear));
+
             return Promise.all(gearPromises).then((gearData) => {
                 const failed = [];
 

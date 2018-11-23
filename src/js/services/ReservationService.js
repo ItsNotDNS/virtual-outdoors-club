@@ -52,6 +52,15 @@ export default class ReservationService {
             .catch(genericCatch);
     }
 
+    payReservationCash(id) {
+        return this.service.post(`${config.databaseHost}/reservation/checkout`, { id, cash: true })
+            .then((response) => {
+                const reservation = response.data;
+                return { reservation };
+            })
+            .catch(genericCatch);
+    }
+
     cancelReservation(id) {
         return this.service.post(`${config.databaseHost}/reservation/cancel`, { id })
             .then((response) => {

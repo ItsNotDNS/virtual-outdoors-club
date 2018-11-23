@@ -244,8 +244,8 @@ def checkout(request):
         return RespError(406, "The reservation status must be paid before it can be checked out.")
 
     reservation.save()
-   
-    return Response()
+    serial = ReservationGETSerializer(reservation)
+    return Response(serial.data)
 
 
 @api_view(['POST'])
