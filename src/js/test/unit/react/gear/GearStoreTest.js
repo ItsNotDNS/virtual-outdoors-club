@@ -6,6 +6,7 @@ import { expect } from "chai";
 import axios from "axios";
 import GearService from "../../../../services/GearService";
 import { GearActions } from "../../../../react/gear/GearStore";
+import moment from "moment";
 
 let getStub, postStub, patchStub, deleteStub,
     gearStore = new GearStore();
@@ -770,14 +771,16 @@ describe("GearStore Tests", () => {
     });
 
     it("onDateFilterChanged success", () => {
-        const mockStartDate = "2018-01-01",
-            mockEndDate = "2018-01-02";
+        const mockStartDate = new Date("2018-01-01"),
+            mockEndDate = new Date("2018-01-02"),
+            targetStartDate = new Date(mockStartDate),
+            targetEndDate = new Date(mockEndDate);
         expect(gearStore.state.dateFilter.startDate).to.equal(null);
         expect(gearStore.state.dateFilter.endDate).to.equal(null);
         gearStore.onDateFilterChanged("startDate", mockStartDate);
-        expect(gearStore.state.dateFilter.startDate).to.equal(mockStartDate);
+        expect(gearStore.state.dateFilter.startDate.getTime()).to.equal(targetStartDate.getTime());
         gearStore.onDateFilterChanged("endDate", mockEndDate);
-        expect(gearStore.state.dateFilter.endDate).to.equal(mockEndDate);
+        expect(gearStore.state.dateFilter.endDate.getTime()).to.equal(targetEndDate.getTime());
     });
 
     it("onFetchGearListFromTo - success", () => {

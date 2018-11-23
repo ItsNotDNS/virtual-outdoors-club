@@ -476,7 +476,10 @@ export class ReservationStore extends Reflux.Store {
     onFetchReservationListFromTo(startDate, endDate) {
         const service = new ReservationService();
 
-        return service.fetchReservationListFromTo(startDate, endDate)
+        return service.fetchReservationListFromTo(
+            moment(startDate).format("YYYY-MM-DD"),
+            moment(endDate).format("YYYY-MM-DD")
+        )
             .then(({ data }) => {
                 if (data) {
                     this.setState({

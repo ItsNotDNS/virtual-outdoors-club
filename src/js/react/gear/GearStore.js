@@ -7,6 +7,7 @@ import GearService from "../../services/GearService";
 import update from "immutability-helper";
 import Constants from "../../constants/constants";
 import { toast } from "react-toastify";
+import moment from "moment";
 
 function gearCategorycompare(a, b) {
     // Use toUpperCase() to ignore character casing
@@ -642,10 +643,10 @@ export class GearStore extends Reflux.Store {
     onDateFilterChanged(field, date) {
         const newState = update(this.state, {
             dateFilter: {
-                [field]: { $set: date }
+                [field]: { $set: new Date(date) }
             },
             reserveGearForm: {
-                [field]: { $set: date }
+                [field]: { $set: new Date(date) }
             }
         });
         this.setState(newState);
@@ -665,7 +666,10 @@ export class GearStore extends Reflux.Store {
 
     onFetchRentableListFromTo(startDate, endDate) {
         const service = new GearService();
-        return service.fetchGearListFromTo(startDate, endDate)
+        return service.fetchGearListFromTo(
+            moment(startDate).format("YYYY-MM-DD"),
+            moment(endDate).format("YYYY-MM-DD")
+        )
             .then(({ data }) => {
                 if (data) {
                     this.setState({
