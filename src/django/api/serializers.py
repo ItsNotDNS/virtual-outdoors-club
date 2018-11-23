@@ -15,13 +15,14 @@ class UserVariabilitySerializer(serializers.ModelSerializer):
 
 
 class MemberSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Member
         fields = [
             "email"
         ]
 
+    def validate_email(self, value):
+        return value.lower()
 
 class BlackListSerializer(serializers.ModelSerializer):
 
