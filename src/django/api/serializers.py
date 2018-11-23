@@ -107,7 +107,8 @@ class ReservationPOSTSerializer(serializers.ModelSerializer):
         try:    # Check if blacklisted email
             blackListed = BlackList.objects.get(email=data["email"])
             if blackListed:
-                raise serializers.ValidationError("This email is blacklisted!")
+                raise serializers.ValidationError("You are not allowed to rent gear at this time. If you wish to know why, contact the outdoors club.")
+                
         except BlackList.DoesNotExist:
             pass
 
