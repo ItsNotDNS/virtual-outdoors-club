@@ -370,8 +370,8 @@ export class GearStore extends Reflux.Store {
             const newState = update(this.state, {
                 shoppingList: { $push: [row] },
                 checkoutDisabled: { $set: false },
-                gearList: {
-                    $set: this.state.gearList.filter(
+                rentableList: {
+                    $set: this.state.rentableList.filter(
                         (gear) => {
                             return gear.id !== row.id;
                         }
@@ -393,7 +393,7 @@ export class GearStore extends Reflux.Store {
                     row.id !== obj.id)
             },
             checkoutDisabled: { $set: newCheckoutDisabledValue },
-            gearList: { $push: [row] }
+            rentableList: { $push: [row] }
         });
         this.setState(newState);
     }
