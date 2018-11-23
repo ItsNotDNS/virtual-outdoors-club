@@ -8,6 +8,20 @@ import update from "immutability-helper";
 import Constants from "../../constants/constants";
 import { toast } from "react-toastify";
 
+function gearCategorycompare(a, b) {
+    // Use toUpperCase() to ignore character casing
+    const nameA = a.name.toUpperCase(),
+        nameB = b.name.toUpperCase();
+
+    let comparison = 0;
+    if (nameA > nameB) {
+        comparison = 1;
+    } else if (nameA < nameB) {
+        comparison = -1;
+    }
+    return comparison;
+}
+
 function defaultState() {
     return {
         fetchedGearList: false, // initial check to fetch the gear list
@@ -269,7 +283,7 @@ export class GearStore extends Reflux.Store {
             .then(({ data, error }) => {
                 if (data) {
                     this.setState({
-                        categoryList: data
+                        categoryList: data.sort(gearCategorycompare)
                     });
                 } else {
                     this.setState({

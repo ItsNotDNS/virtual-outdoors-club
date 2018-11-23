@@ -65,6 +65,10 @@ export default class ReservationTable extends React.Component {
                         // prevent errors if onSelectRow isn't defined
                         onSelect: this.onSelectRow
                     }}
+                    defaultSorted={[
+                        { dataField: "startDate", order: "desc" },
+                        { dataField: "endDate", order: "desc" }
+                    ]}
                 />
             </div>
         );
