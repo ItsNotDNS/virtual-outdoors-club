@@ -65,7 +65,7 @@ class ReservationView(APIView):
         if ID and email:
             res = res.filter(id=ID, email=email)
             if not res:
-                return RespError(404, "No reservation with this ID and email were found.")
+                return RespError(404, "No reservation with this ID and email combination were found.")
 
         # Find all reservations in a specific date range if only the start and end dates are given
         elif (startDate and endDate) and not (ID or email):
@@ -154,7 +154,7 @@ class ReservationView(APIView):
         try:
             resv = Reservation.objects.get(id=idToUpdate)
         except Reservation.DoesNotExist:
-            return RespError(400, "There is no reservation with the id '" + str(idToUpdate) + "'")
+            return RespError(400, "There is no reservation with the id of '" + str(idToUpdate) + "'.")
 
         if expectedVersion < resv.version:
             return RespError(400, "The version you are trying to update is out of date.")
@@ -163,7 +163,7 @@ class ReservationView(APIView):
 
         # Check if reservation gear can be modified based on status
         if resv.status not in ["REQUESTED", "APPROVED"]:
-            return RespError(400, "The reservation status must be REQUESTED or APPROVED to be modified")
+            return RespError(400, "The reservation status must be 'requested' or 'approved' to be modified.")
 
         for field in resv._meta.fields: # field = Api.Reservation.fieldName
             f = str(field)
@@ -190,7 +190,7 @@ def getHistory(request):
     try:
         res = Reservation.objects.get(id=ID)
     except Reservation.DoesNotExist:
-        return RespError(400, "There is no reservation with the id '" + str(ID) + "'")
+        return RespError(400, "There is no reservation with the id of '" + str(ID) + "'.")
     res = res.history.all()
     serial = ReservationGETSerializer(res, many=True)
     return Response({"data": serial.data})
@@ -217,8 +217,8 @@ def checkout(request):
     gearList = reservation.gear.all()  
     for gear in gearList:
         if gear.condition != "RENTABLE":
-            return RespError(403, "The gear item + '" + str(gear.code) + "' is not RENTABLE, and thus can't be checked out."
-                            + " To still proceed with checking out, remove the gear item from this reservation.")
+            return RespError(403, "The gear item with the code of '" + str(gear.code) + "' is not 'rentable', and thus can't be checked out."
+                            + " To still proceed with checking out, you must remove the gear item from this reservation.")
         try: 
             # the below query does the following: 
             # Finds all reservations with a gear item in the reservation attempted to be checked out.
@@ -227,9 +227,9 @@ def checkout(request):
             latestResWithGearItem = Reservation.objects.filter(gear=gear).filter(endDate__lte=today).latest('endDate', 'startDate')
 
             if latestResWithGearItem.status != "CANCELLED" and latestResWithGearItem.status != "RETURNED":
-                return RespError(406, str(gear.code) + " is currently held in another reservation (id #" + str(latestResWithGearItem.id) +
-                                "), because that reservation hasn't been marked as returned or cancelled. You must remove the gear item"
-                                "from this reservation in order to proceed.") 
+                return RespError(406, "The gear item with the code of '" + str(gear.code) + "' is currently held in another reservation (id #"
+                                + str(latestResWithGearItem.id) + "), because that reservation hasn't been marked as 'returned' or 'cancelled'. You must remove the gear item"
+                                "from your reservation in order to proceed.") 
 
         except Reservation.DoesNotExist:
             # no other reservation currently with the gear item.
@@ -241,7 +241,7 @@ def checkout(request):
         reservation.status = "TAKEN"
         reservation.payment = "CASH"
     else:
-        return RespError(406, "The reservation status must be PAID before it can be checked out")
+        return RespError(406, "The reservation status must be paid before it can be checked out.")
 
     reservation.save()
    
@@ -257,15 +257,15 @@ def checkin(request):
 
     reservation = reservationIdExists(request['id'])
     if not reservation:
-        return RespError(404, "There is no reservation with the id of '" + str(request['id']) + "'")
+        return RespError(404, "There is no reservation with the id of '" + str(request['id']) + "'.")
 
     if reservation.status != "TAKEN":
-        return RespError(406, "The reservation status must be TAKEN")
+        return RespError(406, "The reservation status must be 'taken'.")
 
     try:
         amount = Decimal(request['amount'])
     except ValueError:
-        return RespError(400, "'" + request['amount'] + "' is not a valid decimal")
+        return RespError(400, "'" + request['amount'] + "' is not a valid decimal number.")
 
     if amount < 0:
         return RespError(400, "Capture amount must be greater than or equal to zero.")
@@ -277,7 +277,7 @@ def checkin(request):
         if status:
             return RespError(400, status)
     else:
-        msg = "Please return cash deposit"
+        msg = "Please return the cash deposit."
 
     reservation.status = "RETURNED"
     reservation.save()
@@ -290,14 +290,14 @@ def cancel(request):
     request = request.data
 
     if "id" not in request:
-        return RespError(400, "You must specify a reservation id to cancel")
+        return RespError(400, "You must specify a reservation id to cancel.")
 
     reservation = reservationIdExists(request['id'])
     if not reservation:
-        return RespError(404, "There is no reservation with the id of '" + str(request['id']) + "'")
+        return RespError(404, "There is no reservation with the id of '" + str(request['id']) + "'.")
 
     if reservation.status != "REQUESTED" and reservation.status != "APPROVED":
-        return RespError(406, "The reservation status must be REQUESTED or APPROVED")
+        return RespError(406, "The reservation status must be 'requested' or 'approved'.")
 
     reservation.status = "CANCELLED"
     reservation.save()
@@ -306,21 +306,21 @@ def cancel(request):
 
     serial = ReservationGETSerializer(reservation)
     return Response(serial.data)
-
+    
 
 @api_view(['POST'])
 def approve(request):
     request = request.data
 
     if "id" not in request:
-        return RespError(400, "You must specify a reservation id to approve")
+        return RespError(400, "You must specify a reservation id to approve.")
 
     reservation = reservationIdExists(request['id'])
     if not reservation:
-        return RespError(404, "There is no reservation with the id of '" + str(request['id']) + "'")
+        return RespError(404, "There is no reservation with the id of '" + str(request['id']) + "'.")
 
     if reservation.status != "REQUESTED":
-        return RespError(406, "The reservation status must be REQUESTED in order to be approved.")
+        return RespError(406, "The reservation status must be 'requested' in order to be approved.")
 
     reservation.status = "APPROVED"
     reservation.save()
