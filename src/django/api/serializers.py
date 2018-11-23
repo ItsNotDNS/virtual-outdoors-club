@@ -116,24 +116,18 @@ class ReservationPOSTSerializer(serializers.ModelSerializer):
         if data['startDate'] > data['endDate']:
             raise serializers.ValidationError("Start date must be before the end date")
 
-        try:
-            maxTimeInAdvance = UserVariability.objects.get(pk=DAYSINADVANCETOMAKERESV).value
-        except:
-            maxTimeInAdvance = 7
+
+        maxTimeInAdvance = UserVariability.objects.get(pk=DAYSINADVANCETOMAKERESV).value
+
         if (data['startDate'] - datetime.now().date()).days > maxTimeInAdvance:
             raise serializers.ValidationError("Start date cannot be more than " + str(maxTimeInAdvance) + " days in advance")
 
-        try:
-            maxResvTime = UserVariability.objects.get(pk=MAXRESVDAYS).value
-        except UserVariability.DoesNotExist:
-            maxResvTime = 14
+        maxResvTime = UserVariability.objects.get(pk=MAXRESVDAYS).value
         if (data['endDate'] - data['startDate']).days > maxResvTime:
             raise serializers.ValidationError("Length of reservation must be less than " + str(maxResvTime) + " days")
 
-        try:
-            maxResvs = UserVariability.objects.get(pk=MAXRENTALS).value
-        except UserVariability.DoesNotExist:
-            maxResvs = 2
+        maxResvs = UserVariability.objects.get(pk=MAXRENTALS).value
+
         userReservations = Reservation.objects.filter(email=data["email"]).exclude(status="RETURNED").exclude(status="CANCELLED")
         if 'id' in self.initial_data:
             userReservations = userReservations.exclude(id=self.initial_data["id"])

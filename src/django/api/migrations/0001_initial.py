@@ -3,8 +3,28 @@
 from django.conf import settings
 import django.core.validators
 from django.db import migrations, models
+from ..models import UserVariability
 import django.db.models.deletion
 import simple_history.models
+
+
+def initialData(apps, schema_editor):
+    users = ["member", "executive"]
+    variables = ["maxLength", "maxFuture", "maxRentals"]
+    values = [14, 7, 3]
+
+    for i in range(len(variables)):
+        try:
+            entry = UserVariability.objects.create(variable=users[0]+variables[i], value=values[i])
+            entry.save()
+        except:
+            pass
+    for i in range(len(variables)):
+        try:
+            entry = UserVariability.objects.create(variable=users[1]+variables[i], value=values[i])
+            entry.save()
+        except:
+            pass
 
 
 class Migration(migrations.Migration):
@@ -150,4 +170,7 @@ class Migration(migrations.Migration):
             name='category',
             field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, to='api.GearCategory'),
         ),
+
+        migrations.RunPython(initialData)
     ]
+
