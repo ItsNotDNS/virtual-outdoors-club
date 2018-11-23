@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
-
+import paypalrestsdk
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
-    'paypal.standard.ipn',
     'background_task',
     'api.apps.APIConfig',
     'simple_history',
@@ -138,5 +137,6 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = "uofaoutdoorsclub@gmail.com"
 EMAIL_HOST_PASSWORD = "universityofalbertaoutdoorsclub"
 
-# TODO Change for release version
-PAYPAL_TEST = True
+paypalrestsdk.configure({"mode": "sandbox",
+                         "client_id": "AUrNrlkC6Fexo2s-3muc01YsBBap5tx550MNkh68S9fNtM6eST0aPmu7FXfTMeFre04XjecHq66NvX-x",
+                         "client_secret": "ENCaWYHIDZERVsjHnfith1fLyHyV6R_vZIpbMFit7bO7iiN95R1MVsPR5-8fidpMYUNRh1S2f8Ol7ghK"})

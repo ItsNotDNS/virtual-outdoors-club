@@ -93,7 +93,6 @@ class ReservationTestCase(TestCase):
         response = self.client.get('/api/reservation/?gearId=1', content_type="application/json").data['data']
         self.assertEqual(response, correctResponse)        
 
-        
     def test_getHistory(self):
         patch = {
             "gear": [self.sp.pk, self.bk.pk]
@@ -110,7 +109,6 @@ class ReservationTestCase(TestCase):
         # testing get history request with id
         response = self.client.get('/api/reservation/history/?id=1', content_type="application/json").data
         self.assertEqual(len(response["data"]), 3)
-
 
     def test_checkout(self):
         request = {"id": 1}
@@ -155,6 +153,19 @@ class ReservationTestCase(TestCase):
         # test to checkout a reservation succesfully
         response = self.client.post("/api/reservation/checkout/", request, content_type='application/json')
         self.assertEqual(response.status_code, 200)
+
+        # test to checkout a reservation that has an endDate before today 
+        # newRes has a startDate of today-9 days by default
+        newReq = {"id": newRes.pk}
+        response = response = self.client.post("/api/reservation/checkout/", newReq, content_type='application/json')
+        self.assertEqual(response.status_code, 406)
+
+        # test to checkout a reservation that has an startDate after today 
+        newRes.endDate = (today+datetime.timedelta(days=7)).strftime("%Y-%m-%d")
+        newRes.startDate = (today+datetime.timedelta(days=1)).strftime("%Y-%m-%d")
+        response = response = self.client.post("/api/reservation/checkout/", newReq, content_type='application/json')
+        self.assertEqual(response.status_code, 406)
+
         newRes.delete()
 
         correctResponse = [{
@@ -204,9 +215,10 @@ class ReservationTestCase(TestCase):
         today = datetime.datetime.today()
 
         #test for a succesful checkin of a reservation
-        request = {"id": 1}
+        request = {"id": 1, "amount": 0}
         reservation = Reservation.objects.get(pk=1)
         reservation.status = "TAKEN"
+        reservation.payment = "CASH"
         reservation.save()
 
         response = self.client.post("/api/reservation/checkin/", request, content_type='application/json')
@@ -361,7 +373,7 @@ class ReservationTestCase(TestCase):
 
         correctResponse = {
             'startDate': today.strftime("%Y-%m-%d"),
-            'id': 4,
+            'id': 5,
             'email': 'enry@email.com',
             'endDate': (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
             'gear': [self.bk.pk],
@@ -454,7 +466,7 @@ class ReservationTestCase(TestCase):
 
 
       # Test that canceling releases hold on gear
-        request = {"id": 4} 
+        request = {"id": 5} 
         response = self.client.post('/api/reservation/cancel/', request, content_type='application/json')
         self.assertEqual(response.status_code, 200)
         request = {
@@ -469,7 +481,7 @@ class ReservationTestCase(TestCase):
 
         correctResponse = {
             'startDate': today.strftime("%Y-%m-%d"),
-            'id': 5,
+            'id': 6,
             'email': 'enry@email.com',
             'endDate': (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
             'gear': [self.bk.pk],
@@ -481,7 +493,6 @@ class ReservationTestCase(TestCase):
 
         response = self.client.post("/api/reservation", request, content_type="application/json").data
         self.assertEqual(response, correctResponse)
-
 
     def test_patch(self):
 
@@ -547,7 +558,7 @@ class ReservationTestCase(TestCase):
             "licenseName": "Name on their license.",
             "licenseAddress": "Address on their license.",
             "startDate": (today + datetime.timedelta(days=1)).strftime("%Y-%m-%d"),
-            "endDate": (today + datetime.timedelta(days=7)).strftime("%Y-%m-%d"),
+            "endDate": (today + datetime.timedelta(days=5)).strftime("%Y-%m-%d"),
             "status": "REQUESTED",
             "gear": [sp1.pk]
         }
@@ -569,6 +580,34 @@ class ReservationTestCase(TestCase):
 
         response = self.client.patch("/api/reservation", request, content_type="application/json")
         self.assertEqual(response.status_code, 400)
+
+
+        # Make second resv and test editing it
+        request = {
+            "email": "henry@email.com",
+            "licenseName": "Name on their license.",
+            "licenseAddress": "Address on their license.",
+            "startDate": (today + datetime.timedelta(days=6)).strftime("%Y-%m-%d"),
+            "endDate": (today + datetime.timedelta(days=11)).strftime("%Y-%m-%d"),
+            "status": "REQUESTED",
+            "gear": [sp1.pk]
+        }
+
+        response = self.client.post("/api/reservation", request, content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+
+        patch = {
+            "gear": [self.sp.pk, self.bk.pk],
+            "startDate": (today + datetime.timedelta(days=7)).strftime("%Y-%m-%d"),
+        }
+
+        request = {
+            "id": 4,
+            "expectedVersion": 1,
+            "patch": patch,
+        }
+        response = self.client.patch("/api/reservation", request, content_type="application/json")
+        self.assertEqual(response.status_code, 200)
 
     # BUGFIX-TEST: You can pass in any expectedVersion and it results in a patch
     # even if the expected version doesn't match
@@ -608,7 +647,6 @@ class ReservationTestCase(TestCase):
         response = self.client.post("/api/reservation", request, content_type="application/json")
         self.assertEqual(response.status_code, 400)
 
-
     def test_blackListedEmail(self):
         today = datetime.datetime.today()
 
@@ -641,7 +679,6 @@ class ReservationTestCase(TestCase):
         response = self.client.post("/api/reservation", request, content_type="application/json")
         self.assertEqual(response.status_code, 400)
 
-
     def test_tooManyReservations(self):
         # A reservation is already created in the startup, so this is already at the limit
         request = {
@@ -666,4 +703,3 @@ class ReservationTestCase(TestCase):
 
         response = self.client.post("/api/reservation", request, content_type="application/json")
         self.assertEqual(response.status_code, 400)
-

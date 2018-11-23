@@ -25,7 +25,8 @@ function defaultState() {
                 options: []
             },
             data: {},
-            edit: {}
+            edit: {},
+            showConfirmation: ""
         },
         // Payment State
         emailValidationForm: {
@@ -53,13 +54,15 @@ function defaultState() {
     };
 }
 
-// Create actions and export them for use
+// Create and export actions for use
 export const ReservationActions = Reflux.createActions([
     "openReservationModal",
     "closeReservationModal",
     "saveReservationChanges",
+    "undoReservationChanges",
     "approveReservation",
     "cancelReservation",
+    "payCash",
     "editReservation",
     "fetchReservationList",
     "openDeleteReservationModal",
@@ -77,7 +80,9 @@ export const ReservationActions = Reflux.createActions([
     "loadAvailableGear",
     "addGearToReservation",
     "dateFilterChanged",
-    "fetchReservationListFromTo"
+    "fetchReservationListFromTo",
+    "showConfirmation",
+    "hideConfirmation"
 ]);
 
 export class ReservationStore extends Reflux.Store {
@@ -85,6 +90,48 @@ export class ReservationStore extends Reflux.Store {
         super();
         this.state = defaultState();
         this.listenables = ReservationActions; // listen for actions
+    }
+
+    onShowConfirmation(type) {
+        this.setState(update(this.state, {
+            reservationModal: {
+                showConfirmation: { $set: type }
+            }
+        }));
+    }
+
+    onHideConfirmation() {
+        this.setState(update(this.state, {
+            reservationModal: {
+                showConfirmation: { $set: "" }
+            }
+        }));
+    }
+
+    onPayCash() {
+        const service = new ReservationService();
+
+        return service.payReservationCash(this.state.reservationModal.data.id)
+            .then(({ error, reservation }) => {
+                if (error) {
+                    this.setState(update(this.state, {
+                        reservationModal: {
+                            alertMsg: { $set: error },
+                            alertType: { $set: "danger" }
+                        }
+                    }));
+                } else {
+                    this.setState(update(this.state, {
+                        reservationModal: {
+                            edit: { $set: {} },
+                            alertMsg: { $set: "Reservation Paid! You should now hand out the gear to the member." },
+                            alertType: { $set: "success" }
+                        }
+                    }));
+                    this.updateModalAndList(reservation);
+                    this.onHideConfirmation();
+                }
+            });
     }
 
     clone(obj) {
@@ -179,6 +226,13 @@ export class ReservationStore extends Reflux.Store {
             }
         });
 
+        if (startDate) {
+            updateInfo.startDate = moment(updateInfo.startDate).format("YYYY-MM-DD");
+        }
+        if (endDate) {
+            updateInfo.endDate = moment(updateInfo.endDate).format("YYYY-MM-DD");
+        }
+
         // condense gear list to id values
         if (gear) {
             updateInfo.gear = gear.map((item) => item.id);
@@ -200,14 +254,13 @@ export class ReservationStore extends Reflux.Store {
 
                         this.setState(update(this.state, {
                             reservationModal: {
-                                data: { $set: this.parseReservationData(reservation) },
                                 edit: { $set: {} },
                                 gearSelect: { $set: gearSelect },
                                 alertMsg: { $set: "Reservation Saved!" },
                                 alertType: { $set: "success" }
                             }
                         }));
-                        // TODO: update main list?
+                        this.updateModalAndList(reservation);
                     }
                 });
         }
@@ -219,6 +272,28 @@ export class ReservationStore extends Reflux.Store {
         reservation.endDate = new Date(reservation.endDate);
 
         return reservation;
+    }
+
+    updateModalAndList(reservation) {
+        const { id } = reservation,
+            reservationList = this.state.reservationList.map((item) => {
+                return id === item.id ? reservation : item;
+            });
+
+        this.setState(update(this.state, {
+            reservationList: { $set: reservationList },
+            reservationModal: {
+                data: { $set: this.parseReservationData(reservation) }
+            }
+        }));
+    }
+
+    onUndoReservationChanges() {
+        this.setState(update(this.state, {
+            reservationModal: {
+                edit: { $set: {} }
+            }
+        }));
     }
 
     onOpenReservationModal(reservationInfo) {
@@ -250,17 +325,14 @@ export class ReservationStore extends Reflux.Store {
                         }
                     }));
                 } else {
-                    const newList = this.state.reservationList.map((item) => {
-                        return id === item.id ? reservation : item;
-                    });
                     this.setState(update(this.state, {
-                        reservationList: { $set: newList },
                         reservationModal: {
                             alertMsg: { $set: "This reservation is now approved!" },
-                            alertType: { $set: "success" },
-                            data: { $set: this.parseReservationData(reservation) }
+                            alertType: { $set: "success" }
                         }
                     }));
+                    this.updateModalAndList(reservation);
+                    this.onHideConfirmation();
                 }
             });
     }
@@ -279,17 +351,14 @@ export class ReservationStore extends Reflux.Store {
                         }
                     }));
                 } else {
-                    const newList = this.state.reservationList.map((item) => {
-                        return id === item.id ? reservation : item;
-                    });
                     this.setState(update(this.state, {
-                        reservationList: { $set: newList },
                         reservationModal: {
                             alertMsg: { $set: "This reservation is now cancelled." },
-                            alertType: { $set: "success" },
-                            data: { $set: this.parseReservationData(reservation) }
+                            alertType: { $set: "success" }
                         }
                     }));
+                    this.updateModalAndList(reservation);
+                    this.onHideConfirmation();
                 }
             });
     }
@@ -407,7 +476,10 @@ export class ReservationStore extends Reflux.Store {
     onFetchReservationListFromTo(startDate, endDate) {
         const service = new ReservationService();
 
-        return service.fetchReservationListFromTo(startDate, endDate)
+        return service.fetchReservationListFromTo(
+            moment(startDate).format("YYYY-MM-DD"),
+            moment(endDate).format("YYYY-MM-DD")
+        )
             .then(({ data }) => {
                 if (data) {
                     this.setState({

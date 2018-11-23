@@ -47,7 +47,8 @@ export default class CategoryTable extends React.Component {
     get columns() {
         return [{
             dataField: "name",
-            text: "Category Name"
+            text: "Category Name",
+            sort: true
         }, {
             text: "Actions",
             dataField: "isDummyField",
@@ -62,6 +63,7 @@ export default class CategoryTable extends React.Component {
                 keyField="name"
                 columns={this.columns}
                 data={this.props.categories}
+                defaultSorted={[{ dataField: "name", order: "asc" }]}
             />
         );
     }

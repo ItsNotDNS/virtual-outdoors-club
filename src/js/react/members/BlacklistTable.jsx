@@ -36,7 +36,8 @@ export default class MemberTable extends React.Component {
     get columns() {
         return [{
             dataField: "email",
-            text: "Member Email"
+            text: "Member Email",
+            sort: true
         }, {
             text: "Remove from Blacklist",
             dataField: "isDummyField",
@@ -54,6 +55,7 @@ export default class MemberTable extends React.Component {
                 keyField="email"
                 columns={this.columns}
                 data={this.props.memberList}
+                defaultSorted={[{ dataField: "email", order: "asc" }]}
             />
         );
     }

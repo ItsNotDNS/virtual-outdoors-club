@@ -65,19 +65,24 @@ export default class GearTable extends React.Component {
     get columns() {
         return [{
             dataField: "code",
-            text: "Gear ID"
+            text: "Gear ID",
+            sort: true
         }, {
             dataField: "category",
-            text: "Category"
+            text: "Category",
+            sort: true
         }, {
             dataField: "description",
-            text: "Description"
+            text: "Description",
+            sort: true
         }, {
             dataField: "depositFee",
-            text: "Fee"
+            text: "Fee",
+            sort: true
         }, {
             dataField: "condition",
-            text: "Condition"
+            text: "Condition",
+            sort: true
         }, {
             text: "Actions",
             dataField: "isDummyField",
@@ -106,6 +111,7 @@ export default class GearTable extends React.Component {
                 </div>
                 <Table
                     {...props.baseProps}
+                    defaultSorted={[{ dataField: "code", order: "asc" }]}
                 />
             </div>
         );

@@ -8,13 +8,19 @@ import moment from "moment";
 import Select from "react-select";
 
 const {
-    REQUESTED,
-    APPROVED,
-    PAID,
-    TAKEN,
-    RETURNED,
-    CANCELLED
-} = constants.reservations.status;
+    status: {
+        REQUESTED,
+        APPROVED,
+        PAID,
+        TAKEN,
+        RETURNED,
+        CANCELLED
+    }, actions: {
+        CANCEL,
+        APPROVE,
+        PAY_CASH
+    }
+} = constants.reservations;
 
 export default class ReservationModal extends React.Component {
     constructor(props) {
@@ -26,7 +32,7 @@ export default class ReservationModal extends React.Component {
     }
 
     getData() {
-        const { edit: { startDate, endDate, gear }, data } = this.props,
+        const { edit: { startDate, endDate, gear }, data, showConfirmation } = this.props,
             dataValues = { ...data },
             editableStatuses = {
                 [REQUESTED]: true,
@@ -35,7 +41,8 @@ export default class ReservationModal extends React.Component {
             };
 
         // set if the user can edit fields on the modal
-        dataValues.editable = editableStatuses[data.status];
+        // should have editable status and not be showing a confirmation dialogue
+        dataValues.editable = editableStatuses[data.status] && !showConfirmation;
 
         // set if user can save edited fields (using save button)
         if (startDate || endDate || gear) {
@@ -50,6 +57,13 @@ export default class ReservationModal extends React.Component {
         }
         if (gear) {
             dataValues.gear = gear;
+        }
+
+        if (dataValues.gear) {
+            dataValues.totalDeposit = dataValues.gear.reduce((total, item) => {
+                return total + Number(item.depositFee);
+            }, 0);
+            dataValues.totalDeposit = dataValues.totalDeposit.toFixed(2);
         }
 
         return dataValues;
@@ -67,38 +81,49 @@ export default class ReservationModal extends React.Component {
     }
 
     footerButton(data, actions) {
+        const openConfirmWrapper = (type) => {
+            return () => actions.showConfirmation(type);
+        };
+
+        if (data.canSave) {
+            return {
+                [data.status]: (
+                    <div className="row">
+                        <div className="col-xs-6">
+                            {this.getButton("Go Back", actions.undoReservationChanges, "primary")}
+                        </div>
+                        <div className="col-xs-6">
+                            {this.getButton("Save Changes", actions.saveReservationChanges, "success")}
+                        </div>
+                    </div>
+                )
+            };
+        }
+
         return {
             [REQUESTED]: (
                 <div className="row">
                     <div className="col-xs-4">
-                        {this.getButton("Terminate", actions.cancelReservation, "danger")}
+                        {this.getButton("Terminate", openConfirmWrapper(CANCEL), "danger")}
                     </div>
                     <div className="col-xs-4">
-                        {this.getButton("Save", actions.saveReservationChanges, "primary", { disabled: !data.canSave })}
+                        {this.getButton("Save", actions.saveReservationChanges, "primary")}
                     </div>
                     <div className="col-xs-4">
-                        {this.getButton("Approve", actions.approveReservation, "success")}
+                        {this.getButton("Approve", openConfirmWrapper(APPROVE), "success")}
                     </div>
                 </div>
             ),
             [APPROVED]: (
-                <div>
-                    <div className="row bottom-margin">
-                        <div className="col-xs-4">
-                            {this.getButton("Terminate", actions.cancelReservation, "danger")}
-                        </div>
-                        <div className="col-xs-4">
-                            {this.getButton("Cash Deposit", null, "warning")}
-                        </div>
-                        <div className="col-xs-4">
-                            {this.getButton("Save", actions.saveReservationChanges, "primary", { disabled: !data.canSave })}
-                        </div>
+                <div className="row">
+                    <div className="col-xs-4">
+                        {this.getButton("Terminate", openConfirmWrapper(CANCEL), "danger")}
                     </div>
-                    <div className="row">
-                        <div className="col-xs-4" />
-                        <div className="col-xs-4">
-                            {this.getButton("Open Payment Page", () => window.open(`/pay?id=${data.id}`), "warning")}
-                        </div>
+                    <div className="col-xs-4">
+                        {this.getButton("Take Cash Deposit", openConfirmWrapper(PAY_CASH), "warning")}
+                    </div>
+                    <div className="col-xs-4">
+                        {this.getButton("Open Payment Page", () => window.open(`/pay?id=${data.id}`), "primary")}
                     </div>
                 </div>
             ),
@@ -113,6 +138,57 @@ export default class ReservationModal extends React.Component {
             ),
             [CANCELLED]: (
                 <div className="text-center gray-out"><i>You cannot perform any actions on a cancelled reservation.</i></div>
+            )
+        };
+    }
+
+    footerConfirm(data, actions) {
+        const backBtn = (
+            <div className="col-xs-6">
+                {this.getButton("Go Back", actions.hideConfirmation, "primary")}
+            </div>
+        );
+
+        return {
+            [CANCEL]: (
+                <div>
+                    <div className="row text-center">
+                        <p><strong>This will terminate the reservation and cannot be undone!</strong></p>
+                    </div>
+                    <div className="row">
+                        {backBtn}
+                        <div className="col-xs-6">
+                            {this.getButton("Proceed", actions.cancelReservation, "danger")}
+                        </div>
+                    </div>
+                </div>
+            ),
+            [APPROVE]: (
+                <div>
+                    <div className="row text-center">
+                        <p><strong>This will approve the reservation and send an email to the member allowing them to pay up to a day before the reservation starts.</strong></p>
+                    </div>
+                    <div className="row">
+                        {backBtn}
+                        <div className="col-xs-6">
+                            {this.getButton("Proceed", actions.approveReservation, "success")}
+                        </div>
+                    </div>
+                </div>
+            ),
+            [PAY_CASH]: (
+                <div>
+                    <div className="row text-center">
+                        <p><strong>The member should give you a cash deposit of $<u>{data.totalDeposit}</u> before you proceed.</strong></p>
+                        <p>We'll remind you to give it back when they return the gear.</p>
+                    </div>
+                    <div className="row">
+                        {backBtn}
+                        <div className="col-xs-6">
+                            {this.getButton("Proceed", actions.payCash, "warning")}
+                        </div>
+                    </div>
+                </div>
             )
         };
     }
@@ -135,11 +211,11 @@ export default class ReservationModal extends React.Component {
         );
     }
 
-    getGearList({ gear = [], editable }) {
+    getGearList({ gear = [], editable, status }) {
         return gear.map((item, i) => {
             const iconView = editable ? this.getDeleteGearIcon(i) : null;
             return (
-                <div className={`row left-margin right-margin ${editable ? "" : "gray-out"}`}
+                <div className={`row left-margin right-margin ${status !== CANCELLED ? "" : "gray-out"}`}
                     key={i}
                 >
                     {item.code} - {item.description} {iconView}
@@ -187,8 +263,13 @@ export default class ReservationModal extends React.Component {
         );
     }
 
+    getFooter(data, showConfirmation, actions) {
+        return this.footerConfirm(data, actions)[showConfirmation] ||
+            this.footerButton(data, actions)[data.status];
+    }
+
     render() {
-        const { alertMsg, alertType, actions } = this.props,
+        const { alertMsg, alertType, actions, showConfirmation } = this.props,
             data = this.getData();
 
         return (
@@ -237,9 +318,7 @@ export default class ReservationModal extends React.Component {
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    <div>
-                        {this.footerButton(data, actions)[data.status]}
-                    </div>
+                    {this.getFooter(data, showConfirmation, actions)}
                 </Modal.Footer>
             </Modal>
         );
@@ -252,9 +331,13 @@ ReservationModal.propTypes = {
         approveReservation: PropTypes.func.isRequired,
         cancelReservation: PropTypes.func.isRequired,
         editReservation: PropTypes.func.isRequired,
+        payCash: PropTypes.func.isRequired,
         loadAvailableGear: PropTypes.func.isRequired,
         addGearToReservation: PropTypes.func.isRequired,
-        saveReservationChanges: PropTypes.func.isRequired
+        saveReservationChanges: PropTypes.func.isRequired,
+        undoReservationChanges: PropTypes.func.isRequired,
+        showConfirmation: PropTypes.func.isRequired,
+        hideConfirmation: PropTypes.func.isRequired
     }).isRequired,
     show: PropTypes.bool.isRequired,
     alertMsg: PropTypes.string,
@@ -278,5 +361,6 @@ ReservationModal.propTypes = {
         isLoading: PropTypes.bool,
         gear: PropTypes.array,
         options: PropTypes.array
-    })
+    }),
+    showConfirmation: PropTypes.string
 };

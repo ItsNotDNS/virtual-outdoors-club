@@ -12,7 +12,6 @@ import { GearStore } from "../gear/GearStore";
 import DayPickerInput from "react-day-picker/DayPickerInput";
 import PropTypes from "prop-types";
 import { ControlLabel, FormGroup } from "react-bootstrap";
-import moment from "moment";
 
 export default class DateRangePicker extends Reflux.Component {
     constructor(props) {
@@ -26,29 +25,19 @@ export default class DateRangePicker extends Reflux.Component {
         this.getBR = this.getBR.bind(this);
 
         this.state = {
-            from: undefined,
-            to: undefined
+            selectedStartDate: undefined,
+            selectedEndDate: undefined
         };
     }
 
-    formatDate(date) {
-        if (!date) {
-            return "";
-        }
-        const day = date.getDate(),
-            month = date.getMonth() + 1,
-            year = date.getFullYear();
-        return (`${year}-${month}-${day}`);
-    }
-
     handleFromChange(from) {
-        this.setState({ from });
-        this.props.setStartDate(this.formatDate(from));
+        this.setState({ selectedStartDate: from });
+        this.props.setStartDate(from);
     }
 
     handleToChange(to) {
-        this.setState({ to });
-        this.props.setEndDate(this.formatDate(to));
+        this.setState({ selectedEndDate: to });
+        this.props.setEndDate(to);
     }
 
     handleClick() {
@@ -63,36 +52,17 @@ export default class DateRangePicker extends Reflux.Component {
         return (<br />);
     }
 
-    static getDerivedStateFromProps(props, state) {
-        let startDate,
-            endDate;
-        if (state.from === undefined && state.to === undefined) {
-            if (props.startDate) {
-                startDate = moment(props.startDate).toDate();
-            }
-            if (props.endDate) {
-                endDate = moment(props.endDate).toDate();
-            }
-            return ({
-                from: startDate,
-                to: endDate
-            });
-        }
-        return null;
-    }
-
     render() {
-        const { from, to } = this.state;
         return (
             <form>
                 <FormGroup>
                     <ControlLabel>Start Date:</ControlLabel>
                     {this.getBR()}
                     <DayPickerInput
-                        value={from}
+                        value={this.state.selectedStartDate || this.props.startDate}
                         placeholder="YYYY-MM-DD"
                         dayPickerProps={{
-                            selectedDays: [from, { from, to }],
+                            selectedDays: { from: this.state.selectedStartDate || this.props.startDate, to: this.state.selectedEndDate || this.props.endDate },
                             onDayClick: this.handleClick
                         }}
                         onDayChange={this.handleFromChange}
@@ -103,13 +73,16 @@ export default class DateRangePicker extends Reflux.Component {
                     {this.getBR()}
                     <DayPickerInput
                         ref={this.endDayPickerInputRef}
-                        value={to}
+                        value={this.state.selectedEndDate || this.props.endDate}
                         placeholder="YYYY-MM-DD"
                         dayPickerProps={{
-                            selectedDays: [from, { from, to }],
-                            disabledDays: { before: from },
-                            fromMonth: from,
-                            month: from
+                            selectedDays: {
+                                from: this.state.selectedStartDate || this.props.startDate,
+                                to: this.state.selectedEndDate || this.props.endDate
+                            },
+                            disabledDays: { before: this.state.selectedStartDate || this.props.startDate },
+                            fromMonth: this.state.selectedStartDate || this.props.startDate,
+                            month: this.state.selectedStartDate || this.props.startDate
                         }}
                         onDayChange={this.handleToChange}
                     />
@@ -123,6 +96,6 @@ DateRangePicker.propTypes = {
     setStartDate: PropTypes.func.isRequired,
     setEndDate: PropTypes.func.isRequired,
     horizontal: PropTypes.bool.isRequired,
-    startDate: PropTypes.string,
-    endDate: PropTypes.string
+    startDate: PropTypes.instanceOf(Date),
+    endDate: PropTypes.instanceOf(Date)
 };

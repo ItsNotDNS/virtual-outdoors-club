@@ -19,6 +19,15 @@
     }
 }
 
+.DayPickerInput {
+        .DayPicker-Day {
+            border-radius: 0;
+        }
+        input {
+            text-align: center;
+        }
+    }
+
 .page-margin {
     margin: 1%;
 }
@@ -264,7 +273,6 @@
     .DayPickerInput {
         float: right!important;
         input {
-            text-align: right;
             width: 100%;
         }
     }

@@ -7,6 +7,21 @@ import GearService from "../../services/GearService";
 import update from "immutability-helper";
 import Constants from "../../constants/constants";
 import { toast } from "react-toastify";
+import moment from "moment";
+
+function gearCategorycompare(a, b) {
+    // Use toUpperCase() to ignore character casing
+    const nameA = a.name.toUpperCase(),
+        nameB = b.name.toUpperCase();
+
+    let comparison = 0;
+    if (nameA > nameB) {
+        comparison = 1;
+    } else if (nameA < nameB) {
+        comparison = -1;
+    }
+    return comparison;
+}
 
 function defaultState() {
     return {
@@ -269,7 +284,7 @@ export class GearStore extends Reflux.Store {
             .then(({ data, error }) => {
                 if (data) {
                     this.setState({
-                        categoryList: data
+                        categoryList: data.sort(gearCategorycompare)
                     });
                 } else {
                     this.setState({
@@ -370,8 +385,8 @@ export class GearStore extends Reflux.Store {
             const newState = update(this.state, {
                 shoppingList: { $push: [row] },
                 checkoutDisabled: { $set: false },
-                gearList: {
-                    $set: this.state.gearList.filter(
+                rentableList: {
+                    $set: this.state.rentableList.filter(
                         (gear) => {
                             return gear.id !== row.id;
                         }
@@ -393,7 +408,7 @@ export class GearStore extends Reflux.Store {
                     row.id !== obj.id)
             },
             checkoutDisabled: { $set: newCheckoutDisabledValue },
-            gearList: { $push: [row] }
+            rentableList: { $push: [row] }
         });
         this.setState(newState);
     }
@@ -628,10 +643,10 @@ export class GearStore extends Reflux.Store {
     onDateFilterChanged(field, date) {
         const newState = update(this.state, {
             dateFilter: {
-                [field]: { $set: date }
+                [field]: { $set: new Date(date) }
             },
             reserveGearForm: {
-                [field]: { $set: date }
+                [field]: { $set: new Date(date) }
             }
         });
         this.setState(newState);
@@ -651,7 +666,10 @@ export class GearStore extends Reflux.Store {
 
     onFetchRentableListFromTo(startDate, endDate) {
         const service = new GearService();
-        return service.fetchGearListFromTo(startDate, endDate)
+        return service.fetchGearListFromTo(
+            moment(startDate).format("YYYY-MM-DD"),
+            moment(endDate).format("YYYY-MM-DD")
+        )
             .then(({ data }) => {
                 if (data) {
                     this.setState({

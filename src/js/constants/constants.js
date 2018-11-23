@@ -25,6 +25,11 @@ export default {
             "TAKEN": "TAKEN",
             "RETURNED": "RETURNED",
             "CANCELLED": "CANCELLED"
+        },
+        actions: {
+            CANCEL: "CANCEL",
+            APPROVE: "APPROVE",
+            PAY_CASH: "PAY_CASH"
         }
     }
 };

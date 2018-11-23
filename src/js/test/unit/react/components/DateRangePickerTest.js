@@ -7,24 +7,6 @@ import sinon from "sinon";
 import moment from "moment";
 
 describe("DateRangePicker Tests", () => {
-    it("formatDate success", () => {
-        const formattedDate = "2018-1-23",
-            date = new Date("January 23, 2018"),
-            setStartDateSpy = sinon.spy(),
-            setEndDateSpy = sinon.spy(),
-            dateRangePicker = shallow(
-                <DateRangePicker
-                    setStartDate={setStartDateSpy}
-                    setEndDate={setEndDateSpy}
-                    horizontal
-                    startDate={"2018-10-10"}
-                    endDate={"2018-10-14"}
-                />
-            );
-        expect(dateRangePicker.instance().formatDate("")).to.equal("");
-        expect(dateRangePicker.instance().formatDate(date)).to.equal(formattedDate);
-    });
-
     it("handleFromChange calls reserveGearFormChanged success", () => {
         const setStartDateSpy = sinon.spy(),
             setEndDateSpy = sinon.spy(),

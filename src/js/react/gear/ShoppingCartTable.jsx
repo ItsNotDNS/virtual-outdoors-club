@@ -65,6 +65,7 @@ export default class ShoppingCartTable extends Reflux.Component {
                 keyField="id"
                 data={this.props.shoppingList}
                 columns={this.columns}
+                defaultSorted={[{ dataField: "code", order: "asc" }]}
             />
         );
     }

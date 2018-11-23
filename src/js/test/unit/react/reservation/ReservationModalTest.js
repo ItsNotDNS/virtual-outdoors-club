@@ -113,21 +113,6 @@ describe("ReservationModal Tests", () => {
         expect(!!componentData.canSave).to.be.true;
     });
 
-    it("An approved reservation can open the reservation payment page", () => {
-        const modal = getComponent({ data: getReservation() }),
-            windowStub = sandbox.stub(window, "open"),
-            { actions, data } = modal.instance().props,
-            buttons = modal.instance().footerButton(data, actions)[APPROVED],
-            secondRow = buttons.props.children[1], // two rows of buttons
-            buttonDiv = secondRow.props.children[1], // two divs, one for spacing one for the button
-            onClick = buttonDiv.props.children.props.onClick; // the button's own click prop
-
-        expect(windowStub.called).to.be.false;
-        onClick();
-        expect(windowStub.called).to.be.true;
-        expect(windowStub.calledWith(`/pay?id=${data.id}`)).to.be.true;
-    });
-
     it("clickTrash filters out the selected index", () => {
         const editReservationSpy = sandbox.spy(),
             modal = getComponent({ 

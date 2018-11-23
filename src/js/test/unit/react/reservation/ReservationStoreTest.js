@@ -389,4 +389,13 @@ describe("ReservationStore Test", () => {
             ]);
         })
     });
+
+    it("onPayCash - error path", () => {
+        const error = { response: { data: { message: "this is an error message" } } },	
+            promise = Promise.reject(error);	
+         axiosPostStub.returns(promise); // set stub to return mock data	
+         return store.onPayCash().then(() => {
+            expect(store.state.reservationModal.alertMsg).to.equal(error.response.data.message);	
+        });	
+    });
 });

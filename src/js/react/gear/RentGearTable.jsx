@@ -65,6 +65,7 @@ export default class RentGearTable extends Reflux.Component {
                 </div>
                 <BootstrapTable
                     {...props.baseProps}
+                    defaultSorted={[{ dataField: "code", order: "asc" }]}
                 />
             </div>
         );
