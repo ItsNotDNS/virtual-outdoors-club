@@ -6,7 +6,9 @@
 import React from "react";
 import Table from "react-bootstrap-table-next";
 import PropTypes from "prop-types";
+import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit";
 
+const { SearchBar } = Search;
 export default class MemberTable extends React.Component {
     constructor() {
         super();
@@ -49,14 +51,30 @@ export default class MemberTable extends React.Component {
         }];
     }
 
+    getComponents(props) {
+        return (
+            <div>
+                <div className="custom-search-field">
+                    <SearchBar {...props.searchProps} />
+                </div>
+                <Table
+                    {...props.baseProps}
+                    defaultSorted={[{ dataField: "email", order: "asc" }]}
+                />
+            </div>
+        );
+    }
+
     render() {
         return (
-            <Table
+            <ToolkitProvider
+                search
                 keyField="email"
                 columns={this.columns}
                 data={this.props.memberList}
-                defaultSorted={[{ dataField: "email", order: "asc" }]}
-            />
+            >
+                {this.getComponents}
+            </ToolkitProvider>
         );
     }
 }
