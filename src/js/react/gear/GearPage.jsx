@@ -15,6 +15,7 @@ import Constants from "../../constants/constants";
 import ErrorAlert from "../components/ErrorAlert";
 import ConfirmationDialog from "../components/ConfirmationDialog";
 import FileButton from "../components/FileButton";
+import FlaggedGearTable from "./FlaggedGearTable";
 
 export default class GearPage extends Reflux.Component {
     constructor() {
@@ -119,6 +120,21 @@ export default class GearPage extends Reflux.Component {
         );
     }
 
+    getFlaggedGearTab(tabKey) {
+        return (
+            <Tab eventKey={tabKey} title="Flagged Gear">
+                <div className="row">
+                    <div className="col-md-12">
+                        <FlaggedGearTable
+                            gearList={this.state.gearList}
+                            onClick={GearActions.openGearModal}
+                        />
+                    </div>
+                </div>
+            </Tab>
+        );
+    }
+
     getUploadErrorAlert(error) {
         if (error) {
             return (
@@ -209,7 +225,8 @@ export default class GearPage extends Reflux.Component {
                 >
                     {this.getGearTab(1)}
                     {this.getCategoryTab(2)}
-                    {this.getImportExportTab(3)}
+                    {this.getFlaggedGearTab(3)}
+                    {this.getImportExportTab(4)}
                 </Tabs>
             </div>
         );
