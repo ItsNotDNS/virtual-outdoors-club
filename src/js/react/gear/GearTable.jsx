@@ -27,7 +27,8 @@ export default class GearTable extends React.Component {
             gearCode: row.code,
             depositFee: row.depositFee,
             gearDescription: row.description,
-            gearCategory: row.category
+            gearCategory: row.category,
+            gearStatus: row.statusDescription
         };
 
         return () => callback(Constants.modals.EDITING, { gear });
