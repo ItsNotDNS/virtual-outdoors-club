@@ -52,7 +52,8 @@ function defaultState() {
             gearCode: "",
             depositFee: "",
             gearCategory: "",
-            gearDescription: ""
+            gearDescription: "",
+            gearStatus: ""
         },
         fetchedGearCategoryList: false,
         categoryList: [],
@@ -170,6 +171,7 @@ export class GearStore extends Reflux.Store {
         return service.fetchGearList()
             .then(({ data, error }) => {
                 if (data) {
+                    console.log(data);
                     this.setState({
                         gearList: data,
                         rentableList: data
@@ -184,7 +186,7 @@ export class GearStore extends Reflux.Store {
 
     // opens the gear modal, mode is to specify if the modal is for creating or editing gear
     onOpenGearModal(mode = Constants.modals.CREATING, options = { gear: {} }) {
-        const { id, expectedVersion, gearCode, depositFee, gearCategory, gearDescription } = options.gear,
+        const { id, expectedVersion, gearCode, depositFee, gearCategory, gearDescription, gearStatus } = options.gear,
             newState = update(this.state, {
                 gearModal: {
                     show: { $set: true },
@@ -194,7 +196,8 @@ export class GearStore extends Reflux.Store {
                     gearCode: { $set: gearCode || "" },
                     depositFee: { $set: depositFee || "" },
                     gearCategory: { $set: gearCategory || "" },
-                    gearDescription: { $set: gearDescription || "" }
+                    gearDescription: { $set: gearDescription || "" },
+                    gearStatus: { $set: gearStatus || "" }
                 }
             });
         this.setState(newState);

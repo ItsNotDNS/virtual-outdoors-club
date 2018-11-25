@@ -31,13 +31,14 @@ export default class GearService {
             .catch(genericCatch);
     }
 
-    createGear({ gearCode, depositFee, gearDescription, gearCategory }) {
+    createGear({ gearCode, depositFee, gearDescription, gearCategory, gearStatus }) {
         return this.service.post(`${config.databaseHost}/gear`, {
             code: gearCode,
             depositFee,
             description: gearDescription,
             category: gearCategory,
-            condition: "RENTABLE"
+            condition: "RENTABLE",
+            statusDescription: gearStatus
         })
             .then((response) => {
                 return { gear: response.data };
@@ -45,7 +46,7 @@ export default class GearService {
             .catch(genericCatch);
     }
 
-    updateGear({ id, expectedVersion, gearCode, depositFee, gearDescription, gearCategory }) {
+    updateGear({ id, expectedVersion, gearCode, depositFee, gearDescription, gearCategory, gearStatus }) {
         return this.service.patch(`${config.databaseHost}/gear`, {
             id,
             expectedVersion,
@@ -53,7 +54,8 @@ export default class GearService {
                 code: gearCode,
                 depositFee,
                 description: gearDescription,
-                category: gearCategory
+                category: gearCategory,
+                statusDescription: gearStatus
             }
         })
             .then((response) => {

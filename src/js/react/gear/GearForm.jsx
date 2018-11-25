@@ -54,6 +54,13 @@ export default class GearForm extends React.Component {
                     onChange={this.handleChange}
                     value={this.props.gearCategory}
                 />
+                <LabeledInput
+                    label="Gear Status"
+                    name="gearStatus"
+                    placeholder="current gear status"
+                    onChange={this.handleChange}
+                    value={this.props.gearStatus}
+                />
             </ButtonModalForm>
         );
     }
@@ -71,5 +78,6 @@ GearForm.propTypes = {
     gearCode: PropTypes.string,
     depositFee: PropTypes.string,
     gearDescription: PropTypes.string,
-    gearCategory: PropTypes.string
+    gearCategory: PropTypes.string,
+    gearStatus: PropTypes.string
 };

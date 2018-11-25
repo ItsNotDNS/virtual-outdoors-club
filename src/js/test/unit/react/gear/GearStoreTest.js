@@ -156,7 +156,8 @@ describe("GearStore Tests", () => {
             gearCode: "",
             depositFee: "",
             gearCategory: "",
-            gearDescription: ""
+            gearDescription: "",
+            gearStatus: ""
         });
 
         gearStore.onOpenGearModal();
@@ -172,7 +173,8 @@ describe("GearStore Tests", () => {
             gearCode: "",
             depositFee: "",
             gearCategory: "",
-            gearDescription: ""
+            gearDescription: "",
+            gearStatus: ""
         });
 
         gearStore.onCloseGearModal();
@@ -188,7 +190,8 @@ describe("GearStore Tests", () => {
             gearCode: "",
             depositFee: "",
             gearCategory: "",
-            gearDescription: ""
+            gearDescription: "",
+            gearStatus: ""
         });
     });
 
