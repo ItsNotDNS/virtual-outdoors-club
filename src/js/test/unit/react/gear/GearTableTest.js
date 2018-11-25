@@ -11,21 +11,24 @@ const mockGearList = [{
         "code": "BK01",
         "description": "Book about hiking",
         "category": "book",
-        "version": 1
+        "version": 1,
+        "statusDescription": "some status"
     }, {
         "id": 2,
         "depositFee": "30.00",
         "code": "BK02",
         "description": "Mountains 101",
         "category": "book",
-        "version": 3
+        "version": 3,
+        "statusDescription": "some status"
     }, {
         "id": 3,
         "depositFee": "50.00",
         "code": "TN01",
         "description": "Tent for 4 people",
         "category": "tent",
-        "version": 1
+        "version": 1,
+        "statusDescription": "some status"
     }],
     getShallowForm = (props = {}) => {
         const emptyFunc = () => {};
@@ -59,7 +62,8 @@ describe("GearTable Tests", () => {
                 gearCode: mockGearList[0].code,
                 depositFee: mockGearList[0].depositFee,
                 gearDescription: mockGearList[0].description,
-                gearCategory: mockGearList[0].category
+                gearCategory: mockGearList[0].category,
+                gearStatus: mockGearList[0].statusDescription
             }
         })).to.be.true;
     });
