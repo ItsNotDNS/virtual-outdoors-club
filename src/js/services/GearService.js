@@ -113,8 +113,8 @@ export default class GearService {
             email: reserveGearForm.email,
             licenseName: reserveGearForm.licenseName,
             licenseAddress: reserveGearForm.licenseAddress,
-            startDate: reserveGearForm.startDate,
-            endDate: reserveGearForm.endDate,
+            startDate: moment(reserveGearForm.startDate).format("YYYY-MM-DD"),
+            endDate: moment(reserveGearForm.endDate).format("YYYY-MM-DD"),
             status: "REQUESTED",
             gear: reserveGearForm.items
         };

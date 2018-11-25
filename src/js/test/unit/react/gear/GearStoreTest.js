@@ -783,24 +783,24 @@ describe("GearStore Tests", () => {
         expect(gearStore.state.dateFilter.endDate.getTime()).to.equal(targetEndDate.getTime());
     });
 
-    it("onFetchGearListFromTo - success", () => {
-        const mockStartDate = "2018-01-01",
-            mockEndDate = "2018-01-02";
+    it("onFetchRentableListFromTo - success", () => {
+        const mockStartDate = new Date("2018-01-01"),
+            mockEndDate = new Date("2018-01-02");
         getStub.returns(Promise.resolve({ data: { data: mockGearList } }));
-        gearStore.onFetchGearListFromTo(mockStartDate, mockEndDate);
-        return gearStore.onFetchGearListFromTo(mockStartDate, mockEndDate).then(() => {
-            expect(gearStore.state.gearList).to.be.equal(mockGearList);
+        gearStore.onFetchRentableListFromTo(mockStartDate, mockEndDate);
+        return gearStore.onFetchRentableListFromTo(mockStartDate, mockEndDate).then(() => {
+            expect(gearStore.state.rentableList).to.be.equal(mockGearList);
         });
     });
 
-    it("onFetchGearListFromTo - error", () => {
-        const mockStartDate = "2018-01-01",
-            mockEndDate = "2018-01-02",
+    it("onFetchRentableListFromTo - error", () => {
+        const mockStartDate = new Date("2018-01-01"),
+            mockEndDate = new Date("2018-01-02"),
             error = { response: { data: { message: "Error message" } } };
         getStub.returns(Promise.reject(error));
-        gearStore.onFetchGearListFromTo(mockEndDate, mockStartDate);
-        return gearStore.onFetchGearListFromTo(mockEndDate, mockStartDate).then(() => {
-            expect(gearStore.state.gearList.length).to.be.equal(0);
+        gearStore.onFetchRentableListFromTo(mockEndDate, mockStartDate);
+        return gearStore.onFetchRentableListFromTo(mockEndDate, mockStartDate).then(() => {
+            expect(gearStore.state.rentableList.length).to.be.equal(0);
         });
     });
 });

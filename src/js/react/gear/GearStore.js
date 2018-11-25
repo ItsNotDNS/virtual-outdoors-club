@@ -652,18 +652,6 @@ export class GearStore extends Reflux.Store {
         this.setState(newState);
     }
 
-    onFetchGearListFromTo(startDate, endDate) {
-        const service = new GearService();
-        return service.fetchGearListFromTo(startDate, endDate)
-            .then(({ data }) => {
-                if (data) {
-                    this.setState({
-                        gearList: data
-                    });
-                }
-            });
-    }
-
     onFetchRentableListFromTo(startDate, endDate) {
         const service = new GearService();
         return service.fetchGearListFromTo(
