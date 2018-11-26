@@ -1,12 +1,13 @@
 from .error import *
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
-from ..models import Reservation
+from ..models import Reservation, Gear
 from ..tasks import cancelled, approved
 from ..views.PayPalView import process
 from ..serializers import ReservationPOSTSerializer, ReservationGETSerializer
 from decimal import Decimal
 from django.db.models import Q
+from django.db import transaction
 import datetime
 
 
@@ -170,8 +171,13 @@ class ReservationView(APIView):
             f = f[16:]  # truncates Api.Reservation. part out
             if f not in patch:
                 patch[f] = getattr(resv, f)
+        if "gear" not in patch:
+            patch["gear"] = []
+            gear = resv.gear.all()
+            for g in gear:
+                patch["gear"].append(g.pk)
 
-        sResv = ReservationPOSTSerializer(resv, data=patch)
+        sResv = ReservationPOSTSerializer(resv, data=patch, partial=True)
 
         if not sResv.is_valid():
             return serialValidation(sResv)
@@ -249,40 +255,69 @@ def checkout(request):
 
 
 @api_view(['POST'])
+@transaction.atomic
 def checkin(request):
     request = request.data
 
-    if "id" not in request and "amount" not in request:
+    if "id" not in request and "charge" not in request:
         return RespError(400, "You must specify an id to return and the amount you wish to capture.")
 
     reservation = reservationIdExists(request['id'])
     if not reservation:
         return RespError(404, "There is no reservation with the id of '" + str(request['id']) + "'.")
 
+    resvGear = reservation.gear.all()
+
+    if "gear" in request:
+        for gear in request["gear"]:
+            for ele in ["id", "status", "comment"]:
+                if ele not in gear:
+                    return RespError(400, "You must provide " + str(ele) + " for each gear object!")
+                try:
+                    g = Gear.objects.get(pk=gear["id"])
+                except:
+                    g = Gear.objects.all()
+                    return RespError(400, "There is no gear with the ID of " + str(gear["id"]))
+            g = resvGear.filter(id=gear["id"])
+            if len(g) == 0:
+                return RespError(400, "You can only return gear that was in the reservation")
+
     if reservation.status != "TAKEN":
         return RespError(406, "The reservation status must be 'taken'.")
 
     try:
-        amount = Decimal(request['amount'])
+        charge = Decimal(request['charge'])
     except ValueError:
-        return RespError(400, "'" + request['amount'] + "' is not a valid decimal number.")
+        return RespError(400, "'" + request['charge'] + "' is not a valid decimal number.")
 
-    if amount < 0:
+    if charge < 0:
         return RespError(400, "Capture amount must be greater than or equal to zero.")
 
-    msg = ""
-    if reservation.payment != "CASH":
-        status = process(reservation, amount)
+    # Passes all checks
+    try:
+        with transaction.atomic():
+            if "gear" in request:
+                for gear in request["gear"]:
+                    for ele in ["id", "status", "comment"]:
+                        g = Gear.objects.get(id=gear["id"])
+                        g.condition = gear["status"]
+                        g.statusDescription = gear["comment"]
+                        g.save()
 
-        if status:
-            return RespError(400, status)
-    else:
-        msg = "Please return the cash deposit."
+            if reservation.payment != "CASH":
+                status = process(reservation, charge)
+        
+                if status:
+                    return RespError(400, status)
+        
+            reservation.status = "RETURNED"
+            reservation.save()
+    except Exception as e:
+        return RespError(400, str(e))
 
-    reservation.status = "RETURNED"
-    reservation.save()
+    serial = ReservationGETSerializer(reservation)
 
-    return Response(msg)
+    return Response({"data": serial.data})
 
 
 @api_view(['POST'])

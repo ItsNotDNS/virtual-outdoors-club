@@ -50,6 +50,7 @@ class Gear(models.Model):
     depositFee = models.DecimalField(max_digits = 10, decimal_places = 2, validators=[MinValueValidator(0)])
     description = models.CharField(max_length = 255, blank = True)
     condition = models.CharField(max_length=20, choices=CONDITION_CHOICE, blank = True, default="RENTABLE")
+    statusDescription = models.CharField(max_length = 100, blank = True)
     version = models.IntegerField(default=1)
     history = HistoricalRecords()
 

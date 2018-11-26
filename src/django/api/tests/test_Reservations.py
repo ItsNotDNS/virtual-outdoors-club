@@ -48,6 +48,7 @@ class ReservationTestCase(TestCase):
                                       'depositFee': '12.00',
                                       'description': 'Ski poles',
                                       'condition': 'RENTABLE',
+                                      "statusDescription": "",
                                       'version': 1}],
                             'startDate': today.strftime("%Y-%m-%d"),
                             'endDate': (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
@@ -180,6 +181,7 @@ class ReservationTestCase(TestCase):
                       'depositFee': '12.00',
                       'description': 'Ski poles',
                       'condition': 'RENTABLE',
+                      "statusDescription": "",
                       'version': 1}],
             'endDate': (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
             'startDate': today.strftime("%Y-%m-%d"),
@@ -215,7 +217,16 @@ class ReservationTestCase(TestCase):
         today = datetime.datetime.today()
 
         #test for a succesful checkin of a reservation
-        request = {"id": 1, "amount": 0}
+        request = {
+                "id": 1,
+                "charge": 0,
+                "gear":[{
+                       'id': self.sp.pk,
+                       "status": "MISSING",
+                       "comment": "Didn't get returned",
+                    }
+                ]
+                }
         reservation = Reservation.objects.get(pk=1)
         reservation.status = "TAKEN"
         reservation.payment = "CASH"
@@ -235,13 +246,13 @@ class ReservationTestCase(TestCase):
                       'category': 'Ski poles',
                       'depositFee': '12.00',
                       'description': 'Ski poles',
-                      'condition': 'RENTABLE',
+                      'condition': 'MISSING',
+                      "statusDescription": "Didn't get returned",
                       'version': 1}],
             'endDate': (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
             'startDate': today.strftime("%Y-%m-%d"),
             'version': 1
             }]
-
         # tests if status of checked in reservation is "RETURNED" or not
         response = self.client.get('/api/reservation/').data['data']
         self.assertEqual(response, correctResponse)
@@ -259,7 +270,16 @@ class ReservationTestCase(TestCase):
         # test for if a reservation that does not have the "TAKEN" status is attempted to be checked in 
         reservation.status = "CANCELLED"
         reservation.save()
-        request = {"id": 1}
+        request = {
+                "id": 1,
+                "charge": 0,
+                "gear":[{
+                       'id': self.sp.pk,
+                       "status": "MISSING",
+                       "comment": "Didn't get returned",
+                    }
+                ]
+                }
         response = self.client.post('/api/reservation/checkin/', request, content_type='application/json')
         self.assertEqual(response.status_code, 406)
 
@@ -282,6 +302,7 @@ class ReservationTestCase(TestCase):
                       'depositFee': '12.00',
                       'description': 'Ski poles',
                       'condition': 'RENTABLE',
+                      "statusDescription": "",
                       'version': 1}],
             'endDate': (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
             'startDate': today.strftime("%Y-%m-%d"),
@@ -329,6 +350,7 @@ class ReservationTestCase(TestCase):
                       'depositFee': '12.00',
                       'description': 'Ski poles',
                       'condition': 'RENTABLE',
+                      "statusDescription": "",
                       'version': 1}],
             'endDate': (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
             'startDate': today.strftime("%Y-%m-%d"),
@@ -503,12 +525,63 @@ class ReservationTestCase(TestCase):
 
         patch = {
             "gear": [self.sp.pk, self.bk.pk],
-            "startDate": (today + datetime.timedelta(days=1)).strftime("%Y-%m-%d"),
+            "startDate": (today + datetime.timedelta(days=0)).strftime("%Y-%m-%d"),
         }
 
         request = {
             "id": 1,
             "expectedVersion": 1,
+            "patch": patch,
+        }
+
+        correctResponse = {
+            'startDate': (today + datetime.timedelta(days=0)).strftime("%Y-%m-%d"),
+            'id': 1,
+            'email': 'enry@email.com',
+            'endDate': (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
+            'gear': [
+                {   
+                    'id': self.sp.pk,
+                    'code': 'SP01',
+                    'category': 'Ski poles',
+                    'depositFee': '12.00',
+                    'description': 'Ski poles',
+                    'condition': 'RENTABLE',
+                    "statusDescription": "",
+                    'version': 1
+                },
+                {
+                    'id': self.bk.pk,
+                    'code': 'BK01',
+                    'category': 'Book',
+                    'depositFee': '12.00',
+                    'description': 'some book',
+                    'condition': 'RENTABLE',
+                    "statusDescription": "",
+                    'version': 1
+                }
+            ],
+            'licenseName': 'Name on their license.',
+            'status': 'REQUESTED',
+            'licenseAddress': 'Address on their license.',
+            'version': 2
+        }
+
+        response = self.client.patch("/api/reservation", request, content_type="application/json").data
+        self.assertEqual(response, correctResponse)
+
+        # Test that num of reservations is the same in the DB
+        response = self.client.get("/api/reservation/", content_type='application/json').data["data"]
+        self.assertEqual(len(response), reservationListOriginalLen)
+
+        # Test with no gear update
+        patch = {
+            "startDate": (today + datetime.timedelta(days=1)).strftime("%Y-%m-%d"),
+        }
+
+        request = {
+            "id": 1,
+            "expectedVersion": 2,
             "patch": patch,
         }
 
@@ -525,6 +598,7 @@ class ReservationTestCase(TestCase):
                     'depositFee': '12.00',
                     'description': 'Ski poles',
                     'condition': 'RENTABLE',
+                    "statusDescription": "",
                     'version': 1
                 },
                 {
@@ -534,22 +608,19 @@ class ReservationTestCase(TestCase):
                     'depositFee': '12.00',
                     'description': 'some book',
                     'condition': 'RENTABLE',
+                    "statusDescription": "",
                     'version': 1
                 }
             ],
             'licenseName': 'Name on their license.',
             'status': 'REQUESTED',
             'licenseAddress': 'Address on their license.',
-            'version': 2
+            'version': 3
         }
 
         response = self.client.patch("/api/reservation", request, content_type="application/json").data
         self.assertEqual(response, correctResponse)
 
-        # Test that num of reservations is the same in the DB
-        response = self.client.get("/api/reservation/", content_type='application/json').data["data"]
-        self.assertEqual(len(response), reservationListOriginalLen)
-#
         spCat1 = GearCategory.objects.create(name="Ski poles")
         sp1 = Gear.objects.create(code="SP02", category=spCat1, depositFee=14.00, description="Ski poles", condition="RENTABLE", version=1)
 

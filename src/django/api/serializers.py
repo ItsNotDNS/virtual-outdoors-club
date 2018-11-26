@@ -54,6 +54,7 @@ class GearSerializer(serializers.ModelSerializer):
             "depositFee",
             "description",
             "condition",
+            "statusDescription",
             "version",
         ]
 

@@ -29,6 +29,7 @@ class GearTestCase(TestCase):
                 "depositFee": "50.00",
                 "description": "A black Dakine backpack",
                 "condition": "RENTABLE",
+                "statusDescription": "",
                 "version": 1
             }, {
                 "id": 3,
@@ -37,6 +38,7 @@ class GearTestCase(TestCase):
                 "depositFee": "50.00",
                 "description": "A old red sleeping bag",
                 "condition": "RENTABLE",
+                "statusDescription": "",
                 "version": 1
             }]
         }
@@ -54,6 +56,7 @@ class GearTestCase(TestCase):
                 "depositFee": "50.00",
                 "description": "A black Dakine backpack",
                 "condition": "RENTABLE",
+                "statusDescription": "",
                 "version": 1
             }]
         }
@@ -65,7 +68,7 @@ class GearTestCase(TestCase):
             "category": "Sleeping Bag",
             "depositFee": "100.00",
             "description": "This backpack was actually a sleeping bag all along!",
-            #"condition": "RENTABLE"
+            "condition": "FLAGGED"
         }
         request = {
             "id": 2,
@@ -85,7 +88,8 @@ class GearTestCase(TestCase):
                 "category": "Sleeping Bag",
                 "depositFee": "100.00",
                 "description": "This backpack was actually a sleeping bag all along!",
-                "condition": "RENTABLE",
+                "condition": "FLAGGED",
+                "statusDescription": "",
                 "version": 2
                 }, {
                 "id": 2,
@@ -94,12 +98,46 @@ class GearTestCase(TestCase):
                 "depositFee": "50.00",
                 "description": "A black Dakine backpack",
                 "condition": "RENTABLE",
+                "statusDescription": "",
                 "version": 1
                 },
             ]
         }
 
         self.assertEqual(response, expectedResponse)
+
+        # Test illegal condition values
+        patch = {
+            "code": "SB02",
+            "category": "Sleeping Bag",
+            "depositFee": "100.00",
+            "description": "This backpack was actually a sleeping bag all along!",
+            "condition": "DELETED"
+        }
+        request = {
+            "id": 2,
+            "expectedVersion": 2,
+            "patch": patch
+        }
+        # check response data
+        response = self.client.patch("/api/gear", request, content_type='application/json')
+        self.assertEqual(response.status_code, 400)
+
+        patch = {
+            "code": "SB02",
+            "category": "Sleeping Bag",
+            "depositFee": "100.00",
+            "description": "This backpack was actually a sleeping bag all along!",
+            "condition": "ASDF:LH"
+        }
+        request = {
+            "id": 2,
+            "expectedVersion": 2,
+            "patch": patch
+        }
+        # check response data
+        response = self.client.patch("/api/gear", request, content_type='application/json')
+        self.assertEqual(response.status_code, 400)
 
 
     def test_post(self):
@@ -121,6 +159,7 @@ class GearTestCase(TestCase):
             "depositFee": request["depositFee"],
             "description": request["description"],
             "condition": "RENTABLE",
+            "statusDescription": "",
             "version": 1        # default value
         }
 
@@ -173,7 +212,7 @@ class GearTestCase(TestCase):
             "category": "Sleeping Bag",
             "depositFee": "100.00",
             "description": "This backpack was actually a sleeping bag all along!",
-            #"condition": "RENTABLE"
+            "condition": "FLAGGED"
         }
         request = {
             "id": 2,
@@ -187,7 +226,8 @@ class GearTestCase(TestCase):
             "category": patch["category"],
             "depositFee": patch["depositFee"],
             "description": patch["description"],
-            "condition": "RENTABLE",
+            "condition": "FLAGGED",
+            "statusDescription": "",
             "version": request["expectedVersion"] + 1
         }
 
@@ -201,20 +241,22 @@ class GearTestCase(TestCase):
         self.assertEqual(g.category.name, patch["category"])
         self.assertEqual(g.depositFee, Decimal(patch["depositFee"]))
         self.assertEqual(g.description, patch["description"])
-        #self.assertEqual(g.code, patch["code"])
+        self.assertEqual(g.condition, patch["condition"])
 
     def test_delete(self):
         response = self.client.delete("/api/gear?id=" + str(self.gearObj2.pk), content_type="application/json").data
         self.assertEqual(response, {"message": "Successfully deleted gear: 'SB01'"})
         
         response = self.client.get("/api/gear/", content_type='application/json').data["data"]
-        self.assertEqual(response, [{
+
+        correctResponse = [{
                 "id": 2,
                 "code": "BP01",
                 "category": "Backpack",
                 "depositFee": "50.00",
                 "description": "A black Dakine backpack",
                 "condition": "RENTABLE",
+                "statusDescription": "",
                 "version": 1
             }, {
                 "id": 3,
@@ -223,8 +265,11 @@ class GearTestCase(TestCase):
                 "depositFee": "50.00",
                 "description": "A old red sleeping bag",
                 "condition": "DELETED",
+                "statusDescription": "",
                 "version": 1
-            }])
+            }]
+
+        self.assertEqual(response, correctResponse)
 
     def test_delete_missingId(self):
         response = self.client.delete("/api/gear?code=SB02", content_type="application/json").data
