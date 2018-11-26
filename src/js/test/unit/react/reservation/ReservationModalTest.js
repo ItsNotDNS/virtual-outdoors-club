@@ -39,7 +39,7 @@ const {
                 loadAvailableGear: propActions.loadAvailableGear || emptyFunc,
                 addGearToReservation: propActions.addGearToReservation || emptyFunc,
                 saveReservationChanges: propActions.saveReservationChanges || emptyFunc
-            }
+            };
 
         return shallow(
             <ReservationModal
@@ -49,6 +49,8 @@ const {
                 data={props.data || {}}
                 edit={props.edit || {}}
                 gearSelect={props.gearSelect || {}}
+                tabSelected={props.tabSelected || 1}
+                onTabSelected={props.onTabSelected || emptyFunc}
             />
         );
     };

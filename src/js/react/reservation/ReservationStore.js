@@ -12,6 +12,7 @@ function defaultState() {
     return {
         // Reservation Page State
         fetchedReservationList: false,
+        tabSelected: 1,
         error: "",
         reservationList: [],
         reservationModal: {
@@ -26,7 +27,8 @@ function defaultState() {
             },
             data: {},
             edit: {},
-            showConfirmation: ""
+            showConfirmation: "",
+            history: []
         },
         // Payment State
         emailValidationForm: {
@@ -50,12 +52,27 @@ function defaultState() {
         dateFilter: {
             startDate: null,
             endDate: null
+        },
+        // ReturnProcessor State (uses gearList in reservationModal)
+        returnProcessor: {
+            index: -1,
+            current: {
+                id: null,
+                status: null,
+                comment: null
+            },
+            gear: [],
+            totalDeposit: "",
+            charge: "",
+            moneyToReturn: "",
+            timeout: null
         }
     };
 }
 
 // Create and export actions for use
 export const ReservationActions = Reflux.createActions([
+    "tabSelected",
     "openReservationModal",
     "closeReservationModal",
     "saveReservationChanges",
@@ -82,7 +99,15 @@ export const ReservationActions = Reflux.createActions([
     "dateFilterChanged",
     "fetchReservationListFromTo",
     "showConfirmation",
-    "hideConfirmation"
+    "hideConfirmation",
+    // ReturnProcessor Actions
+    "startReturnProcess",
+    "cancelReturnProcess",
+    "conditionChanged",
+    "commentChanged",
+    "processNext",
+    "chargeChanged",
+    "finishProcessing"
 ]);
 
 export class ReservationStore extends Reflux.Store {
@@ -90,6 +115,8 @@ export class ReservationStore extends Reflux.Store {
         super();
         this.state = defaultState();
         this.listenables = ReservationActions; // listen for actions
+
+        this.chargeChangedTimeout = this.chargeChangedTimeout.bind(this);
     }
 
     onShowConfirmation(type) {
@@ -132,6 +159,12 @@ export class ReservationStore extends Reflux.Store {
                     this.onHideConfirmation();
                 }
             });
+    }
+
+    onTabSelected(tab) {
+        this.setState({
+            tabSelected: tab
+        });
     }
 
     clone(obj) {
@@ -297,6 +330,27 @@ export class ReservationStore extends Reflux.Store {
     }
 
     onOpenReservationModal(reservationInfo) {
+        /*
+        const service = new ReservationService();
+        service.fetchReservationHistory(reservationInfo.id).then(({ data, error }) => {
+            // The purpose of this "then" is to extract the return from
+            // the JSon object, regardless of data or error
+            if (data) {
+                return data;
+            } else {
+                return error;
+            }
+        }).then((value) => {
+            // It does not matter whether there is data or an error
+            // Assign it as the "history"
+            this.setState(update(this.state, {
+                reservationModal: {
+                    history: { $set: value }
+                }
+            }));
+        });
+        */
+
         this.setState(update(this.state, {
             reservationModal: {
                 show: { $set: true },
@@ -306,8 +360,12 @@ export class ReservationStore extends Reflux.Store {
     }
 
     onCloseReservationModal() {
+        const { reservationModal, returnProcessor, tabSelected } = defaultState();
+
         this.setState(update(this.state, {
-            reservationModal: { $set: defaultState().reservationModal }
+            reservationModal: { $set: reservationModal },
+            returnProcessor: { $set: returnProcessor },
+            tabSelected: { $set: tabSelected }
         }));
     }
 
@@ -485,6 +543,156 @@ export class ReservationStore extends Reflux.Store {
                     this.setState({
                         reservationList: data
                     });
+                }
+            });
+    }
+
+    /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+     * * * ReturnProcessor Actions
+     * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+    onStartReturnProcess() {
+        const gear = this.state.reservationModal.data.gear.map((item) => {
+                return {
+                    id: item.id,
+                    depositFee: item.depositFee,
+                    comment: "",
+                    status: "Good"
+                };
+            }),
+            totalDeposit = gear.reduce((total, item) => {
+                return total + Number(item.depositFee);
+            }, 0).toFixed(2);
+
+        this.setState(update(this.state, {
+            returnProcessor: {
+                index: { $set: 0 },
+                current: { $set: gear[0] },
+                gear: { $set: gear },
+                totalDeposit: { $set: totalDeposit }
+            }
+        }));
+    }
+
+    onCancelReturnProcess() {
+        this.setState(update(this.state, {
+            returnProcessor: { $set: defaultState().returnProcessor }
+        }));
+    }
+
+    chargeChangedTimeout() {
+        const { returnProcessor } = this.state,
+            charge = Number(returnProcessor.charge),
+            totalDeposit = Number(returnProcessor.totalDeposit),
+            actualCharge = Math.min(totalDeposit, Math.max(0, charge)) || 0, // prevent NaN
+            moneyToReturn = totalDeposit - actualCharge;
+
+        this.setState(update(this.state, {
+            returnProcessor: {
+                timeout: { $set: null },
+                charge: { $set: actualCharge.toFixed(2) },
+                moneyToReturn: { $set: moneyToReturn.toFixed(2) }
+            }
+        }));
+    }
+
+    onChargeChanged(event) {
+        const { timeout } = this.state.returnProcessor,
+            { value } = event.target;
+
+        if (timeout) {
+            clearTimeout(timeout);
+        }
+
+        this.setState(update(this.state, {
+            returnProcessor: {
+                timeout: { $set: setTimeout(this.chargeChangedTimeout, 400) },
+                charge: { $set: value }
+            }
+        }));
+    }
+
+    setCharge(value) {
+        const { totalDeposit } = this.state.returnProcessor;
+
+        this.setState(update(this.state, {
+            returnProcessor: {
+                charge: { $set: value.toFixed(2) },
+                moneyToReturn: { $set: (Number(totalDeposit) - value).toFixed(2) }
+            }
+        }));
+    }
+
+    onProcessNext() {
+        const { gear, index, current } = this.state.returnProcessor,
+            noneNext = gear.length - 1 <= index,
+            nextIndex = index + 1;
+
+        this.setState(update(this.state, {
+            returnProcessor: {
+                index: { $set: nextIndex },
+                current: { $set: noneNext ? {} : gear[nextIndex] },
+                gear: {
+                    [index]: { $set: current }
+                }
+            }
+        }));
+
+        if (noneNext) {
+            const charge = this.state.returnProcessor.gear.reduce((total, item) => {
+                return item.status !== "Good" ? total + Number(item.depositFee) : total;
+            }, 0);
+
+            this.setCharge(charge);
+        }
+    }
+
+    onConditionChanged({ value }) {
+        this.setState(update(this.state, {
+            returnProcessor: {
+                current: {
+                    status: { $set: value }
+                }
+            }
+        }));
+    }
+
+    onCommentChanged(event) {
+        const { value } = (event && event.target) || {};
+        if (value) {
+            this.setState(update(this.state, {
+                returnProcessor: {
+                    current: {
+                        comment: { $set: value }
+                    }
+                }
+            }));
+        }
+    }
+
+    onFinishProcessing() {
+        const { charge, gear } = this.state.returnProcessor,
+            { id } = this.state.reservationModal.data,
+            service = new ReservationService();
+
+        return service.checkInGear(id, gear, charge)
+            .then(({ reservation, error }) => {
+                if (error) {
+                    this.setState(update(this.state, {
+                        reservationModal: {
+                            alertMsg: { $set: error },
+                            alertType: { $set: "danger" }
+                        }
+                    }));
+                } else {
+                    this.setState(update(this.state, {
+                        reservationModal: {
+                            alertMsg: { $set: "We have updated the inventory with your report." },
+                            alertType: { $set: "success" }
+                        },
+                        returnProcessor: { $set: defaultState().returnProcessor }
+                    }));
+                    this.updateModalAndList(reservation);
                 }
             });
     }

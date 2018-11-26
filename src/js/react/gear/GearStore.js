@@ -8,6 +8,7 @@ import update from "immutability-helper";
 import Constants from "../../constants/constants";
 import { toast } from "react-toastify";
 import moment from "moment";
+import ReservationService from "../../services/ReservationService";
 
 function gearCategorycompare(a, b) {
     // Use toUpperCase() to ignore character casing
@@ -99,7 +100,12 @@ function defaultState() {
             startDate: null,
             endDate: null
         },
-        rentableList: []
+        rentableList: [],
+        gearHistoryModal: {
+            show: false,
+            gearHistory: [],
+            gearReservationHistory: []
+        }
     };
 }
 
@@ -137,7 +143,9 @@ export const GearActions = Reflux.createActions([
     "gearStatusCheckBoxChange",
     "dateFilterChanged",
     "fetchGearListFromTo",
-    "fetchRentableListFromTo"
+    "fetchRentableListFromTo",
+    "openGearHistoryModal",
+    "closeGearHistoryModal"
 ]);
 
 export class GearStore extends Reflux.Store {
@@ -665,5 +673,50 @@ export class GearStore extends Reflux.Store {
                     });
                 }
             });
+    }
+
+    onOpenGearHistoryModal(gear) {
+        const gearService = new GearService(),
+            reservationService = new ReservationService(),
+            gearHistoryPromise = gearService.fetchGearHistory(gear.id)
+                .then(({ data, error }) => {
+                    if (data) {
+                        return data;
+                    } else {
+                        return error;
+                    }
+                }),
+            gearReservationHistoryPromise =
+                reservationService.fetchGearReservationHistory(gear.id)
+                    .then(({ data, error }) => {
+                        if (data) {
+                            return data;
+                        } else {
+                            return error;
+                        }
+                    });
+
+        Promise.all([gearHistoryPromise, gearReservationHistoryPromise])
+            .then((values) => {
+                const gearHistory = values[0],
+                    gearReservationHistory = values[1];
+
+                // It does not matter if the value is real or an error
+                // Set it as the history
+                this.setState(update(this.state, {
+                    gearHistoryModal: {
+                        show: { $set: true },
+                        gear: { $set: gear },
+                        gearHistory: { $set: gearHistory },
+                        gearReservationHistory: { $set: gearReservationHistory }
+                    }
+                }));
+            });
+    }
+
+    onCloseGearHistoryModal() {
+        this.setState(update(this.state, {
+            gearHistoryModal: { $set: defaultState().gearHistoryModal }
+        }));
     }
 }

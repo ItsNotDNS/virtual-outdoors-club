@@ -318,7 +318,7 @@ def checkin(request):
 
     serial = ReservationGETSerializer(reservation)
 
-    return Response({"data": serial.data})
+    return Response(serial.data)
 
 
 @api_view(['POST'])

@@ -58,7 +58,15 @@ module.exports = function(config) {
                     statements: 85,
                     lines: 85,
                     branches: 85,
-                    functions: 85
+                    functions: 85,
+                    overrides: {
+                        "src/js/react/reservation/ReturnProcessor.jsx": {
+                            statements: 0,
+                            lines: 0,
+                            branches: 0,
+                            functions: 0
+                        }
+                    }
                 }
             }
         },

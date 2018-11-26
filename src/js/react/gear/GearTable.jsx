@@ -15,6 +15,7 @@ export default class GearTable extends React.Component {
     constructor() {
         super();
         this.getActionCell = this.getActionCell.bind(this);
+        this.getComponents = this.getComponents.bind(this);
         this.state = {
             filteredGearList: []
         };
@@ -110,6 +111,13 @@ export default class GearTable extends React.Component {
                     <StatusSearchBar />
                 </div>
                 <Table
+                    hover
+                    selectRow={{
+                        mode: "radio",
+                        hideSelectColumn: true,
+                        clickToSelect: true
+                        /* onSelect: (row) => this.props.onSelectRow && this.props.onSelectRow(row) */
+                    }}
                     {...props.baseProps}
                     defaultSorted={[{ dataField: "code", order: "asc" }]}
                 />
@@ -134,6 +142,7 @@ export default class GearTable extends React.Component {
 GearTable.propTypes = {
     onClickEdit: PropTypes.func.isRequired,
     onClickDelete: PropTypes.func.isRequired,
+    onSelectRow: PropTypes.func,
     gearList: PropTypes.array.isRequired,
     checkboxOptions: PropTypes.object.isRequired
 };

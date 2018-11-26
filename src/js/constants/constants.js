@@ -17,6 +17,13 @@ export default {
         EXECUTIVE: "executive",
         MEMBER: "member"
     },
+    gear: {
+        conditions: {
+            RENTABLE: "Rentable",
+            FLAGGED: "Flagged",
+            NEEDS_REPAIR: "Needs Repair"
+        }
+    },
     reservations: {
         status: {
             "REQUESTED": "REQUESTED",

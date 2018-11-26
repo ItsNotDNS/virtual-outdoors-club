@@ -88,4 +88,41 @@ export default class ReservationService {
             return { error: error.response.data.message };
         });
     }
+
+    /*
+    fetchGearReservationHistory(gearId) {
+        return this.service.get(
+            `${config.databaseHost}/reservation?gearId=${gearId}`
+        ).then((response) => {
+            return {
+                data: response.data.data
+            };
+        }).catch((error) => {
+            return {
+                error: error.response.data.message
+            };
+        });
+    }
+
+    fetchReservationHistory(reservationId) {
+        return this.service.get(
+            `${config.databaseHost}/reservation/history?id=${reservationId}`
+        ).then((response) => {
+            return {
+                data: response.data.data
+            };
+        }).catch((error) => {
+            return {
+                error: error.response.data.message
+            };
+        });
+    }
+*/
+
+    checkInGear(id, gear, charge) {
+        return this.service.post(`${config.databaseHost}/reservation/checkin`, { id, gear, charge })
+            .then((response) => {
+                return { reservation: response.data };
+            }).catch(genericCatch);
+    }
 }

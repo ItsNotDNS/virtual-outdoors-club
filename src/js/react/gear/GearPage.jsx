@@ -15,6 +15,7 @@ import Constants from "../../constants/constants";
 import ErrorAlert from "../components/ErrorAlert";
 import ConfirmationDialog from "../components/ConfirmationDialog";
 import FileButton from "../components/FileButton";
+// import GearHistoryModal from "./GearHistoryModal";
 
 export default class GearPage extends Reflux.Component {
     constructor() {
@@ -41,7 +42,7 @@ export default class GearPage extends Reflux.Component {
 
     getGearTab(tabKey) {
         return (
-            <Tab eventKey={tabKey} title="Gear">
+            <Tab eventKey={tabKey} title="Gear" className="gear-table">
                 <div className="row">
                     <div className="col-md-12">
                         <button className="btn btn-primary span" onClick={this.wrapOpenModal(GearActions.openGearModal)}>
@@ -59,6 +60,7 @@ export default class GearPage extends Reflux.Component {
                     <div className="col-md-12">
                         <GearTable
                             gearList={this.state.gearList}
+                            onSelectRow={GearActions.openGearHistoryModal}
                             onClickEdit={GearActions.openGearModal}
                             onClickDelete={GearActions.openDeleteGearModal}
                             checkboxOptions={this.state.checkboxOptions}
@@ -78,6 +80,10 @@ export default class GearPage extends Reflux.Component {
                     onClose={GearActions.closeDeleteGearModal}
                     onSubmit={GearActions.submitDeleteGearModal}
                 />
+                {/* <GearHistoryModal
+                    {...this.state.gearHistoryModal}
+                    onClose={GearActions.closeGearHistoryModal}
+                /> */}
             </Tab>
         );
     }

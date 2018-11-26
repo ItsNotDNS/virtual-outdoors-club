@@ -6,6 +6,7 @@ import DatePicker from "./DatePickerV2";
 import constants from "../../constants/constants";
 import moment from "moment";
 import Select from "react-select";
+import ReturnProcessor from "./ReturnProcessor";
 
 const {
     status: {
@@ -131,7 +132,7 @@ export default class ReservationModal extends React.Component {
                 <div>Paid</div>
             ),
             [TAKEN]: (
-                <div>Taken</div>
+                <ReturnProcessor />
             ),
             [RETURNED]: (
                 <div>Returned</div>

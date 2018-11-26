@@ -262,4 +262,14 @@ export default class GearService {
             return { data: response.data.data };
         }).catch(genericCatch);
     }
+
+    fetchGearHistory(gearId) {
+        return this.service.get(
+            `${config.databaseHost}/gear/history?id=${gearId}`
+        ).then((response) => {
+            return { data: response.data.data };
+        }).catch((error) => {
+            return { error: error.response.data.message };
+        });
+    }
 };
