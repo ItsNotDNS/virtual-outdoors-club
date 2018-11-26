@@ -10,8 +10,8 @@ import simple_history.models
 
 def initialData(apps, schema_editor):
     users = ["member", "executive"]
-    variables = ["maxLength", "maxFuture", "maxRentals"]
-    values = [14, 7, 3]
+    variables = ["maxLength", "maxFuture", "maxReservations", "maxGearPerReservation"]
+    values = [14, 7, 3, 5]
 
     for i in range(len(variables)):
         try:

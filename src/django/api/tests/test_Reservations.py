@@ -754,7 +754,7 @@ class ReservationTestCase(TestCase):
         # A reservation is already created in the startup, so this is already at the limit
         request = {
             "member": {
-                "maxRentals": 1
+                "maxReservations": 1
             }
         }
         response = self.client.post("/api/system/variability", request, content_type="application/json")

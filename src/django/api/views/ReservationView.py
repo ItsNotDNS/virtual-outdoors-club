@@ -116,7 +116,7 @@ class ReservationView(APIView):
                 return RespError(400, "'" + str(key) + "' is not valid with this POST method, please resubmit the "
                                                        "request without it.")
 
-        sRes = ReservationPOSTSerializer(data=newRes)
+        sRes = ReservationPOSTSerializer(data=newRes, context={'request':request})
 
         if not sRes.is_valid():
             return serialValidation(sRes)
@@ -127,6 +127,7 @@ class ReservationView(APIView):
 
     # Edit gear in reservation
     def patch(self, request):
+        orgRequest = request
         request = request.data
         allowedPatchMethods = {
             "gear": True,
@@ -177,7 +178,7 @@ class ReservationView(APIView):
             for g in gear:
                 patch["gear"].append(g.pk)
 
-        sResv = ReservationPOSTSerializer(resv, data=patch, partial=True)
+        sResv = ReservationPOSTSerializer(resv, data=patch, partial=True, context={'request':orgRequest})
 
         if not sResv.is_valid():
             return serialValidation(sResv)

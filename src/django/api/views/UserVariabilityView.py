@@ -18,12 +18,13 @@ class UserVariabilityView(APIView):
         request = request.data
     
         allowedMemberTypes = ["executive", "member"]
-        allowedVariables = ["maxLength", "maxFuture", "maxRentals"]
+        allowedVariables = ["maxLength", "maxFuture", "maxReservations", "maxGearPerReservation"]
     
         errorMessages = {
             "maxLength": "max reservation length",
             "maxFuture": "max days in future can reserve",
-            "maxRentals": "max number of rentals",
+            "maxReservations": "max number of rentals",
+            "maxGearPerReservation": "max number of gear per reservation"
         }
     
         # Error checking
