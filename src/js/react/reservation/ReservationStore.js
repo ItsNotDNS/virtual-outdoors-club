@@ -301,8 +301,8 @@ export class ReservationStore extends Reflux.Store {
 
     parseReservationData(reservation) {
         reservation = this.clone(reservation);
-        reservation.startDate = new Date(reservation.startDate);
-        reservation.endDate = new Date(reservation.endDate);
+        reservation.startDate = moment(reservation.startDate, "YYYY-MM-DD").toDate();
+        reservation.endDate = moment(reservation.endDate, "YYYY-MM-DD").toDate();
 
         return reservation;
     }

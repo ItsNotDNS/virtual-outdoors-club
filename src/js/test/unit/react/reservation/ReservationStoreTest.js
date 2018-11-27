@@ -209,10 +209,11 @@ describe("ReservationStore Test", () => {
     });
 
     it("onOpenReservationModal", () => {
-        const reservationData = {
-            startDate: new Date(),
-            endDate: new Date()
-        };
+        const dateFormat = "YYYY-MM-DD",
+            reservationData = {
+                startDate: moment(moment().format(dateFormat), dateFormat).toDate(),
+                endDate: moment(moment().format(dateFormat), dateFormat).toDate()
+            };
 
         // Stub getting of Reservation History
         axiosGetStub.returns(Promise.resolve())
