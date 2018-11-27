@@ -27,7 +27,7 @@ before_script:
   - psql -c "CREATE DATABASE outdoors_club_db"
   # runs django migrations and creates worker
   - python src/django/manage.py migrate
-  - python src/django/manage.py createworker
+  - python src/django/manage.py createworkers
 
 script:
   # runs the Django/backend unit tests with a coverage reporter

@@ -1,14 +1,39 @@
-from background_task import background
-from .models import Reservation
-from django.core import mail
 from .views.PayPalView import process
+from background_task import background
+from .models import Gear, Reservation, GearStat
+from .emailing import EmailThread
+from django.db.models import F
 import datetime
-import threading
 
 
 @background()
-def worker():
+def stats_worker():
+    create = False
+    if datetime.datetime.today().weekday() == 0:
+        create = True
 
+    for gear in Gear.objects.all():
+        try:
+            gs = GearStat.objects.get(gearID=gear, counter__lt=7)
+        except GearStat.DoesNotExist:
+            gs = None
+
+        if gear.reservation_set.filter(status="TAKEN").exists():
+            if gs:
+                gs.usage += 1
+            elif create:
+                gs = GearStat.objects.create(gearID=gear, usage=1)
+        elif not gs and create:
+            gs = GearStat.objects.create(gearID=gear, usage=0)
+
+        if gs:
+            gs.save()
+
+    GearStat.objects.filter(counter__lt=7).update(counter=F('counter')+1)
+
+
+@background()
+def email_worker():
     today = datetime.datetime.today()
     tomorrow = (today + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
 
@@ -55,43 +80,3 @@ def worker():
 
     if len(messages) > 0:
         EmailThread(messages).start()
-
-
-def cancelled(res):
-    body = "Hey " + res.licenseName.split()[0] + ",\n\nThis is an automated email letting you know that your" \
-           " reservation for " + str(res.startDate) + " to " + str(res.endDate) + " has been cancelled. If you have" \
-           " concerns or questions, please contact the University of Alberta Outdoors Club as soon as possible so" \
-           " appropriate action can be taken to resolve the issue.\n\nThanks,\nUniversity of Alberta Outdoors Club"
-
-    EmailThread([{"subject": "Reservation Cancelled", "body": body, "to": [res.email]}]).start()
-
-
-def approved(res):
-    body = "Hey " + res.licenseName.split()[0] + ",\n\nThis is an automated email letting you know that your" \
-           " reservation for " + str(res.startDate) + " to " + str(res.endDate) + " has been approved." \
-           " You'll recieve an email the day before allowing you to pay through Paypal, or can come to the" \
-           " office to pay in person when you come to pick up your gear on " + str(res.startDate) + ""\
-           "\n\nThanks,\nUniversity of Alberta Outdoors Club"
-
-    EmailThread([{"subject": "Reservation Approved", "body": body, "to": [res.email]}]).start()
-
-
-# Async email sender
-class EmailThread(threading.Thread):
-
-    def __init__(self, messages):
-        self.messages = messages
-        threading.Thread.__init__(self)
-
-    # TODO Change dev@ualberta.ca to actual email address
-    def run(self):
-        connection = mail.get_connection(fail_silently=False)
-        connection.open()
-
-        mass = []
-
-        for item in self.messages:
-            mass.append(mail.EmailMessage(item['subject'], item['body'], "dev@ualberta.ca", item['to']))
-
-        connection.send_messages(mass)
-        connection.close()

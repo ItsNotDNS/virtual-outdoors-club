@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.postgres.fields import JSONField
 from django.core.validators import MinValueValidator
 from simple_history.models import HistoricalRecords
 
@@ -108,16 +107,8 @@ class Permission(models.Model):
     permissionType = models.CharField(max_length = 30, choices = PERMISSION_CHOICE, default = None)
 
 
-# retain history of payment methods with each reservation
-class PaymentHistory(models.Model):
-    CASH = "CASH"
-    PAYPAL = "PAYPAL"
-    UNDECIDED = "UNDECIDED"
-    PAYMENT_CHOICE = (
-        (CASH, "Cash"),
-        (PAYPAL, "Paypal"),
-        (UNDECIDED, "Undecided"),
-    )
+class GearStat(models.Model):
+    counter = models.PositiveSmallIntegerField(default=0)
+    gearID = models.ForeignKey(Gear, on_delete = models.CASCADE)
+    usage = models.DecimalField(max_digits=4, decimal_places=2)
 
-    reservationID = models.ForeignKey(Reservation, on_delete = models.PROTECT, default = None)
-    paymentType = models.CharField(max_length = 20, choices = PAYMENT_CHOICE, default = None)

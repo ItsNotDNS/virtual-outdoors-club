@@ -1,6 +1,6 @@
 from django.core import mail
 from django.test import TestCase
-from ..tasks import cancelled, approved
+from ..emailing import cancelled, approved
 from ..models import Reservation
 
 

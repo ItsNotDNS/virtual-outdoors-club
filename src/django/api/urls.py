@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from .views.GearCategoryView import GearCategoryView
-from .views import GearView, PayPalView, ReservationView, UserVariabilityView, MemberView, BlackListView
+from .views import GearView, PayPalView, ReservationView, UserVariabilityView, MemberView, BlackListView, StatsView
 
 
 urlpatterns = [
@@ -20,4 +20,5 @@ urlpatterns = [
     url(r'^system/accounts/?$', UserVariabilityView.changePassword, name="changePassword"),
     url(r'^members/blacklist/?$', BlackListView.BlackListView.as_view(), name="BlackList"),
     url(r'^members/?$', MemberView.MemberView.as_view(), name="Members"),
+    url(r'^statistics/?$', StatsView.statistics, name="Statistics")
 ]

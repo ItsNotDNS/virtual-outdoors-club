@@ -2,7 +2,7 @@ from .error import *
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from ..models import Reservation, Gear
-from ..tasks import cancelled, approved
+from ..emailing import cancelled, approved
 from ..views.PayPalView import process
 from ..serializers import ReservationPOSTSerializer, ReservationGETSerializer
 from decimal import Decimal
@@ -216,16 +216,19 @@ def checkout(request):
 
     today = datetime.date.today()
     if reservation.endDate < today:
-        return RespError(406, "You cannot checkout a reservation that ends before today; please fix the endDate and try again.")
+        return RespError(406, "You cannot checkout a reservation that ends before today; please fix the endDate and"
+                              " try again.")
 
     if reservation.startDate > today:
-        return RespError(406, "You cannot checkout a reservation that starts after today; please fix the startDate and try again.")
+        return RespError(406, "You cannot checkout a reservation that starts after today; please fix the startDate and"
+                              " try again.")
 
     gearList = reservation.gear.all()  
     for gear in gearList:
         if gear.condition != "RENTABLE":
-            return RespError(403, "The gear item with the code of '" + str(gear.code) + "' is not 'rentable', and thus can't be checked out."
-                            + " To still proceed with checking out, you must remove the gear item from this reservation.")
+            return RespError(403, "The gear item with the code of '" + str(gear.code) + "' is not 'rentable', and "
+                                  "thus can't be checked out. To still proceed with checking out, "
+                                  "you must remove the gear item from this reservation.")
         try: 
             # the below query does the following: 
             # Finds all reservations with a gear item in the reservation attempted to be checked out.
@@ -234,9 +237,10 @@ def checkout(request):
             latestResWithGearItem = Reservation.objects.filter(gear=gear).filter(endDate__lte=today).latest('endDate', 'startDate')
 
             if latestResWithGearItem.status != "CANCELLED" and latestResWithGearItem.status != "RETURNED":
-                return RespError(406, "The gear item with the code of '" + str(gear.code) + "' is currently held in another reservation (id #"
-                                + str(latestResWithGearItem.id) + "), because that reservation hasn't been marked as 'returned' or 'cancelled'. You must remove the gear item"
-                                "from your reservation in order to proceed.") 
+                return RespError(406, "The gear item with the code of '" + str(gear.code) + "' is currently held "
+                                      "in another reservation (id #" + str(latestResWithGearItem.id) + "), because "
+                                      "that reservation hasn't been marked as 'returned' or 'cancelled'. You must "
+                                      "remove the gear item from your reservation in order to proceed.")
 
         except Reservation.DoesNotExist:
             # no other reservation currently with the gear item.
@@ -275,10 +279,10 @@ def checkin(request):
                 if ele not in gear:
                     return RespError(400, "You must provide " + str(ele) + " for each gear object!")
                 try:
-                    g = Gear.objects.get(pk=gear["id"])
-                except:
-                    g = Gear.objects.all()
+                    Gear.objects.get(pk=gear["id"])
+                except Gear.DoesNotExist:
                     return RespError(400, "There is no gear with the ID of " + str(gear["id"]))
+
             g = resvGear.filter(id=gear["id"])
             if len(g) == 0:
                 return RespError(400, "You can only return gear that was in the reservation")
@@ -299,11 +303,10 @@ def checkin(request):
         with transaction.atomic():
             if "gear" in request:
                 for gear in request["gear"]:
-                    for ele in ["id", "status", "comment"]:
-                        g = Gear.objects.get(id=gear["id"])
-                        g.condition = gear["status"]
-                        g.statusDescription = gear["comment"]
-                        g.save()
+                    g = Gear.objects.get(id=gear["id"])
+                    g.condition = gear["status"]
+                    g.statusDescription = gear["comment"]
+                    g.save()
 
             if reservation.payment != "CASH":
                 status = process(reservation, charge)
