@@ -2,13 +2,16 @@ from django.core import mail
 import threading
 
 
-def cancelled(res):
-    body = "Hey " + res.licenseName.split()[0] + ",\n\nThis is an automated email letting you know that your" \
-           " reservation for " + str(res.startDate) + " to " + str(res.endDate) + " has been cancelled. If you have" \
-           " concerns or questions, please contact the University of Alberta Outdoors Club as soon as possible so" \
-           " appropriate action can be taken to resolve the issue.\n\nThanks,\nUniversity of Alberta Outdoors Club"
+def cancelled(reservations):
+    emails = []
+    for res in reservations:
+        body = "Hey " + res.licenseName.split()[0] + ",\n\nThis is an automated email letting you know that your" \
+               " reservation for " + str(res.startDate) + " to " + str(res.endDate) + " has been cancelled. If you have" \
+               " concerns or questions, please contact the University of Alberta Outdoors Club as soon as possible so" \
+               " appropriate action can be taken to resolve the issue.\n\nThanks,\nUniversity of Alberta Outdoors Club"
+        emails.append({"subject": "Reservation Cancelled", "body": body, "to": [res.email]})
 
-    EmailThread([{"subject": "Reservation Cancelled", "body": body, "to": [res.email]}]).start()
+    EmailThread(emails).start()
 
 
 def approved(res):
