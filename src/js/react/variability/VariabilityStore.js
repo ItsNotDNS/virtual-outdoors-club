@@ -56,7 +56,7 @@ export class VariableStore extends Reflux.Store {
             settings:
                 {
                     [type]: {
-                        [change.name]: { $set: parseInt(change.value) }
+                        [change.name]: { $set: parseInt(change.value) || "" }
                     }
                 }
         });
