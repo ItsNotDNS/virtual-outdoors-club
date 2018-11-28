@@ -8,6 +8,7 @@ ssh -i /tmp/key_outdoors.pem ubuntu@199.116.235.142 <<EOF
     pkill -f process_tasks
     git checkout master
     git pull
+    exit
     pip3 install -r requirements.txt
     python3 ./src/django/manage.py createworkers --wipe
     python3 ./src/django/manage.py process_tasks &
