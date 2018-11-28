@@ -1,7 +1,16 @@
 from rest_framework import serializers
-from .models import Gear, GearCategory, Reservation, UserVariability, Member, BlackList
+from .models import Gear, GearCategory, Reservation, UserVariability, Member, BlackList, System
+from datetime import datetime
 from django.db.models import Q
 import datetime, pytz
+
+class SystemSerializer(serializers.ModelSerializer):
+     class Meta:
+        model = System
+        fields = [
+            "service",
+            "disabled"
+        ]
 
 
 class UserVariabilitySerializer(serializers.ModelSerializer):

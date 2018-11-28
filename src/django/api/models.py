@@ -5,8 +5,8 @@ from simple_history.models import HistoricalRecords
 
 # system that enables particular parts of the system to be rendered available or disabled
 class System(models.Model):
-    service = models.CharField(max_length = 100)
-    enabled = models.BooleanField(default = True)
+    service = models.CharField(max_length = 100, primary_key=True)
+    disabled = models.BooleanField(default = False)
 
 
 # set a standard value for specific parameters in the system for members

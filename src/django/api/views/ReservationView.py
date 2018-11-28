@@ -1,7 +1,7 @@
 from .error import *
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
-from ..models import Reservation, Gear
+from ..models import Reservation, System, Gear
 from ..emailing import cancelled, approved
 from ..views.PayPalView import process
 from ..serializers import ReservationPOSTSerializer, ReservationGETSerializer
@@ -98,6 +98,23 @@ class ReservationView(APIView):
 
     # Attempt to create a new reservation
     def post(self, request):
+
+        # Get the value of the disableSys boolean from System in the DB.
+        # If it doesn't exist, initialize it to the default value of False
+        try:
+            disableSys = System.objects.get(service="disableSys")
+            disableSysBool = disableSys.disabled
+
+        except System.DoesNotExist:
+            # by default, the rental system is enabled (disableSys's value by default = False). Thus:
+            serviceEntry = System.objects.create(service="disableSys") 
+            serviceEntry.save()
+            disableSysBool = False
+
+        # Before making any reservations, check if the rental system is disabled or not.
+        if disableSysBool:
+            return RespError(403, "You cannot make reservations because the rental system is currently disabled.")
+
         newRes = request.data
 
         properties = {
