@@ -4,7 +4,8 @@ ssh -i /tmp/key_outdoors.pem ubuntu@199.116.235.142 <<EOF
     ssh-add ~/.ssh/deploy_rsa
     source outdoorsclubenv/bin/activate
     cd virtual-outdoors-club
-    pkill -f manage.py
+    pkill -f runserver
+    pkill -f process_tasks
     git checkout master
     git pull
     pip3 install -r requirements.txt
