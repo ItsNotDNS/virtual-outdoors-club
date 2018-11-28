@@ -24,7 +24,8 @@ export default class VariabilityService {
             member: {
                 "maxLength": settings[MEMBER].maxReservationLength,
                 "maxFuture": settings[MEMBER].maxDaysInFutureCanStart,
-                "maxRentals": settings[MEMBER].maxItemsReserved
+                "maxGearPerReservation": settings[MEMBER].maxItemsReserved,
+                "maxReservations": settings[MEMBER].maxReservations
             }
         };
         return axios.post(`${config.databaseHost}/system/variability`, data)
@@ -43,7 +44,8 @@ export default class VariabilityService {
             executive: {
                 "maxLength": settings[EXECUTIVE].maxReservationLength,
                 "maxFuture": settings[EXECUTIVE].maxDaysInFutureCanStart,
-                "maxRentals": settings[EXECUTIVE].maxItemsReserved
+                "maxGearPerReservation": settings[EXECUTIVE].maxItemsReserved,
+                "maxReservations": settings[EXECUTIVE].maxReservations
             }
         };
         return axios.post(`${config.databaseHost}/system/variability`, data)

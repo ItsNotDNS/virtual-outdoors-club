@@ -41,7 +41,7 @@ describe("VariabilityStore Tests", () => {
         const error = { response: { data: { message: "Error message" } } };
         getStub.returns(Promise.reject(error));
         return store.onFetchSystemVariables().then(() => {
-            expect(store.state.error).to.be.true;
+            expect(store.state.fetchError).to.be.true;
         });
     });
 
@@ -49,28 +49,34 @@ describe("VariabilityStore Tests", () => {
         const error = { response: { data: {} } };
         getStub.returns(Promise.reject(error));
         return store.onFetchSystemVariables().then(() => {
-            expect(store.state.error).to.be.true;
+            expect(store.state.fetchError).to.be.true;
         });
     });
 
     it("onFetchSystemVariables - success path", () => {
         getStub.returns(Promise.resolve({ data: {
             data: [
-                {variable: "membermaxRentals", value: 8},
-                {variable: "membermaxFuture", value: 7},
-                {variable: "membermaxLength", value: 12},
-                {variable: "executivemaxRentals", value: 5},
-                {variable: "executivemaxFuture", value: 4},
-                {variable: "executivemaxLength", value: 6}
+                {variable: "executivemaxGearPerReservation", value: 6},
+                {variable: "executivemaxFuture", value: 7},
+                {variable: "executivemaxLength", value: 5},
+                {variable: "executivemaxReservations", value: 8},
+                {variable: "membermaxGearPerReservation", value: 10},
+                {variable: "membermaxFuture", value: 11},
+                {variable: "membermaxLength", value: 9},
+                {variable: "membermaxReservations", value: 12}
             ] } }));
         return store.onFetchSystemVariables().then(() => {
             expect(store.state.error).to.be.false;
-            expect(store.state.settings[EXECUTIVE].maxReservationLength).to.equal(6);
-            expect(store.state.settings[EXECUTIVE].maxDaysInFutureCanStart).to.equal(4);
-            expect(store.state.settings[EXECUTIVE].maxItemsReserved).to.equal(5);
-            expect(store.state.settings[MEMBER].maxReservationLength).to.equal(12);
-            expect(store.state.settings[MEMBER].maxDaysInFutureCanStart).to.equal(7);
-            expect(store.state.settings[MEMBER].maxItemsReserved).to.equal(8);
+
+            expect(store.state.settings[EXECUTIVE].maxItemsReserved).to.equal(6);
+            expect(store.state.settings[EXECUTIVE].maxDaysInFutureCanStart).to.equal(7);
+            expect(store.state.settings[EXECUTIVE].maxReservationLength).to.equal(5);
+            expect(store.state.settings[EXECUTIVE].maxReservations).to.equal(8);
+
+            expect(store.state.settings[MEMBER].maxItemsReserved).to.equal(10);
+            expect(store.state.settings[MEMBER].maxDaysInFutureCanStart).to.equal(11);
+            expect(store.state.settings[MEMBER].maxReservationLength).to.equal(9);
+            expect(store.state.settings[MEMBER].maxReservations).to.equal(12);
         });
     });
 

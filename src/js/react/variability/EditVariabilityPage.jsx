@@ -9,6 +9,7 @@ import { VariableStore, VariableActions } from "./VariabilityStore";
 import { ToastContainer } from "react-toastify";
 import { MemberActions } from "../members/MemberStore";
 import { Tab, Tabs } from "react-bootstrap";
+import ErrorAlert from "../components/ErrorAlert";
 
 export default class EditVariabilityPage extends Reflux.Component {
     constructor() {
@@ -48,22 +49,28 @@ export default class EditVariabilityPage extends Reflux.Component {
             <Tab eventKey={tabKey} title="Member Settings">
                 <div className="col-md-6 margin-top-2">
                     <LabeledInput
-                        label="Max Reservation Length (days)"
+                        label="Max Reservation Length (in days)"
                         name="maxReservationLength"
                         onChange={this.handleChangeWrapper(onMemberChange)}
                         value={memberValues.maxReservationLength}
                     />
                     <LabeledInput
-                        label="Max Number of Items on Reservation"
+                        label="Max Number of Items per Reservation"
                         name="maxItemsReserved"
                         onChange={this.handleChangeWrapper(onMemberChange)}
                         value={memberValues.maxItemsReserved}
                     />
                     <LabeledInput
-                        label="Max Days in Future can Reserve"
+                        label="Max Days in Advance to Reserve"
                         name="maxDaysInFutureCanStart"
                         onChange={this.handleChangeWrapper(onMemberChange)}
                         value={memberValues.maxDaysInFutureCanStart}
+                    />
+                    <LabeledInput
+                        label="Max Number of Reservations"
+                        name="maxReservations"
+                        onChange={this.handleChangeWrapper(onMemberChange)}
+                        value={memberValues.maxReservations}
                     />
                     <button
                         className="btn btn-success submit-button"
@@ -81,22 +88,28 @@ export default class EditVariabilityPage extends Reflux.Component {
             <Tab eventKey={tabKey} title="Executive Settings">
                 <div className="col-md-6 margin-top-2">
                     <LabeledInput
-                        label="Max Reservation Length (days)"
+                        label="Max Reservation Length (in days)"
                         name="maxReservationLength"
                         onChange={this.handleChangeWrapper(onExecChange)}
                         value={execValues.maxReservationLength}
                     />
                     <LabeledInput
-                        label="Max Number of Items on Reservation"
+                        label="Max Number of Items per Reservation"
                         name="maxItemsReserved"
                         onChange={this.handleChangeWrapper(onExecChange)}
                         value={execValues.maxItemsReserved}
                     />
                     <LabeledInput
-                        label="Max Days in Future can Reserve"
+                        label="Max Days in Advance to Reserve"
                         name="maxDaysInFutureCanStart"
                         onChange={this.handleChangeWrapper(onExecChange)}
                         value={execValues.maxDaysInFutureCanStart}
+                    />
+                    <LabeledInput
+                        label="Max Number of Reservations"
+                        name="maxReservations"
+                        onChange={this.handleChangeWrapper(onExecChange)}
+                        value={execValues.maxReservations}
                     />
                     <button
                         className="btn btn-success submit-button"
@@ -114,7 +127,6 @@ export default class EditVariabilityPage extends Reflux.Component {
             onMemberChange = VariableActions.updateMemberVariable,
             execValues = this.state.settings[constants.variability.EXECUTIVE],
             memberValues = this.state.settings[constants.variability.MEMBER];
-
         return (
             <div className="variability-view">
                 <ToastContainer
@@ -129,6 +141,10 @@ export default class EditVariabilityPage extends Reflux.Component {
                 />
                 <h3>Edit System Values</h3>
                 <p>Here you can edit system values Member and Executive.</p>
+                <ErrorAlert
+                    show={this.state.fetchError}
+                    errorMessage={this.state.fetchErrorMessage}
+                />
                 <Tabs activeKey={this.state.tabSelected}
                     onSelect={MemberActions.tabSelected}
                     id="member-view-tabs"

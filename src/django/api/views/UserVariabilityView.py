@@ -45,7 +45,7 @@ class UserVariabilityView(APIView):
                 else:
                     upperBound = 99
                 if request[memberType][var] <= lowerBound or request[memberType][var] >= upperBound:
-                    return RespError(400, str(memberType).title() + " " + errorMessages[var] + " must be between " + str(lowerBound) + " and " + str(upperBound))
+                    return RespError(400, str(memberType).title() + " " + errorMessages[var] + " must be between " + str(lowerBound+1) + " and " + str(upperBound-1))
     
         # Create or update
         for memberType in request:
