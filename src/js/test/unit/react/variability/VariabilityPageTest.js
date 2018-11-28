@@ -39,10 +39,17 @@ describe("VariabilityPage Tests", () => {
         expect(actionsStub.fetchSystemVariables.calledOnce).to.be.true
     });
 
-    it("calls saveSystemVariables on click", () => {
+    it("calls onSaveExecSystemVariables on click save exec", () => {
         const page = shallow(<Page />);
-        actionsStub.saveSystemVariables = sandbox.spy();
-        page.instance().onClickSaveButton();
-        expect(actionsStub.saveSystemVariables.calledOnce).to.be.true;
+        actionsStub.saveExecSystemVariables = sandbox.spy();
+        page.instance().onClickExecSaveButton();
+        expect(actionsStub.saveExecSystemVariables.calledOnce).to.be.true;
+    });
+
+    it("calls onSaveMemberSystemVariables on click save exec", () => {
+        const page = shallow(<Page />);
+        actionsStub.saveMemberSystemVariables = sandbox.spy();
+        page.instance().onClickMemberSaveButton();
+        expect(actionsStub.saveMemberSystemVariables.calledOnce).to.be.true;
     });
 });

@@ -79,6 +79,7 @@ export default class GearTable extends React.Component {
         }, {
             dataField: "depositFee",
             text: "Fee",
+            align: "right",
             sort: true
         }, {
             dataField: "condition",
@@ -88,7 +89,10 @@ export default class GearTable extends React.Component {
             text: "Actions",
             dataField: "isDummyField",
             isDummyField: true,
-            formatter: this.getActionCell
+            formatter: this.getActionCell,
+            headerStyle: {
+                width: "15%"
+            }
         }];
     }
 
@@ -106,10 +110,8 @@ export default class GearTable extends React.Component {
     getComponents(props) {
         return (
             <div>
-                <div className="custom-search-field">
-                    <SearchBar {...props.searchProps} />
-                    <StatusSearchBar />
-                </div>
+                <SearchBar className="custom-search-field" {...props.searchProps} />
+                <StatusSearchBar />
                 <Table
                     hover
                     selectRow={{

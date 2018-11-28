@@ -34,7 +34,7 @@ const sandbox = sinon.createSandbox(),
         "code": "BK02",
         "description": "Mountains 101",
         "category": "book",
-        "condition": "RENTABLE",
+        "condition": "FLAGGED",
         "version": 3
     }, {
         "id": 3,
@@ -42,7 +42,15 @@ const sandbox = sinon.createSandbox(),
         "code": "TN01",
         "description": "Tent for 4 people",
         "category": "tent",
-        "condition": "RENTABLE",
+        "condition": "DELETED",
+        "version": 1
+    }, {
+        "id": 4,
+        "depositFee": "50.00",
+        "code": "TN021",
+        "description": "Tent for 4 people",
+        "category": "tent",
+        "condition": "NEEDS_REPAIR",
         "version": 1
     }],
     mockReservationInfo = { "email": "henry@email.com",
@@ -125,6 +133,39 @@ describe("GearStore Tests", () => {
         return gearStore.onFetchGearList().then(() => {
             expect(gearStore.state.fetchedGearList).to.be.true;
             expect(gearStore.state.gearList).to.deep.equal([]);
+            expect(gearStore.state.error).to.equal(error.response.data.message);
+        });
+    });
+
+    it("onFetchRentableGearList - success path", () => {
+        const promise = Promise.resolve({ data: { data: mockGearList } });
+        console.log(mockGearList);
+        expect(gearStore.state.fetchedRentableGearList).to.be.false;
+
+        getStub.returns(promise); // set stub to return mock data
+
+        return gearStore.onFetchRentableGearList().then(() => {
+            console.log(gearStore.state.rentableList);
+            expect(gearStore.state.fetchedRentableGearList).to.be.true;
+            expect(gearStore.state.rentableList.includes(mockGearList[0])).to.be.true;
+            expect(gearStore.state.rentableList.includes(mockGearList[1])).to.be.false;
+            expect(gearStore.state.rentableList.includes(mockGearList[2])).to.be.false;
+            expect(gearStore.state.rentableList.includes(mockGearList[3])).to.be.false;
+            expect(gearStore.state.error).to.equal("");
+        });
+    });
+
+    it("onFetchRentableGearList - error path", () => {
+        const error = { response: { data: { message: "this is an error message" } } },
+            promise = Promise.reject(error);
+
+        expect(gearStore.state.fetchedRentableGearList).to.be.false;
+
+        getStub.returns(promise); // set stub to return mock data
+
+        return gearStore.onFetchRentableGearList().then(() => {
+            expect(gearStore.state.fetchedRentableGearList).to.be.true;
+            expect(gearStore.state.rentableList).to.deep.equal([]);
             expect(gearStore.state.error).to.equal(error.response.data.message);
         });
     });
@@ -803,4 +844,5 @@ describe("GearStore Tests", () => {
             expect(gearStore.state.rentableList.length).to.be.equal(0);
         });
     });
+
 });

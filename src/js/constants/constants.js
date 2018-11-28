@@ -11,7 +11,7 @@ export default {
     },
     modals: {
         EDITING: "Editing",
-        CREATING: "Creating"
+        CREATING: "Add New"
     },
     variability: {
         EXECUTIVE: "executive",

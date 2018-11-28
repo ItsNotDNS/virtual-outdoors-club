@@ -46,7 +46,7 @@ export default class MemberTable extends React.Component {
             isDummyField: true,
             formatter: this.getBlacklistAddCell,
             headerStyle: {
-                width: "20%"
+                width: "15%"
             }
         }];
     }

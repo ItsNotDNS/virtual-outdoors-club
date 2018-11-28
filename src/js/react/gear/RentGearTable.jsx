@@ -34,12 +34,16 @@ export default class RentGearTable extends Reflux.Component {
         }, {
             dataField: "depositFee",
             text: "Deposit Fee",
+            align: "right",
             sort: true
         },
         {
             dataField: "add",
             text: "Add",
-            formatter: this.getActionCell
+            formatter: this.getActionCell,
+            headerStyle: {
+                width: "15%"
+            }
         }];
     }
 

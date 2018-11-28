@@ -101,6 +101,7 @@ function defaultState() {
             endDate: null
         },
         rentableList: [],
+        fetchedRentableGearList: false,
         gearHistoryModal: {
             show: false,
             gearHistory: [],
@@ -144,6 +145,7 @@ export const GearActions = Reflux.createActions([
     "dateFilterChanged",
     "fetchGearListFromTo",
     "fetchRentableListFromTo",
+    "fetchRentableGearList",
     "openGearHistoryModal",
     "closeGearHistoryModal"
 ]);
@@ -179,8 +181,32 @@ export class GearStore extends Reflux.Store {
             .then(({ data, error }) => {
                 if (data) {
                     this.setState({
-                        gearList: data,
-                        rentableList: data
+                        gearList: data
+                    });
+                } else {
+                    this.setState({
+                        error
+                    });
+                }
+            });
+    }
+
+    onFetchRentableGearList() {
+        const service = new GearService();
+
+        this.setState({
+            fetchedRentableGearList: true
+        });
+
+        return service.fetchGearList()
+            .then(({ data, error }) => {
+                if (data) {
+                    this.setState({
+                        rentableList: data.filter(
+                            (gear) => {
+                                return gear.condition === "RENTABLE";
+                            }
+                        )
                     });
                 } else {
                     this.setState({

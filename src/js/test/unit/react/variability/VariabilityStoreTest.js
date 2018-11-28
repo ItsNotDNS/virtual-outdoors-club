@@ -74,26 +74,49 @@ describe("VariabilityStore Tests", () => {
         });
     });
 
-    it("onSaveSystemVariables - error path", () => {
+    it("onSaveExecSystemVariables - error path", () => {
         const error = { response: { data: { message: "Error message" } } };
         postStub.returns(Promise.reject(error));
-        return store.onSaveSystemVariables().then(() => {
+        return store.onSaveExecSystemVariables().then(() => {
             expect(store.state.error).to.be.true;
         });
     });
 
-    it("onSaveSystemVariables - unexpected error path", () => {
+    it("onSaveExecSystemVariables - unexpected error path", () => {
         const error = { response: { data: { } } };
         postStub.returns(Promise.reject(error));
-        return store.onSaveSystemVariables().then(() => {
+        return store.onSaveExecSystemVariables().then(() => {
             expect(store.state.error).to.be.true;
         });
     });
 
-    it("onSaveSystemVariables - success path", () => {
-        const error = { response: { data: { message: "Error message" } } };
+    it("onSaveExecSystemVariables - success path", () => {
         postStub.returns(Promise.resolve({}));
-        return store.onSaveSystemVariables().then(() => {
+        return store.onSaveExecSystemVariables().then(() => {
+            expect(store.state.error).to.be.false;
+        });
+    });
+
+
+    it("onSaveMemberSystemVariables - error path", () => {
+        const error = { response: { data: { message: "Error message" } } };
+        postStub.returns(Promise.reject(error));
+        return store.onSaveMemberSystemVariables().then(() => {
+            expect(store.state.error).to.be.true;
+        });
+    });
+
+    it("onSaveMemberSystemVariables - unexpected error path", () => {
+        const error = { response: { data: { } } };
+        postStub.returns(Promise.reject(error));
+        return store.onSaveMemberSystemVariables().then(() => {
+            expect(store.state.error).to.be.true;
+        });
+    });
+
+    it("onSaveMemberSystemVariables - success path", () => {
+        postStub.returns(Promise.resolve({}));
+        return store.onSaveMemberSystemVariables().then(() => {
             expect(store.state.error).to.be.false;
         });
     });

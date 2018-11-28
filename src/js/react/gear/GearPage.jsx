@@ -45,19 +45,15 @@ export default class GearPage extends Reflux.Component {
             <Tab eventKey={tabKey} title="Gear" className="gear-table">
                 <div className="row">
                     <div className="col-md-12">
-                        <button className="btn btn-primary span" onClick={this.wrapOpenModal(GearActions.openGearModal)}>
-                            <i className="fas fa-plus-circle" /> Add New Gear
-                        </button>
                         <button
                             onClick={GearActions.getGearFile}
-                            className="btn btn-primary pull-right"
+                            className="btn btn-primary pull-right export-button"
                         >
-                            <i className="fas fa-file-import" /> Export Gear Data
+                            <i className="fas fa-file-import" /> Export
                         </button>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-md-12">
+                        <button className="btn btn-primary pull-right add-new-button" onClick={this.wrapOpenModal(GearActions.openGearModal)}>
+                            <i className="fas fa-plus-circle" /> Add New
+                        </button>
                         <GearTable
                             gearList={this.state.gearList}
                             onSelectRow={GearActions.openGearHistoryModal}
@@ -95,7 +91,7 @@ export default class GearPage extends Reflux.Component {
                 <div className="row">
                     <div className="col-md-12">
                         <button className="btn btn-primary" onClick={this.wrapOpenModal(GearActions.openCategoryModal)}>
-                            <i className="fas fa-plus-circle" /> Add New Category
+                            <i className="fas fa-plus-circle" /> Add New
                         </button>
                     </div>
                 </div>

@@ -29,15 +29,18 @@ export default class ReservationTable extends React.Component {
             sort: true,
             dataField: "gear[]",
             text: "Items",
+            align: "right",
             formatter: (row, data) => <div>{data.gear.length}</div>
         }, {
             sort: true,
             dataField: "startDate",
-            text: "Start Date"
+            text: "Start Date",
+            align: "right"
         }, {
             sort: true,
             dataField: "endDate",
-            text: "End Date"
+            text: "End Date",
+            align: "right"
         }, {
             sort: true,
             dataField: "status",
