@@ -2,8 +2,11 @@
 ssh -i /tmp/key_outdoors.pem ubuntu@199.116.235.142 <<EOF
     source outdoorsclubenv/bin/activate
     cd virtual-outdoors-club
-    ssh-agent bash
+    eval "$(ssh-agent -s)"
+    ssh-agent
+    ssh-add -l
     ssh-add ~/.ssh/deploy_rsa
+    ssh-add -l
     git checkout master
     git pull
     pkill -f manage.py
