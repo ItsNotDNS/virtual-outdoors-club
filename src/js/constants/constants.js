@@ -38,5 +38,11 @@ export default {
             APPROVE: "APPROVE",
             PAY_CASH: "PAY_CASH"
         }
+    },
+    gearConditions: {
+        RENTABLE: "RENTABLE",
+        FLAGGED: "FLAGGED",
+        NEEDS_REPAIR: "NEEDS_REPAIR",
+        DELETED: "DELETED"
     }
 };

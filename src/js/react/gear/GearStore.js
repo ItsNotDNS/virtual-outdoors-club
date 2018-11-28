@@ -55,6 +55,8 @@ function defaultState() {
             depositFee: "",
             gearCategory: "",
             gearDescription: "",
+            gearCondition: "",
+            gearStatus: "",
             tabSelected: 1,
             gearHistory: [],
             gearReservationHistory: []
@@ -105,6 +107,7 @@ function defaultState() {
             endDate: null
         },
         rentableList: [],
+        conditionSelected: "",
         fetchedRentableGearList: false,
         gearHistoryModal: {
             show: false,
@@ -150,6 +153,7 @@ export const GearActions = Reflux.createActions([
     "dateFilterChanged",
     "fetchGearListFromTo",
     "fetchRentableListFromTo",
+    "updateConditionDropdown",
     "fetchRentableGearList",
     "openGearHistoryModal",
     "closeGearHistoryModal"
@@ -172,6 +176,12 @@ export class GearStore extends Reflux.Store {
     onUpdateDropdown(value) {
         this.setState({
             categoryDropdown: { categorySelected: value }
+        });
+    }
+
+    onUpdateConditionDropdown(value) {
+        this.setState({
+            conditionSelected: value
         });
     }
 
@@ -236,7 +246,7 @@ export class GearStore extends Reflux.Store {
         if (Object.keys(options.gear).length !== 0 && options.gear.constructor === Object) {
             this.fetchGearHistory(options.gear);
         }
-        const { id, expectedVersion, gearCode, depositFee, gearCategory, gearDescription } = options.gear,
+        const { id, expectedVersion, gearCode, depositFee, gearCategory, gearDescription, gearCondition, gearStatus } = options.gear,
             newState = update(this.state, {
                 gearModal: {
                     show: { $set: true },
@@ -246,7 +256,9 @@ export class GearStore extends Reflux.Store {
                     gearCode: { $set: gearCode || "" },
                     depositFee: { $set: depositFee || "" },
                     gearCategory: { $set: gearCategory || "" },
-                    gearDescription: { $set: gearDescription || "" }
+                    gearDescription: { $set: gearDescription || "" },
+                    gearCondition: { $set: gearCondition || "" },
+                    gearStatus: { $set: gearStatus || "" }
                 }
             });
         this.setState(newState);

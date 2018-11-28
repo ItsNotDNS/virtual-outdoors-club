@@ -89,6 +89,10 @@
         width: 50%;
     }
 
+    .mark-as-resolve-button {
+        width: 100%;
+    }
+
     .nav {
         margin-bottom: 1%;
     }
@@ -395,6 +399,26 @@
     margin-left: 1%;
 }
 
+.gear-status-badge {
+    width: 100%;
+    border-radius: 25px;
+    &.rentable {
+        color: white;
+        background-color: #3EC300;
+    }
+    &.flagged {
+        color: white;
+        background-color: #ffc100;
+    }
+    &.deleted {
+        color: white;
+        background-color: #7f7f7f;
+    }
+    &.needs_repair {
+        color: white;
+        background-color: #E3170A;
+    }
+}
 .reservation-badge {
     width: 100%;
     border-radius: 25px;

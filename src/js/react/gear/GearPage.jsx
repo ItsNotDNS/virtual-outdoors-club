@@ -75,6 +75,8 @@ export default class GearPage extends Reflux.Component {
                     message="Are you sure you want to delete this piece of gear?"
                     onClose={GearActions.closeDeleteGearModal}
                     onSubmit={GearActions.submitDeleteGearModal}
+                    error={this.state.deleteGearModal.error}
+                    errorMessage={this.state.deleteGearModal.errorMessage}
                 />
             </Tab>
         );
@@ -112,6 +114,8 @@ export default class GearPage extends Reflux.Component {
                     message="Are you sure you want to delete this gear category?"
                     onClose={GearActions.closeDeleteGearCategoryModal}
                     onSubmit={GearActions.submitDeleteGearCategoryModal}
+                    error={this.state.deleteGearCategoryModal.error}
+                    errorMessage={this.state.deleteGearCategoryModal.errorMessage}
                 />
             </Tab>
         );

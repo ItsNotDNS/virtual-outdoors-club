@@ -9,6 +9,7 @@ import GearCategoryDropdown from "./GearCategoryDropdown";
 import { Button, Modal, Tab, Table, Tabs } from "react-bootstrap";
 import ErrorAlert from "../components/ErrorAlert";
 import { capitalizeFirstLetter } from "../utilities";
+import GearConditionDropdown from "./GearConditionDropdown";
 
 export default class GearModal extends React.Component {
     constructor(props) {
@@ -38,12 +39,9 @@ export default class GearModal extends React.Component {
                             onChange={this.handleChange}
                             value={this.props.gearCode}
                         />
-                        <LabeledInput
-                            label="Deposit Fee"
-                            name="depositFee"
-                            placeholder="50.00"
+                        <GearCategoryDropdown
                             onChange={this.handleChange}
-                            value={this.props.depositFee}
+                            value={this.props.gearCategory}
                         />
                         <LabeledInput
                             label="Description"
@@ -52,9 +50,23 @@ export default class GearModal extends React.Component {
                             onChange={this.handleChange}
                             value={this.props.gearDescription}
                         />
-                        <GearCategoryDropdown
+                        <LabeledInput
+                            label="Deposit Fee"
+                            name="depositFee"
+                            placeholder="50.00"
                             onChange={this.handleChange}
-                            value={this.props.gearCategory}
+                            value={this.props.depositFee}
+                        />
+                        <GearConditionDropdown
+                            onChange={this.handleChange}
+                            value={this.props.gearCondition}
+                        />
+                        <LabeledInput
+                            label="Gear Condition Description"
+                            name="gearStatus"
+                            placeholder="Describe the condition of this gear"
+                            onChange={this.handleChange}
+                            value={this.props.gearStatus}
                         />
                     </div>
                 </div>
@@ -243,6 +255,8 @@ GearModal.propTypes = {
     depositFee: PropTypes.string,
     gearDescription: PropTypes.string,
     gearCategory: PropTypes.string,
+    gearCondition: PropTypes.string,
+    gearStatus: PropTypes.string,
     gearHistory: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
     gearReservationHistory: PropTypes.oneOfType([PropTypes.string, PropTypes.array])
 

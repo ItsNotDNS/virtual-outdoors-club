@@ -99,7 +99,9 @@ const sandbox = sinon.createSandbox(),
         gearDescription: "",
         tabSelected: 1,
         gearHistory: [],
-        gearReservationHistory: []
+        gearReservationHistory: [],
+        gearCondition: "",
+        gearStatus: ""
     };
 
 describe("GearStore Tests", () => {
@@ -224,7 +226,9 @@ describe("GearStore Tests", () => {
             gearDescription: "",
             tabSelected: 1,
             gearHistory: [],
-            gearReservationHistory: []
+            gearReservationHistory: [],
+            gearCondition: "",
+            gearStatus: ""
         });
 
         gearStore.onCloseGearModal();
@@ -903,6 +907,8 @@ describe("GearStore Tests", () => {
         depositFee: "",
         gearCategory: "",
         gearDescription: "",
+        gearCondition: "",
+        gearStatus: "",
         tabSelected: 1000,
         gearHistory: [],
         gearReservationHistory: []
