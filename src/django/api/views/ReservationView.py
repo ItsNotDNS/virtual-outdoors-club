@@ -172,13 +172,14 @@ class ReservationView(APIView):
             f = f[16:]  # truncates Api.Reservation. part out
             if f not in patch:
                 patch[f] = getattr(resv, f)
+
         if "gear" not in patch:
             patch["gear"] = []
             gear = resv.gear.all()
             for g in gear:
                 patch["gear"].append(g.pk)
 
-        sResv = ReservationPOSTSerializer(resv, data=patch, partial=True, context={'request':orgRequest})
+        sResv = ReservationPOSTSerializer(resv, data=patch, partial=True, context={'request': orgRequest.user.username})
 
         if not sResv.is_valid():
             return serialValidation(sResv)
