@@ -89,7 +89,6 @@ export default class ReservationService {
         });
     }
 
-    /*
     fetchGearReservationHistory(gearId) {
         return this.service.get(
             `${config.databaseHost}/reservation?gearId=${gearId}`
@@ -117,7 +116,6 @@ export default class ReservationService {
             };
         });
     }
-*/
 
     checkInGear(id, gear, charge) {
         return this.service.post(`${config.databaseHost}/reservation/checkin`, { id, gear, charge })

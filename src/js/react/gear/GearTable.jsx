@@ -113,13 +113,6 @@ export default class GearTable extends React.Component {
                 <SearchBar className="custom-search-field" {...props.searchProps} />
                 <StatusSearchBar />
                 <Table
-                    hover
-                    selectRow={{
-                        mode: "radio",
-                        hideSelectColumn: true,
-                        clickToSelect: true
-                        /* onSelect: (row) => this.props.onSelectRow && this.props.onSelectRow(row) */
-                    }}
                     {...props.baseProps}
                     defaultSorted={[{ dataField: "code", order: "asc" }]}
                 />

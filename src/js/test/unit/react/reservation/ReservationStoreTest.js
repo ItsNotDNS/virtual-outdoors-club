@@ -565,4 +565,12 @@ describe("ReservationStore Test", () => {
             expect(updateModalAndListStub.called).to.be.false;
         });
     });
+
+    it("onReservationTabSelected changes state properly", () => {
+        expect(store.state.reservationModal.tabSelected).to.equal(1);
+        axiosGetStub.returns(Promise.resolve());
+        store.onReservationModalTabSelected(2);
+
+        expect(store.state.reservationModal.tabSelected).to.equal(2);
+    });
 });

@@ -6,7 +6,6 @@ import { expect } from "chai";
 import axios from "axios";
 import GearService from "../../../../services/GearService";
 import { GearActions } from "../../../../react/gear/GearStore";
-import moment from "moment";
 
 let getStub, postStub, patchStub, deleteStub,
     gearStore = new GearStore();
@@ -86,7 +85,22 @@ const sandbox = sinon.createSandbox(),
             gear: [mockGearList[0], mockGearList[1]],
             status: "REQUESTED"
         }
-    ];
+    ],
+    mockGearModal = {
+        show: false,
+        error: false,
+        errorMessage: "",
+        mode: null,
+        id: null,
+        expectedVersion: null,
+        gearCode: "",
+        depositFee: "",
+        gearCategory: "",
+        gearDescription: "",
+        tabSelected: 1,
+        gearHistory: [],
+        gearReservationHistory: []
+    };
 
 describe("GearStore Tests", () => {
     beforeEach(() => {
@@ -187,18 +201,7 @@ describe("GearStore Tests", () => {
 
     it("onOpenGearModal - open and close CREATE path", () => {
         // initial state
-        expect(gearStore.state.gearModal).to.deep.equal({
-            show: false,
-            error: false,
-            errorMessage: "",
-            mode: null,
-            id: null,
-            expectedVersion: null,
-            gearCode: "",
-            depositFee: "",
-            gearCategory: "",
-            gearDescription: ""
-        });
+        expect(gearStore.state.gearModal).to.deep.equal(mockGearModal);
 
         gearStore.onOpenGearModal();
 
@@ -213,24 +216,16 @@ describe("GearStore Tests", () => {
             gearCode: "",
             depositFee: "",
             gearCategory: "",
-            gearDescription: ""
+            gearDescription: "",
+            tabSelected: 1,
+            gearHistory: [],
+            gearReservationHistory: []
         });
 
         gearStore.onCloseGearModal();
 
         // returns to base state
-        expect(gearStore.state.gearModal).to.deep.equal({
-            show: false,
-            error: false,
-            errorMessage: "",
-            mode: null,
-            id: null,
-            expectedVersion: null,
-            gearCode: "",
-            depositFee: "",
-            gearCategory: "",
-            gearDescription: ""
-        });
+        expect(gearStore.state.gearModal).to.deep.equal(mockGearModal);
     });
 
     it("onGearModalChanged - all fields update", () => {
@@ -298,6 +293,8 @@ describe("GearStore Tests", () => {
         const mockGear = mockGearList[2],
             mockGearResponse = JSON.parse(JSON.stringify(mockGear)); // cloning method
 
+        sandbox.stub(gearStore, "fetchGearHistory");
+
         // modify our expectation
         mockGearResponse.version += 1;
         mockGearResponse.description = "this is a new gear description";
@@ -340,6 +337,8 @@ describe("GearStore Tests", () => {
         const mockGear = mockGearList[2],
             mockGearResponse = JSON.parse(JSON.stringify(mockGear)), // cloning method
             error = { response: { data: { message: "this is an error message" } } };
+
+        sandbox.stub(gearStore, "fetchGearHistory")
 
         // modify our expectation
         mockGearResponse.version += 1;
@@ -845,4 +844,68 @@ describe("GearStore Tests", () => {
         });
     });
 
+    it("fetchGearHistory", () => {
+        const response= {
+                data: {
+                    data: [{
+                        "id": 0,
+                        "gearCode": "BP01",
+                        "category": "backpack",
+                        "checkedOut": true,
+                        "depositFee": 50.0,
+                        "gearDescription": "Deuter 60+10 Blue (New Oct 2017)",
+                        "condition": "",
+                        "version": 1
+                    }]
+                }
+        };
+        getStub.returns(Promise.resolve(response));
+        return gearStore.fetchGearHistory(mockGearList[0]).then(() => {
+            expect(gearStore.state.gearModal.gearHistory).to.be.equal(response.data.data)
+        })
+
+    });
+
+    it("onTabSelected changes state properly", () => {
+        expect(gearStore.state.tabSelected).to.equal(1);
+
+        gearStore.onTabSelected(2);
+
+        expect(gearStore.state.tabSelected).to.equal(2);
+    });
+
+    it("onGearModalTabSelected changes state properly", () => {
+        expect(gearStore.state.gearModal.tabSelected).to.equal(1);
+
+        gearStore.onGearModalTabSelected(2);
+
+        expect(gearStore.state.gearModal.tabSelected).to.equal(2);
+    });
+
+    it("onCloseGearModal resets state properly", () => {
+        expect(gearStore.state.gearModal).to.deep.equal(mockGearModal);
+
+        gearStore.state.gearModal.tabSelected = 1000
+
+        const changedGearModal = {
+            show: false,
+        error: false,
+        errorMessage: "",
+        mode: null,
+        id: null,
+        expectedVersion: null,
+        gearCode: "",
+        depositFee: "",
+        gearCategory: "",
+        gearDescription: "",
+        tabSelected: 1000,
+        gearHistory: [],
+        gearReservationHistory: []
+        };
+        expect(gearStore.state.gearModal).to.deep.equal(changedGearModal);
+
+        gearStore.onCloseGearModal();
+
+        expect(gearStore.state.gearModal).to.deep.equal(mockGearModal);
+    });
 });

@@ -25,4 +25,11 @@ describe("ReservationTable Tests", () => {
 
         expect(cell.props.children).to.equal(0);
     });
+
+    it("formatter formats status column", () => {
+        const table = mount(<Table reservationList={[]} />),
+            formatter = table.instance().columns[5].formatter,
+            cell = formatter("REQUESTED");
+        expect(cell).to.equal("Requested");
+    });
 });

@@ -6,6 +6,7 @@ import React from "react";
 import Table from "react-bootstrap-table-next";
 import PropTypes from "prop-types";
 import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit";
+import { capitalizeFirstLetter } from "../utilities";
 
 const { SearchBar } = Search;
 
@@ -44,7 +45,8 @@ export default class ReservationTable extends React.Component {
         }, {
             sort: true,
             dataField: "status",
-            text: "Status"
+            text: "Status",
+            formatter: capitalizeFirstLetter
         }];
     }
 

@@ -12,10 +12,10 @@ function defaultState() {
     return {
         // Reservation Page State
         fetchedReservationList: false,
-        tabSelected: 1,
         error: "",
         reservationList: [],
         reservationModal: {
+            tabSelected: 1,
             show: false,
             alertMsg: "",
             alertType: "",
@@ -72,7 +72,7 @@ function defaultState() {
 
 // Create and export actions for use
 export const ReservationActions = Reflux.createActions([
-    "tabSelected",
+    "reservationModalTabSelected",
     "openReservationModal",
     "closeReservationModal",
     "saveReservationChanges",
@@ -161,10 +161,30 @@ export class ReservationStore extends Reflux.Store {
             });
     }
 
-    onTabSelected(tab) {
-        this.setState({
-            tabSelected: tab
+    onReservationModalTabSelected(tab) {
+        const service = new ReservationService();
+        service.fetchReservationHistory(this.state.reservationModal.data.id).then(({ data, error }) => {
+            // The purpose of this "then" is to extract the return from
+            // the JSon object, regardless of data or error
+            if (data) {
+                return data;
+            } else {
+                return error;
+            }
+        }).then((value) => {
+            // It does not matter whether there is data or an error
+            // Assign it as the "history"
+            this.setState(update(this.state, {
+                reservationModal: {
+                    history: { $set: value }
+                }
+            }));
         });
+        this.setState(update(this.state, {
+            reservationModal: {
+                tabSelected: { $set: tab }
+            }
+        }));
     }
 
     clone(obj) {
@@ -330,27 +350,6 @@ export class ReservationStore extends Reflux.Store {
     }
 
     onOpenReservationModal(reservationInfo) {
-        /*
-        const service = new ReservationService();
-        service.fetchReservationHistory(reservationInfo.id).then(({ data, error }) => {
-            // The purpose of this "then" is to extract the return from
-            // the JSon object, regardless of data or error
-            if (data) {
-                return data;
-            } else {
-                return error;
-            }
-        }).then((value) => {
-            // It does not matter whether there is data or an error
-            // Assign it as the "history"
-            this.setState(update(this.state, {
-                reservationModal: {
-                    history: { $set: value }
-                }
-            }));
-        });
-        */
-
         this.setState(update(this.state, {
             reservationModal: {
                 show: { $set: true },

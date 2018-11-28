@@ -7,7 +7,7 @@ import React from "react";
 import Reflux from "reflux";
 import { Tabs, Tab, Alert } from "react-bootstrap";
 import { GearStore, GearActions } from "./GearStore";
-import GearForm from "./GearForm";
+import GearModal from "./GearModal";
 import GearTable from "./GearTable";
 import CategoryForm from "./CategoryForm";
 import CategoryTable from "./CategoryTable";
@@ -15,7 +15,6 @@ import Constants from "../../constants/constants";
 import ErrorAlert from "../components/ErrorAlert";
 import ConfirmationDialog from "../components/ConfirmationDialog";
 import FileButton from "../components/FileButton";
-// import GearHistoryModal from "./GearHistoryModal";
 
 export default class GearPage extends Reflux.Component {
     constructor() {
@@ -42,7 +41,7 @@ export default class GearPage extends Reflux.Component {
 
     getGearTab(tabKey) {
         return (
-            <Tab eventKey={tabKey} title="Gear" className="gear-table">
+            <Tab eventKey={tabKey} title="Gear">
                 <div className="row">
                     <div className="col-md-12">
                         <button
@@ -63,11 +62,12 @@ export default class GearPage extends Reflux.Component {
                         />
                     </div>
                 </div>
-                <GearForm {...this.state.gearModal}
+                <GearModal {...this.state.gearModal}
                     formTitle={`${this.state.gearModal.mode} Gear`}
                     onChange={GearActions.gearModalChanged}
                     onSubmit={GearActions.submitGearModal}
                     onClose={GearActions.closeGearModal}
+                    onTabSelected={GearActions.gearModalTabSelected}
                 />
                 <ConfirmationDialog
                     show={this.state.deleteGearModal.show}
@@ -76,10 +76,6 @@ export default class GearPage extends Reflux.Component {
                     onClose={GearActions.closeDeleteGearModal}
                     onSubmit={GearActions.submitDeleteGearModal}
                 />
-                {/* <GearHistoryModal
-                    {...this.state.gearHistoryModal}
-                    onClose={GearActions.closeGearHistoryModal}
-                /> */}
             </Tab>
         );
     }
@@ -90,7 +86,7 @@ export default class GearPage extends Reflux.Component {
                 title="Categories">
                 <div className="row">
                     <div className="col-md-12">
-                        <button className="btn btn-primary" onClick={this.wrapOpenModal(GearActions.openCategoryModal)}>
+                        <button className="btn btn-primary pull-right" onClick={this.wrapOpenModal(GearActions.openCategoryModal)}>
                             <i className="fas fa-plus-circle" /> Add New
                         </button>
                     </div>

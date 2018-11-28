@@ -24,7 +24,7 @@ const getShallowForm = (props = {}) => {
     );
 };
 
-describe("GearForm Tests", () => {
+describe("CategoryFrom Tests", () => {
     it("calls onChange when handleChange is called", () => {
         const onChangeSpy = sinon.spy(),
             event = {

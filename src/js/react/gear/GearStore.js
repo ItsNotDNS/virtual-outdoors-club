@@ -53,7 +53,10 @@ function defaultState() {
             gearCode: "",
             depositFee: "",
             gearCategory: "",
-            gearDescription: ""
+            gearDescription: "",
+            tabSelected: 1,
+            gearHistory: [],
+            gearReservationHistory: []
         },
         fetchedGearCategoryList: false,
         categoryList: [],
@@ -119,6 +122,7 @@ export const GearActions = Reflux.createActions([
     "gearModalChanged",
     "submitGearModal",
     "closeGearModal",
+    "gearModalTabSelected",
     "fetchGearCategoryList",
     "openCategoryModal",
     "categoryModalChanged",
@@ -216,8 +220,19 @@ export class GearStore extends Reflux.Store {
             });
     }
 
+    onGearModalTabSelected(tab) {
+        this.setState(update(this.state, {
+            gearModal: {
+                tabSelected: { $set: tab }
+            }
+        }));
+    }
+
     // opens the gear modal, mode is to specify if the modal is for creating or editing gear
     onOpenGearModal(mode = Constants.modals.CREATING, options = { gear: {} }) {
+        if (Object.keys(options.gear).length !== 0 && options.gear.constructor === Object) {
+            this.fetchGearHistory(options.gear);
+        }
         const { id, expectedVersion, gearCode, depositFee, gearCategory, gearDescription } = options.gear,
             newState = update(this.state, {
                 gearModal: {
@@ -701,48 +716,42 @@ export class GearStore extends Reflux.Store {
             });
     }
 
-    onOpenGearHistoryModal(gear) {
-        const gearService = new GearService(),
-            reservationService = new ReservationService(),
-            gearHistoryPromise = gearService.fetchGearHistory(gear.id)
-                .then(({ data, error }) => {
-                    if (data) {
-                        return data;
-                    } else {
-                        return error;
-                    }
-                }),
-            gearReservationHistoryPromise =
-                reservationService.fetchGearReservationHistory(gear.id)
+    fetchGearHistory(gear) {
+        if (gear) {
+            const gearService = new GearService(),
+                reservationService = new ReservationService(),
+                gearHistoryPromise = gearService.fetchGearHistory(gear.id)
                     .then(({ data, error }) => {
                         if (data) {
                             return data;
                         } else {
                             return error;
                         }
-                    });
+                    }),
+                gearReservationHistoryPromise =
+                    reservationService.fetchGearReservationHistory(gear.id)
+                        .then(({ data, error }) => {
+                            if (data) {
+                                return data;
+                            } else {
+                                return error;
+                            }
+                        });
 
-        Promise.all([gearHistoryPromise, gearReservationHistoryPromise])
-            .then((values) => {
-                const gearHistory = values[0],
-                    gearReservationHistory = values[1];
+            return Promise.all([gearHistoryPromise, gearReservationHistoryPromise])
+                .then((values) => {
+                    const gearHistory = values[0],
+                        gearReservationHistory = values[1];
 
-                // It does not matter if the value is real or an error
-                // Set it as the history
-                this.setState(update(this.state, {
-                    gearHistoryModal: {
-                        show: { $set: true },
-                        gear: { $set: gear },
-                        gearHistory: { $set: gearHistory },
-                        gearReservationHistory: { $set: gearReservationHistory }
-                    }
-                }));
-            });
-    }
-
-    onCloseGearHistoryModal() {
-        this.setState(update(this.state, {
-            gearHistoryModal: { $set: defaultState().gearHistoryModal }
-        }));
+                    // It does not matter if the value is real or an error
+                    // Set it as the history
+                    this.setState(update(this.state, {
+                        gearModal: {
+                            gearHistory: { $set: gearHistory },
+                            gearReservationHistory: { $set: gearReservationHistory }
+                        }
+                    }));
+                });
+        }
     }
 }
