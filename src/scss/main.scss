@@ -325,7 +325,7 @@
     $nav-background-color: #1e508f;
     $selected-nav-background-color: #337ab7;
     $text-color: white;
-    $text-hover-color: black;
+    $text-hover-color: white;
 
     background-color: $nav-background-color;
     border: 0px;
@@ -338,7 +338,8 @@
       color: $text-color;
     }
     .navbar-nav > li > a:hover {
-      color: $text-hover-color;
+        background-color: $selected-nav-background-color;
+        color: $text-hover-color;
     }
 
     /*currently selected item*/
