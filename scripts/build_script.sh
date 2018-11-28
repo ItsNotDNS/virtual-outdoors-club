@@ -9,10 +9,14 @@ ssh -i /tmp/key_outdoors.pem ubuntu@199.116.235.142 <<EOF
     git checkout master
     git pull
     exit
+    source outdoorsclubenv/bin/activate
+    cd virtual-outdoors-club
     pip3 install -r requirements.txt
-    python3 ./src/django/manage.py createworkers --wipe
-    python3 ./src/django/manage.py process_tasks &
-    python3 ./src/django/manage.py runserver 0.0.0.0:8000 &
+    cd src
+    cd django
+    python3 manage.py createworkers --wipe
+    python3 manage.py process_tasks &
+    python3 manage.py runserver 0.0.0.0:8000 &
     sudo systemctl restart nginx
     exit
 EOF
