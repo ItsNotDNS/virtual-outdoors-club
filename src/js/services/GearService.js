@@ -113,8 +113,8 @@ export default class GearService {
             email: reserveGearForm.email,
             licenseName: reserveGearForm.licenseName,
             licenseAddress: reserveGearForm.licenseAddress,
-            startDate: reserveGearForm.startDate,
-            endDate: reserveGearForm.endDate,
+            startDate: moment(reserveGearForm.startDate).format("YYYY-MM-DD"),
+            endDate: moment(reserveGearForm.endDate).format("YYYY-MM-DD"),
             status: "REQUESTED",
             gear: reserveGearForm.items
         };
@@ -261,5 +261,15 @@ export default class GearService {
         ).then((response) => {
             return { data: response.data.data };
         }).catch(genericCatch);
+    }
+
+    fetchGearHistory(gearId) {
+        return this.service.get(
+            `${config.databaseHost}/gear/history?id=${gearId}`
+        ).then((response) => {
+            return { data: response.data.data };
+        }).catch((error) => {
+            return { error: error.response.data.message };
+        });
     }
 };

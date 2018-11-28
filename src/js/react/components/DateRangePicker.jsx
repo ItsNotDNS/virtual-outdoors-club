@@ -3,7 +3,6 @@
  * can set a prop so it shows as horizontal or vertical.
  * Accepts 2 callback function props for the caller to pass in to store the
  * chosen date value.
- * input, output date format: "YYYY-MM-DD"
  */
 
 import React from "react";
@@ -59,10 +58,10 @@ export default class DateRangePicker extends Reflux.Component {
                     <ControlLabel>Start Date:</ControlLabel>
                     {this.getBR()}
                     <DayPickerInput
-                        value={this.state.selectedStartDate || this.props.startDate}
+                        value={this.props.startDate || this.state.selectedStartDate}
                         placeholder="YYYY-MM-DD"
                         dayPickerProps={{
-                            selectedDays: { from: this.state.selectedStartDate || this.props.startDate, to: this.state.selectedEndDate || this.props.endDate },
+                            selectedDays: { from: this.props.startDate || this.state.selectedStartDate, to: this.props.endDate || this.state.selectedEndDate },
                             onDayClick: this.handleClick
                         }}
                         onDayChange={this.handleFromChange}
@@ -73,16 +72,16 @@ export default class DateRangePicker extends Reflux.Component {
                     {this.getBR()}
                     <DayPickerInput
                         ref={this.endDayPickerInputRef}
-                        value={this.state.selectedEndDate || this.props.endDate}
+                        value={this.props.endDate || this.state.selectedEndDate}
                         placeholder="YYYY-MM-DD"
                         dayPickerProps={{
                             selectedDays: {
-                                from: this.state.selectedStartDate || this.props.startDate,
-                                to: this.state.selectedEndDate || this.props.endDate
+                                from: this.props.startDate || this.state.selectedStartDate,
+                                to: this.props.endDate || this.state.selectedEndDate
                             },
-                            disabledDays: { before: this.state.selectedStartDate || this.props.startDate },
-                            fromMonth: this.state.selectedStartDate || this.props.startDate,
-                            month: this.state.selectedStartDate || this.props.startDate
+                            disabledDays: { before: this.props.startDate || this.state.selectedStartDate },
+                            fromMonth: this.props.startDate || this.state.selectedStartDate,
+                            month: this.props.startDate || this.state.selectedStartDate
                         }}
                         onDayChange={this.handleToChange}
                     />

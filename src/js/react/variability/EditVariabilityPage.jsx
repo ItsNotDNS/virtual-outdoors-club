@@ -7,13 +7,18 @@ import LabeledInput from "../components/LabeledInput";
 import constants from "../../constants/constants";
 import { VariableStore, VariableActions } from "./VariabilityStore";
 import { ToastContainer } from "react-toastify";
+import { MemberActions } from "../members/MemberStore";
+import { Tab, Tabs } from "react-bootstrap";
 
 export default class EditVariabilityPage extends Reflux.Component {
     constructor() {
         super();
 
         this.store = VariableStore;
-        this.onClickSaveButton = this.onClickSaveButton.bind(this);
+        this.onClickExecSaveButton = this.onClickExecSaveButton.bind(this);
+        this.onClickMemberSaveButton = this.onClickMemberSaveButton.bind(this);
+        this.getMemberSettingsTab = this.getMemberSettingsTab.bind(this);
+        this.getExecSettingsTab = this.getExecSettingsTab.bind(this);
     }
 
     componentDidMount() {
@@ -30,8 +35,78 @@ export default class EditVariabilityPage extends Reflux.Component {
         };
     }
 
-    onClickSaveButton() {
-        VariableActions.saveSystemVariables();
+    onClickExecSaveButton() {
+        VariableActions.saveExecSystemVariables();
+    }
+
+    onClickMemberSaveButton() {
+        VariableActions.saveMemberSystemVariables();
+    }
+
+    getMemberSettingsTab(tabKey, onMemberChange, memberValues) {
+        return (
+            <Tab eventKey={tabKey} title="Member Settings">
+                <div className="col-md-6 margin-top-2">
+                    <LabeledInput
+                        label="Max Reservation Length (days)"
+                        name="maxReservationLength"
+                        onChange={this.handleChangeWrapper(onMemberChange)}
+                        value={memberValues.maxReservationLength}
+                    />
+                    <LabeledInput
+                        label="Max Number of Items on Reservation"
+                        name="maxItemsReserved"
+                        onChange={this.handleChangeWrapper(onMemberChange)}
+                        value={memberValues.maxItemsReserved}
+                    />
+                    <LabeledInput
+                        label="Max Days in Future can Reserve"
+                        name="maxDaysInFutureCanStart"
+                        onChange={this.handleChangeWrapper(onMemberChange)}
+                        value={memberValues.maxDaysInFutureCanStart}
+                    />
+                    <button
+                        className="btn btn-success submit-button"
+                        onClick={this.onClickMemberSaveButton}
+                    >
+                            Save
+                    </button>
+                </div>
+            </Tab>
+        );
+    }
+
+    getExecSettingsTab(tabKey, onExecChange, execValues) {
+        return (
+            <Tab eventKey={tabKey} title="Executive Settings">
+                <div className="col-md-6 margin-top-2">
+                    <LabeledInput
+                        label="Max Reservation Length (days)"
+                        name="maxReservationLength"
+                        onChange={this.handleChangeWrapper(onExecChange)}
+                        value={execValues.maxReservationLength}
+                    />
+                    <LabeledInput
+                        label="Max Number of Items on Reservation"
+                        name="maxItemsReserved"
+                        onChange={this.handleChangeWrapper(onExecChange)}
+                        value={execValues.maxItemsReserved}
+                    />
+                    <LabeledInput
+                        label="Max Days in Future can Reserve"
+                        name="maxDaysInFutureCanStart"
+                        onChange={this.handleChangeWrapper(onExecChange)}
+                        value={execValues.maxDaysInFutureCanStart}
+                    />
+                    <button
+                        className="btn btn-success submit-button"
+                        onClick={this.onClickExecSaveButton}
+                    >
+                            Save
+                    </button>
+                </div>
+            </Tab>
+        );
     }
 
     render() {
@@ -42,68 +117,25 @@ export default class EditVariabilityPage extends Reflux.Component {
 
         return (
             <div className="variability-view">
-                <div className="row">
-                    <ToastContainer
-                        className="reservation-success-toast"
-                        position="top-center"
-                        autoClose={4000}
-                        hideProgressBar
-                        closeOnClick
-                        pauseOnVisibilityChange={false}
-                        draggablePercent={80}
-                        pauseOnHover={false}
-                    />
-                    <div className="col-md-6">
-                        <h4>Member Settings</h4>
-                        <LabeledInput
-                            label="Max Reservation Length (days)"
-                            name="maxReservationLength"
-                            onChange={this.handleChangeWrapper(onMemberChange)}
-                            value={memberValues.maxReservationLength}
-                        />
-                        <LabeledInput
-                            label="Max Number of Items on Reservation"
-                            name="maxItemsReserved"
-                            onChange={this.handleChangeWrapper(onMemberChange)}
-                            value={memberValues.maxItemsReserved}
-                        />
-                        <LabeledInput
-                            label="Max Days in Future can Reserve"
-                            name="maxDaysInFutureCanStart"
-                            onChange={this.handleChangeWrapper(onMemberChange)}
-                            value={memberValues.maxDaysInFutureCanStart}
-                        />
-                    </div>
-                    <div className="col-md-6">
-                        <h4>Executive Settings</h4>
-                        <LabeledInput
-                            label="Max Reservation Length (days)"
-                            name="maxReservationLength"
-                            onChange={this.handleChangeWrapper(onExecChange)}
-                            value={execValues.maxReservationLength}
-                        />
-                        <LabeledInput
-                            label="Max Number of Items on Reservation"
-                            name="maxItemsReserved"
-                            onChange={this.handleChangeWrapper(onExecChange)}
-                            value={execValues.maxItemsReserved}
-                        />
-                        <LabeledInput
-                            label="Max Days in Future can Reserve"
-                            name="maxDaysInFutureCanStart"
-                            onChange={this.handleChangeWrapper(onExecChange)}
-                            value={execValues.maxDaysInFutureCanStart}
-                        />
-                    </div>
-                </div>
-                <div className="text-center">
-                    <button
-                        className="btn btn-success submit-button"
-                        onClick={this.onClickSaveButton}
-                    >
-                            Save
-                    </button>
-                </div>
+                <ToastContainer
+                    className="reservation-success-toast"
+                    position="top-center"
+                    autoClose={4000}
+                    hideProgressBar
+                    closeOnClick
+                    pauseOnVisibilityChange={false}
+                    draggablePercent={80}
+                    pauseOnHover={false}
+                />
+                <h3>Edit System Values</h3>
+                <p>Here you can edit system values Member and Executive.</p>
+                <Tabs activeKey={this.state.tabSelected}
+                    onSelect={MemberActions.tabSelected}
+                    id="member-view-tabs"
+                >
+                    {this.getMemberSettingsTab(1, onMemberChange, memberValues)}
+                    {this.getExecSettingsTab(2, onExecChange, execValues)}
+                </Tabs>
             </div>
         );
     }

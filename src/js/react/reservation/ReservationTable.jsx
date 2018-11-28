@@ -6,6 +6,7 @@ import React from "react";
 import Table from "react-bootstrap-table-next";
 import PropTypes from "prop-types";
 import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit";
+import { capitalizeFirstLetter } from "../utilities";
 
 const { SearchBar } = Search;
 
@@ -29,19 +30,23 @@ export default class ReservationTable extends React.Component {
             sort: true,
             dataField: "gear[]",
             text: "Items",
+            align: "right",
             formatter: (row, data) => <div>{data.gear.length}</div>
         }, {
             sort: true,
             dataField: "startDate",
-            text: "Start Date"
+            text: "Start Date",
+            align: "right"
         }, {
             sort: true,
             dataField: "endDate",
-            text: "End Date"
+            text: "End Date",
+            align: "right"
         }, {
             sort: true,
             dataField: "status",
-            text: "Status"
+            text: "Status",
+            formatter: capitalizeFirstLetter
         }];
     }
 

@@ -131,18 +131,23 @@ export default class MemberPage extends Reflux.Component {
         return (
             <div>
                 {alert}
-                <FileButton
-                    onFileSelected={MemberActions.fileSelected}
-                    placeholder={"You can update your member list by uploading your member file here."}
-                />
-                <div className="text-center">
-                    <button
-                        className="btn btn-success submit-button"
-                        disabled={!members.length}
-                        onClick={MemberActions.uploadMemberFile}
-                    >
-                            Upload
-                    </button>
+                <div className="row bottom-margin">
+                    <div className="col-md-6 col-xs-12">
+                        <FileButton
+                            onFileSelected={MemberActions.fileSelected}
+                            placeholder={"You can update your member list by uploading your member file here."}
+                        />
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-md-2 col-xs-4">
+                        <button className="btn btn-success full-width"
+                            disabled={!members.length}
+                            onClick={MemberActions.uploadMemberFile}
+                        >
+                                Upload
+                        </button>
+                    </div>
                 </div>
             </div>
         );

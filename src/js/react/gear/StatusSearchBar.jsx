@@ -12,31 +12,35 @@ export default class StatusSearchBar extends React.Component {
 
     render() {
         return (
-            <FormGroup>
-                <Checkbox inline name="RENTABLE"
-                    defaultChecked
-                    onClick={this.handleChange}
-                >
+            <div>
+
+                <FormGroup>
+                    <div className="status-search-bar-header"> Gear condition filter: </div>
+                    <Checkbox inline name="RENTABLE"
+                        defaultChecked
+                        onClick={this.handleChange}
+                    >
                         Rentable
-                </Checkbox>
-                <Checkbox inline name="FLAGGED"
-                    defaultChecked
-                    onClick={this.handleChange}
-                >
+                    </Checkbox>
+                    <Checkbox inline name="FLAGGED"
+                        defaultChecked
+                        onClick={this.handleChange}
+                    >
                         Flagged
-                </Checkbox>
-                <Checkbox inline name="NEEDS_REPAIR"
-                    defaultChecked
-                    onClick={this.handleChange}
-                >
+                    </Checkbox>
+                    <Checkbox inline name="NEEDS_REPAIR"
+                        defaultChecked
+                        onClick={this.handleChange}
+                    >
                         Needs Repair
-                </Checkbox>
-                <Checkbox inline name="DELETED"
-                    onClick={this.handleChange}
-                >
+                    </Checkbox>
+                    <Checkbox inline name="DELETED"
+                        onClick={this.handleChange}
+                    >
                         Deleted
-                </Checkbox>
-            </FormGroup>
+                    </Checkbox>
+                </FormGroup>
+            </div>
         );
     }
 }

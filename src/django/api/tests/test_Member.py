@@ -71,9 +71,10 @@ class MemberTestCase(TestCase):
 
 
     def test_getMemberList(self):
+        # also tests lowercase
         request = {
             "members": [
-                    {"email": "jon@gmail.com"},
+                    {"email": "JoN@gMaiL.com"},
                     {"email": "abc@gmail.com"},
                 ]
         }

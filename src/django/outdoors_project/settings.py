@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'background_task',
-    'api.apps.APIConfig',
+    'api',
     'simple_history',
 ]
 
@@ -131,6 +131,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# TODO: Change to UAOC specific info
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587

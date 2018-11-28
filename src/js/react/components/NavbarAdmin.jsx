@@ -8,10 +8,10 @@ import { Navbar, NavItem, Nav, NavDropdown, MenuItem } from "react-bootstrap";
 export default class NavbarAdmin extends React.Component {
     render() {
         return (
-            <Navbar fluid collapseOnSelect >
+            <Navbar fluid collapseOnSelect className="nav-bar-admin navbar-static-top">
                 <Navbar.Header>
                     <Navbar.Brand>
-                        Administration
+                        Outdoors Club Administration
                     </Navbar.Brand>
                     <Navbar.Toggle />
                 </Navbar.Header>

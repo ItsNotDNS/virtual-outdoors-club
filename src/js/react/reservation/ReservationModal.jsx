@@ -1,11 +1,13 @@
 /* eslint-disable react/no-unused-prop-types */
 import React from "react";
 import PropTypes from "prop-types";
-import { Modal, Alert } from "react-bootstrap";
+import { Modal, Alert, Tab, Tabs, Table } from "react-bootstrap";
 import DatePicker from "./DatePickerV2";
 import constants from "../../constants/constants";
 import moment from "moment";
 import Select from "react-select";
+import ReturnProcessor from "./ReturnProcessor";
+import { capitalizeFirstLetter } from "../utilities";
 
 const {
     status: {
@@ -29,6 +31,7 @@ export default class ReservationModal extends React.Component {
         this.footerButton = this.footerButton.bind(this);
         this.clickTrash = this.clickTrash.bind(this);
         this.getData = this.getData.bind(this);
+        this.buildTable = this.buildTable.bind(this);
     }
 
     getData() {
@@ -131,7 +134,7 @@ export default class ReservationModal extends React.Component {
                 <div>Paid</div>
             ),
             [TAKEN]: (
-                <div>Taken</div>
+                <ReturnProcessor />
             ),
             [RETURNED]: (
                 <div>Returned</div>
@@ -268,8 +271,119 @@ export default class ReservationModal extends React.Component {
             this.footerButton(data, actions)[data.status];
     }
 
+    getReservationInfoTab(tabKey) {
+        const { alertMsg, alertType, actions } = this.props,
+            data = this.getData();
+        return (
+            <Tab eventKey={tabKey} title="Current Info">
+                <div className="row">
+                    <div className="col-md-12">
+                        {this.getModalAlert(alertMsg, alertType)}
+                        <div className="text-center bottom-margin">
+                            <h4>Member's Info</h4>
+                        </div>
+                        <div className="row">
+                            <div className="col-md-3 col-xs-0" />
+                            <div className="col-md-6 col-xs-12">
+                                {this.getNameValueField("Name", data.licenseName)}
+                                {this.getNameValueField("Address", data.licenseAddress)}
+                                {this.getNameValueField("Email", data.email)}
+                            </div>
+                        </div>
+                        <hr />
+                        {this.getReservationPeriodInfo(data, this.props.actions)}
+                        <hr />
+                        <div className="text-center bottom-margin">
+                            <h4>Gear Reserved</h4>
+                        </div>
+                        <div className="row bottom-margin">
+                            <div className="col-md-3 col-xs-0" />
+                            <div className="col-md-6 col-xs-12">
+                                {this.getGearList(data)}
+                            </div>
+                        </div>
+                        <div className="row" hidden={!data.editable}>
+                            <div className="col-md-3 col-xs-0" />
+                            <div className="col-md-6 col-xs-12">
+                                <Select
+                                    {...this.props.gearSelect}
+                                    value=""
+                                    onMenuOpen={actions.loadAvailableGear}
+                                    onChange={actions.addGearToReservation}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </Tab>
+        );
+    }
+
+    buildTable() {
+        if (Array.isArray(this.props.history) && !!this.props.history.length) {
+            const rows = [];
+            for (let i = 0; i < Math.min(this.props.history.length, 10); i++) {
+                const record = this.props.history[i];
+                rows.push(
+                    <tr key={i}>
+                        <td>
+                            {record.email}
+                        </td>
+                        <td>
+                            {record.licenseName}
+                        </td>
+                        <td>
+                            {record.licenseAddress}
+                        </td>
+                        <td>
+                            {record.startDate}
+                        </td>
+                        <td>
+                            {record.endDate}
+                        </td>
+                        <td>
+                            {capitalizeFirstLetter(record.status)}
+                        </td>
+                    </tr>
+                );
+            }
+            return (
+                <div className="table-responsive">
+                    <Table>
+                        <thead>
+                            <tr>
+                                <th>Email</th>
+                                <th>License Name</th>
+                                <th>License Address</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {rows}
+                        </tbody>
+                    </Table>
+                </div>
+            );
+        }
+        return this.props.history;
+    }
+
+    getReservationHistoryTab(tabKey) {
+        return (
+            <Tab eventKey={tabKey} title="Reservation History">
+                <div className="row">
+                    <div className="col-md-12">
+                        {this.buildTable()}
+                    </div>
+                </div>
+            </Tab>
+        );
+    }
+
     render() {
-        const { alertMsg, alertType, actions, showConfirmation } = this.props,
+        const { actions, showConfirmation } = this.props,
             data = this.getData();
 
         return (
@@ -281,45 +395,23 @@ export default class ReservationModal extends React.Component {
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {this.getModalAlert(alertMsg, alertType)}
-                    <div className="text-center bottom-margin">
-                        <h4>Member's Info</h4>
-                    </div>
-                    <div className="row">
-                        <div className="col-md-3 col-xs-0" />
-                        <div className="col-md-6 col-xs-12">
-                            {this.getNameValueField("Name", data.licenseName)}
-                            {this.getNameValueField("Address", data.licenseAddress)}
-                            {this.getNameValueField("Email", data.email)}
-                        </div>
-                    </div>
-                    <hr />
-                    {this.getReservationPeriodInfo(data, this.props.actions)}
-                    <hr />
-                    <div className="text-center bottom-margin">
-                        <h4>Gear Reserved</h4>
-                    </div>
-                    <div className="row bottom-margin">
-                        <div className="col-md-3 col-xs-0" />
-                        <div className="col-md-6 col-xs-12">
-                            {this.getGearList(data)}
-                        </div>
-                    </div>
-                    <div className="row" hidden={!data.editable}>
-                        <div className="col-md-3 col-xs-0" />
-                        <div className="col-md-6 col-xs-12">
-                            <Select
-                                {...this.props.gearSelect}
-                                value=""
-                                onMenuOpen={actions.loadAvailableGear}
-                                onChange={actions.addGearToReservation}
-                            />
-                        </div>
-                    </div>
+                    <Tabs
+                        id="reservation-modal"
+                        activeKey={this.props.tabSelected}
+                        onSelect={this.props.onTabSelected}
+                    >
+                        {this.getReservationInfoTab(1)}
+                        {this.getReservationHistoryTab(2)}
+                    </Tabs>
                 </Modal.Body>
-                <Modal.Footer>
-                    {this.getFooter(data, showConfirmation, actions)}
-                </Modal.Footer>
+                {
+                    this.props.tabSelected === 1
+                        ? <Modal.Footer>
+                            {this.getFooter(data, showConfirmation, actions)}
+                        </Modal.Footer>
+                        : null
+                }
+
             </Modal>
         );
     }
@@ -362,5 +454,8 @@ ReservationModal.propTypes = {
         gear: PropTypes.array,
         options: PropTypes.array
     }),
-    showConfirmation: PropTypes.string
+    showConfirmation: PropTypes.string,
+    history: PropTypes.array,
+    tabSelected: PropTypes.number,
+    onTabSelected: PropTypes.func
 };

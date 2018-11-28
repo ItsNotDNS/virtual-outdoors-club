@@ -15,7 +15,8 @@ class UserVariabilityTestCase(TestCase):
         self.client = APIRequestFactory()
         self.maxLength = "maxLength"
         self.maxFuture = "maxFuture"
-        self.maxRentals = "maxRentals"
+        self.maxReservations = "maxReservations"
+        self.maxGearPerReservation = "maxGearPerReservation"
 
 
     def test_get(self):
@@ -23,10 +24,12 @@ class UserVariabilityTestCase(TestCase):
         correctResponse = [
                 {"variable": "membermaxLength", "value": 14},
                 {"variable": "membermaxFuture", "value": 7},
-                {"variable": "membermaxRentals", "value": 3},
+                {"variable": "membermaxReservations", "value": 3},
+                {"variable": "membermaxGearPerReservation", "value": 5},
                 {"variable": "executivemaxLength", "value": 14},
                 {"variable": "executivemaxFuture", "value": 7},
-                {"variable": "executivemaxRentals", "value": 3},
+                {"variable": "executivemaxReservations", "value": 3},
+                {"variable": "executivemaxGearPerReservation", "value": 5},
         ]
         response = self.client.get("/api/system/variability/", content_type="application/json")
         self.assertEqual(response.status_code, 200)
@@ -117,35 +120,70 @@ class UserVariabilityTestCase(TestCase):
     def test_updateMaxReservations(self):
         request = {
             "executive": {
-                self.maxRentals: 3,
+                self.maxReservations: 3,
             },
             "member": {
-                self.maxRentals: 2,
+                self.maxReservations: 2,
             }
         }
 
         response = self.client.post("/api/system/variability/", request, content_type="application/json")
         self.assertEqual(response.status_code, 200)
-        variable = UserVariability.objects.get(pk="executive"+self.maxRentals)
+        variable = UserVariability.objects.get(pk="executive"+self.maxReservations)
         self.assertEqual(variable.value, 3)
-        variable = UserVariability.objects.get(pk="member"+self.maxRentals)
+        variable = UserVariability.objects.get(pk="member"+self.maxReservations)
         self.assertEqual(variable.value, 2)
 
         # test invalid values
         request = {
             "executive": {
-                self.maxRentals: 3,
+                self.maxReservations: 3,
             },
             "member": {
-                self.maxRentals: -1,
+                self.maxReservations: -1,
             }
         }
 
         response = self.client.post("/api/system/variability/", request, content_type="application/json")
         self.assertEqual(response.status_code, 400)
-        variable = UserVariability.objects.get(pk="executive"+self.maxRentals)
+        variable = UserVariability.objects.get(pk="executive"+self.maxReservations)
         self.assertEqual(variable.value, 3)
-        variable = UserVariability.objects.get(pk="member"+self.maxRentals)
+        variable = UserVariability.objects.get(pk="member"+self.maxReservations)
+        self.assertEqual(variable.value, 2)
+
+
+    def test_updateMaxGearPerReservation(self):
+        request = {
+            "executive": {
+                self.maxGearPerReservation: 3,
+            },
+            "member": {
+                self.maxGearPerReservation: 2,
+            }
+        }
+
+        response = self.client.post("/api/system/variability/", request, content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+        variable = UserVariability.objects.get(pk="executive"+self.maxGearPerReservation)
+        self.assertEqual(variable.value, 3)
+        variable = UserVariability.objects.get(pk="member"+self.maxGearPerReservation)
+        self.assertEqual(variable.value, 2)
+
+        # test invalid values
+        request = {
+            "executive": {
+                self.maxGearPerReservation: 3,
+            },
+            "member": {
+                self.maxGearPerReservation: -1,
+            }
+        }
+
+        response = self.client.post("/api/system/variability/", request, content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+        variable = UserVariability.objects.get(pk="executive"+self.maxGearPerReservation)
+        self.assertEqual(variable.value, 3)
+        variable = UserVariability.objects.get(pk="member"+self.maxGearPerReservation)
         self.assertEqual(variable.value, 2)
 
 

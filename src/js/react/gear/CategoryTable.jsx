@@ -53,7 +53,10 @@ export default class CategoryTable extends React.Component {
             text: "Actions",
             dataField: "isDummyField",
             isDummyField: true,
-            formatter: this.getActionCell
+            formatter: this.getActionCell,
+            headerStyle: {
+                width: "15%"
+            }
         }];
     }
 
