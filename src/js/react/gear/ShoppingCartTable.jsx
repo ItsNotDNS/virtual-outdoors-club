@@ -52,7 +52,7 @@ export default class ShoppingCartTable extends Reflux.Component {
     removeButtonFormatter(cell, row) {
         return (
             <Button
-                className="btn btn-danger removeFromCartButton"
+                className="btn btn-danger removeFromCartButton full-width"
                 onClick={
                     this.getRemoveAction(this.props.removeFromCart, row)
                 }

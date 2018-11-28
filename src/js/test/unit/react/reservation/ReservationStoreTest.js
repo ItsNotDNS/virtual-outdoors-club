@@ -565,7 +565,7 @@ describe("ReservationStore Test", () => {
     });
 
     it("onProcessNext - noneNext, setsCharge", () => {
-        store.state.returnProcessor.gear = [{depositFee:1}, {depositFee:2, status: "Good"}, {depositFee:3}]
+        store.state.returnProcessor.gear = [{depositFee:1}, {depositFee:2, status: "RENTABLE"}, {depositFee:3}]
         store.state.returnProcessor.index = 2
         store.state.returnProcessor.current = store.state.returnProcessor.gear[2]
 
@@ -590,7 +590,7 @@ describe("ReservationStore Test", () => {
     });
 
     it("onConditionChanged", () => {
-        store.onConditionChanged({ value: "testValue"})
+        store.onConditionChanged({ label: "", value: "testValue"})
         expect(store.state.returnProcessor.current.status).to.equal("testValue")
     });
 

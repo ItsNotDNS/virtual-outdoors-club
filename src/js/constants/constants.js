@@ -4,7 +4,7 @@
  * breaking everything.
  */
 
-export default {
+const constants = {
     accounts: {
         ADMIN: "admin",
         EXECUTIVE: "executive"
@@ -19,9 +19,15 @@ export default {
     },
     gear: {
         conditions: {
-            RENTABLE: "Rentable",
-            FLAGGED: "Flagged",
-            NEEDS_REPAIR: "Needs Repair"
+            RENTABLE: "RENTABLE",
+            FLAGGED: "FLAGGED",
+            NEEDS_REPAIR: "NEEDS_REPAIR"
+        },
+        conditionLabels: {
+            LOOKS_GOOD: "Looks Good",
+            BROKEN: "Broken",
+            NEEDS_CHECK: "Should Be Checked Further",
+            MISSING: "Not Returned"
         }
     },
     reservations: {
@@ -46,3 +52,5 @@ export default {
         DELETED: "DELETED"
     }
 };
+
+export default constants;

@@ -2,6 +2,21 @@ import React from "react";
 import Reflux from "reflux";
 import { ReservationStore, ReservationActions } from "./ReservationStore";
 import Select from "react-select";
+import constants from "../../constants/constants";
+
+const {
+    conditions: {
+        RENTABLE,
+        FLAGGED,
+        NEEDS_REPAIR
+    },
+    conditionLabels: {
+        LOOKS_GOOD,
+        BROKEN,
+        NEEDS_CHECK,
+        MISSING
+    }
+} = constants.gear;
 
 export default class ReturnProcessor extends Reflux.Component {
     constructor() {
@@ -47,7 +62,7 @@ export default class ReturnProcessor extends Reflux.Component {
             <div className="row">
                 <hr />
                 <div className="col-xs-4">
-                    <button onClick={ReservationActions.startReturnProcess}
+                    <button onClick={ReservationActions.processPrevious}
                         disabled={disableBack}
                         className="full-width btn btn-primary"
                     >
@@ -82,9 +97,10 @@ export default class ReturnProcessor extends Reflux.Component {
         const { index, current: { status, comment } } = this.state.returnProcessor,
             { code } = this.state.reservationModal.data.gear[index],
             options = [
-                { label: "Good", value: "Good" },
-                { label: "Missing", value: "Missing" },
-                { label: "Should be Checked Further", value: "Flagged" }
+                { label: LOOKS_GOOD, value: RENTABLE },
+                { label: BROKEN, value: NEEDS_REPAIR },
+                { label: NEEDS_CHECK, value: FLAGGED },
+                { label: MISSING, value: MISSING }
             ],
             selected = options.filter((option) => option.value === status);
 
@@ -105,7 +121,7 @@ export default class ReturnProcessor extends Reflux.Component {
                         />
                     </div>
                 </div>
-                {status !== "Good" ? this.getGearLockWarning() : null}
+                {status !== "RENTABLE" ? this.getGearLockWarning() : null}
                 <div className="row bottom-margin">
                     <div className="col-xs-12">
                         <strong>{"Comment (optional): "}</strong>

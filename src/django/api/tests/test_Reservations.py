@@ -224,7 +224,7 @@ class ReservationTestCase(TestCase):
                 "charge": 0,
                 "gear":[{
                        'id': self.sp.pk,
-                       "status": "MISSING",
+                       "status": "FLAGGED",
                        "comment": "Didn't get returned",
                     }
                 ]
@@ -248,7 +248,7 @@ class ReservationTestCase(TestCase):
                       'category': 'Ski poles',
                       'depositFee': '12.00',
                       'description': 'Ski poles',
-                      'condition': 'MISSING',
+                      'condition': 'FLAGGED',
                       "statusDescription": "Didn't get returned",
                       'version': 1}],
             'endDate': (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),

@@ -400,8 +400,10 @@ export default class ReservationModal extends React.Component {
                         activeKey={this.props.tabSelected}
                         onSelect={this.props.onTabSelected}
                     >
-                        {this.getReservationInfoTab(1)}
-                        {this.getReservationHistoryTab(2)}
+                        <div className="top-margin">
+                            {this.getReservationInfoTab(1)}
+                            {this.getReservationHistoryTab(2)}
+                        </div>
                     </Tabs>
                 </Modal.Body>
                 {

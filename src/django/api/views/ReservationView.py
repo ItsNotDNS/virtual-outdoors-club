@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from ..models import Reservation, System, Gear
 from ..emailing import cancelled, approved
 from ..views.PayPalView import process
-from ..serializers import ReservationPOSTSerializer, ReservationGETSerializer
+from ..serializers import ReservationPOSTSerializer, ReservationGETSerializer, GearSerializer
 from decimal import Decimal
 from django.db.models import Q
 from django.db import transaction
@@ -332,9 +332,14 @@ def checkin(request):
             if "gear" in request:
                 for gear in request["gear"]:
                     g = Gear.objects.get(id=gear["id"])
-                    g.condition = gear["status"]
-                    g.statusDescription = gear["comment"]
-                    g.save()
+                    patch = {
+                        "condition": gear["status"],
+                        "statusDescription": gear["comment"]
+                    }
+                    sGear = GearSerializer(g, data=patch, partial=True)
+                    if not sGear.is_valid():
+                        return serialValidation(sGear)
+                    sGear.save()
 
             if reservation.payment != "CASH":
                 status = process(reservation, charge)
