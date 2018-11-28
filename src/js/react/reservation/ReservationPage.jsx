@@ -60,6 +60,7 @@ export default class ReservationPage extends Reflux.Component {
                         <ReservationTable
                             reservationList={this.state.reservationList}
                             onSelectRow={ReservationActions.openReservationModal}
+                            checkboxOptions={this.state.checkboxOptions}
                         />
                         <ReservationModal
                             {...this.state.reservationModal}

@@ -7,6 +7,7 @@ import ReservationService from "../../services/ReservationService";
 import GearService from "../../services/GearService";
 import moment from "moment";
 import update from "immutability-helper";
+import Constants from "../../constants/constants";
 
 function defaultState() {
     return {
@@ -66,6 +67,14 @@ function defaultState() {
             charge: "",
             moneyToReturn: "",
             timeout: null
+        },
+        checkboxOptions: {
+            [Constants.reservations.status["REQUESTED"]]: true,
+            [Constants.reservations.status["APPROVED"]]: true,
+            [Constants.reservations.status["PAID"]]: true,
+            [Constants.reservations.status["TAKEN"]]: true,
+            [Constants.reservations.status["RETURNED"]]: false,
+            [Constants.reservations.status["CANCELLED"]]: false
         }
     };
 }
@@ -107,7 +116,9 @@ export const ReservationActions = Reflux.createActions([
     "commentChanged",
     "processNext",
     "chargeChanged",
-    "finishProcessing"
+    "finishProcessing",
+    // Reservation filtering Actions
+    "reservationStatusCheckBoxChange"
 ]);
 
 export class ReservationStore extends Reflux.Store {
@@ -694,5 +705,15 @@ export class ReservationStore extends Reflux.Store {
                     this.updateModalAndList(reservation);
                 }
             });
+    }
+
+    // Reservation filtering Actions
+    onReservationStatusCheckBoxChange(checkboxKey, checkBoxChecked) {
+        const newState = update(this.state, {
+            checkboxOptions: {
+                [checkboxKey]: { $set: checkBoxChecked }
+            }
+        });
+        this.setState(newState);
     }
 }

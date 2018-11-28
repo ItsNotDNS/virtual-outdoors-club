@@ -390,3 +390,32 @@
     }
 
 }
+
+.reservation-badge {
+    width: 100%;
+    border-radius: 25px;
+    &.cancelled {
+        color: white;
+        background-color: #7f7f7f;
+    }
+    &.returned {
+        color: white;
+        background-color: #7f7f7f;
+    }
+    &.requested {
+        color: white;
+        background-color: #741D93;
+    }
+    &.taken {
+        color: white;
+        background-color: #1E3888;
+    }
+    &.approved {
+        color: white;
+        background-color: #3EC300;
+    }
+    &.paid {
+        color: white;
+        background-color: #FFFC31;
+    }
+}

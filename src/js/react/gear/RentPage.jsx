@@ -10,7 +10,7 @@ import RentGearTable from "./RentGearTable";
 import ShoppingCartTable from "./ShoppingCartTable";
 import LabeledInput from "../components/LabeledInput";
 import ErrorAlert from "../components/ErrorAlert";
-import { Button, Tab, Tabs } from "react-bootstrap";
+import { Button, ControlLabel, Tab, Tabs } from "react-bootstrap";
 import ButtonModalForm from "../components/ButtonModalForm";
 import DateRangePicker from "../components/DateRangePicker";
 import { ToastContainer } from "react-toastify";
@@ -129,6 +129,11 @@ export default class RentPage extends Reflux.Component {
                         horizontal={false}
                         startDate={this.state.dateFilter.startDate}
                         endDate={this.state.dateFilter.endDate}
+                    />
+                    <ControlLabel>Shopping Cart</ControlLabel>
+                    <ShoppingCartTable
+                        removeFromCart={GearActions.removeFromShoppingCart}
+                        shoppingList={this.state.shoppingList}
                     />
                 </ButtonModalForm>
                 <Tabs defaultActiveKey={1} id="rent-view-tabs">
