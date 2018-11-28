@@ -1,7 +1,8 @@
 from django.test import TestCase
 from rest_framework.test import APIRequestFactory
 from decimal import Decimal
-from ..models import GearCategory, Gear
+from ..models import GearCategory, Gear, Reservation
+import datetime
 
 
 class GearTestCase(TestCase):
@@ -44,6 +45,32 @@ class GearTestCase(TestCase):
         }
 
         self.assertEqual(response, expectedResponse)
+
+    def test_get_reservation(self):
+        today = datetime.datetime.today()
+        startDate=today.strftime("%Y-%m-%d")
+        endDate=(today + datetime.timedelta(days=3)).strftime("%Y-%m-%d")
+        url = "/api/gear?from=" + startDate + "&to=" + endDate
+        response = self.client.get(url, content_type="application/json").data["data"]
+        originalResponseLength = len(response)
+
+        gr = Reservation.objects.create(
+            email="enry@email.com", 
+            licenseName="Name on their license.",
+            status="APPROVED",
+            licenseAddress="Address on their license.", 
+            approvedBy="nobody",
+            startDate=startDate,
+            endDate=endDate
+        )
+        gr.gear.add(self.gearObj1)
+        gr.save()
+
+        response = self.client.get(url, content_type="application/json").data["data"]
+        newResponseLen = len(response)
+
+        self.assertEqual(originalResponseLength - 1, newResponseLen)
+
 
     def test_gearHistory(self):
         response = self.client.get("/api/gear/history/?id=2", content_type="application/json").data

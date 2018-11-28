@@ -44,10 +44,10 @@ class GearView(APIView):
                 return RespError(400, "Date must be in year-month-day format")
 
             dateFilter = Q(startDate__range=[start, end]) | \
-                         Q(endDate__range=[start, end]) | \
-                         Q(startDate__lte=start, endDate__gte=end)
+                        Q(endDate__range=[start, end]) | \
+                        Q(startDate__lte=start, endDate__gte=end)
 
-            resGear = Reservation.objects.filter(dateFilter).values("gear")
+            resGear = Reservation.objects.filter(dateFilter).exclude(status__in=["RETURNED", "CANCELLED"]).values("gear")
 
             if resGear.exists():
                 gear = gear.exclude(id__in=resGear)
