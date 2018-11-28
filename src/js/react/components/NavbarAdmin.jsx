@@ -33,8 +33,8 @@ export default class NavbarAdmin extends React.Component {
                             <LinkContainer to="#">
                                 <MenuItem disabled eventKey={5.1}>Enable/Disable Rental System</MenuItem>
                             </LinkContainer>
-                            <LinkContainer to="#">
-                                <MenuItem disabled eventKey={5.2}>Statistics</MenuItem>
+                            <LinkContainer to="/statistics">
+                                <MenuItem eventKey={5.2}>Statistics</MenuItem>
                             </LinkContainer>
                             <LinkContainer to="/variability">
                                 <MenuItem eventKey={5.3}>System Variables</MenuItem>
