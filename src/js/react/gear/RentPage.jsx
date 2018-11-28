@@ -86,6 +86,10 @@ export default class RentPage extends Reflux.Component {
                     draggablePercent={80}
                     pauseOnHover={false}
                 />
+                <ErrorAlert
+                    show={this.state.error}
+                    errorMessage={this.state.errorMessage}
+                />
                 <Button
                     className="btn btn-primary pull-right "
                     disabled={this.state.checkoutDisabled}
@@ -98,13 +102,9 @@ export default class RentPage extends Reflux.Component {
                     onSubmit={GearActions.submitReserveGearForm}
                     onClose={GearActions.closeReserveGearForm}
                     show={this.state.reserveGearForm.show}
-                    error={false}
-                    errorMessage={"error"}
+                    error={this.state.reserveGearForm.error}
+                    errorMessage={this.state.reserveGearForm.errorMessage}
                 >
-                    <ErrorAlert
-                        show={this.state.reserveGearForm.error}
-                        errorMessage={this.state.reserveGearForm.errorMessage}
-                    />
                     <LabeledInput
                         label="Email"
                         name="email"

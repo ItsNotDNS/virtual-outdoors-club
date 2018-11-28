@@ -122,4 +122,38 @@ export default class ReservationService {
                 return { reservation: response.data };
             }).catch(genericCatch);
     }
+
+    fetchSystemStatus() {
+        return this.service.get(
+            `${config.databaseHost}/system`
+        ).then((response) => {
+            return { data: response.data.data };
+        }).catch((error) => {
+            return { error: error.response.data.message };
+        });
+    }
+
+    enableSystem() {
+        return this.service.post(`${config.databaseHost}/system/`, {
+            disableSys: false
+        })
+            .then((response) => {
+                return { data: response.data.data };
+            }).catch((error) => {
+                return { error: error.response.data.message };
+            });
+    }
+
+    disableSystem(cancelReservations) {
+        return this.service.post(`${config.databaseHost}/system/`,
+            {
+                disableSys: true,
+                cancelRes: cancelReservations
+            })
+            .then((response) => {
+                return { data: response.data.data };
+            }).catch((error) => {
+                return { error: error.response.data.message };
+            });
+    }
 }

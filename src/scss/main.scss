@@ -391,6 +391,10 @@
 
 }
 
+.system-status-label {
+    margin-left: 1%;
+}
+
 .reservation-badge {
     width: 100%;
     border-radius: 25px;
@@ -416,6 +420,6 @@
     }
     &.paid {
         color: white;
-        background-color: #FFFC31;
+        background-color: #ffc100;
     }
 }

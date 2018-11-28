@@ -16,6 +16,7 @@ import PaymentPage from "./reservation/payment/PaymentPage";
 import VariabilityPage from "./variability/EditVariabilityPage";
 import AccountPage from "./accounts/AccountsPage";
 import StatisticsPage from "./statistics/StatisticsPage";
+import DisableSystemPage from "./reservation/DisableSystemPage";
 
 export default class App extends React.Component {
     constructor(props) {
@@ -57,6 +58,7 @@ export default class App extends React.Component {
                     <Route path="/pay" component={PaymentPage} />
                     <Route path="/variability" component={this.AdminWrapper(VariabilityPage)} />
                     <Route path="/statistics" component={this.AdminWrapper(StatisticsPage)} />
+                    <Route path="/disable" component={this.AdminWrapper(DisableSystemPage)} />
                 </div>
             </BrowserRouter>
         );

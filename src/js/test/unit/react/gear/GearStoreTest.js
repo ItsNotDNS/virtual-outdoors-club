@@ -132,7 +132,8 @@ describe("GearStore Tests", () => {
         return gearStore.onFetchGearList().then(() => {
             expect(gearStore.state.fetchedGearList).to.be.true;
             expect(gearStore.state.gearList).to.deep.equal(mockGearList);
-            expect(gearStore.state.error).to.equal("");
+            expect(gearStore.state.error).to.equal(false);
+            expect(gearStore.state.errorMessage).to.equal("");
         });
     });
 
@@ -147,7 +148,8 @@ describe("GearStore Tests", () => {
         return gearStore.onFetchGearList().then(() => {
             expect(gearStore.state.fetchedGearList).to.be.true;
             expect(gearStore.state.gearList).to.deep.equal([]);
-            expect(gearStore.state.error).to.equal(error.response.data.message);
+            expect(gearStore.state.error).to.equal(true);
+            expect(gearStore.state.errorMessage).to.equal(error.response.data.message);
         });
     });
 
@@ -165,7 +167,8 @@ describe("GearStore Tests", () => {
             expect(gearStore.state.rentableList.includes(mockGearList[1])).to.be.false;
             expect(gearStore.state.rentableList.includes(mockGearList[2])).to.be.false;
             expect(gearStore.state.rentableList.includes(mockGearList[3])).to.be.false;
-            expect(gearStore.state.error).to.equal("");
+            expect(gearStore.state.error).to.equal(false);
+            expect(gearStore.state.errorMessage).to.equal("");
         });
     });
 
@@ -180,7 +183,8 @@ describe("GearStore Tests", () => {
         return gearStore.onFetchRentableGearList().then(() => {
             expect(gearStore.state.fetchedRentableGearList).to.be.true;
             expect(gearStore.state.rentableList).to.deep.equal([]);
-            expect(gearStore.state.error).to.equal(error.response.data.message);
+            expect(gearStore.state.error).to.equal(true);
+            expect(gearStore.state.errorMessage).to.equal(error.response.data.message);
         });
     });
 
@@ -195,7 +199,8 @@ describe("GearStore Tests", () => {
         return gearStore.onFetchGearList().then(() => {
             expect(gearStore.state.fetchedGearList).to.be.true;
             expect(gearStore.state.gearList).to.deep.equal([]);
-            expect(gearStore.state.error).to.contain("try again later");
+            expect(gearStore.state.error).to.equal(true);
+            expect(gearStore.state.errorMessage).to.contain("try again later");
         });
     });
 

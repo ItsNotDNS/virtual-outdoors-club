@@ -28,7 +28,8 @@ function defaultState() {
     return {
         fetchedGearList: false, // initial check to fetch the gear list
         tabSelected: 1,
-        error: "",
+        error: false,
+        errorMessage: "",
         upload: {
             gear: [],
             categories: [],
@@ -189,7 +190,8 @@ export class GearStore extends Reflux.Store {
                     });
                 } else {
                     this.setState({
-                        error
+                        error: true,
+                        errorMessage: error
                     });
                 }
             });
@@ -214,7 +216,8 @@ export class GearStore extends Reflux.Store {
                     });
                 } else {
                     this.setState({
-                        error
+                        error: true,
+                        errorMessage: error
                     });
                 }
             });

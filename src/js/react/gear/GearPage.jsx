@@ -206,7 +206,7 @@ export default class GearPage extends Reflux.Component {
     render() {
         return (
             <div className="gear-view">
-                <ErrorAlert show={!!this.state.error} errorMessage={this.state.error} />
+                <ErrorAlert show={this.state.error} errorMessage={this.state.errorMessage} />
                 <Tabs id="gear-view-tabs"
                     activeKey={this.state.tabSelected}
                     onSelect={GearActions.tabSelected}

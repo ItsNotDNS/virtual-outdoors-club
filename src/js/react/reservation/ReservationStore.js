@@ -54,6 +54,15 @@ function defaultState() {
             startDate: null,
             endDate: null
         },
+        disableSystem: {
+            disableRent: false,
+            showDialog: false,
+            cancelFutureReservations: false,
+            error: false,
+            errorMessage: "",
+            fetchError: false,
+            fetchErrorMessage: ""
+        },
         // ReturnProcessor State (uses gearList in reservationModal)
         returnProcessor: {
             index: -1,
@@ -109,6 +118,13 @@ export const ReservationActions = Reflux.createActions([
     "fetchReservationListFromTo",
     "showConfirmation",
     "hideConfirmation",
+    // Disable system Actions
+    "fetchSystemStatus",
+    "enableSystem",
+    "disableSystem",
+    "openDisableSystemDialog",
+    "closeDisableSystemDialog",
+    "cancelFutureReservationsChange",
     // ReturnProcessor Actions
     "startReturnProcess",
     "cancelReturnProcess",
@@ -555,6 +571,110 @@ export class ReservationStore extends Reflux.Store {
                     });
                 }
             });
+    }
+
+    /***************************************************************************
+     * Disable system Actions
+     **************************************************************************/
+    onFetchSystemStatus() {
+        const service = new ReservationService();
+        return service.fetchSystemStatus()
+            .then(({ data, error }) => {
+                if (data) {
+                    const newState = update(this.state, {
+                        disableSystem: {
+                            disableRent: { $set: data[0].disabled }
+                        }
+                    });
+                    this.setState(newState);
+                } else {
+                    const newState = update(this.state, {
+                        disableSystem: {
+                            fetchError: { $set: true },
+                            fetchErrorMessage: { $set: error }
+                        }
+                    });
+                    this.setState(newState);
+                }
+            });
+    }
+
+    onOpenDisableSystemDialog() {
+        const newState = update(this.state, {
+            disableSystem: {
+                showDialog: { $set: true }
+            }
+        });
+        this.setState(newState);
+    }
+
+    onCloseDisableSystemDialog() {
+        const newState = update(this.state, {
+            disableSystem: {
+                showDialog: { $set: false }
+            }
+        });
+        this.setState(newState);
+    }
+
+    onEnableSystem() {
+        const service = new ReservationService();
+        return service.enableSystem()
+            .then(({ data, error }) => {
+                if (error) {
+                    const newState = update(this.state, {
+                        disableSystem: {
+                            error: { $set: true },
+                            errorMessage: { $set: error }
+                        }
+                    });
+                    this.setState(newState);
+                } else {
+                    const newState = update(this.state, {
+                        disableSystem: {
+                            disableRent: { $set: false },
+                            showDialog: { $set: false }
+                        }
+                    });
+                    this.setState(newState);
+                }
+            });
+    }
+
+    onDisableSystem() {
+        const service = new ReservationService();
+        return service.disableSystem(this.state.disableSystem.cancelFutureReservations)
+            .then(({ data, error }) => {
+                if (error) {
+                    const newState = update(this.state, {
+                        disableSystem: {
+                            error: { $set: true },
+                            errorMessage: { $set: error }
+                        }
+                    });
+                    this.setState(newState);
+                } else {
+                    const newState = update(this.state, {
+                        disableSystem: {
+                            disableRent: { $set: true },
+                            showDialog: { $set: false }
+                        }
+                    });
+                    this.setState(newState);
+                    if (this.state.disableSystem.cancelFutureReservations) {
+                        this.onFetchReservationList();
+                    }
+                }
+            });
+    }
+
+    onCancelFutureReservationsChange() {
+        const newState = update(this.state, {
+            disableSystem: {
+                cancelFutureReservations: { $set: !this.state.disableSystem.cancelFutureReservations }
+            }
+        });
+        this.setState(newState);
     }
 
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *

@@ -403,6 +403,73 @@ describe("ReservationStore Test", () => {
         });	
     });
 
+    it("open closes DisableSystemDialog success", () => {
+        expect(store.state.disableSystem.showDialog).to.equal(false);
+        store.onOpenDisableSystemDialog();
+        expect(store.state.disableSystem.showDialog).to.equal(true);
+        store.onCloseDisableSystemDialog();
+        expect(store.state.disableSystem.showDialog).to.equal(false);
+    });
+
+    it("onEnableSystem - error path", () => {
+        const error = { response: { data: { message: "this is an error message" } } },
+            promise = Promise.reject(error);
+         axiosPostStub.returns(promise); // set stub to return mock data
+         return store.onEnableSystem().then(() => {
+            expect(store.state.disableSystem.error).to.be.true;
+            expect(store.state.disableSystem.errorMessage).to.equal("this is an error message");
+        });
+    });
+
+    it("onEnableSystem - success path", () => {
+        const promise = Promise.resolve({ data: "" });
+         axiosPostStub.returns(promise); // set stub to return mock data
+         return store.onEnableSystem().then(() => {
+            expect(store.state.disableSystem.disableRent).to.equal(false);
+        });
+    });
+
+    it("onDisableSystem - error path", () => {
+        const error = { response: { data: { message: "this is an error message" } } },
+            promise = Promise.reject(error);
+         axiosPostStub.returns(promise); // set stub to return mock data
+         return store.onDisableSystem().then(() => {
+            expect(store.state.disableSystem.error).to.be.true;
+            expect(store.state.disableSystem.errorMessage).to.equal("this is an error message");
+        });
+    });
+
+    it("onDisableSystem - success path", () => {
+        const promise = Promise.resolve({ data: "" });
+         axiosPostStub.returns(promise); // set stub to return mock data
+         return store.onDisableSystem().then(() => {
+            expect(store.state.disableSystem.disableRent).to.equal(true);
+        });
+    });
+
+    it("onFetchSystemStatus - error path", () => {
+        const error = { response: { data: { message: "this is an error message" } } },
+            promise = Promise.reject(error);
+         axiosGetStub.returns(promise); // set stub to return mock data
+         return store.onFetchSystemStatus().then(() => {
+            expect(store.state.disableSystem.fetchError).to.be.true;
+            expect(store.state.disableSystem.fetchErrorMessage).to.equal("this is an error message");
+        });
+    });
+
+    it("onFetchSystemStatus - success path", () => {
+        const promise1 = Promise.resolve({ data: [{service: "disableSys", disabled: false}] }),
+            promise2 = Promise.resolve({ data: [{service: "disableSys", disabled: true}] });
+         axiosGetStub.returns(promise1);
+         return store.onFetchSystemStatus().then(() => {
+            expect(store.state.disableSystem.disableRent).to.equal(false);
+        });
+         axiosPostStub.returns(promise2);
+         return store.onFetchSystemStatus().then(() => {
+            expect(store.state.disableSystem.disableRent).to.equal(true);
+        });
+    });
+
     it("onStartReturnProcess", () => {
         store.state.reservationModal.data.gear = [{
             id: 1,
@@ -521,7 +588,7 @@ describe("ReservationStore Test", () => {
             2:2, edit: "test"
         })
     });
-    
+
     it("onConditionChanged", () => {
         store.onConditionChanged({ value: "testValue"})
         expect(store.state.returnProcessor.current.status).to.equal("testValue")
