@@ -218,7 +218,16 @@ def getHistory(request):
         return RespError(400, "There is no reservation with the id of '" + str(ID) + "'.")
     res = res.history.all()
     serial = ReservationGETSerializer(res, many=True)
-    return Response({"data": serial.data})
+
+    data = []
+    for i in range(len(serial.data)):
+        if i == 0:
+            data.append(serial.data[i])
+            continue
+        if serial.data[i] != serial.data[i-1]:
+            data.append(serial.data[i])
+
+    return Response({"data": data})
 
 
 @api_view(['POST'])

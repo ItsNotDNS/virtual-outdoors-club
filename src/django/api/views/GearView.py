@@ -167,7 +167,15 @@ def getHistory(request):
     else:
         return RespError(400, "Must give the ID to search for")
 
-    gear = GearSerializer(gear, many=True)
-    return Response({"data": gear.data})
+    serial = GearSerializer(gear, many=True)
 
+    data = []
+    for i in range(len(serial.data)):
+        if i == 0:
+            data.append(serial.data[i])
+            continue
+        if serial.data[i] != serial.data[i-1]:
+            data.append(serial.data[i])
+
+    return Response({"data": data})
 

@@ -110,8 +110,8 @@ class ReservationTestCase(TestCase):
         response = self.client.patch("/api/reservation", request, content_type="application/json").data
 
         # testing get history request with id
-        response = self.client.get('/api/reservation/history/?id=' + str(self.reservationId), content_type="application/json").data
-        self.assertEqual(len(response["data"]), 3)
+        response = self.client.get('/api/reservation/history/?id=2', content_type="application/json").data
+        self.assertEqual(len(response["data"]), 2)
 
     def test_checkout(self):
         request = {"id": self.reservationId}
