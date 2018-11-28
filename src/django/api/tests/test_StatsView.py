@@ -1,6 +1,5 @@
 from django.test import TestCase
 from ..models import GearCategory, Gear, GearStat
-from decimal import Decimal
 import datetime
 
 
@@ -50,17 +49,17 @@ class StatsViewTestCase(TestCase):
         correct_response = {
             'gear': {
                 'SP01': {
-                    'description': '',
-                    'usage': [Decimal('0.1428571428571428571428571429')]},
+                    'description': '', 
+                    'usage': [0.14285714285714285]},
                 'MP02': {
                     'description': '',
-                    'usage': [Decimal('0.5714285714285714285714285714')]},
+                    'usage': [0.5714285714285714]},
                 'MP01': {
                     'description': '',
-                    'usage': [Decimal('0.5714285714285714285714285714')]}},
+                    'usage': [0.5714285714285714]}},
             'category': {
-                'Ski Poles': [Decimal('0.1428571428571428571428571429')],
-                'Map': [Decimal('0.5714285714285714285714285714')]}
+                'Ski Poles': [0.14285714285714285],
+                'Map': [0.5714285714285714]}
         }
 
         query = '/api/statistics?from=' + (self.today - datetime.timedelta(days=7)).strftime("%Y-%m-%d")
@@ -71,16 +70,16 @@ class StatsViewTestCase(TestCase):
             'gear': {
                 'SP01': {
                     'description': '',
-                    'usage': [Decimal('0.1428571428571428571428571429'), Decimal('0.5714285714285714285714285714')]},
+                    'usage': [0.14285714285714285, 0.5714285714285714]},
                 'MP02': {
                     'description': '',
-                    'usage': [Decimal('0.5714285714285714285714285714'), 0]},
+                    'usage': [0.5714285714285714, 0]},
                 'MP01': {
                     'description': '',
-                    'usage': [Decimal('0.5714285714285714285714285714'), Decimal('0.7142857142857142857142857143')]}},
+                    'usage': [0.5714285714285714, 0.7142857142857143]}},
             'category': {
-                'Ski Poles': [Decimal('0.1428571428571428571428571429'), Decimal('0.5714285714285714285714285714')],
-                'Map': [Decimal('0.5714285714285714285714285714'), Decimal('0.7142857142857142857142857143')]}
+                'Ski Poles': [0.14285714285714285, 0.2857142857142857],
+                'Map': [0.5714285714285714, 0.35714285714285715]}
         }
 
         query = '/api/statistics?from=' + (self.today - datetime.timedelta(days=14)).strftime("%Y-%m-%d")
@@ -91,13 +90,13 @@ class StatsViewTestCase(TestCase):
             'gear': {
                 'SP01': {
                     'description': '',
-                    'usage': [Decimal('0.5714285714285714285714285714')]},
+                    'usage': [0.5714285714285714]},
                 'MP01': {
                     'description': '',
-                    'usage': [Decimal('0.7142857142857142857142857143')]}},
+                    'usage': [0.7142857142857143]}},
             'category': {
-                'Ski Poles': [Decimal('0.5714285714285714285714285714')],
-                'Map': [Decimal('0.7142857142857142857142857143')]}
+                'Ski Poles': [0.5714285714285714],
+                'Map': [0.7142857142857143]}
         }
 
         query = '/api/statistics?to=' + (self.today - datetime.timedelta(days=7)).strftime("%Y-%m-%d")
@@ -117,16 +116,16 @@ class StatsViewTestCase(TestCase):
             'gear': {
                 'SP01': {
                     'description': '',
-                    'usage': [Decimal('0.1428571428571428571428571429')]},
+                    'usage': [0.14285714285714285]},
                 'MP02': {
                     'description': '',
-                    'usage': [Decimal('0.5714285714285714285714285714')]},
+                    'usage': [0.5714285714285714]},
                 'MP01': {
                     'description': '',
-                    'usage': [Decimal('0.5714285714285714285714285714')]}},
+                    'usage': [0.5714285714285714]}},
             'category': {
-                'Ski Poles': [Decimal('0.1428571428571428571428571429')],
-                'Map': [Decimal('0.5714285714285714285714285714')]}
+                'Ski Poles': [0.14285714285714285],
+                'Map': [0.5714285714285714]}
         }
 
         query = '/api/statistics?from=' + (self.today - datetime.timedelta(days=7)).strftime("%Y-%m-%d") + '&to=' + self.today.strftime("%Y-%m-%d")
@@ -137,16 +136,16 @@ class StatsViewTestCase(TestCase):
             'gear': {
                 'SP01': {
                     'description': '',
-                    'usage': [Decimal('0.1428571428571428571428571429'), Decimal('0.5714285714285714285714285714')]},
+                    'usage': [0.14285714285714285, 0.5714285714285714]},
                 'MP02': {
                     'description': '',
-                    'usage': [Decimal('0.5714285714285714285714285714'), 0]},
+                    'usage': [0.5714285714285714, 0]},
                 'MP01': {
                     'description': '',
-                    'usage': [Decimal('0.5714285714285714285714285714'), Decimal('0.7142857142857142857142857143')]}},
+                    'usage': [0.5714285714285714, 0.7142857142857143]}},
             'category': {
-                'Ski Poles': [Decimal('0.1428571428571428571428571429'), Decimal('0.5714285714285714285714285714')],
-                'Map': [Decimal('0.5714285714285714285714285714'), Decimal('0.7142857142857142857142857143')]}
+                'Ski Poles': [0.14285714285714285, 0.2857142857142857],
+                'Map': [0.5714285714285714, 0.35714285714285715]}
         }
 
         query = '/api/statistics?from=' + (self.today - datetime.timedelta(days=14)).strftime("%Y-%m-%d") + '&to=' + self.today.strftime("%Y-%m-%d")
@@ -157,13 +156,13 @@ class StatsViewTestCase(TestCase):
             'gear': {
                 'SP01': {
                     'description': '',
-                    'usage': [Decimal('0.5714285714285714285714285714')]},
+                    'usage': [0.5714285714285714]},
                 'MP01': {
                     'description': '',
-                    'usage': [Decimal('0.7142857142857142857142857143')]}},
+                    'usage': [0.7142857142857143]}},
             'category': {
-                'Ski Poles': [Decimal('0.5714285714285714285714285714')],
-                'Map': [Decimal('0.7142857142857142857142857143')]}
+                'Ski Poles': [0.5714285714285714],
+                'Map': [0.7142857142857143]}
         }
 
         query = '/api/statistics?from=' + (self.today - datetime.timedelta(days=14)).strftime("%Y-%m-%d") + '&to=' + (self.today - datetime.timedelta(days=7)).strftime("%Y-%m-%d")

@@ -2,10 +2,12 @@ from rest_framework import serializers
 from .models import Gear, GearCategory, Reservation, UserVariability, Member, BlackList, System
 from datetime import datetime
 from django.db.models import Q
-import datetime, pytz
+import datetime
+
 
 class SystemSerializer(serializers.ModelSerializer):
-     class Meta:
+
+    class Meta:
         model = System
         fields = [
             "service",
@@ -32,6 +34,7 @@ class MemberSerializer(serializers.ModelSerializer):
 
     def validate_email(self, value):
         return value.lower()
+
 
 class BlackListSerializer(serializers.ModelSerializer):
 
