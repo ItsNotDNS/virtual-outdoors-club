@@ -63,7 +63,8 @@ class GearView(APIView):
             "category": False,
             "depositFee": False,
             "description": False,
-            "condition": False
+            "condition": False,
+            "statusDescription": False
         }
 
         # check for extra uncessessary keys
@@ -91,7 +92,8 @@ class GearView(APIView):
             "category": True,
             "depositFee": True,
             "description": True,
-            "condition": True
+            "condition": True,
+            "statusDescription": True
         }
 
         idToUpdate = request.get("id", None)
@@ -111,6 +113,9 @@ class GearView(APIView):
         for key in patch:
             if key not in allowedPatchMethods:
                 return RespError(400, "'" + key + "' is not a valid patch method.")
+
+        if "condition" in patch and patch["condition"] == "DELETED":
+            return RespError(400, "You cannot set the gear condition to deleted, you must delete the gear!")
 
         try:
             gear = Gear.objects.get(id=idToUpdate)

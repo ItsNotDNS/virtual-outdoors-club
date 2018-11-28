@@ -11,8 +11,9 @@ const { EXECUTIVE, MEMBER } = constants.variability,
     VariableActions = Reflux.createActions([
         "updateExecVariable",
         "updateMemberVariable",
-        "saveSystemVariables",
-        "fetchSystemVariables"
+        "saveExecSystemVariables",
+        "fetchSystemVariables",
+        "saveMemberSystemVariables"
     ]);
 
 export { VariableActions };
@@ -107,9 +108,9 @@ export class VariableStore extends Reflux.Store {
             });
     }
 
-    onSaveSystemVariables() {
+    onSaveMemberSystemVariables() {
         const service = new VariabilityService();
-        return service.setSystemVariables(this.state.settings)
+        return service.setMemberSystemVariables(this.state.settings)
             .then(({ error }) => {
                 if (error) {
                     const newState = update(this.state, {
@@ -118,7 +119,25 @@ export class VariableStore extends Reflux.Store {
                     this.setState(newState);
                     toast.error(error, { className: "custom-error-toast" });
                 } else {
-                    toast.success("Values changed successfully",
+                    toast.success("Member settings changed successfully",
+                        { className: "custom-success-toast" }
+                    );
+                }
+            });
+    }
+
+    onSaveExecSystemVariables() {
+        const service = new VariabilityService();
+        return service.setExecSystemVariables(this.state.settings)
+            .then(({ error }) => {
+                if (error) {
+                    const newState = update(this.state, {
+                        error: { $set: true }
+                    });
+                    this.setState(newState);
+                    toast.error(error, { className: "custom-error-toast" });
+                } else {
+                    toast.success("Exec settings changed successfully",
                         { className: "custom-success-toast" }
                     );
                 }

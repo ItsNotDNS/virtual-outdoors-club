@@ -6,7 +6,6 @@ import { expect } from "chai";
 import axios from "axios";
 import GearService from "../../../../services/GearService";
 import { GearActions } from "../../../../react/gear/GearStore";
-import moment from "moment";
 
 let getStub, postStub, patchStub, deleteStub,
     gearStore = new GearStore();
@@ -34,7 +33,7 @@ const sandbox = sinon.createSandbox(),
         "code": "BK02",
         "description": "Mountains 101",
         "category": "book",
-        "condition": "RENTABLE",
+        "condition": "FLAGGED",
         "version": 3
     }, {
         "id": 3,
@@ -42,7 +41,15 @@ const sandbox = sinon.createSandbox(),
         "code": "TN01",
         "description": "Tent for 4 people",
         "category": "tent",
-        "condition": "RENTABLE",
+        "condition": "DELETED",
+        "version": 1
+    }, {
+        "id": 4,
+        "depositFee": "50.00",
+        "code": "TN021",
+        "description": "Tent for 4 people",
+        "category": "tent",
+        "condition": "NEEDS_REPAIR",
         "version": 1
     }],
     mockReservationInfo = { "email": "henry@email.com",
@@ -78,7 +85,22 @@ const sandbox = sinon.createSandbox(),
             gear: [mockGearList[0], mockGearList[1]],
             status: "REQUESTED"
         }
-    ];
+    ],
+    mockGearModal = {
+        show: false,
+        error: false,
+        errorMessage: "",
+        mode: null,
+        id: null,
+        expectedVersion: null,
+        gearCode: "",
+        depositFee: "",
+        gearCategory: "",
+        gearDescription: "",
+        tabSelected: 1,
+        gearHistory: [],
+        gearReservationHistory: []
+    };
 
 describe("GearStore Tests", () => {
     beforeEach(() => {
@@ -129,6 +151,39 @@ describe("GearStore Tests", () => {
         });
     });
 
+    it("onFetchRentableGearList - success path", () => {
+        const promise = Promise.resolve({ data: { data: mockGearList } });
+        console.log(mockGearList);
+        expect(gearStore.state.fetchedRentableGearList).to.be.false;
+
+        getStub.returns(promise); // set stub to return mock data
+
+        return gearStore.onFetchRentableGearList().then(() => {
+            console.log(gearStore.state.rentableList);
+            expect(gearStore.state.fetchedRentableGearList).to.be.true;
+            expect(gearStore.state.rentableList.includes(mockGearList[0])).to.be.true;
+            expect(gearStore.state.rentableList.includes(mockGearList[1])).to.be.false;
+            expect(gearStore.state.rentableList.includes(mockGearList[2])).to.be.false;
+            expect(gearStore.state.rentableList.includes(mockGearList[3])).to.be.false;
+            expect(gearStore.state.error).to.equal("");
+        });
+    });
+
+    it("onFetchRentableGearList - error path", () => {
+        const error = { response: { data: { message: "this is an error message" } } },
+            promise = Promise.reject(error);
+
+        expect(gearStore.state.fetchedRentableGearList).to.be.false;
+
+        getStub.returns(promise); // set stub to return mock data
+
+        return gearStore.onFetchRentableGearList().then(() => {
+            expect(gearStore.state.fetchedRentableGearList).to.be.true;
+            expect(gearStore.state.rentableList).to.deep.equal([]);
+            expect(gearStore.state.error).to.equal(error.response.data.message);
+        });
+    });
+
     it("onFetchGearList - error path without a response from server", () => {
         const error = {},
             promise = Promise.reject(error);
@@ -146,18 +201,7 @@ describe("GearStore Tests", () => {
 
     it("onOpenGearModal - open and close CREATE path", () => {
         // initial state
-        expect(gearStore.state.gearModal).to.deep.equal({
-            show: false,
-            error: false,
-            errorMessage: "",
-            mode: null,
-            id: null,
-            expectedVersion: null,
-            gearCode: "",
-            depositFee: "",
-            gearCategory: "",
-            gearDescription: ""
-        });
+        expect(gearStore.state.gearModal).to.deep.equal(mockGearModal);
 
         gearStore.onOpenGearModal();
 
@@ -172,24 +216,16 @@ describe("GearStore Tests", () => {
             gearCode: "",
             depositFee: "",
             gearCategory: "",
-            gearDescription: ""
+            gearDescription: "",
+            tabSelected: 1,
+            gearHistory: [],
+            gearReservationHistory: []
         });
 
         gearStore.onCloseGearModal();
 
         // returns to base state
-        expect(gearStore.state.gearModal).to.deep.equal({
-            show: false,
-            error: false,
-            errorMessage: "",
-            mode: null,
-            id: null,
-            expectedVersion: null,
-            gearCode: "",
-            depositFee: "",
-            gearCategory: "",
-            gearDescription: ""
-        });
+        expect(gearStore.state.gearModal).to.deep.equal(mockGearModal);
     });
 
     it("onGearModalChanged - all fields update", () => {
@@ -257,6 +293,8 @@ describe("GearStore Tests", () => {
         const mockGear = mockGearList[2],
             mockGearResponse = JSON.parse(JSON.stringify(mockGear)); // cloning method
 
+        sandbox.stub(gearStore, "fetchGearHistory");
+
         // modify our expectation
         mockGearResponse.version += 1;
         mockGearResponse.description = "this is a new gear description";
@@ -299,6 +337,8 @@ describe("GearStore Tests", () => {
         const mockGear = mockGearList[2],
             mockGearResponse = JSON.parse(JSON.stringify(mockGear)), // cloning method
             error = { response: { data: { message: "this is an error message" } } };
+
+        sandbox.stub(gearStore, "fetchGearHistory")
 
         // modify our expectation
         mockGearResponse.version += 1;
@@ -783,24 +823,89 @@ describe("GearStore Tests", () => {
         expect(gearStore.state.dateFilter.endDate.getTime()).to.equal(targetEndDate.getTime());
     });
 
-    it("onFetchGearListFromTo - success", () => {
-        const mockStartDate = "2018-01-01",
-            mockEndDate = "2018-01-02";
+    it("onFetchRentableListFromTo - success", () => {
+        const mockStartDate = new Date("2018-01-01"),
+            mockEndDate = new Date("2018-01-02");
         getStub.returns(Promise.resolve({ data: { data: mockGearList } }));
-        gearStore.onFetchGearListFromTo(mockStartDate, mockEndDate);
-        return gearStore.onFetchGearListFromTo(mockStartDate, mockEndDate).then(() => {
-            expect(gearStore.state.gearList).to.be.equal(mockGearList);
+        gearStore.onFetchRentableListFromTo(mockStartDate, mockEndDate);
+        return gearStore.onFetchRentableListFromTo(mockStartDate, mockEndDate).then(() => {
+            expect(gearStore.state.rentableList).to.be.equal(mockGearList);
         });
     });
 
-    it("onFetchGearListFromTo - error", () => {
-        const mockStartDate = "2018-01-01",
-            mockEndDate = "2018-01-02",
+    it("onFetchRentableListFromTo - error", () => {
+        const mockStartDate = new Date("2018-01-01"),
+            mockEndDate = new Date("2018-01-02"),
             error = { response: { data: { message: "Error message" } } };
         getStub.returns(Promise.reject(error));
-        gearStore.onFetchGearListFromTo(mockEndDate, mockStartDate);
-        return gearStore.onFetchGearListFromTo(mockEndDate, mockStartDate).then(() => {
-            expect(gearStore.state.gearList.length).to.be.equal(0);
+        gearStore.onFetchRentableListFromTo(mockEndDate, mockStartDate);
+        return gearStore.onFetchRentableListFromTo(mockEndDate, mockStartDate).then(() => {
+            expect(gearStore.state.rentableList.length).to.be.equal(0);
         });
+    });
+
+    it("fetchGearHistory", () => {
+        const response= {
+                data: {
+                    data: [{
+                        "id": 0,
+                        "gearCode": "BP01",
+                        "category": "backpack",
+                        "checkedOut": true,
+                        "depositFee": 50.0,
+                        "gearDescription": "Deuter 60+10 Blue (New Oct 2017)",
+                        "condition": "",
+                        "version": 1
+                    }]
+                }
+        };
+        getStub.returns(Promise.resolve(response));
+        return gearStore.fetchGearHistory(mockGearList[0]).then(() => {
+            expect(gearStore.state.gearModal.gearHistory).to.be.equal(response.data.data)
+        })
+
+    });
+
+    it("onTabSelected changes state properly", () => {
+        expect(gearStore.state.tabSelected).to.equal(1);
+
+        gearStore.onTabSelected(2);
+
+        expect(gearStore.state.tabSelected).to.equal(2);
+    });
+
+    it("onGearModalTabSelected changes state properly", () => {
+        expect(gearStore.state.gearModal.tabSelected).to.equal(1);
+
+        gearStore.onGearModalTabSelected(2);
+
+        expect(gearStore.state.gearModal.tabSelected).to.equal(2);
+    });
+
+    it("onCloseGearModal resets state properly", () => {
+        expect(gearStore.state.gearModal).to.deep.equal(mockGearModal);
+
+        gearStore.state.gearModal.tabSelected = 1000
+
+        const changedGearModal = {
+            show: false,
+        error: false,
+        errorMessage: "",
+        mode: null,
+        id: null,
+        expectedVersion: null,
+        gearCode: "",
+        depositFee: "",
+        gearCategory: "",
+        gearDescription: "",
+        tabSelected: 1000,
+        gearHistory: [],
+        gearReservationHistory: []
+        };
+        expect(gearStore.state.gearModal).to.deep.equal(changedGearModal);
+
+        gearStore.onCloseGearModal();
+
+        expect(gearStore.state.gearModal).to.deep.equal(mockGearModal);
     });
 });

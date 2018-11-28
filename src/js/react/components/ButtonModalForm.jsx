@@ -24,12 +24,6 @@ export default class ButtonModalForm extends React.Component {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button
-                        type="button"
-                        onClick={this.props.onClose}
-                    >
-                        Close
-                    </Button>
-                    <Button
                         bsStyle="primary"
                         onClick={this.props.onSubmit}
                     >

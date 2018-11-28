@@ -43,17 +43,17 @@ describe("RentPage Tests", () => {
 
     it("calls fetchedGearList on mount", () => {
         const page = shallow(<RentPage />);
-        actionsStub.fetchGearList = sandbox.spy();
+        actionsStub.fetchRentableGearList = sandbox.spy();
 
         page.instance().componentDidMount();
 
-        expect(actionsStub.fetchGearList.calledOnce).to.be.true;
+        expect(actionsStub.fetchRentableGearList.calledOnce).to.be.true;
 
-        page.instance().state.fetchedGearList = true; // not set by the component
+        page.instance().state.fetchedRentableGearList = true; // not set by the component
 
         page.instance().componentDidMount();
 
-        expect(actionsStub.fetchGearList.calledOnce).to.be.true;
+        expect(actionsStub.fetchGearList.calledOnce).to.be.false;
     });
 
     it("calls onChange when handleChange is called", () => {

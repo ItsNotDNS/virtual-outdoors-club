@@ -57,7 +57,7 @@ describe("ReservationStore Test", () => {
                 endDate,
                 gear: []
             }
-        }
+        };
 
         expect(store.onLoadAvailableGear()).to.equal(undefined);
 
@@ -209,10 +209,14 @@ describe("ReservationStore Test", () => {
     });
 
     it("onOpenReservationModal", () => {
-        const reservationData = {
-            startDate: new Date(),
-            endDate: new Date()
-        }
+        const dateFormat = "YYYY-MM-DD",
+            reservationData = {
+                startDate: moment(moment().format(dateFormat), dateFormat).toDate(),
+                endDate: moment(moment().format(dateFormat), dateFormat).toDate()
+            };
+
+        // Stub getting of Reservation History
+        axiosGetStub.returns(Promise.resolve())
 
         expect(store.state.reservationModal.show).to.be.false;
         store.onOpenReservationModal(reservationData);
@@ -230,7 +234,7 @@ describe("ReservationStore Test", () => {
     it("onApproveReservation - success", () => {
         store.state.reservationList = [
             { id: 1, status: "UNAPPROVED" }, { id: 2, status: "CANCELLED" }
-        ]
+        ];
         store.state.reservationModal.data.id = 1;
 
         axiosPostStub.resolves({ data: {
@@ -397,5 +401,176 @@ describe("ReservationStore Test", () => {
          return store.onPayCash().then(() => {
             expect(store.state.reservationModal.alertMsg).to.equal(error.response.data.message);	
         });	
+    });
+
+    it("onStartReturnProcess", () => {
+        store.state.reservationModal.data.gear = [{
+            id: 1,
+            depositFee: "5.01"
+        }, {
+            id: 2,
+            depositFee: "4.10"
+        }]
+
+        store.onStartReturnProcess();
+
+        expect(store.state.returnProcessor).to.have.property("index", 0)
+        expect(store.state.returnProcessor).to.have.property("current", store.state.returnProcessor.gear[0])
+        expect(store.state.returnProcessor.gear).to.have.length(2)
+        expect(store.state.returnProcessor).to.have.property("totalDeposit", "9.11")
+    });
+
+    it("onCancelReturnProcess", () => {
+        store.state.returnProcessor.index = 2;
+
+        store.onCancelReturnProcess();
+
+        expect(store.state.returnProcessor.index).to.equal(-1);
+    })
+
+    it("onChargeChanged", () => {
+        const clock = sinon.useFakeTimers(),
+            chargeChangedTimeoutStub = sinon.stub(store, "chargeChangedTimeout"),
+            timeoutInitValue = store.state.returnProcessor.timeout;
+
+        store.onChargeChanged({ target: { value: "40.01" } } );
+
+        expect(store.state.returnProcessor.timeout).to.not.equal(timeoutInitValue);
+
+        clock.tick(350)
+
+        expect(chargeChangedTimeoutStub.called).to.be.false;
+        store.onChargeChanged({ target: { value: "30.01" } } );
+
+        clock.tick(100)
+
+        expect(chargeChangedTimeoutStub.called).to.be.false;
+
+        clock.tick(400)
+
+        expect(chargeChangedTimeoutStub.called).to.be.true;
+
+        clock.restore();
+    });
+
+    it("chargeChangedTimeout - sets negative charge to 0", () => {
+        store.state.returnProcessor.charge = "-5.0";
+        store.state.returnProcessor.totalDeposit = "10.00";
+
+        store.chargeChangedTimeout()
+
+        expect(store.state.returnProcessor.charge).to.equal("0.00");
+        expect(store.state.returnProcessor.moneyToReturn).to.equal("10.00")
+    });
+
+    it("chargeChangedTimeout - sets text to 0", () => {
+        store.state.returnProcessor.charge = "asdfgs";
+        store.state.returnProcessor.totalDeposit = "10.00";
+
+        store.chargeChangedTimeout()
+
+        expect(store.state.returnProcessor.charge).to.equal("0.00");
+        expect(store.state.returnProcessor.moneyToReturn).to.equal("10.00")
+    });
+
+    it("chargeChangedTimeout - overcharge text set to total deposit", () => {
+        store.state.returnProcessor.charge = "15.00";
+        store.state.returnProcessor.totalDeposit = "10.00";
+
+        store.chargeChangedTimeout()
+
+        expect(store.state.returnProcessor.charge).to.equal("10.00");
+        expect(store.state.returnProcessor.moneyToReturn).to.equal("0.00")
+    });
+
+    it("onProcessNext - noneNext", () => {
+        store.state.returnProcessor.gear = [{1:1}, {2:2}, {3:3}]
+        store.state.returnProcessor.index = 2
+        store.state.returnProcessor.current = store.state.returnProcessor.gear[2]
+        store.state.returnProcessor.current.edit = "test"
+
+        store.onProcessNext()
+        expect(store.state.returnProcessor.index).to.equal(3);
+        expect(store.state.returnProcessor.current).to.deep.equal({});
+        expect(store.state.returnProcessor.gear[2]).to.deep.equal({
+            3:3, edit: "test"
+        })
+    });
+
+    it("onProcessNext - noneNext, setsCharge", () => {
+        store.state.returnProcessor.gear = [{depositFee:1}, {depositFee:2, status: "Good"}, {depositFee:3}]
+        store.state.returnProcessor.index = 2
+        store.state.returnProcessor.current = store.state.returnProcessor.gear[2]
+
+        store.onProcessNext()
+        expect(store.state.returnProcessor.index).to.equal(3);
+        expect(store.state.returnProcessor.current).to.deep.equal({});
+        expect(store.state.returnProcessor.charge).to.equal("4.00")
+    });
+
+    it("onProcessNext - handles going next", () => {
+        store.state.returnProcessor.gear = [{1:1}, {2:2}, {3:3}]
+        store.state.returnProcessor.index = 1
+        store.state.returnProcessor.current = store.state.returnProcessor.gear[1]
+        store.state.returnProcessor.current.edit = "test"
+
+        store.onProcessNext()
+        expect(store.state.returnProcessor.index).to.equal(2);
+        expect(store.state.returnProcessor.current).to.deep.equal({3:3});
+        expect(store.state.returnProcessor.gear[1]).to.deep.equal({
+            2:2, edit: "test"
+        })
+    });
+    
+    it("onConditionChanged", () => {
+        store.onConditionChanged({ value: "testValue"})
+        expect(store.state.returnProcessor.current.status).to.equal("testValue")
+    });
+
+    it("onCommentChanged", () => {
+        store.state.returnProcessor.current.comment = "hello!"
+        store.onCommentChanged();
+        expect(store.state.returnProcessor.current.comment).to.equal("hello!")
+        store.onCommentChanged({ target: { value: "test" } });
+        expect(store.state.returnProcessor.current.comment).to.equal("test")
+    });
+
+    it("onFinishProcessing - success path", () => {
+        const updateModalAndListStub = sandbox.stub(store, "updateModalAndList")
+        store.state.reservationModal.data.id = 1
+        store.state.returnProcessor.gear = [{ status: "Good" }]
+        store.state.returnProcessor.index = 2
+        store.state.returnProcessor.charge = "100.00"
+
+        axiosPostStub.returns(Promise.resolve({ data: "test"}));
+
+        return store.onFinishProcessing().then(() => {
+            expect(store.state.returnProcessor.index).to.equal(-1);
+            expect(updateModalAndListStub.called).to.be.true;
+        });
+    });
+
+    it("onFinishProcessing - error path", () => {
+        const updateModalAndListStub = sandbox.stub(store, "updateModalAndList")
+        store.state.reservationModal.data.id = 1
+        store.state.returnProcessor.index = 2
+        store.state.returnProcessor.gear = [{ status: "Good" }]
+        store.state.returnProcessor.charge = "100.00"
+
+        axiosPostStub.returns(Promise.reject({ response: { data: { message: "error" }}}));
+
+        return store.onFinishProcessing().then(() => {
+            expect(store.state.returnProcessor.index).to.equal(2);
+            expect(store.state.reservationModal.alertMsg).to.equal("error")
+            expect(updateModalAndListStub.called).to.be.false;
+        });
+    });
+
+    it("onReservationTabSelected changes state properly", () => {
+        expect(store.state.reservationModal.tabSelected).to.equal(1);
+        axiosGetStub.returns(Promise.resolve());
+        store.onReservationModalTabSelected(2);
+
+        expect(store.state.reservationModal.tabSelected).to.equal(2);
     });
 });

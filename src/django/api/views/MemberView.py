@@ -24,7 +24,6 @@ class MemberView(APIView):
         members = request.get("members", None)
         if not members:
             return RespError(400, "You must provide a list of members.")
-
         try:
             with transaction.atomic():
                 Member.objects.all().delete()

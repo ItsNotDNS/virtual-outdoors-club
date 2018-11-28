@@ -6,7 +6,6 @@ from django.db.models import ProtectedError
 from rest_framework.views import APIView
 
 
-
 # Returns False or the category if it exists
 def gearCategoryExists(category):
     try:

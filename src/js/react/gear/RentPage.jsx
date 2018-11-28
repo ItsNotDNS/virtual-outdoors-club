@@ -24,8 +24,8 @@ export default class RentPage extends Reflux.Component {
     }
 
     componentDidMount() {
-        if (!this.state.fetchedGearList) {
-            GearActions.fetchGearList();
+        if (!this.state.fetchedRentableGearList) {
+            GearActions.fetchRentableGearList();
         }
     }
 

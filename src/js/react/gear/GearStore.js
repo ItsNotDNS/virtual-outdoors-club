@@ -8,6 +8,7 @@ import update from "immutability-helper";
 import Constants from "../../constants/constants";
 import { toast } from "react-toastify";
 import moment from "moment";
+import ReservationService from "../../services/ReservationService";
 
 function gearCategorycompare(a, b) {
     // Use toUpperCase() to ignore character casing
@@ -52,7 +53,10 @@ function defaultState() {
             gearCode: "",
             depositFee: "",
             gearCategory: "",
-            gearDescription: ""
+            gearDescription: "",
+            tabSelected: 1,
+            gearHistory: [],
+            gearReservationHistory: []
         },
         fetchedGearCategoryList: false,
         categoryList: [],
@@ -99,7 +103,13 @@ function defaultState() {
             startDate: null,
             endDate: null
         },
-        rentableList: []
+        rentableList: [],
+        fetchedRentableGearList: false,
+        gearHistoryModal: {
+            show: false,
+            gearHistory: [],
+            gearReservationHistory: []
+        }
     };
 }
 
@@ -112,6 +122,7 @@ export const GearActions = Reflux.createActions([
     "gearModalChanged",
     "submitGearModal",
     "closeGearModal",
+    "gearModalTabSelected",
     "fetchGearCategoryList",
     "openCategoryModal",
     "categoryModalChanged",
@@ -137,7 +148,10 @@ export const GearActions = Reflux.createActions([
     "gearStatusCheckBoxChange",
     "dateFilterChanged",
     "fetchGearListFromTo",
-    "fetchRentableListFromTo"
+    "fetchRentableListFromTo",
+    "fetchRentableGearList",
+    "openGearHistoryModal",
+    "closeGearHistoryModal"
 ]);
 
 export class GearStore extends Reflux.Store {
@@ -171,8 +185,7 @@ export class GearStore extends Reflux.Store {
             .then(({ data, error }) => {
                 if (data) {
                     this.setState({
-                        gearList: data,
-                        rentableList: data
+                        gearList: data
                     });
                 } else {
                     this.setState({
@@ -182,8 +195,44 @@ export class GearStore extends Reflux.Store {
             });
     }
 
+    onFetchRentableGearList() {
+        const service = new GearService();
+
+        this.setState({
+            fetchedRentableGearList: true
+        });
+
+        return service.fetchGearList()
+            .then(({ data, error }) => {
+                if (data) {
+                    this.setState({
+                        rentableList: data.filter(
+                            (gear) => {
+                                return gear.condition === "RENTABLE";
+                            }
+                        )
+                    });
+                } else {
+                    this.setState({
+                        error
+                    });
+                }
+            });
+    }
+
+    onGearModalTabSelected(tab) {
+        this.setState(update(this.state, {
+            gearModal: {
+                tabSelected: { $set: tab }
+            }
+        }));
+    }
+
     // opens the gear modal, mode is to specify if the modal is for creating or editing gear
     onOpenGearModal(mode = Constants.modals.CREATING, options = { gear: {} }) {
+        if (Object.keys(options.gear).length !== 0 && options.gear.constructor === Object) {
+            this.fetchGearHistory(options.gear);
+        }
         const { id, expectedVersion, gearCode, depositFee, gearCategory, gearDescription } = options.gear,
             newState = update(this.state, {
                 gearModal: {
@@ -652,18 +701,6 @@ export class GearStore extends Reflux.Store {
         this.setState(newState);
     }
 
-    onFetchGearListFromTo(startDate, endDate) {
-        const service = new GearService();
-        return service.fetchGearListFromTo(startDate, endDate)
-            .then(({ data }) => {
-                if (data) {
-                    this.setState({
-                        gearList: data
-                    });
-                }
-            });
-    }
-
     onFetchRentableListFromTo(startDate, endDate) {
         const service = new GearService();
         return service.fetchGearListFromTo(
@@ -677,5 +714,44 @@ export class GearStore extends Reflux.Store {
                     });
                 }
             });
+    }
+
+    fetchGearHistory(gear) {
+        if (gear) {
+            const gearService = new GearService(),
+                reservationService = new ReservationService(),
+                gearHistoryPromise = gearService.fetchGearHistory(gear.id)
+                    .then(({ data, error }) => {
+                        if (data) {
+                            return data;
+                        } else {
+                            return error;
+                        }
+                    }),
+                gearReservationHistoryPromise =
+                    reservationService.fetchGearReservationHistory(gear.id)
+                        .then(({ data, error }) => {
+                            if (data) {
+                                return data;
+                            } else {
+                                return error;
+                            }
+                        });
+
+            return Promise.all([gearHistoryPromise, gearReservationHistoryPromise])
+                .then((values) => {
+                    const gearHistory = values[0],
+                        gearReservationHistory = values[1];
+
+                    // It does not matter if the value is real or an error
+                    // Set it as the history
+                    this.setState(update(this.state, {
+                        gearModal: {
+                            gearHistory: { $set: gearHistory },
+                            gearReservationHistory: { $set: gearReservationHistory }
+                        }
+                    }));
+                });
+        }
     }
 }

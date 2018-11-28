@@ -1,12 +1,13 @@
 from .error import *
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
-from ..models import Reservation
-from ..tasks import cancelled, approved
+from ..models import Reservation, Gear
+from ..emailing import cancelled, approved
 from ..views.PayPalView import process
 from ..serializers import ReservationPOSTSerializer, ReservationGETSerializer
 from decimal import Decimal
 from django.db.models import Q
+from django.db import transaction
 import datetime
 
 
@@ -115,7 +116,7 @@ class ReservationView(APIView):
                 return RespError(400, "'" + str(key) + "' is not valid with this POST method, please resubmit the "
                                                        "request without it.")
 
-        sRes = ReservationPOSTSerializer(data=newRes)
+        sRes = ReservationPOSTSerializer(data=newRes, context={'request':request})
 
         if not sRes.is_valid():
             return serialValidation(sRes)
@@ -126,6 +127,7 @@ class ReservationView(APIView):
 
     # Edit gear in reservation
     def patch(self, request):
+        orgRequest = request
         request = request.data
         allowedPatchMethods = {
             "gear": True,
@@ -171,7 +173,13 @@ class ReservationView(APIView):
             if f not in patch:
                 patch[f] = getattr(resv, f)
 
-        sResv = ReservationPOSTSerializer(resv, data=patch)
+        if "gear" not in patch:
+            patch["gear"] = []
+            gear = resv.gear.all()
+            for g in gear:
+                patch["gear"].append(g.pk)
+
+        sResv = ReservationPOSTSerializer(resv, data=patch, partial=True, context={'request': orgRequest.user.username})
 
         if not sResv.is_valid():
             return serialValidation(sResv)
@@ -209,16 +217,20 @@ def checkout(request):
 
     today = datetime.date.today()
     if reservation.endDate < today:
-        return RespError(406, "You cannot checkout a reservation that ends before today; please fix the endDate and try again.")
+        return RespError(406, "You cannot checkout a reservation that ends before today;"
+                              " please fix the endDate and try again.")
 
     if reservation.startDate > today:
-        return RespError(406, "You cannot checkout a reservation that starts after today; please fix the startDate and try again.")
+        return RespError(406, "You cannot checkout a reservation that starts after today;"
+                              " please fix the startDate and try again.")
 
     gearList = reservation.gear.all()  
     for gear in gearList:
         if gear.condition != "RENTABLE":
-            return RespError(403, "The gear item with the code of '" + str(gear.code) + "' is not 'rentable', and thus can't be checked out."
-                            + " To still proceed with checking out, you must remove the gear item from this reservation.")
+            return RespError(403, "The gear item with the code of '" + str(gear.code) + "' is not 'rentable',"
+                                  " and thus can't be checked out. To still proceed with checking out, you"
+                                  " must remove the gear item from this reservation.")
+        
         try: 
             # the below query does the following: 
             # Finds all reservations with a gear item in the reservation attempted to be checked out.
@@ -227,9 +239,10 @@ def checkout(request):
             latestResWithGearItem = Reservation.objects.filter(gear=gear).filter(endDate__lte=today).latest('endDate', 'startDate')
 
             if latestResWithGearItem.status != "CANCELLED" and latestResWithGearItem.status != "RETURNED":
-                return RespError(406, "The gear item with the code of '" + str(gear.code) + "' is currently held in another reservation (id #"
-                                + str(latestResWithGearItem.id) + "), because that reservation hasn't been marked as 'returned' or 'cancelled'. You must remove the gear item"
-                                "from your reservation in order to proceed.") 
+                return RespError(406, "The gear item with the code of '" + str(gear.code) + "' is currently held"
+                                      " in another reservation (id #"+ str(latestResWithGearItem.id) + "),"
+                                      " because that reservation hasn't been marked as 'returned' or 'cancelled'."
+                                      " You must remove the gear itemfrom your reservation in order to proceed.")
 
         except Reservation.DoesNotExist:
             # no other reservation currently with the gear item.
@@ -249,40 +262,68 @@ def checkout(request):
 
 
 @api_view(['POST'])
+@transaction.atomic
 def checkin(request):
     request = request.data
 
-    if "id" not in request and "amount" not in request:
+    if "id" not in request and "charge" not in request:
         return RespError(400, "You must specify an id to return and the amount you wish to capture.")
 
     reservation = reservationIdExists(request['id'])
     if not reservation:
         return RespError(404, "There is no reservation with the id of '" + str(request['id']) + "'.")
 
+    resvGear = reservation.gear.all()
+
+    if "gear" in request:
+        for gear in request["gear"]:
+            for ele in ["id", "status", "comment"]:
+                if ele not in gear:
+                    return RespError(400, "You must provide " + str(ele) + " for each gear object!")
+                try:
+                    Gear.objects.get(pk=gear["id"])
+                except Gear.DoesNotExist:
+                    return RespError(400, "There is no gear with the ID of " + str(gear["id"]))
+
+            g = resvGear.filter(id=gear["id"])
+            if len(g) == 0:
+                return RespError(400, "You can only return gear that was in the reservation")
+
     if reservation.status != "TAKEN":
         return RespError(406, "The reservation status must be 'taken'.")
 
     try:
-        amount = Decimal(request['amount'])
+        charge = Decimal(request['charge'])
     except ValueError:
-        return RespError(400, "'" + request['amount'] + "' is not a valid decimal number.")
+        return RespError(400, "'" + request['charge'] + "' is not a valid decimal number.")
 
-    if amount < 0:
+    if charge < 0:
         return RespError(400, "Capture amount must be greater than or equal to zero.")
 
-    msg = ""
-    if reservation.payment != "CASH":
-        status = process(reservation, amount)
+    # Passes all checks
+    try:
+        with transaction.atomic():
+            if "gear" in request:
+                for gear in request["gear"]:
+                    g = Gear.objects.get(id=gear["id"])
+                    g.condition = gear["status"]
+                    g.statusDescription = gear["comment"]
+                    g.save()
 
-        if status:
-            return RespError(400, status)
-    else:
-        msg = "Please return the cash deposit."
+            if reservation.payment != "CASH":
+                status = process(reservation, charge)
+        
+                if status:
+                    return RespError(400, status)
+        
+            reservation.status = "RETURNED"
+            reservation.save()
+    except Exception as e:
+        return RespError(400, str(e))
 
-    reservation.status = "RETURNED"
-    reservation.save()
+    serial = ReservationGETSerializer(reservation)
 
-    return Response(msg)
+    return Response(serial.data)
 
 
 @api_view(['POST'])
@@ -302,7 +343,7 @@ def cancel(request):
     reservation.status = "CANCELLED"
     reservation.save()
 
-    cancelled(reservation)
+    cancelled([reservation])
 
     serial = ReservationGETSerializer(reservation)
     return Response(serial.data)

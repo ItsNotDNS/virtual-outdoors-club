@@ -15,6 +15,7 @@ export default class GearTable extends React.Component {
     constructor() {
         super();
         this.getActionCell = this.getActionCell.bind(this);
+        this.getComponents = this.getComponents.bind(this);
         this.state = {
             filteredGearList: []
         };
@@ -78,6 +79,7 @@ export default class GearTable extends React.Component {
         }, {
             dataField: "depositFee",
             text: "Fee",
+            align: "right",
             sort: true
         }, {
             dataField: "condition",
@@ -87,7 +89,10 @@ export default class GearTable extends React.Component {
             text: "Actions",
             dataField: "isDummyField",
             isDummyField: true,
-            formatter: this.getActionCell
+            formatter: this.getActionCell,
+            headerStyle: {
+                width: "15%"
+            }
         }];
     }
 
@@ -105,10 +110,8 @@ export default class GearTable extends React.Component {
     getComponents(props) {
         return (
             <div>
-                <div className="custom-search-field">
-                    <SearchBar {...props.searchProps} />
-                    <StatusSearchBar />
-                </div>
+                <SearchBar className="custom-search-field" {...props.searchProps} />
+                <StatusSearchBar />
                 <Table
                     {...props.baseProps}
                     defaultSorted={[{ dataField: "code", order: "asc" }]}
@@ -134,6 +137,7 @@ export default class GearTable extends React.Component {
 GearTable.propTypes = {
     onClickEdit: PropTypes.func.isRequired,
     onClickDelete: PropTypes.func.isRequired,
+    onSelectRow: PropTypes.func,
     gearList: PropTypes.array.isRequired,
     checkboxOptions: PropTypes.object.isRequired
 };

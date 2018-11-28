@@ -65,8 +65,7 @@ export default class ReservationPage extends Reflux.Component {
                             {...this.state.reservationModal}
                             actions={ReservationActions}
                             onClose={ReservationActions.closeReservationModal}
-                            onClickEdit={ReservationActions.openReservationModal}
-                            onClickDelete={ReservationActions.openCancelReservationModal}
+                            onTabSelected={ReservationActions.reservationModalTabSelected}
                         />
                     </div>
                 </div>

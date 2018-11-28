@@ -38,7 +38,10 @@ export default class ShoppingCartTable extends Reflux.Component {
         {
             dataField: "remove",
             text: "Remove",
-            formatter: this.removeButtonFormatter
+            formatter: this.removeButtonFormatter,
+            headerStyle: {
+                width: "15%"
+            }
         }];
     }
 

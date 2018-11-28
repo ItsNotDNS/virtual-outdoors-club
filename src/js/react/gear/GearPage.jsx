@@ -7,7 +7,7 @@ import React from "react";
 import Reflux from "reflux";
 import { Tabs, Tab, Alert } from "react-bootstrap";
 import { GearStore, GearActions } from "./GearStore";
-import GearForm from "./GearForm";
+import GearModal from "./GearModal";
 import GearTable from "./GearTable";
 import CategoryForm from "./CategoryForm";
 import CategoryTable from "./CategoryTable";
@@ -44,32 +44,30 @@ export default class GearPage extends Reflux.Component {
             <Tab eventKey={tabKey} title="Gear">
                 <div className="row">
                     <div className="col-md-12">
-                        <button className="btn btn-primary span" onClick={this.wrapOpenModal(GearActions.openGearModal)}>
-                            <i className="fas fa-plus-circle" /> Add New Gear
-                        </button>
                         <button
                             onClick={GearActions.getGearFile}
-                            className="btn btn-primary pull-right"
+                            className="btn btn-primary pull-right export-button"
                         >
-                            <i className="fas fa-file-import" /> Export Gear Data
+                            <i className="fas fa-file-import" /> Export
                         </button>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-md-12">
+                        <button className="btn btn-primary pull-right add-new-button" onClick={this.wrapOpenModal(GearActions.openGearModal)}>
+                            <i className="fas fa-plus-circle" /> Add New
+                        </button>
                         <GearTable
                             gearList={this.state.gearList}
+                            onSelectRow={GearActions.openGearHistoryModal}
                             onClickEdit={GearActions.openGearModal}
                             onClickDelete={GearActions.openDeleteGearModal}
                             checkboxOptions={this.state.checkboxOptions}
                         />
                     </div>
                 </div>
-                <GearForm {...this.state.gearModal}
+                <GearModal {...this.state.gearModal}
                     formTitle={`${this.state.gearModal.mode} Gear`}
                     onChange={GearActions.gearModalChanged}
                     onSubmit={GearActions.submitGearModal}
                     onClose={GearActions.closeGearModal}
+                    onTabSelected={GearActions.gearModalTabSelected}
                 />
                 <ConfirmationDialog
                     show={this.state.deleteGearModal.show}
@@ -88,8 +86,8 @@ export default class GearPage extends Reflux.Component {
                 title="Categories">
                 <div className="row">
                     <div className="col-md-12">
-                        <button className="btn btn-primary" onClick={this.wrapOpenModal(GearActions.openCategoryModal)}>
-                            <i className="fas fa-plus-circle" /> Add New Category
+                        <button className="btn btn-primary pull-right" onClick={this.wrapOpenModal(GearActions.openCategoryModal)}>
+                            <i className="fas fa-plus-circle" /> Add New
                         </button>
                     </div>
                 </div>
@@ -183,17 +181,23 @@ export default class GearPage extends Reflux.Component {
                 title={"Import"}
             >
                 {alert}
-                <FileButton
-                    onFileSelected={GearActions.fileSelected}
-                    placeholder="Choose a file to upload gear to the system." />
-                <div className="text-center">
-                    <button
-                        onClick={GearActions.uploadGearFile}
-                        disabled={gear.length === 0 || warnings.length !== 0}
-                        className="btn btn-success submit-button"
-                    >
-                            Upload
-                    </button>
+                <div className="row bottom-margin">
+                    <div className="col-md-6 col-xs-12">
+                        <FileButton
+                            onFileSelected={GearActions.fileSelected}
+                            placeholder="Choose a file to upload gear into the system."
+                        />
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-md-2 col-xs-4">
+                        <button className="btn btn-success full-width"
+                            onClick={GearActions.uploadGearFile}
+                            disabled={gear.length === 0 || warnings.length !== 0}
+                        >
+                                Upload
+                        </button>
+                    </div>
                 </div>
             </Tab>
         );
