@@ -43,7 +43,7 @@ after_success:
   - npm run-script build
   - scp -r dist ubuntu@199.116.235.142:/var/www/outdoorsclub.com
   # - ssh -i /tmp/key_outdoors.pem ubuntu@199.116.235.142 'bash -s' < scripts/build_script.sh
-  - . ./scripts/build_script.sh
+  - . ./scripts/build_script.sh && exit
 
 # deploy:
 #   provider: script

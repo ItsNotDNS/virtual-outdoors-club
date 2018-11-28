@@ -12,8 +12,7 @@ ssh -i /tmp/key_outdoors.pem ubuntu@199.116.235.142 <<EOF
     python3 ./src/django/manage.py process_tasks &
     python3 ./src/django/manage.py runserver 0.0.0.0:8000 &
     sudo systemctl restart nginx
-    exit 0
-    exit 0
+    exit
 EOF
 
 # nohup  &
