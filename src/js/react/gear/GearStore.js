@@ -445,7 +445,13 @@ export class GearStore extends Reflux.Store {
     }
 
     onAddToShoppingCart(row) {
-        if (!this.state.shoppingList.includes(row)) {
+        let isNewItem = false;
+        this.state.shoppingList.forEach(function(gear) {
+            if (gear.id === row.id) {
+                isNewItem = true;
+            }
+        });
+        if (!isNewItem) {
             const newState = update(this.state, {
                 shoppingList: { $push: [row] },
                 checkoutDisabled: { $set: false },
@@ -458,6 +464,8 @@ export class GearStore extends Reflux.Store {
                 }
             });
             this.setState(newState);
+        } else {
+            toast.error(`Gear ID: ${row.code} is already in your shopping cart`);
         }
     }
 
@@ -717,15 +725,33 @@ export class GearStore extends Reflux.Store {
     }
 
     onFetchRentableListFromTo(startDate, endDate) {
-        const service = new GearService();
-        return service.fetchGearListFromTo(
-            moment(startDate).format("YYYY-MM-DD"),
-            moment(endDate).format("YYYY-MM-DD")
-        )
+        const service = new GearService(),
+            startDateString = moment(startDate).format("YYYY-MM-DD"),
+            endDateString = moment(endDate).format("YYYY-MM-DD");
+        return service.fetchGearListFromTo(startDateString, endDateString)
             .then(({ data }) => {
+                const shoppingCartRemove = {}, rentalListRemove = {};
                 if (data) {
+                    this.state.shoppingList.forEach(function(gear) {
+                        const found = data.find(function(element) {
+                            return element.id === gear.id;
+                        });
+                        if (!found) {
+                            shoppingCartRemove[gear.id] = true;
+                        } else {
+                            rentalListRemove[gear.id] = true;
+                        }
+                    });
+                    if (Object.keys(shoppingCartRemove).length) {
+                        toast.error("Some items have been removed from your shopping cart because it is  unavailable in the selected date range.");
+                    }
                     this.setState({
-                        rentableList: data
+                        rentableList: data.filter(
+                            (gear) => !rentalListRemove[gear.id]
+                        ),
+                        shoppingList: this.state.shoppingList.filter(
+                            (gear) => !shoppingCartRemove[gear.id]
+                        )
                     });
                 }
             });

@@ -41,7 +41,7 @@ describe("RentPage Tests", () => {
         "version": 1
     }];
 
-    it("calls fetchedGearList on mount", () => {
+    it("calls fetchedRentableGearList on mount", () => {
         const page = shallow(<RentPage />);
         actionsStub.fetchRentableGearList = sandbox.spy();
 
@@ -126,4 +126,5 @@ describe("RentPage Tests", () => {
         page.instance().componentDidUpdate(mockPrevProps, mockPrevState);
         expect(actionsStub.fetchRentableListFromTo.calledOnce).to.be.true;
     });
+
 });
