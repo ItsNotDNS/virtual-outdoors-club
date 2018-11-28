@@ -21,7 +21,7 @@ export default class EmailValidationForm extends React.Component {
 
     render() {
         return (
-            <div className="centre-half">
+            <div className="centre-half middle-screen">
                 <ErrorAlert
                     show={this.props.error}
                     errorMessage={this.props.errorMessage}

@@ -59,4 +59,19 @@ describe("PaymentForm Tests", () => {
         form.instance().componentDidMount();
         expect(actionsStub.fetchPayPalForm.calledOnce).to.be.true;
     });
+
+    it("renders error message if error", () => {
+        const form = getShallowForm(mockReservation);
+
+        form.instance().state.error = "Error";
+        expect(form.instance().getPayPalLink().props.children[0].props.children).to.equal("Error")
+    });
+
+    it("renders link if exists", () => {
+        const form = getShallowForm(mockReservation);
+
+        form.instance().state.payPalForm = "https://Somelink.com";
+        expect(form.instance().getPayPalLink().props.href)
+            .to.equal("https://Somelink.com")
+    });
 });

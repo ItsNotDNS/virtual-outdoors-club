@@ -37,6 +37,11 @@
     margin: 0 auto;
 }
 
+.middle-screen {
+    position: absolute;
+    top: 25%;
+    left: 25%;
+}
 
 .variability-view {
     .margin-top-2 {
@@ -211,6 +216,20 @@
 
 .reservation-success-toast {
     text-align: center;
+}
+
+.paypal-div {
+    border-radius: 25px;
+    background-color: #ffc439;
+}
+
+.disabled-div {
+    border-radius: 25px;
+    background-color: #d3d3d3;
+}
+
+.paypal-logo {
+    width: 15%;
 }
 
 .bottom-margin {

@@ -37,10 +37,9 @@ export default class ReservationService {
     fetchPayPalForm(reservationId) {
         return this.service.post(`${config.databaseHost}/process`, {
             id: reservationId
-        })
-            .then((response) => {
-                return { data: response.data };
-            }).catch(genericCatch);
+        }).then((response) => {
+            return { data: response.data };
+        }).catch(genericCatch);
     }
 
     approveReservation(id) {

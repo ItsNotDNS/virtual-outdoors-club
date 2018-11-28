@@ -46,7 +46,7 @@ class Gear(models.Model):
     id = models.AutoField(primary_key = True)
     code = models.CharField(unique = True, max_length = 6)
     category = models.ForeignKey(GearCategory, on_delete = models.PROTECT, null = True)
-    depositFee = models.DecimalField(max_digits = 10, decimal_places = 2, validators=[MinValueValidator(0)])
+    depositFee = models.DecimalField(max_digits = 5, decimal_places = 2, validators=[MinValueValidator(0)])
     description = models.CharField(max_length = 255, blank = True)
     condition = models.CharField(max_length=20, choices=CONDITION_CHOICE, blank = True, default="RENTABLE")
     statusDescription = models.CharField(max_length = 100, blank = True)
