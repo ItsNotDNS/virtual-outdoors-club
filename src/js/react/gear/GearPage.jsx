@@ -181,17 +181,23 @@ export default class GearPage extends Reflux.Component {
                 title={"Import"}
             >
                 {alert}
-                <FileButton
-                    onFileSelected={GearActions.fileSelected}
-                    placeholder="Choose a file to upload gear to the system." />
-                <div className="text-center">
-                    <button
-                        onClick={GearActions.uploadGearFile}
-                        disabled={gear.length === 0 || warnings.length !== 0}
-                        className="btn btn-success submit-button"
-                    >
-                            Upload
-                    </button>
+                <div className="row bottom-margin">
+                    <div className="col-md-6 col-xs-12">
+                        <FileButton
+                            onFileSelected={GearActions.fileSelected}
+                            placeholder="Choose a file to upload gear into the system."
+                        />
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-md-2 col-xs-4">
+                        <button className="btn btn-success full-width"
+                            onClick={GearActions.uploadGearFile}
+                            disabled={gear.length === 0 || warnings.length !== 0}
+                        >
+                                Upload
+                        </button>
+                    </div>
                 </div>
             </Tab>
         );
