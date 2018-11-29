@@ -3,6 +3,7 @@ import CategoryStatisticChart from "react/statistics/CategoryStatisticChart";
 import { expect } from "chai";
 import { shallow } from "enzyme";
 import { Chart } from "react-chartjs-2";
+import sinon from "sinon";
 
 var mockCategoryStatList = [{
         code: "Frying Pan",

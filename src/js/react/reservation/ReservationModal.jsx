@@ -258,6 +258,8 @@ export default class ReservationModal extends React.Component {
                     onDateRangeChange={actions.editReservation}
                     startDate={data.startDate}
                     endDate={data.endDate}
+                    allowSelectBeforeToday={false}
+                    allowSelectAfterToday
                 />
                 <div className="text-center top-margin">
                     {`(${daysLong} days long)`}

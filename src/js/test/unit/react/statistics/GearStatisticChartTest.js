@@ -1,7 +1,7 @@
 import React from "react";
 import GearStatisticChart from "react/statistics/GearStatisticChart";
 import { expect } from "chai";
-import { shallow } from "enzyme";
+import { shallow, mount } from "enzyme";
 import { Chart } from "react-chartjs-2";
 
 var mockGearStatList = [{
@@ -32,14 +32,13 @@ var mockGearStatList = [{
 
 describe("GearStatisticChart Tests", () => {
 
-    // TODO - Figure out how to test this
     it("Displays the chart", () => {
-        var page = shallow(<GearStatisticChart
+        var page = mount(<GearStatisticChart
                 chart_id={"GearStatChart"}
                 gearStatList={mockGearStatList}
                 chart_type={"horizontalBar"}
             />);
-
+        page.instance().componentDidMount();
         expect(page.exists()).to.be.equal(true);
     });
 });

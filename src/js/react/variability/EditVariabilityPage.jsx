@@ -47,7 +47,7 @@ export default class EditVariabilityPage extends Reflux.Component {
     getMemberSettingsTab(tabKey, onMemberChange, memberValues) {
         return (
             <Tab eventKey={tabKey} title="Member Settings">
-                <div className="col-md-6 margin-top-2">
+                <div className="col-md-6 margin-side">
                     <LabeledInput
                         label="Max Reservation Length (in days)"
                         name="maxReservationLength"

@@ -49,7 +49,7 @@ class StatsViewTestCase(TestCase):
         correct_response = {
             'gear': {
                 'SP01': {
-                    'description': '', 
+                    'description': '',
                     'usage': [0.14285714285714285]},
                 'MP02': {
                     'description': '',

@@ -8,6 +8,7 @@ export default class DatePickerV2 extends React.Component {
         super();
 
         this.onDateChangeWrapper = this.onDateChangeWrapper.bind(this);
+        this.getDateRangeOptions = this.getDateRangeOptions.bind(this);
     }
     onDateChangeWrapper(type) {
         return (newDate) => {
@@ -29,7 +30,18 @@ export default class DatePickerV2 extends React.Component {
         );
     }
 
+    getDateRangeOptions() {
+        const { allowSelectBeforeToday, allowSelectAfterToday } = this.props,
+            before = allowSelectBeforeToday ? null : new Date(),
+            after = allowSelectAfterToday ? null : new Date();
+
+        return { before, after };
+    }
+
     getPickerView({ startDate, endDate }) {
+        // prevent date selection based on props
+        const { before, after } = this.getDateRangeOptions();
+
         return (
             <div className="row text-center">
                 <div className="col-xs-5">
@@ -39,7 +51,7 @@ export default class DatePickerV2 extends React.Component {
                             value={startDate}
                             dayPickerProps={{
                                 selectedDays: { from: startDate, to: endDate },
-                                disabledDays: { before: new Date(), after: endDate }
+                                disabledDays: { before: before, after: endDate }
                             }}
                         />
                     </div>
@@ -54,7 +66,7 @@ export default class DatePickerV2 extends React.Component {
                             value={this.props.endDate}
                             dayPickerProps={{
                                 selectedDays: { from: startDate, to: endDate },
-                                disabledDays: { before: startDate }
+                                disabledDays: { before: startDate, after }
                             }}
                         />
                     </div>
@@ -79,5 +91,7 @@ DatePickerV2.propTypes = {
     onDateRangeChange: PropTypes.func.isRequired,
     startDate: PropTypes.instanceOf(Date),
     endDate: PropTypes.instanceOf(Date),
-    disabled: PropTypes.bool
+    disabled: PropTypes.bool,
+    allowSelectBeforeToday: PropTypes.bool,
+    allowSelectAfterToday: PropTypes.bool
 };

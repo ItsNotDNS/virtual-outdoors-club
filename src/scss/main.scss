@@ -273,6 +273,26 @@
     width: 100%;
 }
 
+.statistics-view {
+  .margin-top-2 {
+        margin-top: 2%;
+    }
+
+  .DayPickerInput {
+        margin-left: 0.5%;
+        margin-right: 0.5%;
+        @media only screen and (max-width: 768px) {
+            display: flex;
+        }
+        .DayPicker-Day {
+            border-radius: 0;
+        }
+        input {
+            text-align: center;
+        }
+    }
+}
+
 .reservation-view {
     .react-bootstrap-table {
         cursor: pointer;
