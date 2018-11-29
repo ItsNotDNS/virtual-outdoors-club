@@ -46,6 +46,7 @@ export default class App extends Reflux.Component {
                     <Route path="/statistics" component={withAuth(StatisticsPage)} />
                     <Route path="/disable" component={withAuth(DisableSystemPage)} />
                     <Route path="/help" component={withAuth(HelpPage)} />
+                    <Route path="/member-help" component={HelpPage} />
                 </Switch>
             </BrowserRouter>
         );

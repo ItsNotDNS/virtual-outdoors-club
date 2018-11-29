@@ -2,14 +2,27 @@ import React from "react";
 import { expect } from "chai";
 import HelpPage from "react/help/HelpPage";
 import constants from "../../../../constants/constants";
+import sinon from "sinon";
+import {shallow} from "enzyme";
 
 describe("Help Page Tests", () => {
     it("gear page help renders correct information", () => {
         expect(HelpPage.getGearHelp().props.id).to.equal(constants.help.gear)
     });
 
-    it("rent page help renders correct information", () => {
-        expect(HelpPage.getRentHelp().props.id).to.equal(constants.help.rent)
+    it("rent page help renders correct info - member", () => {
+        const page = shallow(<HelpPage />);
+
+        expect(page.instance().getRentHelp().props.id).to.equal("rent-page")
+
+    });
+
+    it("rent page help renders correct info - exec", () => {
+        const page = shallow(<HelpPage />);
+
+        page.instance().state.isAuthenticated = true;
+        expect(page.instance().getRentHelp().props.id).to.equal("rent-page")
+
     });
 
     it("reservation page help renders correct information", () => {

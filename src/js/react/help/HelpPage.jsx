@@ -1,6 +1,8 @@
 import React from "react";
+import Reflux from "reflux";
 import { Image, Nav, NavItem } from "react-bootstrap";
 import constants from "../../constants/constants";
+import { LoginStore } from "../login/LoginStore";
 
 function importAll(r) {
     const images = {};
@@ -10,7 +12,15 @@ function importAll(r) {
 
 const images = importAll(require.context("../../../images", true, /\.(png)$/));
 
-export default class HelpPage extends React.Component {
+export default class HelpPage extends Reflux.Component {
+    constructor(props) {
+        super(props);
+        this.store = LoginStore;
+
+        this.getRentHelp = this.getRentHelp.bind(this);
+        this.getPages = this.getPages.bind(this);
+    }
+
     static getGearHelp() {
         return (
             <div id={constants.help.gear}>
@@ -55,12 +65,31 @@ export default class HelpPage extends React.Component {
                         <Image responsive src={images["GearPage.png"]} />
                     </div>
                 </div>
+                <br />
+                <div className="row">
+                    <div className="col-md-6">
+                        From here you will also be able to edit the gear using the actions in the table. The edit action also allows you
+                        to view the gear history ie. if the deposit fee has changed.
+                    </div>
+                    <div className="col-md-6">
+                        <Image responsive src={images["EditGearForm.png"]} />
+                    </div>
+                </div>
+                <br />
+                <div className="row">
+                    <div className="col-md-6">
+                        All history pages are ordered from newest to oldest and only shows the last 10 changes.
+                    </div>
+                    <div className="col-md-6">
+                        <Image responsive src={images["GearReservationHistoryTable.png"]} />
+                    </div>
+                </div>
                 <hr />
             </div>
         );
     }
 
-    static getRentHelp() {
+    getRentHelp() {
         return (
             <div id={constants.help.rent}>
                 <h1> Rent Page </h1>
@@ -71,7 +100,13 @@ export default class HelpPage extends React.Component {
                         the date range inputs, text search, and column ordering.
                     </div>
                     <div className="col-md-6">
-                        <Image responsive src={images["ExecutiveRent.png"]} />
+                        {
+                            this.state.isAuthenticated
+                                ? <Image responsive
+                                    src={images["ExecutiveRent.png"]} />
+                                : <Image responsive
+                                    src={images["MemberRent.png"]} />
+                        }
                     </div>
                 </div>
                 <br />
@@ -81,7 +116,13 @@ export default class HelpPage extends React.Component {
                         button will open a form to input other details needed to create a reservation.
                     </div>
                     <div className="col-md-6">
-                        <Image responsive src={images["ExecutiveReservationForm.png"]} />
+                        {
+                            this.state.isAuthenticated
+                                ? <Image responsive
+                                    src={images["ExecutiveReservationForm.png"]} />
+                                : <Image responsive
+                                    src={images["MemberReservationForm.png"]} />
+                        }
                     </div>
                 </div>
                 <hr />
@@ -302,47 +343,43 @@ export default class HelpPage extends React.Component {
 
     static getNav() {
         return (
-            <div>
-                <Nav bsStyle="pills" stacked className="nav-help">
-                    <NavItem eventKey={1} href={`#${constants.help.introduction}`}>
+            <Nav bsStyle="pills" stacked className="nav-help">
+                <NavItem eventKey={1} href={`#${constants.help.introduction}`}>
                         Introduction
-                    </NavItem>
-                    <NavItem eventKey={2} href={`#${constants.help.gear}`}>
+                </NavItem>
+                <NavItem eventKey={2} href={`#${constants.help.gear}`}>
                         Gear Page
-                    </NavItem>
-                    <NavItem eventKey={2} href={`#${constants.help.rent}`}>
+                </NavItem>
+                <NavItem eventKey={2} href={`#${constants.help.rent}`}>
                         Rent Page
-                    </NavItem>
-                    <NavItem eventKey={2} href={`#${constants.help.reservation}`}>
+                </NavItem>
+                <NavItem eventKey={2} href={`#${constants.help.reservation}`}>
                         Reservation Page
-                    </NavItem>
-                    <NavItem eventKey={2} href={`#${constants.help.members}`}>
+                </NavItem>
+                <NavItem eventKey={2} href={`#${constants.help.members}`}>
                         Members Page
-                    </NavItem>
-                    <NavItem eventKey={2} href={`#${constants.help.disableSystem}`}>
+                </NavItem>
+                <NavItem eventKey={2} href={`#${constants.help.disableSystem}`}>
                         Disable System Page
-                    </NavItem>
-                    <NavItem eventKey={2} href={`#${constants.help.statistics}`}>
+                </NavItem>
+                <NavItem eventKey={2} href={`#${constants.help.statistics}`}>
                         Statistics Page
-                    </NavItem>
-                    <NavItem eventKey={2} href={`#${constants.help.systemVariables}`}>
+                </NavItem>
+                <NavItem eventKey={2} href={`#${constants.help.systemVariables}`}>
                         System Variables Page
-                    </NavItem>
-                    <NavItem eventKey={2} href={`#${constants.help.changePassword}`}>
+                </NavItem>
+                <NavItem eventKey={2} href={`#${constants.help.changePassword}`}>
                         Change Password Page
-                    </NavItem>
-                </Nav>
-            </div>
+                </NavItem>
+            </Nav>
         );
     }
 
-    render() {
-        return (
-            <div className="help-page">
-                <div id={constants.help.introduction}
-                    className="content-container col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-3">
-                    {HelpPage.getNav()}
-                    <h1> Introduction </h1>
+    getPages() {
+        if (this.state.isAuthenticated) {
+            return (
+                <div className="content-container col-md-6">
+                    <h1 id={constants.help.introduction}> Introduction </h1>
                     <p>
                         This is the University of Alberta Outdoors Club
                         management system. Admins and Executives
@@ -353,13 +390,33 @@ export default class HelpPage extends React.Component {
                         functionalities of the system.
                     </p>
                     {HelpPage.getGearHelp()}
-                    {HelpPage.getRentHelp()}
+                    {this.getRentHelp()}
                     {HelpPage.getReservationHelp()}
                     {HelpPage.getMembersHelp()}
                     {HelpPage.getDisableSystemHelp()}
                     {HelpPage.getStatisticsHelp()}
                     {HelpPage.getSystemVariablesHelp()}
                     {HelpPage.getChangePasswordHelp()}
+                </div>
+            );
+        } else {
+            return (
+                <div>
+                    {this.getRentHelp()}
+                </div>
+            );
+        }
+    }
+
+    render() {
+        return (
+            <div className="help-page">
+                <div className="row flex">
+                    <div className="col-sm-offset-1 col-md-2">
+                        {this.state.isAuthenticated ? HelpPage.getNav() : null}
+                    </div>
+                    {this.getPages()}
+                    <div className="col-md-1" />
                 </div>
             </div>
         );
