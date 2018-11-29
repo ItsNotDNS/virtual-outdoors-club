@@ -103,7 +103,10 @@ export default class GearTable extends React.Component {
             dataField: "condition",
             text: "Condition",
             sort: true,
-            formatter: this.conditionFormatter
+            formatter: this.conditionFormatter,
+            style: {
+                verticalAlign: "middle"
+            }
         }, {
             text: "Actions",
             dataField: "isDummyField",

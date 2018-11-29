@@ -35,13 +35,15 @@ export default class GearConditionDropdown extends Reflux.Component {
     render() {
         if (this.props.value !== Constants.gearConditions.RENTABLE &&
         this.props.value !== Constants.gearConditions.FLAGGED &&
-        this.props.value !== Constants.gearConditions.NEEDS_REPAIR) {
+        this.props.value !== Constants.gearConditions.NEEDS_REPAIR &&
+        this.props.value !== "") {
             return null;
         }
         return (
             <FormGroup controlId="formControlsSelect">
                 <ControlLabel>Gear Condition</ControlLabel>
                 <FormControl
+                    disabled={this.props.isDisabled}
                     name="gearCondition"
                     componentClass="select"
                     placeholder="select"
@@ -60,5 +62,6 @@ export default class GearConditionDropdown extends Reflux.Component {
 
 GearConditionDropdown.propTypes = {
     onChange: PropTypes.func,
-    value: PropTypes.string
+    value: PropTypes.string,
+    isDisabled: PropTypes.bool
 };

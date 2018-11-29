@@ -10,6 +10,7 @@ import { Button, Modal, Tab, Table, Tabs } from "react-bootstrap";
 import ErrorAlert from "../components/ErrorAlert";
 import { capitalizeFirstLetter } from "../utilities";
 import GearConditionDropdown from "./GearConditionDropdown";
+import Constants from "../../constants/constants";
 
 export default class GearModal extends React.Component {
     constructor(props) {
@@ -17,6 +18,7 @@ export default class GearModal extends React.Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.getGearForm = this.getGearForm.bind(this);
+        this.getIsDeleted = this.getIsDeleted.bind(this);
     }
 
     handleChange(event) {
@@ -33,6 +35,7 @@ export default class GearModal extends React.Component {
                             errorMessage={this.props.errorMessage || ""}
                         />
                         <LabeledInput
+                            disabled={this.getIsDeleted()}
                             label="Gear ID"
                             name="gearCode"
                             placeholder="BP01"
@@ -40,10 +43,12 @@ export default class GearModal extends React.Component {
                             value={this.props.gearCode}
                         />
                         <GearCategoryDropdown
+                            isDisabled={this.getIsDeleted()}
                             onChange={this.handleChange}
                             value={this.props.gearCategory}
                         />
                         <LabeledInput
+                            disabled={this.getIsDeleted()}
                             label="Description"
                             name="gearDescription"
                             placeholder="Brand new"
@@ -51,6 +56,7 @@ export default class GearModal extends React.Component {
                             value={this.props.gearDescription}
                         />
                         <LabeledInput
+                            disabled={this.getIsDeleted()}
                             label="Deposit Fee"
                             name="depositFee"
                             placeholder="50.00"
@@ -58,10 +64,12 @@ export default class GearModal extends React.Component {
                             value={this.props.depositFee}
                         />
                         <GearConditionDropdown
+                            disabled={this.getIsDeleted()}
                             onChange={this.handleChange}
                             value={this.props.gearCondition}
                         />
                         <LabeledInput
+                            disabled={this.getIsDeleted()}
                             label="Gear Condition Description"
                             name="gearStatus"
                             placeholder="Describe the condition of this gear"
@@ -196,6 +204,10 @@ export default class GearModal extends React.Component {
         return this.props.gearReservationHistory;
     }
 
+    getIsDeleted() {
+        return (this.props.gearCondition === Constants.gearConditions["DELETED"]);
+    }
+
     render() {
         return (
             <Modal show={this.props.show} onHide={this.props.onClose}>
@@ -225,6 +237,7 @@ export default class GearModal extends React.Component {
                         Close
                             </Button>
                             <Button
+                                disabled={this.getIsDeleted()}
                                 bsStyle="primary"
                                 onClick={this.props.onSubmit}
                             >

@@ -447,6 +447,7 @@
 }
 
 .gear-status-badge {
+
     width: 100%;
     border-radius: 25px;
     &.rentable {
@@ -466,9 +467,19 @@
         background-color: #E3170A;
     }
 }
+
+.reservation-badge-modal-container {
+    width: 15%;
+}
+
 .reservation-badge {
     width: 100%;
     border-radius: 25px;
+
+    &.modal {
+        width: 10%;
+    }
+
     &.cancelled {
         color: white;
         background-color: #7f7f7f;
