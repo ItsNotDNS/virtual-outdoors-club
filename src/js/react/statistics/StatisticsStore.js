@@ -3,20 +3,25 @@
  */
 import Reflux from "reflux";
 import StatisticService from "../../services/StatisticService";
+import update from "immutability-helper";
+import moment from "moment";
 
 function defaultState() {
     return {
-        fetchedGearStatList: false,
+        fetchedStatistics: false,
         gearStatList: [],
-        fetchedCategoryStatList: false,
         categoryStatList: [],
-        error: ""
+        error: "",
+        dateFilter: {
+            startDate: moment(moment().subtract(4, "d").format("YYYY-MM-DD")).toDate(),
+            endDate: moment(moment().format("YYYY-MM-DD")).toDate()
+        }
     };
 }
 
 export const StatisticActions = Reflux.createActions([
-    "fetchGearStatisticList",
-    "fetchCategoryStatisticList"
+    "fetchStatistics",
+    "dateFilterChanged"
 ]);
 
 export class StatisticStore extends Reflux.Store {
@@ -27,39 +32,38 @@ export class StatisticStore extends Reflux.Store {
         this.listenables = StatisticActions;
     }
 
-    onFetchGearStatisticList() {
-        const service = new StatisticService();
-
-        return service.fetchGearStatisticList()
-            .then(({ data, error }) => {
-                if (data) {
-                    this.setState({
-                        gearStatList: data,
-                        fetchedGearStatList: true
-                    });
-                } else {
-                    this.setState({
-                        error,
-                        fetchedGearStatList: true
-                    });
-                }
-            });
+    onDateFilterChanged({ startDate, endDate }) {
+        const dateFilter = {};
+        if (startDate) {
+            dateFilter.startDate = { $set: startDate };
+        }
+        if (endDate) {
+            dateFilter.endDate = { $set: endDate };
+        }
+        this.setState(update(this.state, { dateFilter }));
+        this.onFetchStatistics();
     }
 
-    onFetchCategoryStatisticList() {
-        const service = new StatisticService();
+    onFetchStatistics() {
+        const { startDate, endDate } = this.state.dateFilter,
+            service = new StatisticService();
 
-        return service.fetchCategoryStatisticList()
-            .then(({ data, error }) => {
-                if (data) {
+        return service.fetchStatisticsFromTo(
+            moment(startDate).format("YYYY-MM-DD"),
+            moment(endDate).format("YYYY-MM-DD")
+        )
+            .then(({ gear, category, error }) => {
+                if (error) {
                     this.setState({
-                        categoryStatList: data,
-                        fetchedCategoryStatList: true
+                        error,
+                        fetchedStatistics: true
                     });
                 } else {
                     this.setState({
-                        error,
-                        fetchedCategoryStatList: true
+                        error: "",
+                        gearStatList: gear,
+                        categoryStatList: category,
+                        fetchedStatistics: true
                     });
                 }
             });
