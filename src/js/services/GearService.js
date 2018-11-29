@@ -143,35 +143,34 @@ export default class GearService {
         });
     }
 
-    // parses a workbook for a column title and returns the name of it
-    _getTitle(name, workbook) {
-        name = name.trim().toLowerCase();
-        // This will return a list of titles that contain the specified name
-        const columnTitle = Object.keys(workbook[0]).filter((key) => {
-            return key.trim().toLowerCase().includes(name);
+    // ensure the required keys are in the column object
+    _columnsHaveRequiredData(columns = {}, required = []) {
+        let flag = true;
+        required.forEach((expectedKey) => {
+            if (!columns[expectedKey]) {
+                flag = false;
+            }
         });
+        return flag;
+    }
 
-        if (columnTitle.length > 1) {
-            throw Error(`There's more than one column that has '${name}' in the title.`);
-        } else if (columnTitle.length === 0) {
-            throw Error(`There must be a column with the title '${name}'.`);
+    _addWarning(warnings, key, row, msg) {
+        if (warnings[key]) {
+            warnings[key] += `, ${row}`;
+        } else {
+            warnings[key] = `${msg} on rows: ${row}`;
         }
-
-        return columnTitle[0]; // returns the name of the column that matches
     }
 
     // Parses an array buffer to human readable data and then organizes it
     _bufferToData(buffer) {
         let workbook,
-            codeTitle = "",
-            categoryTitle = "",
-            descriptionTitle = "",
-            feeTitle = "",
             binary = "";
         const bytes = new Uint8Array(buffer),
-            warnings = [],
+            warnings = {},
             categories = {},
-            gearList = [];
+            requiredColumns = ["code", "description", "category", "fee"],
+            rowsMissingRequiredData = [];
 
         // parse the file's data
         for (let i = 0; i < bytes.length; i++) {
@@ -191,30 +190,62 @@ export default class GearService {
         }
         workbook = xlsx.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
 
-        codeTitle = this._getTitle("code", workbook);
-        categoryTitle = this._getTitle("category", workbook);
-        descriptionTitle = this._getTitle("description", workbook);
-        feeTitle = this._getTitle("fee", workbook);
+        // normalize workbook keys/values
+        workbook = workbook.map((row, rowIndex) => {
+            rowIndex = rowIndex + 2;
 
-        workbook.forEach((row, index) => {
-            const rowNumber = index + 2,
-                gear = {
-                    gearCode: row[codeTitle] && row[codeTitle].trim(),
-                    depositFee: row[feeTitle],
-                    gearDescription: row[descriptionTitle] && row[descriptionTitle].trim(),
-                    gearCategory: row[categoryTitle] && row[categoryTitle].trim().toLowerCase()
-                };
+            const normalizedRow = {};
 
-            if (!gear.gearCode || !gear.gearCategory || !gear.gearDescription || !gear.gearCategory) {
-                warnings.push(`Row ${rowNumber} has missing data.`);
-            } else {
-                gearList.push(gear);
-                categories[gear.gearCategory] = true;
+            Object.keys(row).forEach((key) => {
+                const newKey = key.split("_")[0].trim().toLowerCase();
+                if (normalizedRow[newKey]) {
+                    throw Error(`Detected duplicate columns with the name '${newKey}'. Ensure you don't have columns with similar names.`);
+                }
+                normalizedRow[newKey] = row[key];
+            });
+
+            if (!this._columnsHaveRequiredData(normalizedRow, requiredColumns)) {
+                rowsMissingRequiredData.push(rowIndex);
+            };
+
+            // lowercase category
+            if (normalizedRow["category"]) {
+                normalizedRow["category"] = normalizedRow["category"].trim().toLowerCase();
+                categories[normalizedRow["category"]] = true;
             }
+
+            // set defaults for status and statusDescription
+            if (!normalizedRow["condition"]) {
+                normalizedRow["condition"] = "RENTABLE";
+                this._addWarning(warnings, "statusMissing", rowIndex, "Missing a 'condition' (added a default of RENTABLE)");
+            }
+            if (!normalizedRow["condition desc"]) {
+                normalizedRow["condition desc"] = "";
+                this._addWarning(warnings, "noteMissing", rowIndex, "Missing a 'condition desc' (will remain blank)");
+            }
+
+            return normalizedRow;
+        });
+
+        if (rowsMissingRequiredData.length === workbook.length) {
+            throw Error(`It looks like you are missing a required title for a column, ensure you have these column titles: '${requiredColumns.join("', '")}'.`);
+        } else if (rowsMissingRequiredData.length) {
+            throw Error(`These rows are missing required data (under the column '${requiredColumns.join("', '")}'): ${rowsMissingRequiredData.join(", ")}.`);
+        }
+
+        workbook = workbook.map((row) => {
+            return {
+                gearCode: row.code,
+                depositFee: row.fee,
+                gearDescription: row.description,
+                gearCategory: row.category,
+                gearCondition: row.condition,
+                gearStatus: row["condition desc"]
+            };
         });
 
         return {
-            gear: gearList,
+            gear: workbook,
             categories: Object.keys(categories),
             warnings
         };
@@ -251,7 +282,9 @@ export default class GearService {
                 code: gear.code,
                 description: gear.description,
                 fee: gear.depositFee,
-                category: gear.category
+                category: gear.category,
+                condition: gear.condition,
+                "condition desc": gear.statusDescription
             };
         });
         xlsx.utils.book_append_sheet(workbook, xlsx.utils.json_to_sheet(gearList), "Gear Sheet");

@@ -22,7 +22,6 @@ export default class GearStatisticTable extends React.Component {
     }
 
     render() {
-        // console.log(this.props.gearStatList);
         return (
             <Table
                 keyField="code"

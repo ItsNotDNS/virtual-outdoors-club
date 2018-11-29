@@ -133,13 +133,14 @@ export default class GearPage extends Reflux.Component {
     }
 
     getUploadWarningAlert(warnings) {
-        if (warnings.length > 0) {
-            const children = warnings.map((w, i) => <li key={i}>{w}</li>);
+        const warningKeys = Object.keys(warnings);
+        if (warningKeys.length > 0) {
+            const children = warningKeys.map((wk, i) => <li key={i}>{warnings[wk]}</li>);
             return (
                 <Alert bsStyle="warning">
-                    <h4>The file you are uploading has some inconsistencies.</h4>
-                    <p><strong>You cannot upload this file.</strong></p>
-                    <p>You may want to check out the following rows:</p>
+                    <h4>You are missing some optional data!</h4>
+                    <p><strong>You can still upload this file.</strong></p>
+                    <p>You may want to check out the following rows, but a default value will be added if you choose to submit anyway:</p>
                     <ul>{children}</ul>
                 </Alert>
             );
