@@ -1,4 +1,4 @@
-import axios from "axios";
+import axiosAuth from "../constants/axiosConfig";
 import config from "../../config/config";
 
 // allows us to return a predictable and consistent response for all errors.
@@ -12,7 +12,7 @@ export default class AccountService {
     // would need to use corresponding usernames to set the passwords for admin and executive
     changePassword(name, newPass, oldPass = "") {
         if (oldPass) {
-            return axios.post(`${config.databaseHost}/system/accounts/`, {
+            return axiosAuth.axiosSingleton.post(`${config.databaseHost}/system/accounts/`, {
                 user: name,
                 oldPassword: oldPass,
                 password: newPass
@@ -20,7 +20,7 @@ export default class AccountService {
                 return response;
             }).catch(genericCatch);
         } else {
-            return axios.post(`${config.databaseHost}/system/accounts/`, {
+            return axiosAuth.axiosSingleton.post(`${config.databaseHost}/system/accounts/`, {
                 user: name,
                 password: newPass
             }).then((response) => {
