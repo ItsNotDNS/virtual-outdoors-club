@@ -346,9 +346,10 @@ export class GearStore extends Reflux.Store {
                     this.setState({
                         categoryList: data.sort(gearCategorycompare)
                     });
-                } else {
+                } else if (error) {
                     this.setState({
-                        error
+                        error: true,
+                        errorMessage: error
                     });
                 }
             });

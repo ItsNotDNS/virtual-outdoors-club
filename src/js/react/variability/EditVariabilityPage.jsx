@@ -47,27 +47,27 @@ export default class EditVariabilityPage extends Reflux.Component {
     getMemberSettingsTab(tabKey, onMemberChange, memberValues) {
         return (
             <Tab eventKey={tabKey} title="Member Settings">
-                <div className="col-md-6 margin-side">
+                <div className="col-md-6 margin-top-2">
                     <LabeledInput
-                        label="Max Reservation Length (in days)"
+                        label="Max Reservation Length (1 to 27 days)"
                         name="maxReservationLength"
                         onChange={this.handleChangeWrapper(onMemberChange)}
                         value={memberValues.maxReservationLength}
                     />
                     <LabeledInput
-                        label="Max Number of Items per Reservation"
+                        label="Max Number of Items per Reservation (1 to 98 items)"
                         name="maxItemsReserved"
                         onChange={this.handleChangeWrapper(onMemberChange)}
                         value={memberValues.maxItemsReserved}
                     />
                     <LabeledInput
-                        label="Max Days in Advance to Reserve"
+                        label="Max Days in Advance to Reserve (1 to 364 days)"
                         name="maxDaysInFutureCanStart"
                         onChange={this.handleChangeWrapper(onMemberChange)}
                         value={memberValues.maxDaysInFutureCanStart}
                     />
                     <LabeledInput
-                        label="Max Number of Reservations"
+                        label="Max Number of Reservations (1 to 98 reservations)"
                         name="maxReservations"
                         onChange={this.handleChangeWrapper(onMemberChange)}
                         value={memberValues.maxReservations}
@@ -88,25 +88,25 @@ export default class EditVariabilityPage extends Reflux.Component {
             <Tab eventKey={tabKey} title="Executive Settings">
                 <div className="col-md-6 margin-top-2">
                     <LabeledInput
-                        label="Max Reservation Length (in days)"
+                        label="Max Reservation Length (1 to 27 days)"
                         name="maxReservationLength"
                         onChange={this.handleChangeWrapper(onExecChange)}
                         value={execValues.maxReservationLength}
                     />
                     <LabeledInput
-                        label="Max Number of Items per Reservation"
+                        label="Max Number of Items per Reservation (1 to 98 items)"
                         name="maxItemsReserved"
                         onChange={this.handleChangeWrapper(onExecChange)}
                         value={execValues.maxItemsReserved}
                     />
                     <LabeledInput
-                        label="Max Days in Advance to Reserve"
+                        label="Max Days in Advance to Reserve (1 to 364 days)"
                         name="maxDaysInFutureCanStart"
                         onChange={this.handleChangeWrapper(onExecChange)}
                         value={execValues.maxDaysInFutureCanStart}
                     />
                     <LabeledInput
-                        label="Max Number of Reservations"
+                        label="Max Number of Reservations (1 to 98 reservations)"
                         name="maxReservations"
                         onChange={this.handleChangeWrapper(onExecChange)}
                         value={execValues.maxReservations}

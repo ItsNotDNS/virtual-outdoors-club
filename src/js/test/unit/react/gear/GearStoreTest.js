@@ -383,6 +383,7 @@ describe("GearStore Tests", () => {
         return gearStore.onFetchGearCategoryList().then(() => {
             expect(gearStore.state.categoryList).to.deep.equal(mockCategoryList);
             expect(gearStore.state.fetchedGearCategoryList).to.be.true;
+            expect(gearStore.state.error).to.equal(false);
         });
     });
 
@@ -392,11 +393,12 @@ describe("GearStore Tests", () => {
 
         expect(gearStore.state.categoryList).to.deep.equal([]);
         expect(gearStore.state.fetchedGearCategoryList).to.be.false;
-
+        expect(gearStore.state.error).to.equal(false);
         return gearStore.onFetchGearCategoryList().then(() => {
             expect(gearStore.state.categoryList).to.deep.equal([]);
             expect(gearStore.state.fetchedGearCategoryList).to.be.true;
-            expect(gearStore.state.error).to.equal(error.response.data.message);
+            expect(gearStore.state.error).to.equal(true);
+            expect(gearStore.state.errorMessage).to.equal(error.response.data.message);
         });
     });
 
@@ -410,7 +412,8 @@ describe("GearStore Tests", () => {
         return gearStore.onFetchGearCategoryList().then(() => {
             expect(gearStore.state.categoryList).to.deep.equal([]);
             expect(gearStore.state.fetchedGearCategoryList).to.be.true;
-            expect(gearStore.state.error).to.contain("try again later");
+            expect(gearStore.state.error).to.equal(true);
+            expect(gearStore.state.errorMessage).to.contain("try again later");
         });
     });
 
