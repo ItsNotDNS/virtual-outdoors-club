@@ -145,7 +145,7 @@ export default class ReservationModal extends React.Component {
                 <ReturnProcessor />
             ),
             [RETURNED]: (
-                <div>Returned</div>
+                <div className="text-center gray-out"><i>You cannot perform any actions on a returned reservation.</i></div>
             ),
             [CANCELLED]: (
                 <div className="text-center gray-out"><i>You cannot perform any actions on a cancelled reservation.</i></div>

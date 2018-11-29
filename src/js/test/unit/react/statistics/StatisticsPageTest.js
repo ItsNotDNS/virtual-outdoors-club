@@ -4,6 +4,7 @@ import { StatisticActions } from "react/statistics/StatisticsStore";
 import { expect } from "chai";
 import { shallow, mount } from "enzyme";
 import sinon from "sinon";
+import Constants from "constants/constants";
 
 const sandbox = sinon.createSandbox();
 let actionsStub;
@@ -17,28 +18,37 @@ describe("StatisticsPage Tests", () => {
         sandbox.restore();
     });
 
-    it("calls fetchStatistics on mount", () => {
+    it("calls fetchedGearStatList on mount", () => {
         const page = shallow(<StatisticPage/>);
-        actionsStub.fetchStatistics = sandbox.spy();
+        actionsStub.fetchGearStatisticList = sandbox.spy();
 
         page.instance().componentDidMount();
 
-        expect(actionsStub.fetchStatistics.calledOnce).to.be.true;
+        expect(actionsStub.fetchGearStatisticList.calledOnce).to.be.true;
 
-        page.instance().state.fetchedStatistics = true; // not set by the component
+        page.instance().state.fetchedGearStatList = true; // not set by the component
 
         page.instance().componentDidMount();
 
         page.instance().getGearStatChart(); // Chart updates when data received
 
-        expect(actionsStub.fetchStatistics.calledOnce).to.be.true;
+        expect(actionsStub.fetchGearStatisticList.calledOnce).to.be.true;
     });
 
-    it("displays the charts", () => {
-        const page = mount(<StatisticPage/>);
-        page.setState({ categoryStatList: [{}] })
-        expect(page.find("#CategoryStatChart")).to.have.length(1);
-        page.setState({ gearStatList: [{}] })
-        expect(page.find("#GearStatChart")).to.have.length(1);
+    it("calls fetchedCategoryStatList on mount", () => {
+        const page = shallow(<StatisticPage/>);
+        actionsStub.fetchCategoryStatisticList = sandbox.spy();
+
+        page.instance().componentDidMount();
+
+        expect(actionsStub.fetchCategoryStatisticList.calledOnce).to.be.true;
+
+        page.instance().state.fetchedCategoryStatList = true; // not set by the component
+
+        page.instance().componentDidMount();
+
+        page.instance().getCategoryStatChart(); // Chart updates when data received
+
+        expect(actionsStub.fetchCategoryStatisticList.calledOnce).to.be.true;
     });
 });

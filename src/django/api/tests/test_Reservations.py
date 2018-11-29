@@ -1,5 +1,6 @@
 from django.test import TestCase
 from ..models import Reservation, GearCategory, Gear, Member, BlackList
+from django.contrib.auth.models import User
 import datetime
 
 
@@ -27,9 +28,13 @@ class ReservationTestCase(TestCase):
 
         gr.gear.add(self.sp)
         gr.save()
+        User.objects.create_superuser("admin", "admin@gmail.com", "pass")
+        User.objects.create_user("exec", "exec@gmail.com", "pass")
         self.reservationId = gr.id
 
     def test_get(self):
+        self.client.login(username="admin", password="pass")
+
         response = self.client.get('/api/reservation?from=hello', content_type="application/json").data['message']
         self.assertEqual(response, "startDate is in an invalid date format. Make sure it's in the YYYY-MM-DD format.")
 
@@ -113,6 +118,8 @@ class ReservationTestCase(TestCase):
         self.assertEqual(response, "Invalid combination of query parameters.")
 
     def test_getHistory(self):
+        self.client.login(username="admin", password="pass")
+
         invalid_id = str(Reservation.objects.latest("id").id + 1)
         response = self.client.patch("/api/reservation?id=" + invalid_id, content_type="application/json")
         self.assertEqual(response.status_code, 400)
@@ -135,6 +142,8 @@ class ReservationTestCase(TestCase):
         self.assertEqual(len(response["data"]), 2)
 
     def test_checkout(self):
+        self.client.login(username="admin", password="pass")
+
         request = {}
         response = self.client.post("/api/reservation/checkout/", request, content_type='application/json').data['message']
         self.assertEqual(response, "There needs to be a reservation id to checkout.")
@@ -240,6 +249,8 @@ class ReservationTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
 
     def test_checkin(self):
+        self.client.login(username="admin", password="pass")
+        
         invalid_id = str(Gear.objects.latest("id").id + 1)
         request = {
             "id": self.reservationId,
@@ -324,6 +335,8 @@ class ReservationTestCase(TestCase):
         self.assertEqual(response.status_code, 406)
 
     def test_cancel(self):
+        self.client.login(username="admin", password="pass")
+
         request = {"id": self.reservationId}
         today = datetime.datetime.today()
 
@@ -372,6 +385,8 @@ class ReservationTestCase(TestCase):
         self.assertEqual(response.status_code, 406)
 
     def test_approve(self):
+        self.client.login(username="admin", password="pass")
+
         request = {"id": self.reservationId}
         today = datetime.datetime.today()
 
@@ -418,6 +433,8 @@ class ReservationTestCase(TestCase):
         self.assertEqual(response.status_code, 406)
 
     def test_post(self):
+        self.client.login(username="admin", password="pass")
+
         reservationList = self.client.get("/api/reservation/", content_type='application/json').data["data"]
         reservationListOriginalLen = len(reservationList)
 
@@ -558,6 +575,8 @@ class ReservationTestCase(TestCase):
         self.assertEqual(response, expected)
 
     def test_patch(self):
+        self.client.login(username="admin", password="pass")
+
         reservationList = self.client.get("/api/reservation/", content_type='application/json').data["data"]
         reservationListOriginalLen = len(reservationList)
 
@@ -738,6 +757,8 @@ class ReservationTestCase(TestCase):
     # BUGFIX-TEST: You can pass in any expectedVersion and it results in a patch
     # even if the expected version doesn't match
     def test_patch_expectedVersionMatters(self):
+        self.client.login(username="admin", password="pass")
+
         reservation = self.client.get("/api/reservation").data["data"][0]
         gear = self.client.get("/api/gear").data["data"][0]
 
@@ -757,6 +778,8 @@ class ReservationTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_invalidEmail(self):
+        self.client.login(username="admin", password="pass")
+
         today = datetime.datetime.today()
 
         request = {
@@ -774,6 +797,8 @@ class ReservationTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
 
     def test_blackListedEmail(self):
+        self.client.login(username="admin", password="pass")
+
         today = datetime.datetime.today()
 
         request = {
@@ -790,6 +815,8 @@ class ReservationTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
 
     def test_postTooFarInFuture(self):
+        self.client.login(username="exec", password="pass")
+
         today = datetime.datetime.today()
 
         request = {
@@ -806,6 +833,8 @@ class ReservationTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
 
     def test_tooManyReservations(self):
+        self.client.login(username="admin", password="pass")
+
         # A reservation is already created in the startup, so this is already at the limit
         request = {
             "member": {
@@ -814,9 +843,9 @@ class ReservationTestCase(TestCase):
         }
         response = self.client.post("/api/system/variability", request, content_type="application/json")
         self.assertEqual(response.status_code, 200)
+        self.client.logout()
 
         today = datetime.datetime.today()
-
         request = {
             "email": "enry@email.com",
             "licenseName": "Name on their license.",
@@ -829,3 +858,23 @@ class ReservationTestCase(TestCase):
 
         response = self.client.post("/api/reservation", request, content_type="application/json")
         self.assertEqual(response.status_code, 400)
+
+    def test_testExecPrivilege(self):
+        self.client.login(username="executive1", password="outdoorsclub")
+
+        invalid_id = str(Reservation.objects.latest("id").id + 1)
+        response = self.client.patch("/api/reservation?id=" + invalid_id, content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+
+        patch = {
+            "gear": [self.sp.pk, self.bk.pk]
+        }
+
+        request = {
+            "id": self.reservationId,
+            "expectedVersion": 1,
+            "patch": patch,
+        }
+
+        response = self.client.patch("/api/reservation", request, content_type="application/json")
+        self.assertEqual(response.status_code, 200)

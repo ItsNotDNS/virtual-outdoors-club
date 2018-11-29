@@ -1,12 +1,13 @@
 from .error import *
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from ..models import Reservation, System, Gear
 from ..emailing import cancelled, approved
 from ..views.PayPalView import process
 from ..serializers import ReservationPOSTSerializer, ReservationGETSerializer, GearSerializer
 from django.db.models import Q
 from django.db import transaction
+from rest_framework.permissions import AllowAny
 import datetime
 import decimal
 
@@ -19,12 +20,14 @@ def reservationIdExists(id):
 
     return reservation
 
-
+@permission_classes((AllowAny, ))
 class ReservationView(APIView):
 
     # Gets list of all reservations or specific reservations, depending on parameters
     def get(self, request):
-
+        if not request.user.is_authenticated or not request.user.has_perm("api.view_reservation"):
+            return RespError(400, "You don't have permission to visit this page!")
+ 
         # Look for the following parameters in GET request
         ID = request.query_params.get("id", None)
         email = request.query_params.get("email", None)
@@ -145,6 +148,9 @@ class ReservationView(APIView):
 
     # Edit gear in reservation
     def patch(self, request):
+        if not request.user.is_authenticated or not request.user.has_perm("api.change_reservation"):
+            return RespError(400, "You don't have permission to visit this page!")
+ 
         orgRequest = request
         request = request.data
         allowedPatchMethods = {
@@ -211,6 +217,9 @@ class ReservationView(APIView):
 
 @api_view(['GET'])
 def getHistory(request):
+    if not request.user.is_authenticated or not request.user.has_perm("api.view_reservation"):
+        return RespError(400, "You don't have permission to visit this page!")
+ 
     ID = request.query_params.get("id", None)
 
     try:
@@ -233,6 +242,9 @@ def getHistory(request):
 
 @api_view(['POST'])
 def checkout(request):
+    if not request.user.is_authenticated or not request.user.has_perm("api.change_reservation"):
+        return RespError(400, "You don't have permission to visit this page!")
+ 
     request = request.data
 
     if "id" not in request:
@@ -293,6 +305,9 @@ def checkout(request):
 @api_view(['POST'])
 @transaction.atomic
 def checkin(request):
+    if not request.user.is_authenticated or not request.user.has_perm("api.change_reservation"):
+        return RespError(400, "You don't have permission to visit this page!")
+ 
     request = request.data
 
     if "id" not in request and "charge" not in request:
@@ -362,6 +377,9 @@ def checkin(request):
 
 @api_view(['POST'])
 def cancel(request):
+    if not request.user.is_authenticated or not request.user.has_perm("api.change_reservation"):
+        return RespError(400, "You don't have permission to visit this page!")
+ 
     request = request.data
 
     if "id" not in request:
@@ -385,6 +403,9 @@ def cancel(request):
 
 @api_view(['POST'])
 def approve(request):
+    if not request.user.is_authenticated or not request.user.has_perm("api.change_reservation"):
+        return RespError(400, "You don't have permission to visit this page!")
+ 
     request = request.data
 
     if "id" not in request:

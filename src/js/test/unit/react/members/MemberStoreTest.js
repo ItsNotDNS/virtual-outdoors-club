@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import sinon from "sinon";
-import axios from "axios";
+import axiosAuth, { setAxiosWithAuth } from "../../../../constants/axiosConfig";
 import { MemberStore } from "react/members/MemberStore";
 import MemberService from "services/MemberService";
 
@@ -9,9 +9,9 @@ let axiosGetStub, axiosPostStub, axiosDeleteStub, store;
 
 describe("MemberStore Tests", () => {
     beforeEach(() => {
-        axiosGetStub = sandbox.stub(axios, "get");
-        axiosPostStub = sandbox.stub(axios, "post");
-        axiosDeleteStub = sandbox.stub(axios, "delete");
+        axiosGetStub = sandbox.stub(axiosAuth.axiosSingleton, "get");
+        axiosPostStub = sandbox.stub(axiosAuth.axiosSingleton, "post");
+        axiosDeleteStub = sandbox.stub(axiosAuth.axiosSingleton, "delete");
         store = new MemberStore({ fetchOnConstruct: false });
     });
 

@@ -1,8 +1,9 @@
 import React from "react";
 import Picker from "react/reservation/DatePickerV2";
 import { expect } from "chai";
-import { mount } from "enzyme";
+import { shallow, mount } from "enzyme";
 import sinon from "sinon";
+import DatePickerV2 from "react/reservation/DatePickerV2";
 
 const getPicker = (props = {}) => {
     const emptyFunc = () => {};
@@ -12,8 +13,6 @@ const getPicker = (props = {}) => {
             startDate={props.startDate}
             endDate={props.endDate}
             disabled={props.disabled}
-            allowSelectBeforeToday={props.allowSelectBeforeToday}
-            allowSelectAfterToday={props.allowSelectAfterToday}
         />
     );
 };
@@ -42,9 +41,13 @@ describe("DatePickerV2 Tests", () => {
         expect(spy.calledWith({ "aType": someDate })).to.be.true;
     });
 
-    it("allowSelectAfterToday - false", () => {
-        const picker = getPicker({ allowSelectAfterToday: true });
+    it("is null on the date range options", () => {
+        const picker = shallow(<DatePickerV2
+            disabled={false}
+            allowSelectBeforeToday={true}
+            allowSelectAfterToday={true}
+        />);
 
-        expect(picker.instance().getDateRangeOptions()).to.have.property("after", null);
+        expect(picker.find(".DayPickerInput")).to.have.length(0);
     });
 });

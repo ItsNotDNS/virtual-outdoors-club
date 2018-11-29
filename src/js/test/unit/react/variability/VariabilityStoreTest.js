@@ -2,7 +2,7 @@ import { VariableStore } from "react/variability/VariabilityStore";
 import sinon from "sinon";
 import { expect } from "chai";
 import constants from "constants/constants";
-import axios from "axios";
+import axiosAuth from "../../../../constants/axiosConfig";
 
 const {
     EXECUTIVE,
@@ -16,8 +16,8 @@ let store = new VariableStore(),
 
 describe("VariabilityStore Tests", () => {
     beforeEach(() => {
-        getStub = sandbox.stub(axios, "get");
-        postStub = sandbox.stub(axios, "post");
+        getStub = sandbox.stub(axiosAuth.axiosSingleton, "get");
+        postStub = sandbox.stub(axiosAuth.axiosSingleton, "post");
     });
 
     afterEach(() => {

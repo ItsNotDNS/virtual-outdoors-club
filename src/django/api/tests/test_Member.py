@@ -2,7 +2,7 @@ from django.test import TestCase
 from rest_framework.test import APIRequestFactory
 from decimal import Decimal
 from ..models import Member
-
+from django.contrib.auth.models import User
 
 class MemberTestCase(TestCase):
 
@@ -11,8 +11,11 @@ class MemberTestCase(TestCase):
     def setUpClass(self):
         super().setUpClass()
         self.client = APIRequestFactory()
+        User.objects.create_superuser("admin", "admin@gmail.com", "pass")
 
     def test_updateMemberList(self):
+        self.client.login(username="admin", password="pass")
+
         request = {
             "members": [
                     {"email": "jon@gmail.com"},
@@ -71,6 +74,7 @@ class MemberTestCase(TestCase):
 
 
     def test_getMemberList(self):
+        self.client.login(username="admin", password="pass")
         # also tests lowercase
         request = {
             "members": [

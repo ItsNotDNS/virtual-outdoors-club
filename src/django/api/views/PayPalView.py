@@ -75,6 +75,7 @@ def paypalView(request):
                          "currency": "CAD"})
 
     # TODO Replace with UAOC specif info
+
     deposit = paypalrestsdk.Payment({
         "intent": "authorize",
         "payer": {
@@ -110,6 +111,7 @@ def process(res, amount):
 
     if amount == 0:
         if deposit.void():
+
             return
         else:
             return deposit.error

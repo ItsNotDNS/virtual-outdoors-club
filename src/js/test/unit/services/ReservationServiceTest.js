@@ -1,7 +1,7 @@
 import ReservationService from "services/ReservationService";
 import { expect } from "chai";
 import sinon from "sinon";
-import axios from "axios";
+import axiosAuth, { setAxiosWithAuth } from "constants/axiosConfig";
 
 let getStub;
 const mockGear = {
@@ -17,7 +17,7 @@ sandbox = sinon.createSandbox();
 
 describe("ReservationService Tests", () => {
     beforeEach(() => {
-        getStub = sandbox.stub(axios, "get");
+        getStub = sandbox.stub(axiosAuth.axiosSingleton, "get");
     });
 
     afterEach(() => {

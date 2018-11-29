@@ -11,7 +11,7 @@ class SystemView(APIView):
 
 	# get request to retrieve the boolean variables of system
 	def get(self, request):
-		if not request.user.is_authenticated:
+		if not request.user.is_authenticated or not request.user.has_perm("api.get_system"):
 			return RespError(401, "You don't have permission to visit this page!")
 
 		sys = System.objects.all()
@@ -28,7 +28,7 @@ class SystemView(APIView):
 	def post(self, request):
 		# function to disable or enable the rental system
 
-		if not request.user.is_authenticated:
+		if not request.user.is_authenticated or not request.user.has_perm("api.change_system"):
 			return RespError(401, "You don't have permission to visit this page!")
 			
 		request = request.data

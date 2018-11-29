@@ -1,22 +1,21 @@
-/**
- * Wrapper for login page
- */
-
 import React from "react";
 import Reflux from "reflux";
 import LabeledInput from "../components/LabeledInput";
-import { Button, PageHeader, Image } from "react-bootstrap";
+import { Button, PageHeader, Image, Form } from "react-bootstrap";
+import { LoginStore, LoginActions } from "./LoginStore";
+import ErrorAlert from "../components/ErrorAlert";
 import logo from "../../../images/UAOC_logo.png";
 
 export default class LoginPage extends Reflux.Component {
-    constructor(props) {
-        super(props);
+    constructor() {
+        super();
+        this.store = LoginStore;
         this.handleChange = this.handleChange.bind(this);
     }
 
     handleChange(event) {
-        this.props.onChange(event.target.name, event.target.value);
-    };
+        LoginActions.updateFields(event);
+    }
 
     render() {
         return (
@@ -24,30 +23,36 @@ export default class LoginPage extends Reflux.Component {
                 <div className="img-container ">
                     <Image src={logo} alt={logo} responsive />
                 </div>
-
                 <div className="row">
                     <div className="col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-3">
                         <PageHeader className="page-header-view">
                             University of Alberta <br />
                             <small> Outdoors Club </small>
                         </PageHeader>
-                        <LabeledInput
-                            label="Login"
-                            name="loginField"
-                            placeholder="Enter username"
-                            onChange={this.handleChange}
-                            value={this.props.inputLogin}
-                            className="label-login-view"
-                        />
-                        <LabeledInput
-                            label="Password"
-                            name="passwordField"
-                            placeholder="Enter password"
-                            onChange={this.handleChange}
-                            value={this.props.inputPassword}
-                            className="label-login-view"
-                        />
-                        <Button className="btn-primary submit-button"> Submit </Button>
+                        <Form>
+                            <ErrorAlert
+                                show={this.state.error || false}
+                                errorMessage={this.state.errorMessage || ""}
+                            />
+                            <LabeledInput
+                                label="Login"
+                                name="name"
+                                placeholder="Enter username"
+                                onChange={this.handleChange}
+                                className="label-login-view"
+                                value={this.state.name}
+                            />
+                            <LabeledInput
+                                label="Password"
+                                name="password"
+                                placeholder="Enter password"
+                                onChange={this.handleChange}
+                                className="label-login-view"
+                                type="password"
+                                value={this.state.password}
+                            />
+                        </Form>
+                        <Button className="btn-primary submit-button" onClick={LoginActions.handleSubmit}> Submit </Button>
                     </div>
                 </div>
             </div>

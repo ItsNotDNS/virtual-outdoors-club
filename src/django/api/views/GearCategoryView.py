@@ -8,6 +8,9 @@ from rest_framework.views import APIView
 
 class GearCategoryView(APIView):
     def get(self, request):
+        if not request.user.is_authenticated or not request.user.has_perm("api.view_gearcategory"):
+            return RespError(400, "You don't have permission to visit this page!")
+ 
         categories = GearCategory.objects.all()
         categories = GearCategorySerializer(categories, many=True)
 
@@ -15,6 +18,9 @@ class GearCategoryView(APIView):
 
     # handles addition of a gear category
     def post(self, request):
+        if not request.user.is_authenticated or not request.user.has_perm("api.add_gearcategory"):
+            return RespError(400, "You don't have permission to visit this page!")
+ 
         newGearCategory = request.data
 
         if "name" not in newGearCategory:
@@ -36,6 +42,9 @@ class GearCategoryView(APIView):
         return Response(serial.validated_data)
 
     def patch(self, request):
+        if not request.user.is_authenticated or not request.user.has_perm("api.change_gearcategory"):
+            return RespError(400, "You don't have permission to visit this page!")
+ 
         request = request.data
 
         currentName = request.get("name", None)
@@ -81,6 +90,9 @@ class GearCategoryView(APIView):
 
     # handles deletion of a gear category
     def delete(self, request):
+        if not request.user.is_authenticated or not request.user.has_perm("api.delete_gearcategory"):
+            return RespError(400, "You don't have permission to visit this page!")
+ 
         nameToDelete = request.query_params.get("name", None)
         if not nameToDelete:
             return RespError(400, "You must specify a 'name' parameter to delete.")

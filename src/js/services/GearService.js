@@ -3,10 +3,11 @@
  * calls and returns the responses as a promise
  */
 
-import axios from "axios";
 import xlsx from "xlsx";
 import config from "../../config/config";
 import moment from "moment";
+// import axiosAuth, { setAxiosWithAuth } from "../constants/axiosConfig";
+import axiosAuth from "../constants/axiosConfig";
 
 // allows us to return a predictable and consistent response for all errors.
 const genericCatch = (error) => {
@@ -17,13 +18,11 @@ const genericCatch = (error) => {
 
 export default class GearService {
     constructor(options = {}) {
-        this.service = (options && options.service) || axios;
-
         this._bufferToData = this._bufferToData.bind(this);
     }
 
     fetchGearList() {
-        return this.service.get(`${config.databaseHost}/gear`)
+        return axiosAuth.axiosSingleton.get(`${config.databaseHost}/gear`)
             .then((response) => {
                 // response data is wrapped in response object by the gear list
                 return { data: response.data.data };
@@ -32,7 +31,7 @@ export default class GearService {
     }
 
     createGear({ gearCode, depositFee, gearDescription, gearCategory, gearCondition, gearStatus }) {
-        return this.service.post(`${config.databaseHost}/gear`, {
+        return axiosAuth.axiosSingleton.post(`${config.databaseHost}/gear`, {
             code: gearCode,
             depositFee,
             description: gearDescription,
@@ -47,7 +46,7 @@ export default class GearService {
     }
 
     updateGear({ id, expectedVersion, gearCode, depositFee, gearDescription, gearCategory, gearCondition, gearStatus }) {
-        return this.service.patch(`${config.databaseHost}/gear`, {
+        return axiosAuth.axiosSingleton.patch(`${config.databaseHost}/gear`, {
             id,
             expectedVersion,
             patch: {
@@ -66,7 +65,7 @@ export default class GearService {
     }
 
     deleteGear(gearId) {
-        return this.service.delete(`${config.databaseHost}/gear`, { params: { id: gearId } })
+        return axiosAuth.axiosSingleton.delete(`${config.databaseHost}/gear`, { params: { id: gearId } })
             .then((response) => {
                 return { deleteGear: response.data };
             })
@@ -75,7 +74,7 @@ export default class GearService {
 
     // fetch all categories including what they represent
     fetchGearCategoryList() {
-        return this.service.get(`${config.databaseHost}/gear/categories`)
+        return axiosAuth.axiosSingleton.get(`${config.databaseHost}/gear/categories`)
             .then((response) => {
                 return { data: response.data.data };
             })
@@ -83,7 +82,7 @@ export default class GearService {
     }
 
     createCategory({ name }) {
-        return this.service.post(`${config.databaseHost}/gear/categories`, { name })
+        return axiosAuth.axiosSingleton.post(`${config.databaseHost}/gear/categories`, { name })
             .then((response) => {
                 return { category: response.data };
             })
@@ -91,7 +90,7 @@ export default class GearService {
     }
 
     updateCategory({ originalName, newName }) {
-        return this.service.patch(`${config.databaseHost}/gear/categories`, {
+        return axiosAuth.axiosSingleton.patch(`${config.databaseHost}/gear/categories`, {
             name: originalName,
             patch: {
                 name: newName
@@ -104,7 +103,7 @@ export default class GearService {
     }
 
     deleteCategory(name) {
-        return this.service.delete(`${config.databaseHost}/gear/categories`, { params: { name: name } })
+        return axiosAuth.axiosSingleton.delete(`${config.databaseHost}/gear/categories`, { params: { name: name } })
             .then((response) => {
                 return { deleteCategory: response.data };
             })
@@ -121,7 +120,7 @@ export default class GearService {
             status: "REQUESTED",
             gear: reserveGearForm.items
         };
-        return this.service.post(`${config.databaseHost}/reservation`, data)
+        return axiosAuth.axiosSingleton.post(`${config.databaseHost}/reservation`, data)
             .then((response) => {
                 return { data: response.data };
             })
@@ -292,7 +291,7 @@ export default class GearService {
     }
 
     fetchGearListFromTo(startDate, endDate) {
-        return this.service.get(
+        return axiosAuth.axiosSingleton.get(
             `${config.databaseHost}/gear?from=${startDate}&to=${endDate}`
         ).then((response) => {
             return { data: response.data.data };
@@ -300,7 +299,7 @@ export default class GearService {
     }
 
     fetchGearHistory(gearId) {
-        return this.service.get(
+        return axiosAuth.axiosSingleton.get(
             `${config.databaseHost}/gear/history?id=${gearId}`
         ).then((response) => {
             return { data: response.data.data };

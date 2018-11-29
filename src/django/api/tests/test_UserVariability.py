@@ -12,8 +12,10 @@ class UserVariabilityTestCase(TestCase):
         self.maxFuture = "maxFuture"
         self.maxReservations = "maxReservations"
         self.maxGearPerReservation = "maxGearPerReservation"
+        User.objects.create_superuser("admin", "admin@gmail.com", "pass")
 
     def test_get(self):
+        self.client.login(username="admin", password="pass")
 
         expected = [
                 {"variable": "membermaxLength", "value": 14},
@@ -30,6 +32,7 @@ class UserVariabilityTestCase(TestCase):
         self.assertEqual(expected, response.data["data"])
 
     def test_setMaxResvValue(self):
+        self.client.login(username="admin", password="pass")
 
         request = {
             "executive": {
@@ -94,6 +97,8 @@ class UserVariabilityTestCase(TestCase):
         self.assertEqual(variable.value, 17)
 
     def test_updateDaysInAdvanceToMakeReservation(self):
+        self.client.login(username="admin", password="pass")
+
         request = {
             "executive": {
                 self.maxFuture: 21,
@@ -126,6 +131,8 @@ class UserVariabilityTestCase(TestCase):
         self.assertEqual(variable.value, 14)
 
     def test_updateMaxReservations(self):
+        self.client.login(username="admin", password="pass")
+
         request = {
             "executive": {
                 self.maxReservations: 3,
@@ -160,6 +167,8 @@ class UserVariabilityTestCase(TestCase):
         self.assertEqual(variable.value, 2)
 
     def test_updateMaxGearPerReservation(self):
+        self.client.login(username="admin", password="pass")
+
         request = {
             "executive": {
                 self.maxGearPerReservation: 3,
@@ -193,7 +202,25 @@ class UserVariabilityTestCase(TestCase):
         variable = UserVariability.objects.get(pk="member"+self.maxGearPerReservation)
         self.assertEqual(variable.value, 2)
 
+    def test_login(self):
+        request = {
+            "user": "admin",
+            "password": "pass",
+        }
+        response = self.client.post("/api/system/accounts/login/", request, content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+
+    def test_bad_login(self):
+        request = {
+            "user": "admin",
+            "password": "wrongPass",
+        }
+        response = self.client.post("/api/system/accounts/login/", request, content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+
     def test_changePassword(self):
+        self.client.login(username="admin", password="pass")
+
         User.objects.create_user("exec", "exec@gmail.com", "oldPass")
         request = {
             "user": "hello",
@@ -214,20 +241,19 @@ class UserVariabilityTestCase(TestCase):
         if user is None:
             self.assertEqual("Authentication failed", 1)    # Deliberately fail if no user found
 
-        User.objects.create_user("admin", "admin@gmail.com", "oldPass")
         request = {
             "user": "admin",
             "password": "newPass",
         }
-        response = self.client.post("/api/system/accounts/", request, content_type="application/json")
+        response = self.client.post("/api/system/accounts/password/", request, content_type="application/json")
         self.assertEqual(response.status_code, 400)
 
         request = {
             "user": "admin",
             "password": "newPass",
-            "oldPassword": "oldPass",
+            "oldPassword": "pass",
         }
-        response = self.client.post("/api/system/accounts/", request, content_type="application/json")
+        response = self.client.post("/api/system/accounts/password/", request, content_type="application/json")
         self.assertEqual(response.status_code, 200)
         user = authenticate(username="admin", password="newPass")
         if user is None:

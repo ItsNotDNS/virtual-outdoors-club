@@ -1,5 +1,6 @@
 from django.test import TestCase
 from decimal import Decimal
+from django.contrib.auth.models import User
 from ..models import GearCategory, Gear, Reservation
 import datetime
 
@@ -18,8 +19,10 @@ class GearTestCase(TestCase):
                                             description="A old red sleeping bag", condition="RENTABLE", version=1)
         self.sbpk = sb.pk
         self.bppk = bp.pk
+        User.objects.create_superuser("admin", "admin@gmail.com", "pass")
 
     def test_get(self):
+        response = self.client.get("/api/gear/", content_type="application/json").data
         expected = {
             "data": [{
                 "id": self.gearObj1.id,
@@ -45,6 +48,8 @@ class GearTestCase(TestCase):
         self.assertEqual(response, expected)
 
     def test_get_reservation(self):
+        self.client.login(username="admin", password="pass")
+
         url = "/api/gear?from=hello&to=world"
         response = self.client.get(url, content_type="application/json")
         self.assertEqual(response.status_code, 400)
@@ -79,6 +84,8 @@ class GearTestCase(TestCase):
         self.assertEqual(len(response), originalResponseLength)
 
     def test_gearHistory(self):
+        self.client.login(username="admin", password="pass")
+        
         response = self.client.get("/api/gear/history/?id=").data['message']
         self.assertEqual(response, "Must give the ID to search for")
 
@@ -179,6 +186,8 @@ class GearTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
 
     def test_post(self):
+        self.client.login(username="admin", password="pass")
+
         gearList = self.client.get("/api/gear/", content_type='application/json').data["data"]
         gearListOriginalLen = len(gearList)
 
@@ -211,6 +220,8 @@ class GearTestCase(TestCase):
 
     # POST will fail when sending bad key like "descrip7tion"
     def test_post_invalidKey(self):
+        self.client.login(username="admin", password="pass")
+
         request = {
             "code": "SB02",
             "category": "Sleeping Bag",
@@ -224,6 +235,8 @@ class GearTestCase(TestCase):
         self.assertTrue("'descrip7tion' is" in response)
 
     def test_post_missingKeys(self):
+        self.client.login(username="admin", password="pass")
+
         request = {
             "code": "SB02",
             "category": "Sleeping Bag",
@@ -244,6 +257,8 @@ class GearTestCase(TestCase):
         self.assertTrue("category: This field is required." in response)
 
     def test_patch(self):
+        self.client.login(username="admin", password="pass")
+
         request = {}
         response = self.client.patch("/api/gear/", request, content_type='application/json').data["message"]
         self.assertEqual(response, "You must specify an 'id' to patch.")
@@ -293,6 +308,8 @@ class GearTestCase(TestCase):
         self.assertEqual(g.condition, patch["condition"])
 
     def test_delete(self):
+        self.client.login(username="admin", password="pass")
+
         response = self.client.delete("/api/gear?id=" + str(self.gearObj2.pk), content_type="application/json").data
         self.assertEqual(response, {"message": "Successfully deleted gear: 'SB01'"})
         
@@ -321,10 +338,14 @@ class GearTestCase(TestCase):
         self.assertEqual(response, correctResponse)
 
     def test_delete_missingId(self):
+        self.client.login(username="admin", password="pass")
+
         response = self.client.delete("/api/gear?code=SB02", content_type="application/json").data
         self.assertEqual(response, {"message": "Missing gear id in request"})
 
     def test_delete_DNEGear(self):
+        self.client.login(username="admin", password="pass")
+
         lastGear = Gear.objects.latest('id')
         response = self.client.delete("/api/gear?id=" + str(lastGear.id + 1), content_type="application/json").data
         self.assertEqual(response, {"message": "The gear item trying to be removed does not exist"})

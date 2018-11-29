@@ -2,7 +2,6 @@ from django.conf.urls import url
 from .views.GearCategoryView import GearCategoryView
 from .views import GearView, PayPalView, ReservationView, UserVariabilityView, MemberView, BlackListView, SystemView, StatsView
 
-
 urlpatterns = [
     url(r'^gear/?$', GearView.GearView.as_view(), name="Gear"),
     url(r'^gear/history/?$', GearView.getHistory, name="Gear History"),
@@ -16,6 +15,8 @@ urlpatterns = [
     url(r'^process/?$', PayPalView.paypalView, name="PayPalView"),
     url(r'^return/?$', PayPalView.returnView, name="returnView"),
     url(r'^cancel/?$', PayPalView.cancelView, name="cancelView"),
+    url(r'^system/accounts/login/?$', UserVariabilityView.backendLogin, name="Login"),
+    url(r'^system/accounts/password/?$', UserVariabilityView.changePassword, name="changePassword"),
     url(r'^system/variability/?$', UserVariabilityView.UserVariabilityView.as_view(), name="updateValues"),
     url(r'^system/accounts/?$', UserVariabilityView.changePassword, name="changePassword"),
     url(r'^system/?$', SystemView.SystemView.as_view(), name="System"),

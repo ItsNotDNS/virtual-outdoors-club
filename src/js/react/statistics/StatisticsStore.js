@@ -3,25 +3,20 @@
  */
 import Reflux from "reflux";
 import StatisticService from "../../services/StatisticService";
-import update from "immutability-helper";
-import moment from "moment";
 
 function defaultState() {
     return {
-        fetchedStatistics: false,
+        fetchedGearStatList: false,
         gearStatList: [],
+        fetchedCategoryStatList: false,
         categoryStatList: [],
-        error: "",
-        dateFilter: {
-            startDate: moment(moment().subtract(4, "d").format("YYYY-MM-DD")).toDate(),
-            endDate: moment(moment().format("YYYY-MM-DD")).toDate()
-        }
+        error: ""
     };
 }
 
 export const StatisticActions = Reflux.createActions([
-    "fetchStatistics",
-    "dateFilterChanged"
+    "fetchGearStatisticList",
+    "fetchCategoryStatisticList"
 ]);
 
 export class StatisticStore extends Reflux.Store {
@@ -32,38 +27,39 @@ export class StatisticStore extends Reflux.Store {
         this.listenables = StatisticActions;
     }
 
-    onDateFilterChanged({ startDate, endDate }) {
-        const dateFilter = {};
-        if (startDate) {
-            dateFilter.startDate = { $set: startDate };
-        }
-        if (endDate) {
-            dateFilter.endDate = { $set: endDate };
-        }
-        this.setState(update(this.state, { dateFilter }));
-        this.onFetchStatistics();
-    }
+    onFetchGearStatisticList() {
+        const service = new StatisticService();
 
-    onFetchStatistics() {
-        const { startDate, endDate } = this.state.dateFilter,
-            service = new StatisticService();
-
-        return service.fetchStatisticsFromTo(
-            moment(startDate).format("YYYY-MM-DD"),
-            moment(endDate).format("YYYY-MM-DD")
-        )
-            .then(({ gear, category, error }) => {
-                if (error) {
+        return service.fetchGearStatisticList()
+            .then(({ data, error }) => {
+                if (data) {
                     this.setState({
-                        error,
-                        fetchedStatistics: true
+                        gearStatList: data,
+                        fetchedGearStatList: true
                     });
                 } else {
                     this.setState({
-                        error: "",
-                        gearStatList: gear,
-                        categoryStatList: category,
-                        fetchedStatistics: true
+                        error,
+                        fetchedGearStatList: true
+                    });
+                }
+            });
+    }
+
+    onFetchCategoryStatisticList() {
+        const service = new StatisticService();
+
+        return service.fetchCategoryStatisticList()
+            .then(({ data, error }) => {
+                if (data) {
+                    this.setState({
+                        categoryStatList: data,
+                        fetchedCategoryStatList: true
+                    });
+                } else {
+                    this.setState({
+                        error,
+                        fetchedCategoryStatList: true
                     });
                 }
             });

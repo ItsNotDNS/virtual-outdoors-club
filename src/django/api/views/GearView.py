@@ -2,13 +2,14 @@ from ..models import Gear, Reservation
 from django.core import exceptions
 from ..serializers import GearSerializer
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from .error import *
 from django.db.models import ProtectedError
 from datetime import datetime
 from django.db.models import Q
+from rest_framework.permissions import AllowAny
 
-
+@permission_classes((AllowAny, ))
 class GearView(APIView):
 
     # gets a list of all gear in the database and returns it as a list of json objects
@@ -38,6 +39,9 @@ class GearView(APIView):
         return Response({"data": gear.data})
 
     def post(self, request):
+        if not request.user.is_authenticated or not request.user.has_perm("api.add_gear"):
+            return RespError(400, "You don't have permission to visit this page!")
+ 
         newGear = request.data
 
         properties = {
@@ -67,6 +71,9 @@ class GearView(APIView):
 
     # Edit object in list
     def patch(self, request):
+        if not request.user.is_authenticated or not request.user.has_perm("change_gear"):
+            return RespError(400, "You don't have permission to visit this page!")
+ 
         request = request.data
         # These string values should be constants somewhere..
         allowedPatchMethods = {
@@ -117,6 +124,9 @@ class GearView(APIView):
     # only admins can delete gear from inventory: this check for admin is done in the frontend
     # this function expects a 'id' key in the parameters of the request 
     def delete(self, request):
+        if not request.user.is_authenticated or not request.user.has_perm("api.delete_gear"):
+            return RespError(400, "You don't have permission to visit this page!")
+ 
         idToDelete = request.query_params.get("id")
 
         if not idToDelete:
@@ -144,6 +154,9 @@ class GearView(APIView):
 
 @api_view(['GET'])
 def getHistory(request):
+    if not request.user.is_authenticated or not request.user.has_perm("api.view_gear"):
+        return RespError(400, "You don't have permission to visit this page!")
+ 
     ID = request.query_params.get("id", None)
 
     if not ID:

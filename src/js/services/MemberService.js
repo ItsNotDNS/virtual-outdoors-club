@@ -3,7 +3,7 @@
  * member API.
  */
 import xlsx from "xlsx";
-import axios from "axios";
+import axiosAuth from "../constants/axiosConfig";
 import config from "../../config/config";
 
 // allows us to return a predictable and consistent response for all errors.
@@ -15,7 +15,7 @@ const genericCatch = (error) => {
 
 export default class MemberService {
     getMemberList() {
-        return axios.get(`${config.databaseHost}/members`)
+        return axiosAuth.axiosSingleton.get(`${config.databaseHost}/members`)
             .then((response) => {
                 const list = response.data && response.data.data;
                 return { members: list };
@@ -24,7 +24,7 @@ export default class MemberService {
     }
 
     getBlacklist() {
-        return axios.get(`${config.databaseHost}/members/blacklist`)
+        return axiosAuth.axiosSingleton.get(`${config.databaseHost}/members/blacklist`)
             .then((response) => {
                 const list = response.data && response.data.data;
                 return { members: list };
@@ -33,7 +33,7 @@ export default class MemberService {
     }
 
     uploadMemberList(list) {
-        return axios.post(`${config.databaseHost}/members`, {
+        return axiosAuth.axiosSingleton.post(`${config.databaseHost}/members`, {
             members: list
         })
             .then((response) => {
@@ -44,7 +44,7 @@ export default class MemberService {
     }
 
     blacklistMember(member) {
-        return axios.post(`${config.databaseHost}/members/blacklist`, member)
+        return axiosAuth.axiosSingleton.post(`${config.databaseHost}/members/blacklist`, member)
             .then((response) => {
                 return { blacklistedMember: response.data };
             })
@@ -52,7 +52,7 @@ export default class MemberService {
     }
 
     whitelistMember(email) {
-        return axios.delete(`${config.databaseHost}/members/blacklist`, {
+        return axiosAuth.axiosSingleton.delete(`${config.databaseHost}/members/blacklist`, {
             params: { email }
         })
             .catch(genericCatch);

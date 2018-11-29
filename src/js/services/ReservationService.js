@@ -2,9 +2,8 @@
  * Translates "actions" (method calls) into REST API
  * calls and returns the responses as a promise
  */
-
-import axios from "axios";
 import config from "../../config/config";
+import axiosAuth from "../constants/axiosConfig";
 
 // allows us to return a predictable and consistent response for all errors.
 const genericCatch = (error) => {
@@ -14,12 +13,8 @@ const genericCatch = (error) => {
 };
 
 export default class ReservationService {
-    constructor(options = {}) {
-        this.service = (options && options.service) || axios;
-    }
-
     fetchReservationList() {
-        return this.service.get(`${config.databaseHost}/reservation`)
+        return axiosAuth.axiosSingleton.get(`${config.databaseHost}/reservation`)
             .then((response) => {
                 // response data is wrapped in response object by the gear list
                 return { data: response.data.data };
@@ -28,22 +23,23 @@ export default class ReservationService {
     }
 
     fetchReservation(reservationId, email) {
-        return this.service.get(`${config.databaseHost}/reservation?id=${reservationId}&email=${email}`)
+        return axiosAuth.axiosSingleton.get(`${config.databaseHost}/reservation?id=${reservationId}&email=${email}`)
             .then((response) => {
                 return { data: response.data.data[0] };
             }).catch(genericCatch);
     }
 
     fetchPayPalForm(reservationId) {
-        return this.service.post(`${config.databaseHost}/process`, {
+        return axiosAuth.axiosSingleton.post(`${config.databaseHost}/process`, {
             id: reservationId
-        }).then((response) => {
-            return { data: response.data };
-        }).catch(genericCatch);
+        })
+            .then((response) => {
+                return { data: response.data };
+            }).catch(genericCatch);
     }
 
     approveReservation(id) {
-        return this.service.post(`${config.databaseHost}/reservation/approve`, { id })
+        return axiosAuth.axiosSingleton.post(`${config.databaseHost}/reservation/approve`, { id })
             .then((response) => {
                 const reservation = response.data;
                 return { reservation };
@@ -52,7 +48,7 @@ export default class ReservationService {
     }
 
     payReservationCash(id) {
-        return this.service.post(`${config.databaseHost}/reservation/checkout`, { id, cash: true })
+        return axiosAuth.axiosSingleton.post(`${config.databaseHost}/reservation/checkout`, { id, cash: true })
             .then((response) => {
                 const reservation = response.data;
                 return { reservation };
@@ -61,7 +57,7 @@ export default class ReservationService {
     }
 
     cancelReservation(id) {
-        return this.service.post(`${config.databaseHost}/reservation/cancel`, { id })
+        return axiosAuth.axiosSingleton.post(`${config.databaseHost}/reservation/cancel`, { id })
             .then((response) => {
                 const reservation = response.data;
                 return { reservation };
@@ -70,7 +66,7 @@ export default class ReservationService {
     }
 
     updateReservation(id, expectedVersion, patch) {
-        return this.service.patch(`${config.databaseHost}/reservation`, { id, expectedVersion, patch })
+        return axiosAuth.axiosSingleton.patch(`${config.databaseHost}/reservation`, { id, expectedVersion, patch })
             .then((response) => {
                 const reservation = response.data;
                 return { reservation };
@@ -79,7 +75,7 @@ export default class ReservationService {
     }
 
     fetchReservationListFromTo(startDate, endDate) {
-        return this.service.get(
+        return axiosAuth.axiosSingleton.get(
             `${config.databaseHost}/reservation?from=${startDate}&to=${endDate}`
         ).then((response) => {
             return { data: response.data.data };
@@ -89,7 +85,7 @@ export default class ReservationService {
     }
 
     fetchGearReservationHistory(gearId) {
-        return this.service.get(
+        return axiosAuth.axiosSingleton.get(
             `${config.databaseHost}/reservation?gearId=${gearId}`
         ).then((response) => {
             return {
@@ -103,7 +99,7 @@ export default class ReservationService {
     }
 
     fetchReservationHistory(reservationId) {
-        return this.service.get(
+        return axiosAuth.axiosSingleton.get(
             `${config.databaseHost}/reservation/history?id=${reservationId}`
         ).then((response) => {
             return {
@@ -117,21 +113,21 @@ export default class ReservationService {
     }
 
     checkOutReservation(id) {
-        return this.service.post(`${config.databaseHost}/reservation/checkout`, { id })
+        return axiosAuth.axiosSingleton.post(`${config.databaseHost}/reservation/checkout`, { id })
             .then((response) => {
                 return { reservation: response.data };
             }).catch(genericCatch);
     }
 
     checkInGear(id, gear, charge) {
-        return this.service.post(`${config.databaseHost}/reservation/checkin`, { id, gear, charge })
+        return axiosAuth.axiosSingleton.post(`${config.databaseHost}/reservation/checkin`, { id, gear, charge })
             .then((response) => {
                 return { reservation: response.data };
             }).catch(genericCatch);
     }
 
     fetchSystemStatus() {
-        return this.service.get(
+        return axiosAuth.axiosSingleton.get(
             `${config.databaseHost}/system`
         ).then((response) => {
             return { data: response.data.data };
@@ -141,7 +137,7 @@ export default class ReservationService {
     }
 
     enableSystem() {
-        return this.service.post(`${config.databaseHost}/system/`, {
+        return axiosAuth.axiosSingleton.post(`${config.databaseHost}/system/`, {
             disableSys: false
         })
             .then((response) => {
@@ -152,7 +148,7 @@ export default class ReservationService {
     }
 
     disableSystem(cancelReservations) {
-        return this.service.post(`${config.databaseHost}/system/`,
+        return axiosAuth.axiosSingleton.post(`${config.databaseHost}/system/`,
             {
                 disableSys: true,
                 cancelRes: cancelReservations

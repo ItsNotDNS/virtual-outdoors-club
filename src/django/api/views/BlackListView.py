@@ -6,6 +6,9 @@ from rest_framework.views import APIView
 
 class BlackListView(APIView):
     def get(self, request):
+        if not request.user.is_authenticated or not request.user.has_perm("api.view_blacklist"):
+            return RespError(400, "You don't have permission to visit this page!")
+ 
         members = BlackList.objects.all()
         members = BlackListSerializer(members, many=True)
 
@@ -13,6 +16,9 @@ class BlackListView(APIView):
 
     # handles addition of a blacklisted email
     def post(self, request):
+        if not request.user.is_authenticated or not request.user.has_perm("api.add_blacklist"):
+            return RespError(400, "You don't have permission to visit this page!")
+ 
         newBlackList = request.data
 
         if "email" not in newBlackList:
@@ -32,6 +38,9 @@ class BlackListView(APIView):
 
     # handles deletion of blacklist email
     def delete(self, request):
+        if not request.user.is_authenticated or not request.user.has_perm("api.delete_blacklist"):
+            return RespError(400, "You don't have permission to visit this page!")
+ 
         emailToDelete = request.query_params.get("email", None)
         if not emailToDelete:
             return RespError(400, "You must specify an 'email' parameter to delete.")

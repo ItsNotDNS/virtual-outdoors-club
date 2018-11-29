@@ -1,9 +1,10 @@
 import { expect } from "chai";
 import sinon from "sinon";
-import axios from "axios";
+import axiosAuth, { setAxiosWithAuth } from "../../../../constants/axiosConfig";
 import { ReservationStore } from "react/reservation/ReservationStore";
 import moment from "moment";
 import config from "../../../../../config/config";
+import axios from "axios";
 
 const sandbox = sinon.createSandbox(),
     mockReservation = {	
@@ -26,13 +27,13 @@ const sandbox = sinon.createSandbox(),
         endDate: null,	
         gear: []	
     };
-let axiosGetStub, axiosPostStub, axiosPatchStub, store;
+let axiosGetStub, axiosPostStub, axiosPatchStub, store, axiosStub;
 
 describe("ReservationStore Test", () => {
     beforeEach(() => {
-        axiosGetStub = sandbox.stub(axios, "get");
-        axiosPostStub = sandbox.stub(axios, "post");
-        axiosPatchStub = sandbox.stub(axios, "patch");
+        axiosGetStub = sandbox.stub(axiosAuth.axiosSingleton, "get");
+        axiosPostStub = sandbox.stub(axiosAuth.axiosSingleton, "post");
+        axiosPatchStub = sandbox.stub(axiosAuth.axiosSingleton, "patch");
         store = new ReservationStore();
     });
 
@@ -97,7 +98,7 @@ describe("ReservationStore Test", () => {
         };
 
         axiosGetStub.returns(Promise.resolve(response));
-
+        axiosGetStub.returns(Promise.resolve(response));
         return store.onLoadAvailableGear().then(() => {
             expect(store.state.reservationModal.gearSelect.isLoading).to.be.false;
             expect(store.state.reservationModal.gearSelect.options).to.have.length(1);
@@ -125,7 +126,7 @@ describe("ReservationStore Test", () => {
         };
 
         axiosGetStub.returns(Promise.reject(error));
-
+        axiosGetStub.returns(Promise.reject(error));
         return store.onLoadAvailableGear().then(() => {
             expect(store.state.reservationModal.gearSelect.isLoading).to.be.false;
             expect(store.state.reservationModal.gearSelect.options).to.have.length(0);

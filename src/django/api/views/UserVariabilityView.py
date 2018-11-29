@@ -1,20 +1,49 @@
 from .error import *
-from django.contrib.auth import authenticate
+from django.core import exceptions
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.authtoken.models import Token
 from ..models import UserVariability
 from ..serializers import UserVariabilitySerializer
+from rest_framework.permissions import AllowAny
+
+@api_view(['POST'])
+@permission_classes((AllowAny, ))
+def backendLogin(request):
+    if request.user.is_authenticated:
+        return RespError(400, "You are already logged in")
+
+    required = ["user", "password"]
+    for ele in required:
+        if ele not in request.data:
+            return RespError(400, "You are missing " + ele + ".")
+
+    user = authenticate(request, username=request.data["user"], password=request.data["password"])
+    if user is not None:
+        # Success
+        login(request._request, user)
+        token, _ = Token.objects.get_or_create(user=user)
+        return Response(token.key, status=200)
+    else:
+        return RespError(400, "The username and password combination does not exist.")
 
 
 # Deals with modifiable user variables like max reservations, how long reservations can be and such
 class UserVariabilityView(APIView):
     def get(self, request):
+        if not request.user.is_authenticated or not request.user.has_perm("api.view_uservariability"):
+            return RespError(400, "You don't have permission to visit this page!")
+
         variables = UserVariability.objects.all()
         variables = UserVariabilitySerializer(variables, many=True)
         return Response({"data": variables.data})
 
     def post(self, request):
+        if not request.user.is_authenticated or not request.user.has_perm("api.add_uservariability"):
+            return RespError(400, "You don't have permission to visit this page!")
+
         request = request.data
     
         allowedMemberTypes = ["executive", "member"]
@@ -62,6 +91,9 @@ class UserVariabilityView(APIView):
 
 @api_view(['POST'])
 def changePassword(request):
+    if not request.user.is_authenticated or not request.user.has_perm("api.change_uservariability"):
+        return RespError(400, "You don't have permission to visit this page!")
+ 
     request = request.data
     
     required = ["user", "password"]

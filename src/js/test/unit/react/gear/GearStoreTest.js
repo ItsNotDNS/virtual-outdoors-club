@@ -3,7 +3,7 @@ import Constants from "constants/constants";
 import config from "../../../../../config/config";
 import sinon from "sinon";
 import { expect } from "chai";
-import axios from "axios";
+import axiosAuth, { setAxiosWithAuth } from "../../../../constants/axiosConfig";
 import GearService from "../../../../services/GearService";
 import { GearActions } from "../../../../react/gear/GearStore";
 
@@ -106,10 +106,10 @@ const sandbox = sinon.createSandbox(),
 
 describe("GearStore Tests", () => {
     beforeEach(() => {
-        getStub = sandbox.stub(axios, "get");
-        postStub = sandbox.stub(axios, "post");
-        patchStub = sandbox.stub(axios, "patch");
-        deleteStub = sandbox.stub(axios, "delete");
+        getStub = sandbox.stub(axiosAuth.axiosSingleton, "get");
+        postStub = sandbox.stub(axiosAuth.axiosSingleton, "post");
+        patchStub = sandbox.stub(axiosAuth.axiosSingleton, "patch");
+        deleteStub = sandbox.stub(axiosAuth.axiosSingleton, "delete");
     });
 
     afterEach(() => {

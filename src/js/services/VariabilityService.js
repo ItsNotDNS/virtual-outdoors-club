@@ -1,14 +1,15 @@
 /**
  * Service for system variability
  */
-import axios from "axios";
+import axiosAuth from "../constants/axiosConfig";
 import config from "../../config/config";
 import constants from "../constants/constants";
 
 const { EXECUTIVE, MEMBER } = constants.variability;
+
 export default class VariabilityService {
     fetchSystemVariables() {
-        return axios.get(`${config.databaseHost}/system/variability`)
+        return axiosAuth.axiosSingleton.get(`${config.databaseHost}/system/variability`)
             .then((response) => {
                 return { data: response.data.data };
             })
@@ -28,7 +29,7 @@ export default class VariabilityService {
                 "maxReservations": settings[MEMBER].maxReservations
             }
         };
-        return axios.post(`${config.databaseHost}/system/variability`, data)
+        return axiosAuth.axiosSingleton.post(`${config.databaseHost}/system/variability`, data)
             .then((response) => {
                 return response;
             })
@@ -48,7 +49,7 @@ export default class VariabilityService {
                 "maxReservations": settings[EXECUTIVE].maxReservations
             }
         };
-        return axios.post(`${config.databaseHost}/system/variability`, data)
+        return axiosAuth.axiosSingleton.post(`${config.databaseHost}/system/variability`, data)
             .then((response) => {
                 return response;
             })

@@ -4,6 +4,7 @@
 import React from "react";
 import { LinkContainer } from "react-router-bootstrap";
 import { Navbar, NavItem, Nav, NavDropdown, MenuItem } from "react-bootstrap";
+import { LoginActions } from "../login/LoginStore";
 
 export default class NavbarAdmin extends React.Component {
     render() {
@@ -49,8 +50,8 @@ export default class NavbarAdmin extends React.Component {
                         <LinkContainer to="/help">
                             <NavItem eventKey={6}> Help </NavItem>
                         </LinkContainer>
-                        <LinkContainer to="/login">
-                            <NavItem eventKey={7}> Logout </NavItem>
+                        <LinkContainer to="/">
+                            <NavItem onClick={LoginActions.handleLogout} eventKey={7}> Logout </NavItem>
                         </LinkContainer>
                     </Nav>
                 </Navbar.Collapse>

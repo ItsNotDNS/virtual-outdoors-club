@@ -3,7 +3,7 @@
  * calls and returns the responses as a promise
  */
 
-import axios from "axios";
+import axiosAuth from "../constants/axiosConfig";
 import config from "../../config/config";
 
 // allows us to return a predictable and consistent response for all errors.
@@ -14,48 +14,34 @@ const genericCatch = (error) => {
 };
 
 export default class StatisticService {
-    constructor(options = {}) {
-        this.service = (options && options.service) || axios;
-    }
-
-    _parseGearData({ gear }) {
-        return Object.keys(gear).map((key) => {
-            let sum = 0.0;
-
-            for (let i = 0; i < gear[key].usage.length; i++) {
-                sum = sum + gear[key].usage[i];
-            }
-
-            sum = sum / gear[key].usage.length;
-
-            return {
-                code: key,
-                usage: Number(sum * 100).toFixed(2), // ??
-                description: gear[key].description
-            };
-        });
-    }
-
-    _parseCategoryData({ category }) {
-        return Object.keys(category).map((key) => {
-            let sum = 0.0;
-            for (let i = 0; i < category[key].length; i++) {
-                sum = sum + category[key][i];
-            }
-            sum = sum / category[key].length;
-            return {
-                code: key,
-                usage: Number(sum * 100).toFixed(2) // ??
-            };
-        });
-    }
-
-    fetchStatisticsFromTo(startDate, endDate) {
-        return this.service.get(`${config.databaseHost}/statistics?from=${startDate}&to=${endDate}`)
+    fetchGearStatisticList() {
+        return axiosAuth.axiosSingleton.get(`${config.databaseHost}/statistics`)
             .then((response) => {
-                const gear = this._parseGearData(response.data.data),
-                    category = this._parseCategoryData(response.data.data);
-                return { gear, category };
-            }).catch(genericCatch);
+                const gearStatData = Object.keys(response.data.data.gear).map((key) => {
+                    return {
+                        code: key,
+                        usage: Number(response.data.data.gear[key].usage[0] * 100).toFixed(2), // ??
+                        description: response.data.data.gear[key].description
+                    };
+                });
+                // response data is wrapped in response object by the gear list
+                return { data: gearStatData };
+            })
+            .catch(genericCatch);
+    }
+
+    fetchCategoryStatisticList() {
+        return axiosAuth.axiosSingleton.get(`${config.databaseHost}/statistics`)
+            .then((response) => {
+                const categoryStatData = Object.keys(response.data.data.category).map((key) => {
+                    return {
+                        code: key,
+                        usage: Number(response.data.data.category[key][0] * 100).toFixed(2) // ??
+                    };
+                });
+                // response data is wrapped in response object by the gear list
+                return { data: categoryStatData };
+            })
+            .catch(genericCatch);
     }
 }
