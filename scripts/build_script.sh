@@ -8,9 +8,6 @@ ssh -i /tmp/key_outdoors.pem ubuntu@199.116.235.142 <<EOF
     pkill -f process_tasks
     git checkout master
     git pull
-    exit
-    source outdoorsclubenv/bin/activate
-    cd virtual-outdoors-club
     pip3 install -r requirements.txt
     cd src
     cd django
@@ -18,6 +15,7 @@ ssh -i /tmp/key_outdoors.pem ubuntu@199.116.235.142 <<EOF
     python3 manage.py process_tasks &
     python3 manage.py runserver 0.0.0.0:8000 &
     sudo systemctl restart nginx
+    logout
     exit
 EOF
 
