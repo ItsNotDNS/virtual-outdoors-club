@@ -122,16 +122,21 @@ class GearView(APIView):
         if not idToDelete:
             return RespError(400, "Missing gear id in request")
 
+        
+
         try:
-            delGear = Gear.objects.get(id=idToDelete) 
-        except ProtectedError:
-            return RespError(409, "You cannot remove gear that is currently being reserved")
+            delGear = Gear.objects.get(id=idToDelete)
         except exceptions.ObjectDoesNotExist:
             return RespError(404, "The gear item trying to be removed does not exist")
 
+
+        resos = Reservation.objects.filter(gear=delGear).filter(status="TAKEN")
+        if len(resos) > 0:
+            return RespError(409, "The gear you are trying to delete is currently taken out. Check the gear in before trying to delete.")
+
+
         delGearCode = delGear.code
-        delGear.condition = "DELETED" 
-        delGear.category = None
+        delGear.condition = "DELETED"
         delGear.save()
 
         return RespError(200, "Successfully deleted gear: " + "'" + delGearCode + "'")

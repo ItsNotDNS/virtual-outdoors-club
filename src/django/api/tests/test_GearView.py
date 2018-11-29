@@ -310,7 +310,7 @@ class GearTestCase(TestCase):
             }, {
                 "id": self.gearObj2.id,
                 "code": "SB01",
-                "category": None,
+                "category": "Sleeping Bag",
                 "depositFee": "50.00",
                 "description": "A old red sleeping bag",
                 "condition": "DELETED",

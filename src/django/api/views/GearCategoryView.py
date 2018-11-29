@@ -1,4 +1,4 @@
-from ..models import GearCategory
+from ..models import GearCategory, Gear
 from django.core import exceptions
 from ..serializers import GearCategorySerializer
 from .error import *
@@ -85,12 +85,23 @@ class GearCategoryView(APIView):
         if not nameToDelete:
             return RespError(400, "You must specify a 'name' parameter to delete.")
 
-        # try to delete the category
         try:
-            GearCategory.objects.get(name=nameToDelete).delete()
-        except ProtectedError:
-            return RespError(409, "You cannot remove a gear category that is currently being referenced by a piece of gear.")
+            category = GearCategory.objects.get(name=nameToDelete)
         except exceptions.ObjectDoesNotExist:
             return RespError(400, "The gear category '" + nameToDelete + "' does not exist so it cannot be deleted.")
+
+        gear = Gear.objects.all().filter(category=category.id).exclude(condition="DELETED")
+
+        if len(gear) > 0:
+            return RespError(409, "You cannot remove a gear category that is currently being referenced by a piece of gear.")
+
+        # all deleted gear lose their condition
+        gear = Gear.objects.all().filter(category=category.id).update(category=None)
+
+        # try to delete the category
+        try:
+            category.delete()
+        except ProtectedError:
+            return RespError(409, "You cannot remove a gear category that is currently being referenced by a piece of gear.")
                
         return RespError(200, "Deleted the category: '" + nameToDelete + "'")
