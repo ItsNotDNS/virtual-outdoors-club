@@ -15,7 +15,7 @@ ssh -i /tmp/key_outdoors.pem ubuntu@199.116.235.142 <<EOF
     python3 manage.py process_tasks &
     python3 manage.py runserver 0.0.0.0:8000 &
     sudo systemctl restart nginx
-    logout
+    exit
     exit
 EOF
 
