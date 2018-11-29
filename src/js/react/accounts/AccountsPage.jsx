@@ -48,31 +48,29 @@ export default class AccountsPage extends Reflux.Component {
             execValues = this.state[EXECUTIVE];
         return (
             <Tab title="Executive" eventKey={tabKey}>
-                <div className="row margin-top-2">
-                    <div className="col-md-6 col-xs-12">
-                        {this.getErrorAlert(execValues.error)}
-                        <LabeledInput
-                            name="newExec"
-                            label="New Password"
-                            type="password"
-                            onChange={this.handleChangeWrapper(updateExecVariable)}
-                            value={execValues.newExec}
-                        />
-                        <LabeledInput
-                            name="confirmExec"
-                            label="Confirm Password"
-                            type="password"
-                            onChange={this.handleChangeWrapper(updateExecVariable)}
-                            value={execValues.confirmExec}
-                        />
-                        <div className="text-center">
-                            <button
-                                className="btn btn-success submit-button"
-                                disabled={!execValues.canSubmit}
-                            >
+                <div className="col-md-6 margin-top-2">
+                    {this.getErrorAlert(execValues.error)}
+                    <LabeledInput
+                        name="newExec"
+                        label="New Password"
+                        type="password"
+                        onChange={this.handleChangeWrapper(updateExecVariable)}
+                        value={execValues.newExec}
+                    />
+                    <LabeledInput
+                        name="confirmExec"
+                        label="Confirm Password"
+                        type="password"
+                        onChange={this.handleChangeWrapper(updateExecVariable)}
+                        value={execValues.confirmExec}
+                    />
+                    <div className="text-center">
+                        <button
+                            className="btn btn-success submit-button"
+                            disabled={!execValues.canSubmit}
+                        >
                                     Save
-                            </button>
-                        </div>
+                        </button>
                     </div>
                 </div>
             </Tab>
@@ -85,38 +83,36 @@ export default class AccountsPage extends Reflux.Component {
 
         return (
             <Tab title="Admin" eventKey={tabKey}>
-                <div className="row margin-top-2">
-                    <div className="col-md-6 col-xs-12">
-                        {this.getErrorAlert(adminValues.error)}
-                        <LabeledInput
-                            name="oldAdmin"
-                            label="Old Password"
-                            type="password"
-                            onChange={this.handleChangeWrapper(updateAdminVariable)}
-                            value={adminValues.oldAdmin}
-                        />
-                        <LabeledInput
-                            name="newAdmin"
-                            label="New Password"
-                            type="password"
-                            onChange={this.handleChangeWrapper(updateAdminVariable)}
-                            value={adminValues.newAdmin}
-                        />
-                        <LabeledInput
-                            name="confirmAdmin"
-                            label="Confirm Password"
-                            type="password"
-                            onChange={this.handleChangeWrapper(updateAdminVariable)}
-                            value={adminValues.confirmAdmin}
-                        />
-                        <div className="text-center">
-                            <button
-                                className="btn btn-success submit-button"
-                                disabled={!adminValues.canSubmit}
-                            >
+                <div className="col-md-6 margin-top-2">
+                    {this.getErrorAlert(adminValues.error)}
+                    <LabeledInput
+                        name="oldAdmin"
+                        label="Old Password"
+                        type="password"
+                        onChange={this.handleChangeWrapper(updateAdminVariable)}
+                        value={adminValues.oldAdmin}
+                    />
+                    <LabeledInput
+                        name="newAdmin"
+                        label="New Password"
+                        type="password"
+                        onChange={this.handleChangeWrapper(updateAdminVariable)}
+                        value={adminValues.newAdmin}
+                    />
+                    <LabeledInput
+                        name="confirmAdmin"
+                        label="Confirm Password"
+                        type="password"
+                        onChange={this.handleChangeWrapper(updateAdminVariable)}
+                        value={adminValues.confirmAdmin}
+                    />
+                    <div className="text-center">
+                        <button
+                            className="btn btn-success submit-button"
+                            disabled={!adminValues.canSubmit}
+                        >
                                     Save
-                            </button>
-                        </div>
+                        </button>
                     </div>
                 </div>
             </Tab>

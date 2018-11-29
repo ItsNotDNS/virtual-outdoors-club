@@ -4,7 +4,7 @@
  * breaking everything.
  */
 
-export default {
+const constants = {
     accounts: {
         ADMIN: "admin",
         EXECUTIVE: "executive"
@@ -19,9 +19,15 @@ export default {
     },
     gear: {
         conditions: {
-            RENTABLE: "Rentable",
-            FLAGGED: "Flagged",
-            NEEDS_REPAIR: "Needs Repair"
+            RENTABLE: "RENTABLE",
+            FLAGGED: "FLAGGED",
+            NEEDS_REPAIR: "NEEDS_REPAIR"
+        },
+        conditionLabels: {
+            LOOKS_GOOD: "Looks Good",
+            BROKEN: "Broken",
+            NEEDS_CHECK: "Should Be Checked Further",
+            MISSING: "Not Returned"
         }
     },
     reservations: {
@@ -38,5 +44,24 @@ export default {
             APPROVE: "APPROVE",
             PAY_CASH: "PAY_CASH"
         }
+    },
+    gearConditions: {
+        RENTABLE: "RENTABLE",
+        FLAGGED: "FLAGGED",
+        NEEDS_REPAIR: "NEEDS_REPAIR",
+        DELETED: "DELETED"
+    },
+    help: {
+        introduction: "introduction",
+        gear: "gear-page",
+        rent: "rent-page",
+        reservation: "reservation-page",
+        members: "members-page",
+        disableSystem: "disable-system-page",
+        statistics: "statistics-page",
+        systemVariables: "system-variables-page",
+        changePassword: "change-password-page"
     }
 };
+
+export default constants;

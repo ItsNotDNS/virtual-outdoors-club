@@ -75,6 +75,8 @@ export default class GearPage extends Reflux.Component {
                     message="Are you sure you want to delete this piece of gear?"
                     onClose={GearActions.closeDeleteGearModal}
                     onSubmit={GearActions.submitDeleteGearModal}
+                    error={this.state.deleteGearModal.error}
+                    errorMessage={this.state.deleteGearModal.errorMessage}
                 />
             </Tab>
         );
@@ -112,6 +114,8 @@ export default class GearPage extends Reflux.Component {
                     message="Are you sure you want to delete this gear category?"
                     onClose={GearActions.closeDeleteGearCategoryModal}
                     onSubmit={GearActions.submitDeleteGearCategoryModal}
+                    error={this.state.deleteGearCategoryModal.error}
+                    errorMessage={this.state.deleteGearCategoryModal.errorMessage}
                 />
             </Tab>
         );
@@ -129,13 +133,14 @@ export default class GearPage extends Reflux.Component {
     }
 
     getUploadWarningAlert(warnings) {
-        if (warnings.length > 0) {
-            const children = warnings.map((w, i) => <li key={i}>{w}</li>);
+        const warningKeys = Object.keys(warnings);
+        if (warningKeys.length > 0) {
+            const children = warningKeys.map((wk, i) => <li key={i}>{warnings[wk]}</li>);
             return (
                 <Alert bsStyle="warning">
-                    <h4>The file you are uploading has some inconsistencies.</h4>
-                    <p><strong>You cannot upload this file.</strong></p>
-                    <p>You may want to check out the following rows:</p>
+                    <h4>You are missing some optional data!</h4>
+                    <p><strong>You can still upload this file.</strong></p>
+                    <p>You may want to check out the following rows, but a default value will be added if you choose to submit anyway:</p>
                     <ul>{children}</ul>
                 </Alert>
             );
@@ -193,7 +198,7 @@ export default class GearPage extends Reflux.Component {
                     <div className="col-md-2 col-xs-4">
                         <button className="btn btn-success full-width"
                             onClick={GearActions.uploadGearFile}
-                            disabled={gear.length === 0 || warnings.length !== 0}
+                            disabled={gear.length === 0}
                         >
                                 Upload
                         </button>
@@ -206,7 +211,7 @@ export default class GearPage extends Reflux.Component {
     render() {
         return (
             <div className="gear-view">
-                <ErrorAlert show={!!this.state.error} errorMessage={this.state.error} />
+                <ErrorAlert show={this.state.error} errorMessage={this.state.errorMessage} />
                 <Tabs id="gear-view-tabs"
                     activeKey={this.state.tabSelected}
                     onSelect={GearActions.tabSelected}

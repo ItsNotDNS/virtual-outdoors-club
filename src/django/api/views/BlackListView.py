@@ -1,19 +1,7 @@
 from ..models import BlackList
-from django.core import exceptions
 from ..serializers import BlackListSerializer
 from .error import *
-from django.db.models import ProtectedError
 from rest_framework.views import APIView
-
-# BlacklistView for managing blacklisted members
-
-# Returns False or the email if it exists
-def blackListExists(email):
-    try:
-        email = BlackList.objects.get(email=email)
-    except exceptions.ObjectDoesNotExist:
-        return False
-    return email
 
 
 class BlackListView(APIView):
@@ -29,8 +17,6 @@ class BlackListView(APIView):
 
         if "email" not in newBlackList:
             return RespError(400, "You are required to provide an email when adding an email to the blacklist.")
-               
-        email = str(newBlackList["email"])
 
         serial = BlackListSerializer(data=newBlackList)
         
@@ -43,7 +29,6 @@ class BlackListView(APIView):
         data = serial.validated_data       
         
         return Response(data)
-
 
     # handles deletion of blacklist email
     def delete(self, request):

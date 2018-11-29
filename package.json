@@ -102,6 +102,10 @@
     "react-toastify": "^4.4.0",
     "selenium-standalone": "^6.15.3",
     "sinon": "^6.3.5",
-    "webdriverio": "^4.14.0"
+    "webdriverio": "^4.14.0",
+    "react-chartjs-2": "^2.7.4",
+    "chart.js": "^2.7.3",
+    "salad-ui.chart": "^1.1.55",
+    "mdbreact": "^4.8.3"
   }
 }

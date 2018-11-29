@@ -13,10 +13,10 @@ def serialValidation(serial):
     for key in errors:
         # report errors using the built in serializer error reporter
         if key == "non_field_errors":
-        	return RespError(400, errors[key][0])
+            return RespError(400, errors[key][0])
         else:
-        	return RespError(400, key + ": " + errors[key][0])
-        	
+            return RespError(400, key + ": " + errors[key][0])
+
 
 def error_500(request):
     return JsonResponse({"message": "Internal server error"}, status=500)

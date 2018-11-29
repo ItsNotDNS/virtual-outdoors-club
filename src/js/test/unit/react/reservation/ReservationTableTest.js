@@ -30,6 +30,6 @@ describe("ReservationTable Tests", () => {
         const table = mount(<Table reservationList={[]} />),
             formatter = table.instance().columns[5].formatter,
             cell = formatter("REQUESTED");
-        expect(cell).to.equal("Requested");
+        expect(cell.props.children).to.equal("Requested");
     });
 });

@@ -258,6 +258,8 @@ export default class ReservationModal extends React.Component {
                     onDateRangeChange={actions.editReservation}
                     startDate={data.startDate}
                     endDate={data.endDate}
+                    allowSelectBeforeToday={false}
+                    allowSelectAfterToday
                 />
                 <div className="text-center top-margin">
                     {`(${daysLong} days long)`}
@@ -276,7 +278,7 @@ export default class ReservationModal extends React.Component {
             data = this.getData();
         return (
             <Tab eventKey={tabKey} title="Current Info">
-                <div className="row">
+                <div className="row top-margin">
                     <div className="col-md-12">
                         {this.getModalAlert(alertMsg, alertType)}
                         <div className="text-center bottom-margin">
@@ -385,13 +387,26 @@ export default class ReservationModal extends React.Component {
     render() {
         const { actions, showConfirmation } = this.props,
             data = this.getData();
-
+        let badgeStyleClass = "";
+        badgeStyleClass = data.status && data.status.toLowerCase();
         return (
             <Modal show={this.props.show} bsSize="large" onHide={this.props.onClose}>
                 <Modal.Header closeButton>
                     <Modal.Title className="text-center">
-                        <span className="pull-left">{data.status}</span>
-                        <span className="left-margin pull-left">{`Reservation #${data.id}`}</span>
+                        <div className="hidden-xs">
+                            <div className="reservation-badge-modal-container">
+                                <span className={`pull-left reservation-badge ${badgeStyleClass} `}>{capitalizeFirstLetter(data.status)}</span>
+                            </div>
+                            <span className="left-margin pull-left">{`Reservation #${data.id}`}</span>
+                        </div>
+                        <div className="visible-xs">
+                            <div className="row">
+                                <span className={`reservation-badge ${badgeStyleClass} `}>{capitalizeFirstLetter(data.status)}</span>
+                            </div>
+                            <div className="row">
+                                <span className="text-center">{`Reservation #${data.id}`}</span>
+                            </div>
+                        </div>
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>

@@ -33,6 +33,7 @@ before_script:
   - ssh-add /tmp/key_outdoors.pem
   
 script:
+
   - echo "pass"
 #  - coverage run --source='src/django/api/views/' --omit='src/django/api/views/PayPalView.py' src/django/manage.py test api
 #  - coverage report --fail-under=70

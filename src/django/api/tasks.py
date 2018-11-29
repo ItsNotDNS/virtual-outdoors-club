@@ -34,7 +34,7 @@ def stats_worker():
 
 @background()
 def email_worker():
-    today = datetime.datetime.today()
+    today = datetime.date.today()
     tomorrow = (today + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
 
     oldpaidres = Reservation.objects.filter(endDate=today, status="PAID")
@@ -65,6 +65,36 @@ def email_worker():
                 "\nUniversity of Alberta Outdoors Club"
 
         messages.append({"body": body, "subject": "Gear Return Reminder", "to": [res.email]})
+
+    one_week_overdue = Reservation.objects.filter(endDate=(today-datetime.timedelta(days=7)), status="TAKEN")
+    for res in one_week_overdue.all():
+        body = "Hey " + res.licenseName.split()[0] + ",\n\nThis is an automated email letting you know that you " \
+               "are one week overdue on your reservation. Please return the gear listed below as soon as possible: \n"
+
+        for gear in res.gear.all():
+            body += gear.category.name + " " + gear.code + " - " + gear.description + "\n"
+
+        body += "\nFailure to return these gear will result in blacklisting and forfeiting of your" \
+                " deposit. If you have concerns or questions, please contact the University of Alberta Outdoors" \
+                " Club as soon as possible so appropriate action can be taken to resolve the issue.\n\nThanks," \
+                "\nUniversity of Alberta Outdoors Club"
+
+        messages.append({"body": body, "subject": "Gear One Week Overdue", "to": [res.email]})
+
+    two_weeks_overdue = Reservation.objects.filter(endDate=(today - datetime.timedelta(days=14)), status="TAKEN")
+    for res in two_weeks_overdue.all():
+        body = "Hey " + res.licenseName.split()[0] + ",\n\nThis is an automated email letting you know that you " \
+               "are two weeks overdue on your reservation. Please return the gear listed below as soon as possible: \n"
+
+        for gear in res.gear.all():
+            body += gear.category.name + " " + gear.code + " - " + gear.description + "\n"
+
+        body += "\nFailure to return these gear will result in blacklisting and forfeiting of your" \
+                " deposit. If you have concerns or questions, please contact the University of Alberta Outdoors" \
+                " Club as soon as possible so appropriate action can be taken to resolve the issue.\n\nThanks," \
+                "\nUniversity of Alberta Outdoors Club"
+
+        messages.append({"body": body, "subject": "Gear Two Weeks Overdue", "to": [res.email]})
 
     # Create payment email
     payment = Reservation.objects.filter(startDate=tomorrow, status="APPROVED")

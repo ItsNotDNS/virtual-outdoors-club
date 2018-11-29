@@ -24,15 +24,20 @@ function defaultState() {
             [EXECUTIVE]: {
                 maxReservationLength: 0,
                 maxDaysInFutureCanStart: 0,
-                maxItemsReserved: 0
+                maxItemsReserved: 0,
+                maxReservations: 0
             },
             [MEMBER]: {
                 maxReservationLength: 0,
                 maxDaysInFutureCanStart: 0,
-                maxItemsReserved: 0
+                maxItemsReserved: 0,
+                maxReservations: 0
             }
         },
+        fetchError: false,
+        fetchErrorMessage: "",
         error: false,
+        errorMessage: "",
         fetchedSystemVariables: false
     };
 };
@@ -51,7 +56,7 @@ export class VariableStore extends Reflux.Store {
             settings:
                 {
                     [type]: {
-                        [change.name]: { $set: parseInt(change.value) }
+                        [change.name]: { $set: parseInt(change.value) || "" }
                     }
                 }
         });
@@ -70,12 +75,14 @@ export class VariableStore extends Reflux.Store {
 
     settingsMapping() {
         return {
-            executivemaxRentals: [EXECUTIVE, "maxItemsReserved"],
+            executivemaxGearPerReservation: [EXECUTIVE, "maxItemsReserved"],
             executivemaxLength: [EXECUTIVE, "maxReservationLength"],
             executivemaxFuture: [EXECUTIVE, "maxDaysInFutureCanStart"],
-            membermaxRentals: [MEMBER, "maxItemsReserved"],
+            executivemaxReservations: [EXECUTIVE, "maxReservations"],
+            membermaxGearPerReservation: [MEMBER, "maxItemsReserved"],
             membermaxLength: [MEMBER, "maxReservationLength"],
-            membermaxFuture: [MEMBER, "maxDaysInFutureCanStart"]
+            membermaxFuture: [MEMBER, "maxDaysInFutureCanStart"],
+            membermaxReservations: [MEMBER, "maxReservations"]
         };
     }
 
@@ -88,8 +95,8 @@ export class VariableStore extends Reflux.Store {
             .then(({ data, error }) => {
                 if (error) {
                     const newState = update(this.state, {
-                        error: { $set: true },
-                        errorMessage: { $set: error }
+                        fetchError: { $set: true },
+                        fetchErrorMessage: { $set: error }
                     });
                     this.setState(newState);
                 } else {
@@ -114,7 +121,8 @@ export class VariableStore extends Reflux.Store {
             .then(({ error }) => {
                 if (error) {
                     const newState = update(this.state, {
-                        error: { $set: true }
+                        error: { $set: true },
+                        errorMessage: { $set: error }
                     });
                     this.setState(newState);
                     toast.error(error, { className: "custom-error-toast" });
@@ -132,7 +140,8 @@ export class VariableStore extends Reflux.Store {
             .then(({ error }) => {
                 if (error) {
                     const newState = update(this.state, {
-                        error: { $set: true }
+                        error: { $set: true },
+                        errorMessage: { $set: error }
                     });
                     this.setState(newState);
                     toast.error(error, { className: "custom-error-toast" });

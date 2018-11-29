@@ -24,10 +24,17 @@ export default class ButtonModalForm extends React.Component {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button
+                        type="button"
+                        onClick={this.props.onClose}
+                    >
+                        {this.props.closeButtonText || "Close"}
+                    </Button>
+                    <Button
+                        disabled={this.props.disableSubmit}
                         bsStyle="primary"
                         onClick={this.props.onSubmit}
                     >
-                        Submit
+                        {this.props.submitButtonText || "Submit"}
                     </Button>
                 </Modal.Footer>
             </Modal>
@@ -42,5 +49,8 @@ ButtonModalForm.propTypes = {
     children: PropTypes.any.isRequired,
     show: PropTypes.bool.isRequired,
     error: PropTypes.bool,
-    errorMessage: PropTypes.string
+    errorMessage: PropTypes.string,
+    submitButtonText: PropTypes.string,
+    closeButtonText: PropTypes.string,
+    disableSubmit: PropTypes.bool
 };

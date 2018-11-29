@@ -4,6 +4,7 @@
 import React from "react";
 import { Checkbox, FormGroup } from "react-bootstrap";
 import { GearActions } from "./GearStore";
+import Constants from "../../constants/constants";
 
 export default class StatusSearchBar extends React.Component {
     handleChange(event) {
@@ -13,28 +14,27 @@ export default class StatusSearchBar extends React.Component {
     render() {
         return (
             <div>
-
                 <FormGroup>
                     <div className="status-search-bar-header"> Gear condition filter: </div>
-                    <Checkbox inline name="RENTABLE"
+                    <Checkbox inline name={Constants.gearConditions.RENTABLE}
                         defaultChecked
                         onClick={this.handleChange}
                     >
                         Rentable
                     </Checkbox>
-                    <Checkbox inline name="FLAGGED"
+                    <Checkbox inline name={Constants.gearConditions.FLAGGED}
                         defaultChecked
                         onClick={this.handleChange}
                     >
                         Flagged
                     </Checkbox>
-                    <Checkbox inline name="NEEDS_REPAIR"
+                    <Checkbox inline name={Constants.gearConditions.NEEDS_REPAIR}
                         defaultChecked
                         onClick={this.handleChange}
                     >
                         Needs Repair
                     </Checkbox>
-                    <Checkbox inline name="DELETED"
+                    <Checkbox inline name={Constants.gearConditions.DELETED}
                         onClick={this.handleChange}
                     >
                         Deleted

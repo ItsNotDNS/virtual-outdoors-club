@@ -71,7 +71,6 @@ def statistics(request):
                 gSerial[gs.gearID.code]["usage"][pos] = gs.usage / 7
             else:
                 gSerial[gs.gearID.code] = {"description": gs.gearID.description, "usage": [0] * (upperbound - lowerbound)}
-                #gSerial[gs.gearID.code] = [0] * (upperbound - lowerbound)
                 gSerial[gs.gearID.code]["usage"][0] = gs.usage / 7
 
             if gs.gearID.category.name in cSerial:
@@ -80,8 +79,7 @@ def statistics(request):
             else:
                 cSerial[gs.gearID.category.name] = [0]*(upperbound-lowerbound)
                 cSerial[gs.gearID.category.name][0] = gs.usage
-                catDiv[gs.gearID.category.name] = [0]*(upperbound-lowerbound)
-                catDiv[gs.gearID.category.name][0] += 1
+                catDiv[gs.gearID.category.name] = [1]*(upperbound-lowerbound)
             pos += 1
 
     for category in cSerial:

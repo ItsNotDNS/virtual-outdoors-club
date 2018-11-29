@@ -6,15 +6,6 @@ from django.db.models import ProtectedError
 from rest_framework.views import APIView
 
 
-# Returns False or the category if it exists
-def gearCategoryExists(category):
-    try:
-        category = GearCategory.objects.get(name=category)
-    except exceptions.ObjectDoesNotExist:
-        return False
-    return category
-
-
 class GearCategoryView(APIView):
     def get(self, request):
         categories = GearCategory.objects.all()
@@ -25,21 +16,14 @@ class GearCategoryView(APIView):
     # handles addition of a gear category
     def post(self, request):
         newGearCategory = request.data
-        requiredProperties = {
-            "name": False,
-        }
 
-        for key in newGearCategory:
-            if key not in requiredProperties:
-                return RespError(400, "'" + str(key) + "' is not valid in this POST method.")
-            else:
-                requiredProperties[key] = True
+        if "name" not in newGearCategory:
+            return RespError(400, "You are required to provide a name for a gear category")
 
-        for key in requiredProperties:
-            if not requiredProperties[key]:
-                return RespError(400, "You are required to provide a '" + key + "' when creating a gear category.")
-
-        newGearCategory["name"] = newGearCategory["name"].title()
+        try:
+            newGearCategory["name"] = newGearCategory["name"].title()
+        except AttributeError:
+            return RespError(400, "Gear category name needs to be a string")
 
         serial = GearCategorySerializer(data=newGearCategory)
         
@@ -47,20 +31,9 @@ class GearCategoryView(APIView):
         if not serial.is_valid():
             return serialValidation(serial)
 
-        data = serial.validated_data
-         
-        # checking if the current gear category already exists
-        if gearCategoryExists(data["name"]):
-            return RespError(409, "The gear category already exists")
-        
-        # adding new gear category
-        newGearCategory = GearCategory(name=data["name"])
-            
-        #saving new gear category to database
-        newGearCategory.save()
-        
-        #success
-        return Response(data)
+        serial.save()
+
+        return Response(serial.validated_data)
 
     def patch(self, request):
         request = request.data
@@ -72,27 +45,37 @@ class GearCategoryView(APIView):
             return RespError(400, "You must specify a category to patch.")
 
         if not patch:
-            return RespError(400, "You must specify a 'patch' object with methods.")
+            return RespError(400, "You must specify a 'patch' object with attributes to patch.")
 
         newName = patch.get("name")
 
         if not newName:
             return RespError(400, "You must specify a new name to update to.")
 
-        currentCategory = gearCategoryExists(currentName)
-        newCategory = gearCategoryExists(newName)
+        try:
+            newName = newName.title()
+            currentName = currentName.title()
+        except AttributeError:
+            return RespError(400, "Gear category names must be a string")
 
-        if newCategory:
-            return RespError(400, "A category already exists with the name '" + newName + "'.")
+        try:
+            gear_category = GearCategory.objects.get(name=currentName)
+        except GearCategory.DoesNotExist:
+            return RespError(400, "Gear category '" + currentName + "' does not exist")
+
+        try:
+            GearCategory.objects.get(name=newName)
+        except GearCategory.DoesNotExist:
+            pass
+        else:
+            return RespError(400, "name: gear category with this name already exists.")
 
         # check validity
-        serial = GearCategorySerializer(data=patch)
+        serial = GearCategorySerializer(gear_category, data=patch)
         if not serial.is_valid():
             return serialValidation(serial)
 
-        currentCategory.name = newName
-
-        currentCategory.save()
+        serial.save()
 
         return Response({"name": newName})
 

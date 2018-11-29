@@ -6,7 +6,7 @@ import React from "react";
 import Reflux from "reflux";
 import LabeledInput from "../components/LabeledInput";
 import { Button, PageHeader, Image } from "react-bootstrap";
-import logo from "../../../../doc/assets/UAOC_logo.png";
+import logo from "../../../images/UAOC_logo.png";
 
 export default class LoginPage extends Reflux.Component {
     constructor(props) {

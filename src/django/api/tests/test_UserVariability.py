@@ -1,27 +1,21 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
-from rest_framework.test import APIRequestFactory
-from decimal import Decimal
 from ..models import UserVariability
 
 
 class UserVariabilityTestCase(TestCase):
 
     # Executed before any tests are run to set up the database.
-    @classmethod
-    def setUpClass(self):
-        super().setUpClass()
-        self.client = APIRequestFactory()
+    def setUp(self):
         self.maxLength = "maxLength"
         self.maxFuture = "maxFuture"
         self.maxReservations = "maxReservations"
         self.maxGearPerReservation = "maxGearPerReservation"
 
-
     def test_get(self):
 
-        correctResponse = [
+        expected = [
                 {"variable": "membermaxLength", "value": 14},
                 {"variable": "membermaxFuture", "value": 7},
                 {"variable": "membermaxReservations", "value": 3},
@@ -33,7 +27,7 @@ class UserVariabilityTestCase(TestCase):
         ]
         response = self.client.get("/api/system/variability/", content_type="application/json")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(correctResponse, response.data["data"])
+        self.assertEqual(expected, response.data["data"])
 
     def test_setMaxResvValue(self):
 
@@ -41,14 +35,29 @@ class UserVariabilityTestCase(TestCase):
             "executive": {
                 self.maxLength: 21,
             },
+            "hello": {
+                "world": 23
+            },
             "member": {
-                self.maxLength: 14,
-            }
+                "world": 14,
+            },
+
         }
+
+        response = self.client.post("/api/system/variability/", request, content_type="application/json").data['message']
+        self.assertEqual(response, "hello is not a valid member type")
+
+        del request['hello']
+        response = self.client.post("/api/system/variability/", request, content_type="application/json").data['message']
+        self.assertEqual(response, "world is not a valid variable to modify")
+
+        request['member'] = {self.maxLength: 14}
         response = self.client.post("/api/system/variability/", request, content_type="application/json")
         self.assertEqual(response.status_code, 200)
+
         variable = UserVariability.objects.get(pk="executive"+self.maxLength)
         self.assertEqual(variable.value, 21)
+
         variable = UserVariability.objects.get(pk="member"+self.maxLength)
         self.assertEqual(variable.value, 14)
 
@@ -116,7 +125,6 @@ class UserVariabilityTestCase(TestCase):
         variable = UserVariability.objects.get(pk="member"+self.maxFuture)
         self.assertEqual(variable.value, 14)
 
-
     def test_updateMaxReservations(self):
         request = {
             "executive": {
@@ -150,7 +158,6 @@ class UserVariabilityTestCase(TestCase):
         self.assertEqual(variable.value, 3)
         variable = UserVariability.objects.get(pk="member"+self.maxReservations)
         self.assertEqual(variable.value, 2)
-
 
     def test_updateMaxGearPerReservation(self):
         request = {
@@ -186,20 +193,28 @@ class UserVariabilityTestCase(TestCase):
         variable = UserVariability.objects.get(pk="member"+self.maxGearPerReservation)
         self.assertEqual(variable.value, 2)
 
-
     def test_changePassword(self):
-        u = User.objects.create_user("exec", "exec@gmail.com", "oldPass")
+        User.objects.create_user("exec", "exec@gmail.com", "oldPass")
         request = {
-            "user": "exec",
-            "password": "newPass",
+            "user": "hello",
         }
+
+        response = self.client.post("/api/system/accounts/", request, content_type="application/json").data['message']
+        self.assertEqual(response, "You are missing password.")
+
+        request['password'] = "newPass"
+        response = self.client.post("/api/system/accounts/", request, content_type="application/json").data['message']
+        self.assertEqual(response, "The username and password combination does not exist.")
+
+        request['user'] = "exec"
         response = self.client.post("/api/system/accounts/", request, content_type="application/json")
         self.assertEqual(response.status_code, 200)
+
         user = authenticate(username="exec", password="newPass")
         if user is None:
             self.assertEqual("Authentication failed", 1)    # Deliberately fail if no user found
 
-        u = User.objects.create_user("admin", "admin@gmail.com", "oldPass")
+        User.objects.create_user("admin", "admin@gmail.com", "oldPass")
         request = {
             "user": "admin",
             "password": "newPass",

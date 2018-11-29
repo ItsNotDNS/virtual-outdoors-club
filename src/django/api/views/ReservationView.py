@@ -1,14 +1,14 @@
 from .error import *
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
-from ..models import Reservation, Gear
+from ..models import Reservation, System, Gear
 from ..emailing import cancelled, approved
 from ..views.PayPalView import process
-from ..serializers import ReservationPOSTSerializer, ReservationGETSerializer
-from decimal import Decimal
+from ..serializers import ReservationPOSTSerializer, ReservationGETSerializer, GearSerializer
 from django.db.models import Q
 from django.db import transaction
 import datetime
+import decimal
 
 
 def reservationIdExists(id):
@@ -39,7 +39,8 @@ class ReservationView(APIView):
             try:
                 datetime.datetime.strptime(startDate, '%Y-%m-%d')
             except ValueError:
-                return RespError(400, "startDate is in an invalid date format. Make sure it's in the YYYY-MM-DD format.")
+                return RespError(400,
+                                 "startDate is in an invalid date format. Make sure it's in the YYYY-MM-DD format.")
 
         if endDate is not None:
             try:
@@ -98,6 +99,23 @@ class ReservationView(APIView):
 
     # Attempt to create a new reservation
     def post(self, request):
+
+        # Get the value of the disableSys boolean from System in the DB.
+        # If it doesn't exist, initialize it to the default value of False
+        try:
+            disableSys = System.objects.get(service="disableSys")
+            disableSysBool = disableSys.disabled
+
+        except System.DoesNotExist:
+            # by default, the rental system is enabled (disableSys's value by default = False). Thus:
+            serviceEntry = System.objects.create(service="disableSys")
+            serviceEntry.save()
+            disableSysBool = False
+
+        # Before making any reservations, check if the rental system is disabled or not.
+        if disableSysBool:
+            return RespError(403, "You cannot make reservations because the rental system is currently disabled.")
+
         newRes = request.data
 
         properties = {
@@ -116,7 +134,7 @@ class ReservationView(APIView):
                 return RespError(400, "'" + str(key) + "' is not valid with this POST method, please resubmit the "
                                                        "request without it.")
 
-        sRes = ReservationPOSTSerializer(data=newRes, context={'request':request})
+        sRes = ReservationPOSTSerializer(data=newRes, context={'request': request})
 
         if not sRes.is_valid():
             return serialValidation(sRes)
@@ -147,11 +165,11 @@ class ReservationView(APIView):
             return RespError(400, "You must specify an 'expectedVersion'.")
 
         if not patch:
-            return RespError(400, "You must specify a 'patch' object with methods.")
+            return RespError(400, "You must specify a 'patch' object with attributes to patch.")
 
         for key in patch:
             if key not in allowedPatchMethods:
-                return RespError(400, "'" + key + "' is not a valid patch method.")
+                return RespError(400, "'" + key + "' is not a valid patch attribute.")
 
         try:
             resv = Reservation.objects.get(id=idToUpdate)
@@ -167,7 +185,7 @@ class ReservationView(APIView):
         if resv.status not in ["REQUESTED", "APPROVED"]:
             return RespError(400, "The reservation status must be 'requested' or 'approved' to be modified.")
 
-        for field in resv._meta.fields: # field = Api.Reservation.fieldName
+        for field in resv._meta.fields:  # field = Api.Reservation.fieldName
             f = str(field)
             f = f[16:]  # truncates Api.Reservation. part out
             if f not in patch:
@@ -201,7 +219,16 @@ def getHistory(request):
         return RespError(400, "There is no reservation with the id of '" + str(ID) + "'.")
     res = res.history.all()
     serial = ReservationGETSerializer(res, many=True)
-    return Response({"data": serial.data})
+
+    data = []
+    for i in range(len(serial.data)):
+        if i == 0:
+            data.append(serial.data[i])
+            continue
+        if serial.data[i] != serial.data[i - 1]:
+            data.append(serial.data[i])
+
+    return Response({"data": data})
 
 
 @api_view(['POST'])
@@ -224,25 +251,27 @@ def checkout(request):
         return RespError(406, "You cannot checkout a reservation that starts after today;"
                               " please fix the startDate and try again.")
 
-    gearList = reservation.gear.all()  
+    gearList = reservation.gear.all()
     for gear in gearList:
         if gear.condition != "RENTABLE":
             return RespError(403, "The gear item with the code of '" + str(gear.code) + "' is not 'rentable',"
-                                  " and thus can't be checked out. To still proceed with checking out, you"
-                                  " must remove the gear item from this reservation.")
-        
-        try: 
-            # the below query does the following: 
+                                                                                        " and thus can't be checked out. To still proceed with checking out, you"
+                                                                                        " must remove the gear item from this reservation.")
+
+        try:
+            # the below query does the following:
             # Finds all reservations with a gear item in the reservation attempted to be checked out.
-            # then, find the latest reservation before the current day by endDate. 
+            # then, find the latest reservation before the current day by endDate.
             # If endDates are the same, find by the latest startDate.
-            latestResWithGearItem = Reservation.objects.filter(gear=gear).filter(endDate__lte=today).latest('endDate', 'startDate')
+            latestResWithGearItem = Reservation.objects.filter(gear=gear).filter(endDate__lte=today).latest('endDate',
+                                                                                                            'startDate')
 
             if latestResWithGearItem.status != "CANCELLED" and latestResWithGearItem.status != "RETURNED":
                 return RespError(406, "The gear item with the code of '" + str(gear.code) + "' is currently held"
-                                      " in another reservation (id #"+ str(latestResWithGearItem.id) + "),"
-                                      " because that reservation hasn't been marked as 'returned' or 'cancelled'."
-                                      " You must remove the gear itemfrom your reservation in order to proceed.")
+                                                                                            " in another reservation (id #" + str(
+                    latestResWithGearItem.id) + "),"
+                                                " because that reservation hasn't been marked as 'returned' or 'cancelled'."
+                                                " You must remove the gear itemfrom your reservation in order to proceed.")
 
         except Reservation.DoesNotExist:
             # no other reservation currently with the gear item.
@@ -293,8 +322,8 @@ def checkin(request):
         return RespError(406, "The reservation status must be 'taken'.")
 
     try:
-        charge = Decimal(request['charge'])
-    except ValueError:
+        charge = decimal.Decimal(request['charge'])
+    except decimal.InvalidOperation:
         return RespError(400, "'" + request['charge'] + "' is not a valid decimal number.")
 
     if charge < 0:
@@ -306,16 +335,21 @@ def checkin(request):
             if "gear" in request:
                 for gear in request["gear"]:
                     g = Gear.objects.get(id=gear["id"])
-                    g.condition = gear["status"]
-                    g.statusDescription = gear["comment"]
-                    g.save()
+                    patch = {
+                        "condition": gear["status"],
+                        "statusDescription": gear["comment"]
+                    }
+                    sGear = GearSerializer(g, data=patch, partial=True)
+                    if not sGear.is_valid():
+                        return serialValidation(sGear)
+                    sGear.save()
 
             if reservation.payment != "CASH":
                 status = process(reservation, charge)
-        
+
                 if status:
                     return RespError(400, status)
-        
+
             reservation.status = "RETURNED"
             reservation.save()
     except Exception as e:
@@ -347,7 +381,7 @@ def cancel(request):
 
     serial = ReservationGETSerializer(reservation)
     return Response(serial.data)
-    
+
 
 @api_view(['POST'])
 def approve(request):

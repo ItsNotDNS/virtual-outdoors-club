@@ -1,11 +1,11 @@
 from .error import *
-from django.core import exceptions
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from ..models import UserVariability
 from ..serializers import UserVariabilitySerializer
+
 
 # Deals with modifiable user variables like max reservations, how long reservations can be and such
 class UserVariabilityView(APIView):
@@ -45,7 +45,7 @@ class UserVariabilityView(APIView):
                 else:
                     upperBound = 99
                 if request[memberType][var] <= lowerBound or request[memberType][var] >= upperBound:
-                    return RespError(400, str(memberType).title() + " " + errorMessages[var] + " must be between " + str(lowerBound) + " and " + str(upperBound))
+                    return RespError(400, str(memberType).title() + " " + errorMessages[var] + " must be between " + str(lowerBound+1) + " and " + str(upperBound-1))
     
         # Create or update
         for memberType in request:
@@ -68,10 +68,12 @@ def changePassword(request):
     for ele in required:
         if ele not in request:
             return RespError(400, "You are missing " + ele + ".")
+
     try:
         u = User.objects.get(username=request["user"])
-    except:
+    except User.DoesNotExist:
         return RespError(400, "The username and password combination does not exist.")
+
     if request["user"] == "admin":
         if "oldPassword" not in request:
             return RespError(400, "You must enter the current password to change the admin password")

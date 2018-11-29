@@ -7,6 +7,64 @@ import ReservationService from "../../services/ReservationService";
 import GearService from "../../services/GearService";
 import moment from "moment";
 import update from "immutability-helper";
+import constants from "../../constants/constants";
+
+const {
+        conditions: { RENTABLE, FLAGGED },
+        conditionLabels: { BROKEN, MISSING }
+    } = constants.gear,
+    { REQUESTED, APPROVED, PAID, TAKEN, RETURNED, CANCELLED } = constants.reservations.status,
+    ReservationActions = Reflux.createActions([
+        "tabSelected",
+        "openReservationModal",
+        "closeReservationModal",
+        "saveReservationChanges",
+        "undoReservationChanges",
+        "approveReservation",
+        "cancelReservation",
+        "payCash",
+        "editReservation",
+        "fetchReservationList",
+        "openDeleteReservationModal",
+        "updateDropdown",
+        "submitReservationModal",
+        "openCancelReservationModal",
+        "submitCancelReservationModal",
+        "closeCancelReservationModal",
+        "openEmailValidationForm",
+        "emailValidationFormChanged",
+        "fetchReservation",
+        "fetchPayPalForm",
+        "reservationModalChanged",
+        "setReservationModalError",
+        "loadAvailableGear",
+        "addGearToReservation",
+        "dateFilterChanged",
+        "fetchReservationListFromTo",
+        "showConfirmation",
+        "hideConfirmation",
+        "reservationModalTabSelected",
+        // Disable system Actions
+        "fetchSystemStatus",
+        "enableSystem",
+        "disableSystem",
+        "openDisableSystemDialog",
+        "closeDisableSystemDialog",
+        "cancelFutureReservationsChange",
+        // ReturnProcessor Actions
+        "startReturnProcess",
+        "cancelReturnProcess",
+        "conditionChanged",
+        "commentChanged",
+        "processNext",
+        "processPrevious",
+        "chargeChanged",
+        "finishProcessing",
+        // Reservation filtering Actions
+        "reservationStatusCheckBoxChange"
+    ]);
+
+export { ReservationActions };
 
 function defaultState() {
     return {
@@ -53,63 +111,39 @@ function defaultState() {
             startDate: null,
             endDate: null
         },
+        disableSystem: {
+            disableRent: false,
+            showDialog: false,
+            cancelFutureReservations: false,
+            error: false,
+            errorMessage: "",
+            fetchError: false,
+            fetchErrorMessage: ""
+        },
         // ReturnProcessor State (uses gearList in reservationModal)
         returnProcessor: {
             index: -1,
             current: {
                 id: null,
-                status: null,
-                comment: null
+                status: "",
+                comment: ""
             },
             gear: [],
             totalDeposit: "",
             charge: "",
             moneyToReturn: "",
             timeout: null
+        },
+        checkboxOptions: {
+            [REQUESTED]: true,
+            [APPROVED]: true,
+            [PAID]: true,
+            [TAKEN]: true,
+            [RETURNED]: false,
+            [CANCELLED]: false
         }
     };
 }
-
-// Create and export actions for use
-export const ReservationActions = Reflux.createActions([
-    "reservationModalTabSelected",
-    "openReservationModal",
-    "closeReservationModal",
-    "saveReservationChanges",
-    "undoReservationChanges",
-    "approveReservation",
-    "cancelReservation",
-    "payCash",
-    "editReservation",
-    "fetchReservationList",
-    "openDeleteReservationModal",
-    "updateDropdown",
-    "submitReservationModal",
-    "openCancelReservationModal",
-    "submitCancelReservationModal",
-    "closeCancelReservationModal",
-    "openEmailValidationForm",
-    "emailValidationFormChanged",
-    "fetchReservation",
-    "fetchPayPalForm",
-    "reservationModalChanged",
-    "setReservationModalError",
-    "loadAvailableGear",
-    "addGearToReservation",
-    "dateFilterChanged",
-    "fetchReservationListFromTo",
-    "showConfirmation",
-    "hideConfirmation",
-    // ReturnProcessor Actions
-    "startReturnProcess",
-    "cancelReturnProcess",
-    "conditionChanged",
-    "commentChanged",
-    "processNext",
-    "chargeChanged",
-    "finishProcessing"
-]);
-
 export class ReservationStore extends Reflux.Store {
     constructor() {
         super();
@@ -546,6 +580,110 @@ export class ReservationStore extends Reflux.Store {
             });
     }
 
+    /***************************************************************************
+     * Disable system Actions
+     **************************************************************************/
+    onFetchSystemStatus() {
+        const service = new ReservationService();
+        return service.fetchSystemStatus()
+            .then(({ data, error }) => {
+                if (data) {
+                    const newState = update(this.state, {
+                        disableSystem: {
+                            disableRent: { $set: data[0].disabled }
+                        }
+                    });
+                    this.setState(newState);
+                } else {
+                    const newState = update(this.state, {
+                        disableSystem: {
+                            fetchError: { $set: true },
+                            fetchErrorMessage: { $set: error }
+                        }
+                    });
+                    this.setState(newState);
+                }
+            });
+    }
+
+    onOpenDisableSystemDialog() {
+        const newState = update(this.state, {
+            disableSystem: {
+                showDialog: { $set: true }
+            }
+        });
+        this.setState(newState);
+    }
+
+    onCloseDisableSystemDialog() {
+        const newState = update(this.state, {
+            disableSystem: {
+                showDialog: { $set: false }
+            }
+        });
+        this.setState(newState);
+    }
+
+    onEnableSystem() {
+        const service = new ReservationService();
+        return service.enableSystem()
+            .then(({ data, error }) => {
+                if (error) {
+                    const newState = update(this.state, {
+                        disableSystem: {
+                            error: { $set: true },
+                            errorMessage: { $set: error }
+                        }
+                    });
+                    this.setState(newState);
+                } else {
+                    const newState = update(this.state, {
+                        disableSystem: {
+                            disableRent: { $set: false },
+                            showDialog: { $set: false }
+                        }
+                    });
+                    this.setState(newState);
+                }
+            });
+    }
+
+    onDisableSystem() {
+        const service = new ReservationService();
+        return service.disableSystem(this.state.disableSystem.cancelFutureReservations)
+            .then(({ data, error }) => {
+                if (error) {
+                    const newState = update(this.state, {
+                        disableSystem: {
+                            error: { $set: true },
+                            errorMessage: { $set: error }
+                        }
+                    });
+                    this.setState(newState);
+                } else {
+                    const newState = update(this.state, {
+                        disableSystem: {
+                            disableRent: { $set: true },
+                            showDialog: { $set: false }
+                        }
+                    });
+                    this.setState(newState);
+                    if (this.state.disableSystem.cancelFutureReservations) {
+                        this.onFetchReservationList();
+                    }
+                }
+            });
+    }
+
+    onCancelFutureReservationsChange() {
+        const newState = update(this.state, {
+            disableSystem: {
+                cancelFutureReservations: { $set: !this.state.disableSystem.cancelFutureReservations }
+            }
+        });
+        this.setState(newState);
+    }
+
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      * * * ReturnProcessor Actions
      * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -556,7 +694,7 @@ export class ReservationStore extends Reflux.Store {
                     id: item.id,
                     depositFee: item.depositFee,
                     comment: "",
-                    status: "Good"
+                    status: RENTABLE
                 };
             }),
             totalDeposit = gear.reduce((total, item) => {
@@ -639,18 +777,51 @@ export class ReservationStore extends Reflux.Store {
 
         if (noneNext) {
             const charge = this.state.returnProcessor.gear.reduce((total, item) => {
-                return item.status !== "Good" ? total + Number(item.depositFee) : total;
+                return item.status !== RENTABLE ? total + Number(item.depositFee) : total;
             }, 0);
 
             this.setCharge(charge);
         }
     }
 
-    onConditionChanged({ value }) {
+    onProcessPrevious() {
+        const { gear, index, current } = this.state.returnProcessor,
+            onNone = gear.length === index,
+            nextIndex = index - 1;
+
+        if (!onNone) {
+            this.setState(update(this.state, {
+                returnProcessor: {
+                    gear: {
+                        [index]: current
+                    }
+                }
+            }));
+        }
+
+        this.setState(update(this.state, {
+            returnProcessor: {
+                index: { $set: nextIndex },
+                current: { $set: gear[nextIndex] }
+            }
+        }));
+    }
+
+    onConditionChanged({ label, value }) {
+        let { comment } = this.state.returnProcessor.current;
+        const commentMap = {
+            [MISSING]: "*not returned by member*",
+            [BROKEN]: "*returned broken*"
+        };
+
+        comment = comment.replace(/\*.*\*/, "");
+        comment = (commentMap[label] || "") + comment;
+
         this.setState(update(this.state, {
             returnProcessor: {
                 current: {
-                    status: { $set: value }
+                    status: { $set: value },
+                    comment: { $set: comment }
                 }
             }
         }));
@@ -672,9 +843,15 @@ export class ReservationStore extends Reflux.Store {
     onFinishProcessing() {
         const { charge, gear } = this.state.returnProcessor,
             { id } = this.state.reservationModal.data,
-            service = new ReservationService();
+            service = new ReservationService(),
+            gearData = gear.map((item) => {
+                if (item.status === MISSING) {
+                    item.status = FLAGGED;
+                }
+                return item;
+            });
 
-        return service.checkInGear(id, gear, charge)
+        return service.checkInGear(id, gearData, charge)
             .then(({ reservation, error }) => {
                 if (error) {
                     this.setState(update(this.state, {
@@ -694,5 +871,15 @@ export class ReservationStore extends Reflux.Store {
                     this.updateModalAndList(reservation);
                 }
             });
+    }
+
+    // Reservation filtering Actions
+    onReservationStatusCheckBoxChange(checkboxKey, checkBoxChecked) {
+        const newState = update(this.state, {
+            checkboxOptions: {
+                [checkboxKey]: { $set: checkBoxChecked }
+            }
+        });
+        this.setState(newState);
     }
 }

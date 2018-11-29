@@ -9,6 +9,7 @@ import PropTypes from "prop-types";
 import Constants from "../../constants/constants";
 import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit";
 import StatusSearchBar from "./StatusSearchBar";
+import { capitalizeFirstLetter } from "../utilities";
 
 const { SearchBar } = Search;
 export default class GearTable extends React.Component {
@@ -28,7 +29,9 @@ export default class GearTable extends React.Component {
             gearCode: row.code,
             depositFee: row.depositFee,
             gearDescription: row.description,
-            gearCategory: row.category
+            gearCategory: row.category,
+            gearCondition: row.condition,
+            gearStatus: row.statusDescription
         };
 
         return () => callback(Constants.modals.EDITING, { gear });
@@ -63,6 +66,21 @@ export default class GearTable extends React.Component {
         );
     }
 
+    conditionFormatter(cell) {
+        if (cell === "NEEDS_REPAIR") {
+            return (
+                <div className={`text-center gear-status-badge ${cell.toLowerCase()}`}>
+                    {"Needs Repair"}
+                </div>
+            );
+        }
+        return (
+            <div className={`text-center gear-status-badge ${cell.toLowerCase()}`}>
+                {capitalizeFirstLetter(cell)}
+            </div>
+        );
+    }
+
     get columns() {
         return [{
             dataField: "code",
@@ -78,13 +96,17 @@ export default class GearTable extends React.Component {
             sort: true
         }, {
             dataField: "depositFee",
-            text: "Fee",
+            text: "Deposit Fee",
             align: "right",
             sort: true
         }, {
             dataField: "condition",
             text: "Condition",
-            sort: true
+            sort: true,
+            formatter: this.conditionFormatter,
+            style: {
+                verticalAlign: "middle"
+            }
         }, {
             text: "Actions",
             dataField: "isDummyField",

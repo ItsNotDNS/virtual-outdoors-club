@@ -99,7 +99,9 @@ const sandbox = sinon.createSandbox(),
         gearDescription: "",
         tabSelected: 1,
         gearHistory: [],
-        gearReservationHistory: []
+        gearReservationHistory: [],
+        gearCondition: "",
+        gearStatus: ""
     };
 
 describe("GearStore Tests", () => {
@@ -132,7 +134,8 @@ describe("GearStore Tests", () => {
         return gearStore.onFetchGearList().then(() => {
             expect(gearStore.state.fetchedGearList).to.be.true;
             expect(gearStore.state.gearList).to.deep.equal(mockGearList);
-            expect(gearStore.state.error).to.equal("");
+            expect(gearStore.state.error).to.equal(false);
+            expect(gearStore.state.errorMessage).to.equal("");
         });
     });
 
@@ -147,25 +150,25 @@ describe("GearStore Tests", () => {
         return gearStore.onFetchGearList().then(() => {
             expect(gearStore.state.fetchedGearList).to.be.true;
             expect(gearStore.state.gearList).to.deep.equal([]);
-            expect(gearStore.state.error).to.equal(error.response.data.message);
+            expect(gearStore.state.error).to.equal(true);
+            expect(gearStore.state.errorMessage).to.equal(error.response.data.message);
         });
     });
 
     it("onFetchRentableGearList - success path", () => {
         const promise = Promise.resolve({ data: { data: mockGearList } });
-        console.log(mockGearList);
         expect(gearStore.state.fetchedRentableGearList).to.be.false;
 
         getStub.returns(promise); // set stub to return mock data
 
         return gearStore.onFetchRentableGearList().then(() => {
-            console.log(gearStore.state.rentableList);
             expect(gearStore.state.fetchedRentableGearList).to.be.true;
             expect(gearStore.state.rentableList.includes(mockGearList[0])).to.be.true;
             expect(gearStore.state.rentableList.includes(mockGearList[1])).to.be.false;
             expect(gearStore.state.rentableList.includes(mockGearList[2])).to.be.false;
             expect(gearStore.state.rentableList.includes(mockGearList[3])).to.be.false;
-            expect(gearStore.state.error).to.equal("");
+            expect(gearStore.state.error).to.equal(false);
+            expect(gearStore.state.errorMessage).to.equal("");
         });
     });
 
@@ -180,7 +183,8 @@ describe("GearStore Tests", () => {
         return gearStore.onFetchRentableGearList().then(() => {
             expect(gearStore.state.fetchedRentableGearList).to.be.true;
             expect(gearStore.state.rentableList).to.deep.equal([]);
-            expect(gearStore.state.error).to.equal(error.response.data.message);
+            expect(gearStore.state.error).to.equal(true);
+            expect(gearStore.state.errorMessage).to.equal(error.response.data.message);
         });
     });
 
@@ -195,7 +199,8 @@ describe("GearStore Tests", () => {
         return gearStore.onFetchGearList().then(() => {
             expect(gearStore.state.fetchedGearList).to.be.true;
             expect(gearStore.state.gearList).to.deep.equal([]);
-            expect(gearStore.state.error).to.contain("try again later");
+            expect(gearStore.state.error).to.equal(true);
+            expect(gearStore.state.errorMessage).to.contain("try again later");
         });
     });
 
@@ -219,7 +224,9 @@ describe("GearStore Tests", () => {
             gearDescription: "",
             tabSelected: 1,
             gearHistory: [],
-            gearReservationHistory: []
+            gearReservationHistory: [],
+            gearCondition: "",
+            gearStatus: ""
         });
 
         gearStore.onCloseGearModal();
@@ -815,12 +822,12 @@ describe("GearStore Tests", () => {
             mockEndDate = new Date("2018-01-02"),
             targetStartDate = new Date(mockStartDate),
             targetEndDate = new Date(mockEndDate);
-        expect(gearStore.state.dateFilter.startDate).to.equal(null);
-        expect(gearStore.state.dateFilter.endDate).to.equal(null);
+        expect(gearStore.state.reserveGearForm.startDate).to.equal(null);
+        expect(gearStore.state.reserveGearForm.endDate).to.equal(null);
         gearStore.onDateFilterChanged("startDate", mockStartDate);
-        expect(gearStore.state.dateFilter.startDate.getTime()).to.equal(targetStartDate.getTime());
+        expect(gearStore.state.reserveGearForm.startDate.getTime()).to.equal(targetStartDate.getTime());
         gearStore.onDateFilterChanged("endDate", mockEndDate);
-        expect(gearStore.state.dateFilter.endDate.getTime()).to.equal(targetEndDate.getTime());
+        expect(gearStore.state.reserveGearForm.endDate.getTime()).to.equal(targetEndDate.getTime());
     });
 
     it("onFetchRentableListFromTo - success", () => {
@@ -829,7 +836,30 @@ describe("GearStore Tests", () => {
         getStub.returns(Promise.resolve({ data: { data: mockGearList } }));
         gearStore.onFetchRentableListFromTo(mockStartDate, mockEndDate);
         return gearStore.onFetchRentableListFromTo(mockStartDate, mockEndDate).then(() => {
-            expect(gearStore.state.rentableList).to.be.equal(mockGearList);
+            expect(gearStore.state.rentableList).to.deep.equal(mockGearList);
+        });
+    });
+
+    it("onFetchRentableListFromTo with shopping cart - success", () => {
+        const mockStartDate = new Date("2018-01-01"),
+            mockEndDate = new Date("2018-01-02");
+        getStub.returns(Promise.resolve({ data: { data: mockGearList } }));
+        gearStore.onFetchRentableListFromTo(mockStartDate, mockEndDate);
+        gearStore.state.shoppingList = [mockGearList[0]]
+        return gearStore.onFetchRentableListFromTo(mockStartDate, mockEndDate).then(() => {
+            expect(gearStore.state.rentableList.includes(mockGearList[0])).to.be.false;
+        });
+    });
+
+    it("onFetchRentableListFromTo with shopping cart containing unavailble gear - success", () => {
+        const mockStartDate = new Date("2018-01-01"),
+            mockEndDate = new Date("2018-01-02");
+        getStub.returns(Promise.resolve({ data: { data: mockGearList.slice(1,mockGearList.length) } }));
+        gearStore.onFetchRentableListFromTo(mockStartDate, mockEndDate);
+        gearStore.state.shoppingList = [mockGearList[0]]
+        return gearStore.onFetchRentableListFromTo(mockStartDate, mockEndDate).then(() => {
+            expect(gearStore.state.rentableList.includes(mockGearList[0])).to.be.false;
+            expect(gearStore.state.shoppingList.includes(mockGearList[0])).to.be.false;
         });
     });
 
@@ -898,6 +928,8 @@ describe("GearStore Tests", () => {
         depositFee: "",
         gearCategory: "",
         gearDescription: "",
+        gearCondition: "",
+        gearStatus: "",
         tabSelected: 1000,
         gearHistory: [],
         gearReservationHistory: []

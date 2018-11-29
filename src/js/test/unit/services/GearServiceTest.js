@@ -59,7 +59,7 @@ describe("GearService Tests", () => {
             });
     });
 
-    it("bufferToData - returns gear, categories (no warnings) on success", () => {
+    it("bufferToData - returns gear, categories, and inserts default data on success", () => {
         const service = new GearService(),
             result = service._bufferToData(validFile);
 
@@ -71,49 +71,44 @@ describe("GearService Tests", () => {
             gearCode: "HL01",
             depositFee: 50,
             gearDescription: "Petzl Black",
-            gearCategory: "headlamp"
+            gearCategory: "headlamp",
+            gearCondition: "RENTABLE",
+            gearStatus: ""
         }, {
             gearCode: "HL02",
             depositFee: 49.99,
             gearDescription: "Petzl Yellow Green",
-            gearCategory: "headlamp"
+            gearCategory: "headlamp",
+            gearCondition: "RENTABLE",
+            gearStatus: ""
         }, {
             gearCode: "HP01",
             depositFee: 51.01,
             gearDescription: "Red Komperdell Trailmaster",
-            gearCategory: "hiking pole"
+            gearCategory: "hiking pole",
+            gearCondition: "RENTABLE",
+            gearStatus: ""
         }, {
             gearCode: "HP02",
             depositFee: 50,
             gearDescription: "Red Komperdell Trailmaster",
-            gearCategory: "hiking pole"
+            gearCategory: "hiking pole",
+            gearCondition: "RENTABLE",
+            gearStatus: ""
         }]);
-        expect(result.warnings).to.deep.equal([]);
+        expect(result.warnings).to.have.property("statusMissing");
+        expect(result.warnings).to.have.property("noteMissing");
     });
 
-    it("bufferToData - returns gear, categories and warnings when they exist", () => {
-        const service = new GearService(),
-            result = service._bufferToData(warningMissingData);
+    it("bufferToData - test missing data", () => {
+        const service = new GearService();
 
-        expect(result.warnings).to.deep.equal([
-            "Row 3 has missing data.",
-            "Row 4 has missing data."
-        ]);
-        expect(result.categories).to.deep.equal([
-            "headlamp",
-            "hiking pole"
-        ]);
-        expect(result.gear).to.deep.equal([{
-            gearCode: "HL01",
-            depositFee: 50,
-            gearDescription: "Petzl Yellow Green",
-            gearCategory: "headlamp"
-        }, {
-            gearCode: "HP02",
-            depositFee: 50,
-            gearDescription: "Red Komperdell Trailmaster",
-            gearCategory: "hiking pole"
-        }]);
+        try {
+            service._bufferToData(warningMissingData);
+            expect.fail(); // should have thrown an error
+        } catch (e) {
+            expect(e.toString()).to.contain("These rows are missing required data");
+        }
     });
 
     it("bufferToData - throws if no title", () => {
@@ -123,7 +118,7 @@ describe("GearService Tests", () => {
             service._bufferToData(invalidMissingColumn);
             expect.fail(); // should have thrown an error
         } catch (e) {
-            expect(e.toString()).to.equal("Error: There must be a column with the title 'category'.");
+            expect(e.toString()).to.contain("It looks like you are missing a required title for a column");
         }
     });
 
@@ -134,7 +129,7 @@ describe("GearService Tests", () => {
             service._bufferToData(invalidDuplicateTitle);
             expect.fail(); // should have thrown an error
         } catch (e) {
-            expect(e.toString()).to.equal("Error: There's more than one column that has 'category' in the title.");
+            expect(e.toString()).to.contain("Detected duplicate columns");
         }
     });
 
