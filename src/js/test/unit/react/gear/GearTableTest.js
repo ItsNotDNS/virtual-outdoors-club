@@ -101,4 +101,19 @@ describe("GearTable Tests", () => {
         rv = table.instance().conditionFormatter("DELETED");
         expect(rv.props.children).to.be.equal("Deleted");
     });
+
+    it("categoryFormatter works", () => {
+        const table = getShallowForm({
+                gearList: mockGearList
+            });
+
+        let rv = null;
+        rv = table.instance().categoryFormatter("some category");
+        expect(rv).to.be.equal("some category");
+        rv = table.instance().categoryFormatter("");
+        expect(rv).to.be.equal("Category Deleted");
+        rv = table.instance().categoryFormatter(null);
+        expect(rv).to.be.equal("Category Deleted");
+
+    });
 });

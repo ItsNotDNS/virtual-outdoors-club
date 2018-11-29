@@ -81,6 +81,10 @@ export default class GearTable extends React.Component {
         );
     }
 
+    categoryFormatter(cell) {
+        return cell || "Category Deleted";
+    }
+
     get columns() {
         return [{
             dataField: "code",
@@ -89,7 +93,8 @@ export default class GearTable extends React.Component {
         }, {
             dataField: "category",
             text: "Category",
-            sort: true
+            sort: true,
+            formatter: this.categoryFormatter
         }, {
             dataField: "description",
             text: "Description",
