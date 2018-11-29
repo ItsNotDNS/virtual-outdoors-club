@@ -45,11 +45,15 @@ export default class AccountsPage extends Reflux.Component {
 
     getExecTab(tabKey) {
         const { updateExecVariable } = AccountsActions,
-            execValues = this.state[EXECUTIVE];
+            execValues = this.state[EXECUTIVE],
+            { message, error } = this.state,
+            alert = this.getPasswordAlert(error) ||
+                this.getPasswordMessage(message);
+
         return (
             <Tab title="Executive" eventKey={tabKey}>
                 <div className="col-md-6 margin-top-2">
-                    {this.getErrorAlert(execValues.error)}
+                    {this.getErrorAlert(execValues.error) || alert}
                     <LabeledInput
                         name="newExec"
                         label="New Password"
@@ -68,6 +72,7 @@ export default class AccountsPage extends Reflux.Component {
                         <button
                             className="btn btn-success submit-button"
                             disabled={!execValues.canSubmit}
+                            onClick={AccountsActions.updateExecutivePassword}
                         >
                                     Save
                         </button>
@@ -77,14 +82,37 @@ export default class AccountsPage extends Reflux.Component {
         );
     }
 
+    getPasswordAlert(error) {
+        if (error) {
+            return (
+                <Alert bsStyle="danger">
+                    <h4>Invalid credentials, please try again.</h4>
+                </Alert>
+            );
+        }
+    }
+
+    getPasswordMessage(message) {
+        if (message) {
+            return (
+                <Alert bsStyle="success">
+                    <h4>{message}</h4>
+                </Alert>
+            );
+        }
+    }
+
     getAdminTab(tabKey) {
         const { updateAdminVariable } = AccountsActions,
-            adminValues = this.state[ADMIN];
+            { message, error } = this.state,
+            adminValues = this.state[ADMIN],
+            alert = this.getPasswordAlert(error) ||
+                this.getPasswordMessage(message);
 
         return (
             <Tab title="Admin" eventKey={tabKey}>
                 <div className="col-md-6 margin-top-2">
-                    {this.getErrorAlert(adminValues.error)}
+                    {alert || this.getErrorAlert(adminValues.error)}
                     <LabeledInput
                         name="oldAdmin"
                         label="Old Password"
@@ -110,6 +138,7 @@ export default class AccountsPage extends Reflux.Component {
                         <button
                             className="btn btn-success submit-button"
                             disabled={!adminValues.canSubmit}
+                            onClick={AccountsActions.updateAdminPassword}
                         >
                                     Save
                         </button>

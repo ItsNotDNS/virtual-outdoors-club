@@ -2,6 +2,7 @@ import { AccountsStore } from "react/accounts/AccountsStore";
 import sinon from "sinon";
 import { expect } from "chai";
 import constants from "constants/constants";
+import axios from "axios";
 
 const {
         EXECUTIVE,
@@ -10,11 +11,12 @@ const {
     sandbox = sinon.createSandbox();
 
 let store = new AccountsStore(),
-    clock;
+    clock, postStub;
 
-describe("VariabilityStore Tests", () => {
+describe("AccountStore Tests", () => {
     beforeEach(() => {
         store = new AccountsStore();
+        postStub = sandbox.stub(axios, "post");
         clock = sinon.useFakeTimers();
     });
 
@@ -93,5 +95,81 @@ describe("VariabilityStore Tests", () => {
         store.checkIfValid();
 
         expect(store.state[EXECUTIVE].canSubmit).to.be.true;
+    });
+
+    it("onUpdateAdminPassword - error path", () => {
+        const error = { response: { data: { message: "this is an error message" } } },
+            errorPromise = Promise.reject(error);
+        store.state[ADMIN].newAdmin = "admin";
+        store.state[ADMIN].confirmAdmin = "myNewPassOops";
+        store.state[ADMIN].oldAdmin = "password";
+
+        expect(store.state[ADMIN].newAdmin).to.equal("admin");
+        expect(store.state[ADMIN].confirmAdmin).to.equal("myNewPassOops");
+        expect(store.state[ADMIN].oldAdmin).to.equal("password");
+
+        postStub.returns(errorPromise);
+
+        return store.onUpdateAdminPassword().then(() => {
+            expect(store.state[ADMIN].newAdmin).to.equal("");
+            expect(store.state[ADMIN].confirmAdmin).to.equal("");
+            expect(store.state[ADMIN].oldAdmin).to.equal("");
+            expect(store.state[ADMIN].error).to.equal(error.response.data.message);
+        });
+    });
+
+    it("onUpdateAdminPassword - success path", () => {
+        const resolvePromise = Promise.resolve("");
+        store.state[ADMIN].newAdmin = "admin";
+        store.state[ADMIN].confirmAdmin = "myNewPassOops";
+        store.state[ADMIN].oldAdmin = "password";
+
+        expect(store.state[ADMIN].newAdmin).to.equal("admin");
+        expect(store.state[ADMIN].confirmAdmin).to.equal("myNewPassOops");
+        expect(store.state[ADMIN].oldAdmin).to.equal("password");
+
+        postStub.returns(resolvePromise);
+
+        return store.onUpdateAdminPassword().then(() => {
+            expect(store.state[ADMIN].newAdmin).to.equal("");
+            expect(store.state[ADMIN].confirmAdmin).to.equal("");
+            expect(store.state[ADMIN].oldAdmin).to.equal("");
+            expect(store.state[ADMIN].error).to.equal("");
+        });
+    });
+
+    it("onUpdateExecutivePassword - error path", () => {
+        const error = { response: { data: { message: "this is an error message" } } },
+            errorPromise = Promise.reject(error);
+        store.state[EXECUTIVE].newExec = "EXECUTIVE";
+        store.state[EXECUTIVE].confirmExec = "myNewPassOops";
+
+        expect(store.state[EXECUTIVE].newExec).to.equal("EXECUTIVE");
+        expect(store.state[EXECUTIVE].confirmExec).to.equal("myNewPassOops");
+
+        postStub.returns(errorPromise);
+
+        return store.onUpdateExecutivePassword().then(() => {
+            expect(store.state[EXECUTIVE].newExec).to.equal("");
+            expect(store.state[EXECUTIVE].confirmExec).to.equal("");
+            expect(store.state[EXECUTIVE].error).to.equal(error.response.data.message);
+        });
+    });
+
+    it("onUpdateExecutivePassword - success path", () => {
+        const resolvePromise = Promise.resolve("");
+        store.state[EXECUTIVE].newExec = "executive";
+        store.state[EXECUTIVE].confirmExec = "myNewPassOops";
+
+        expect(store.state[EXECUTIVE].newExec).to.equal("executive");
+        expect(store.state[EXECUTIVE].confirmExec).to.equal("myNewPassOops");
+
+        postStub.returns(resolvePromise);
+
+        return store.onUpdateExecutivePassword().then(() => {
+            expect(store.state[EXECUTIVE].newExec).to.equal("");
+            expect(store.state[EXECUTIVE].confirmExec).to.equal("");
+            expect(store.state[EXECUTIVE].error).to.equal("");
+        });
     });
 });
