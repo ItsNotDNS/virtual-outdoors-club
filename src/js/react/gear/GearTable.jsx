@@ -141,7 +141,10 @@ export default class GearTable extends React.Component {
                 <StatusSearchBar />
                 <Table
                     {...props.baseProps}
-                    defaultSorted={[{ dataField: "code", order: "asc" }]}
+                    defaultSorted={[
+                        { dataField: "condition", order: "asc" },
+                        { dataField: "code", order: "asc" }
+                    ]}
                 />
             </div>
         );

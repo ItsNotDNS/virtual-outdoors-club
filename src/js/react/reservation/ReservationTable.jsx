@@ -84,6 +84,7 @@ export default class ReservationTable extends React.Component {
                         onSelect: this.onSelectRow
                     }}
                     defaultSorted={[
+                        { dataField: "status", order: "desc" },
                         { dataField: "startDate", order: "desc" },
                         { dataField: "endDate", order: "desc" }
                     ]}
