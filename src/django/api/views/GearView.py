@@ -9,24 +9,6 @@ from datetime import datetime
 from django.db.models import Q
 
 
-# returns False if no gear has that id, otherwise the gear with the id is returned
-def gearIdExists(id):
-    try:
-        gear = Gear.objects.get(id=id)
-    except exceptions.ObjectDoesNotExist:
-        return False
-    return gear
-
-
-# returns False or the gear object with a matching code
-def gearCodeExists(code):
-    try:
-        gear = Gear.objects.get(code=code)
-    except exceptions.ObjectDoesNotExist:
-        return False
-    return gear
-
-
 class GearView(APIView):
 
     # gets a list of all gear in the database and returns it as a list of json objects
@@ -44,10 +26,10 @@ class GearView(APIView):
                 return RespError(400, "Date must be in year-month-day format")
 
             dateFilter = Q(startDate__range=[start, end]) | \
-                         Q(endDate__range=[start, end]) | \
-                         Q(startDate__lte=start, endDate__gte=end)
+                        Q(endDate__range=[start, end]) | \
+                        Q(startDate__lte=start, endDate__gte=end)
 
-            resGear = Reservation.objects.filter(dateFilter).values("gear")
+            resGear = Reservation.objects.filter(dateFilter).exclude(status__in=["RETURNED", "CANCELLED"]).values("gear")
 
             if resGear.exists():
                 gear = gear.exclude(id__in=resGear)
@@ -102,13 +84,13 @@ class GearView(APIView):
 
         # The following 3 checks could be up-leveled to a generic PATCH-check function
         if not idToUpdate:
-            return RespError(400, "You must specify an id to patch.")
+            return RespError(400, "You must specify an 'id' to patch.")
         
         if not expectedVersion:
             return RespError(400, "You must specify an 'expectedVersion'.")
 
         if not patch:
-            return RespError(400, "You must specify a 'patch' object with methods.")
+            return RespError(400, "You must specify a 'patch' object with attributes to patch.")
 
         for key in patch:
             if key not in allowedPatchMethods:
@@ -159,15 +141,25 @@ class GearView(APIView):
 def getHistory(request):
     ID = request.query_params.get("id", None)
 
-    if ID:
-        gear = gearIdExists(ID)
-        if not gear:
-            return RespError(400, "Gear ID does not exist")
-        gear = gear.history.all()
-    else:
+    if not ID:
         return RespError(400, "Must give the ID to search for")
 
-    gear = GearSerializer(gear, many=True)
-    return Response({"data": gear.data})
+    try:
+        gear = Gear.objects.get(id=ID)
+    except Gear.DoesNotExist:
+        return RespError(400, "Gear ID does not exist")
 
+    gear_history = gear.history.all()
+
+    serial = GearSerializer(gear_history, many=True)
+
+    data = []
+    for i in range(len(serial.data)):
+        if i == 0:
+            data.append(serial.data[i])
+            continue
+        if serial.data[i] != serial.data[i-1]:
+            data.append(serial.data[i])
+
+    return Response({"data": data})
 

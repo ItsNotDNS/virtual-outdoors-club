@@ -50,6 +50,7 @@ export default class GearCategoryDropdown extends Reflux.Component {
             <FormGroup controlId="formControlsSelect">
                 <ControlLabel>Gear Category</ControlLabel>
                 <FormControl
+                    disabled={this.props.isDisabled}
                     name="gearCategory"
                     componentClass="select"
                     placeholder="select"
@@ -66,5 +67,6 @@ export default class GearCategoryDropdown extends Reflux.Component {
 
 GearCategoryDropdown.propTypes = {
     onChange: PropTypes.func,
-    value: PropTypes.string
+    value: PropTypes.string,
+    isDisabled: PropTypes.bool
 };

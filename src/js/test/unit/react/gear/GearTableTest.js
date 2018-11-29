@@ -11,21 +11,27 @@ const mockGearList = [{
         "code": "BK01",
         "description": "Book about hiking",
         "category": "book",
-        "version": 1
+        "condition": "RENTABLE",
+        "version": 1,
+        "statusDescription": "some status"
     }, {
         "id": 2,
         "depositFee": "30.00",
         "code": "BK02",
         "description": "Mountains 101",
         "category": "book",
-        "version": 3
+        "condition": "RENTABLE",
+        "version": 3,
+        "statusDescription": "some status"
     }, {
         "id": 3,
         "depositFee": "50.00",
         "code": "TN01",
         "description": "Tent for 4 people",
         "category": "tent",
-        "version": 1
+        "condition": "RENTABLE",
+        "version": 1,
+        "statusDescription": "some status"
     }],
     getShallowForm = (props = {}) => {
         const emptyFunc = () => {};
@@ -59,7 +65,9 @@ describe("GearTable Tests", () => {
                 gearCode: mockGearList[0].code,
                 depositFee: mockGearList[0].depositFee,
                 gearDescription: mockGearList[0].description,
-                gearCategory: mockGearList[0].category
+                gearCategory: mockGearList[0].category,
+                gearCondition: mockGearList[0].condition,
+                gearStatus: mockGearList[0].statusDescription
             }
         })).to.be.true;
     });
@@ -76,5 +84,21 @@ describe("GearTable Tests", () => {
         deleteBtn.props.onClick();
 
         expect(deleteSpy.calledWith(mockGearList[0].id)).to.be.true;
+    });
+
+    it("conditionFormatter works", () => {
+        const table = getShallowForm({
+                gearList: mockGearList
+            });
+
+        let rv = null;
+        rv = table.instance().conditionFormatter("RENTABLE");
+        expect(rv.props.children).to.be.equal("Rentable");
+        rv = table.instance().conditionFormatter("FLAGGED");
+        expect(rv.props.children).to.be.equal("Flagged");
+        rv = table.instance().conditionFormatter("NEEDS_REPAIR");
+        expect(rv.props.children).to.be.equal("Needs Repair");
+        rv = table.instance().conditionFormatter("DELETED");
+        expect(rv.props.children).to.be.equal("Deleted");
     });
 });

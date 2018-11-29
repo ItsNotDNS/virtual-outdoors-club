@@ -27,6 +27,6 @@ ConfirmationDialog.propTypes = {
     message: PropTypes.string.isRequired,
     onClose: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
-    error: PropTypes.bool,
-    errorMessage: PropTypes.string
+    error: PropTypes.bool.isRequired,
+    errorMessage: PropTypes.string.isRequired
 };

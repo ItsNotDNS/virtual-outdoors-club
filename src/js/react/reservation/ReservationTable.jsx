@@ -7,6 +7,7 @@ import Table from "react-bootstrap-table-next";
 import PropTypes from "prop-types";
 import ToolkitProvider, { Search } from "react-bootstrap-table2-toolkit";
 import { capitalizeFirstLetter } from "../utilities";
+import ReservationStatusSearchBar from "./ReservationStatusSearchBar";
 
 const { SearchBar } = Search;
 
@@ -15,6 +16,17 @@ export default class ReservationTable extends React.Component {
         super(props);
         this.getComponents = this.getComponents.bind(this);
         this.onSelectRow = this.onSelectRow.bind(this);
+        this.state = {
+            filteredReservationList: []
+        };
+    }
+
+    statusFormatter(cell) {
+        return (
+            <div className={`text-center reservation-badge ${cell.toLowerCase()}`}>
+                {capitalizeFirstLetter(cell)}
+            </div>
+        );
     }
 
     get columns() {
@@ -46,7 +58,7 @@ export default class ReservationTable extends React.Component {
             sort: true,
             dataField: "status",
             text: "Status",
-            formatter: capitalizeFirstLetter
+            formatter: this.statusFormatter
         }];
     }
 
@@ -60,6 +72,7 @@ export default class ReservationTable extends React.Component {
                 <div className="custom-search-field">
                     <SearchBar {...props.searchProps} />
                 </div>
+                <ReservationStatusSearchBar />
                 <Table
                     {...props.baseProps}
                     hover
@@ -79,13 +92,24 @@ export default class ReservationTable extends React.Component {
         );
     }
 
+    static getDerivedStateFromProps(props) {
+        return {
+            filteredReservationList:
+                props.reservationList.filter(
+                    (reservation) => {
+                        return props.checkboxOptions[reservation.status];
+                    }
+                )
+        };
+    }
+
     render() {
         return (
             <ToolkitProvider
                 search
                 keyField="id"
                 columns={this.columns}
-                data={this.props.reservationList}
+                data={this.state.filteredReservationList}
             >
                 {this.getComponents}
             </ToolkitProvider>
@@ -95,5 +119,6 @@ export default class ReservationTable extends React.Component {
 
 ReservationTable.propTypes = {
     onSelectRow: PropTypes.func,
-    reservationList: PropTypes.array.isRequired
+    reservationList: PropTypes.array.isRequired,
+    checkboxOptions: PropTypes.object.isRequired
 };

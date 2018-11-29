@@ -1,11 +1,9 @@
-from .error import *
-from django.core import exceptions
 from django.db import transaction
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view
 from ..models import Member, BlackList
 from ..serializers import MemberSerializer
 from .error import *
+
 
 class MemberView(APIView):
     def get(self, request):
@@ -14,8 +12,7 @@ class MemberView(APIView):
         members = MemberSerializer(members, many=True)
     
         return Response({"data": members.data})
-    
-    
+
     # Transaction that replaces the current member list with a new one
     # if the atomic transaction fails, no changes are saved to the DB
     @transaction.atomic
@@ -30,6 +27,7 @@ class MemberView(APIView):
 
                 serial = MemberSerializer(data=members, many=True)
                 if not serial.is_valid():
+                    errors = serial.errors
                     for key in errors:
                         raise Exception(key + ": " + errors[key][0])
             
@@ -40,4 +38,3 @@ class MemberView(APIView):
 
         # return the same response as the GET endpoint
         return self.get(request)
-    

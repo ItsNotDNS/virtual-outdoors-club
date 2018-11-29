@@ -27,11 +27,6 @@ describe("ReservationPage Tests", () => {
 
         expect(actionsStub.fetchReservationList.calledOnce).to.be.true;
 
-        page.instance().state.fetchedReservationList = true; // not set by the component
-
-        page.instance().componentDidMount();
-
-        expect(actionsStub.fetchReservationList.calledOnce).to.be.true;
     });
 
     it("creates a wrapper that passes CREATE to the callback", () => {

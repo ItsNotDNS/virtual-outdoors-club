@@ -5,6 +5,32 @@
     margin-top: 1%;
 }
 
+.help-page {
+    text-align: left;
+
+    .content-container {
+        @media only screen and (max-width: 768px) {
+            width:100%;
+        }
+        display:inline-block;
+        width:60%
+    }
+
+    p {
+        @media only screen and (max-width: 768px) {
+            width:100%;
+            font-size:14px;
+        }
+        margin-top: 2%;
+        margin-bottom: 2%;
+        display:inline-block;
+        text-align:left;
+        width:80%;
+        font-size:17px;
+    }
+}
+
+
 .file-button {
     input {
         width: 69%;
@@ -37,6 +63,11 @@
     margin: 0 auto;
 }
 
+.middle-screen {
+    position: absolute;
+    top: 25%;
+    left: 25%;
+}
 
 .variability-view {
     .margin-top-2 {
@@ -82,6 +113,10 @@
     .submit-button {
         margin-top: 2%;
         width: 50%;
+    }
+
+    .mark-as-resolve-button {
+        width: 100%;
     }
 
     .nav {
@@ -213,6 +248,20 @@
     text-align: center;
 }
 
+.paypal-div {
+    border-radius: 25px;
+    background-color: #ffc439;
+}
+
+.disabled-div {
+    border-radius: 25px;
+    background-color: #d3d3d3;
+}
+
+.paypal-logo {
+    width: 15%;
+}
+
 .bottom-margin {
     margin-bottom: 2%;
 }
@@ -222,6 +271,26 @@
 
 .full-width {
     width: 100%;
+}
+
+.statistics-view {
+  .margin-top-2 {
+        margin-top: 2%;
+    }
+
+  .DayPickerInput {
+        margin-left: 0.5%;
+        margin-right: 0.5%;
+        @media only screen and (max-width: 768px) {
+            display: flex;
+        }
+        .DayPicker-Day {
+            border-radius: 0;
+        }
+        input {
+            text-align: center;
+        }
+    }
 }
 
 .reservation-view {
@@ -302,7 +371,7 @@
     $nav-background-color: #1e508f;
     $selected-nav-background-color: #337ab7;
     $text-color: white;
-    $text-hover-color: black;
+    $text-hover-color: white;
 
     background-color: $nav-background-color;
     border: 0px;
@@ -315,7 +384,8 @@
       color: $text-color;
     }
     .navbar-nav > li > a:hover {
-      color: $text-hover-color;
+        background-color: $selected-nav-background-color;
+        color: $text-hover-color;
     }
 
     /*currently selected item*/
@@ -370,4 +440,72 @@
         }
     }
 
+}
+
+.system-status-label {
+    margin-left: 1%;
+}
+
+.gear-status-badge {
+
+    width: 100%;
+    border-radius: 25px;
+    &.rentable {
+        color: white;
+        background-color: #3EC300;
+    }
+    &.flagged {
+        color: white;
+        background-color: #ffc100;
+    }
+    &.deleted {
+        color: white;
+        background-color: #7f7f7f;
+    }
+    &.needs_repair {
+        color: white;
+        background-color: #E3170A;
+    }
+}
+
+.reservation-badge-modal-container {
+    width: 15%;
+}
+
+.reservation-badge {
+    width: 100%;
+    border-radius: 25px;
+
+    &.modal {
+        width: 10%;
+    }
+
+    &.cancelled {
+        color: white;
+        background-color: #7f7f7f;
+    }
+    &.returned {
+        color: white;
+        background-color: #7f7f7f;
+    }
+    &.requested {
+        color: white;
+        background-color: #741D93;
+    }
+    &.taken {
+        color: white;
+        background-color: #1E3888;
+    }
+    &.approved {
+        color: white;
+        background-color: #3EC300;
+    }
+    &.paid {
+        color: white;
+        background-color: #ffc100;
+    }
+}
+
+hr {
+    border-top: 1px solid black;
 }

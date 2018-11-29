@@ -7,13 +7,16 @@ import PropTypes from "prop-types";
 import LabeledInput from "../../components/LabeledInput";
 import { ListGroup, ListGroupItem } from "react-bootstrap";
 import { ReservationActions, ReservationStore } from "../ReservationStore";
+import payPalLogo from "../../../../images/PayPal_logo_logotype_emblem.png";
 
+// This needs to be a Reflux component and not a redux component
+// Because it needs to monitor the store for changes
 export default class PaymentForm extends Reflux.Component {
     constructor(props) {
         super(props);
 
         this.getGearList = this.getGearList.bind(this);
-        this.createPayPalForm = this.createPayPalForm.bind(this);
+        this.getPayPalLink = this.getPayPalLink.bind(this);
 
         this.store = ReservationStore;
     }
@@ -36,8 +39,27 @@ export default class PaymentForm extends Reflux.Component {
         );
     }
 
-    createPayPalForm() {
-        return { __html: this.state.payPalForm };
+    getPayPalLink() {
+        return (
+            this.state.error
+                ? <div className="text-center">
+                    <div>
+                        {this.state.error}
+                    </div>
+                    <div className="col-md-4 col-md-offset-4 text-center disabled-div">
+                        Authorize with PayPal
+                    </div>
+                </div>
+                : this.state.payPalForm
+                    ? <a href={this.state.payPalForm}>
+                        <div className="col-md-4 col-md-offset-4 text-center paypal-div">
+                            Authorize with
+                            {" "}
+                            <img className="paypal-logo" src={payPalLogo} alt="PayPal" />
+                        </div>
+                    </a>
+                    : "Loading..."
+        );
     }
 
     render() {
@@ -59,7 +81,7 @@ export default class PaymentForm extends Reflux.Component {
                     value={this.props.endDate} />
 
                 {this.getGearList()}
-                <div className="col-md-4 text-center" dangerouslySetInnerHTML={this.createPayPalForm()} />
+                {this.getPayPalLink()}
             </div>
         );
     }

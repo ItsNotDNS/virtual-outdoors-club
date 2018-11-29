@@ -1,17 +1,13 @@
 from django.test import TestCase
 from ..models import BlackList
-from rest_framework.test import APIRequestFactory
 
 
 class BlackListTestCase(TestCase):
 
     # Create test data and save primary key of all objects
-    @classmethod
-    def setUpClass(self):
-        super().setUpClass()
+    def setUp(self):
         BlackList.objects.create(email="jim@gmail.com")
         BlackList.objects.create(email="jam@gmail.com")
-        self.client = APIRequestFactory
 
     def test_get(self):
         response = self.client.get("/api/members/blacklist/", content_type="application/json").data['data']
@@ -49,6 +45,9 @@ class BlackListTestCase(TestCase):
         response = self.client.post("/api/members/blacklist/", request, content_type='application/json')
         self.assertEqual(response.status_code, 400)
 
+        request = {"email": 123}
+        response = self.client.post("/api/members/blacklist/", request, content_type='application/json')
+        self.assertEqual(response.status_code, 400)
 
     def test_delete(self):
         response = self.client.delete("/api/members/blacklist?email=jim@gmail.com", content_type="application/json").data

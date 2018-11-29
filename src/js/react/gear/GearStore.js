@@ -28,7 +28,8 @@ function defaultState() {
     return {
         fetchedGearList: false, // initial check to fetch the gear list
         tabSelected: 1,
-        error: "",
+        error: false,
+        errorMessage: "",
         upload: {
             gear: [],
             categories: [],
@@ -54,6 +55,8 @@ function defaultState() {
             depositFee: "",
             gearCategory: "",
             gearDescription: "",
+            gearCondition: "",
+            gearStatus: "",
             tabSelected: 1,
             gearHistory: [],
             gearReservationHistory: []
@@ -99,11 +102,8 @@ function defaultState() {
             NEEDS_REPAIR: true,
             DELETED: false
         },
-        dateFilter: {
-            startDate: null,
-            endDate: null
-        },
         rentableList: [],
+        conditionSelected: "",
         fetchedRentableGearList: false,
         gearHistoryModal: {
             show: false,
@@ -149,6 +149,7 @@ export const GearActions = Reflux.createActions([
     "dateFilterChanged",
     "fetchGearListFromTo",
     "fetchRentableListFromTo",
+    "updateConditionDropdown",
     "fetchRentableGearList",
     "openGearHistoryModal",
     "closeGearHistoryModal"
@@ -174,6 +175,12 @@ export class GearStore extends Reflux.Store {
         });
     }
 
+    onUpdateConditionDropdown(value) {
+        this.setState({
+            conditionSelected: value
+        });
+    }
+
     onFetchGearList() {
         const service = new GearService();
 
@@ -189,7 +196,8 @@ export class GearStore extends Reflux.Store {
                     });
                 } else {
                     this.setState({
-                        error
+                        error: true,
+                        errorMessage: error
                     });
                 }
             });
@@ -214,7 +222,8 @@ export class GearStore extends Reflux.Store {
                     });
                 } else {
                     this.setState({
-                        error
+                        error: true,
+                        errorMessage: error
                     });
                 }
             });
@@ -233,7 +242,7 @@ export class GearStore extends Reflux.Store {
         if (Object.keys(options.gear).length !== 0 && options.gear.constructor === Object) {
             this.fetchGearHistory(options.gear);
         }
-        const { id, expectedVersion, gearCode, depositFee, gearCategory, gearDescription } = options.gear,
+        const { id, expectedVersion, gearCode, depositFee, gearCategory, gearDescription, gearCondition, gearStatus } = options.gear,
             newState = update(this.state, {
                 gearModal: {
                     show: { $set: true },
@@ -243,7 +252,9 @@ export class GearStore extends Reflux.Store {
                     gearCode: { $set: gearCode || "" },
                     depositFee: { $set: depositFee || "" },
                     gearCategory: { $set: gearCategory || "" },
-                    gearDescription: { $set: gearDescription || "" }
+                    gearDescription: { $set: gearDescription || "" },
+                    gearCondition: { $set: gearCondition || "" },
+                    gearStatus: { $set: gearStatus || "" }
                 }
             });
         this.setState(newState);
@@ -430,7 +441,13 @@ export class GearStore extends Reflux.Store {
     }
 
     onAddToShoppingCart(row) {
-        if (!this.state.shoppingList.includes(row)) {
+        let isNewItem = false;
+        this.state.shoppingList.forEach(function(gear) {
+            if (gear.id === row.id) {
+                isNewItem = true;
+            }
+        });
+        if (!isNewItem) {
             const newState = update(this.state, {
                 shoppingList: { $push: [row] },
                 checkoutDisabled: { $set: false },
@@ -443,6 +460,8 @@ export class GearStore extends Reflux.Store {
                 }
             });
             this.setState(newState);
+        } else {
+            toast.error(`Gear ID: ${row.code} is already in your shopping cart`);
         }
     }
 
@@ -691,9 +710,6 @@ export class GearStore extends Reflux.Store {
 
     onDateFilterChanged(field, date) {
         const newState = update(this.state, {
-            dateFilter: {
-                [field]: { $set: new Date(date) }
-            },
             reserveGearForm: {
                 [field]: { $set: new Date(date) }
             }
@@ -702,15 +718,33 @@ export class GearStore extends Reflux.Store {
     }
 
     onFetchRentableListFromTo(startDate, endDate) {
-        const service = new GearService();
-        return service.fetchGearListFromTo(
-            moment(startDate).format("YYYY-MM-DD"),
-            moment(endDate).format("YYYY-MM-DD")
-        )
+        const service = new GearService(),
+            startDateString = moment(startDate).format("YYYY-MM-DD"),
+            endDateString = moment(endDate).format("YYYY-MM-DD");
+        return service.fetchGearListFromTo(startDateString, endDateString)
             .then(({ data }) => {
+                const shoppingCartRemove = {}, rentalListRemove = {};
                 if (data) {
+                    this.state.shoppingList.forEach(function(gear) {
+                        const found = data.find(function(element) {
+                            return element.id === gear.id;
+                        });
+                        if (!found) {
+                            shoppingCartRemove[gear.id] = true;
+                        } else {
+                            rentalListRemove[gear.id] = true;
+                        }
+                    });
+                    if (Object.keys(shoppingCartRemove).length) {
+                        toast.error("Some items have been removed from your shopping cart because it is  unavailable in the selected date range.");
+                    }
                     this.setState({
-                        rentableList: data
+                        rentableList: data.filter(
+                            (gear) => !rentalListRemove[gear.id]
+                        ),
+                        shoppingList: this.state.shoppingList.filter(
+                            (gear) => !shoppingCartRemove[gear.id]
+                        )
                     });
                 }
             });
