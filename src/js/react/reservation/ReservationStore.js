@@ -22,6 +22,7 @@ const {
         "undoReservationChanges",
         "approveReservation",
         "cancelReservation",
+        "checkOutReservation",
         "payCash",
         "editReservation",
         "fetchReservationList",
@@ -454,6 +455,32 @@ export class ReservationStore extends Reflux.Store {
             });
     }
 
+    onCheckOutReservation() {
+        const service = new ReservationService(),
+            { id } = this.state.reservationModal.data;
+
+        return service.checkOutReservation(id)
+            .then(({ reservation, error }) => {
+                if (error) {
+                    this.setState(update(this.state, {
+                        reservationModal: {
+                            alertMsg: { $set: error },
+                            alertType: { $set: "danger" }
+                        }
+                    }));
+                } else {
+                    this.setState(update(this.state, {
+                        reservationModal: {
+                            alertMsg: { $set: "This reservation is now checked out." },
+                            alertType: { $set: "success" }
+                        }
+                    }));
+                    this.updateModalAndList(reservation);
+                    this.onHideConfirmation();
+                }
+            });
+    }
+
     onEditReservation({ startDate, endDate, gear }) {
         const edit = {};
 
@@ -869,6 +896,7 @@ export class ReservationStore extends Reflux.Store {
                         returnProcessor: { $set: defaultState().returnProcessor }
                     }));
                     this.updateModalAndList(reservation);
+                    this.onHideConfirmation();
                 }
             });
     }

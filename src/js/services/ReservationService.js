@@ -116,6 +116,13 @@ export default class ReservationService {
         });
     }
 
+    checkOutReservation(id) {
+        return this.service.post(`${config.databaseHost}/reservation/checkout`, { id })
+            .then((response) => {
+                return { reservation: response.data };
+            }).catch(genericCatch);
+    }
+
     checkInGear(id, gear, charge) {
         return this.service.post(`${config.databaseHost}/reservation/checkin`, { id, gear, charge })
             .then((response) => {

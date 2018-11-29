@@ -20,7 +20,8 @@ const {
     }, actions: {
         CANCEL,
         APPROVE,
-        PAY_CASH
+        PAY_CASH,
+        CHECK_OUT
     }
 } = constants.reservations;
 
@@ -107,7 +108,7 @@ export default class ReservationModal extends React.Component {
             [REQUESTED]: (
                 <div className="row">
                     <div className="col-xs-4">
-                        {this.getButton("Terminate", openConfirmWrapper(CANCEL), "danger")}
+                        {this.getButton("Cancel", openConfirmWrapper(CANCEL), "danger")}
                     </div>
                     <div className="col-xs-4">
                         {this.getButton("Save", actions.saveReservationChanges, "primary")}
@@ -120,7 +121,7 @@ export default class ReservationModal extends React.Component {
             [APPROVED]: (
                 <div className="row">
                     <div className="col-xs-4">
-                        {this.getButton("Terminate", openConfirmWrapper(CANCEL), "danger")}
+                        {this.getButton("Cancel", openConfirmWrapper(CANCEL), "danger")}
                     </div>
                     <div className="col-xs-4">
                         {this.getButton("Take Cash Deposit", openConfirmWrapper(PAY_CASH), "warning")}
@@ -131,7 +132,14 @@ export default class ReservationModal extends React.Component {
                 </div>
             ),
             [PAID]: (
-                <div>Paid</div>
+                <div className="row">
+                    <div className="col-xs-6">
+                        {this.getButton("Cancel", openConfirmWrapper(CANCEL), "danger")}
+                    </div>
+                    <div className="col-xs-6">
+                        {this.getButton("Check Out", openConfirmWrapper(CHECK_OUT), "primary")}
+                    </div>
+                </div>
             ),
             [TAKEN]: (
                 <ReturnProcessor />
@@ -189,6 +197,20 @@ export default class ReservationModal extends React.Component {
                         {backBtn}
                         <div className="col-xs-6">
                             {this.getButton("Proceed", actions.payCash, "warning")}
+                        </div>
+                    </div>
+                </div>
+            ),
+            [CHECK_OUT]: (
+                <div>
+                    <div className="row text-center">
+                        <p><strong>Ensure you check the ID of the member you are renting gear out to.</strong></p>
+                        <p>This member paid online via PayPal, you don't have to worry about any cash!</p>
+                    </div>
+                    <div className="row">
+                        {backBtn}
+                        <div className="col-xs-6">
+                            {this.getButton("Proceed", actions.checkOutReservation, "success")}
                         </div>
                     </div>
                 </div>
@@ -438,6 +460,7 @@ ReservationModal.propTypes = {
         approveReservation: PropTypes.func.isRequired,
         cancelReservation: PropTypes.func.isRequired,
         editReservation: PropTypes.func.isRequired,
+        checkOutReservation: PropTypes.func.isRequired,
         payCash: PropTypes.func.isRequired,
         loadAvailableGear: PropTypes.func.isRequired,
         addGearToReservation: PropTypes.func.isRequired,

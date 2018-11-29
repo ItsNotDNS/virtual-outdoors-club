@@ -42,7 +42,8 @@ const constants = {
         actions: {
             CANCEL: "CANCEL",
             APPROVE: "APPROVE",
-            PAY_CASH: "PAY_CASH"
+            PAY_CASH: "PAY_CASH",
+            CHECK_OUT: "CHECK_OUT"
         }
     },
     gearConditions: {
