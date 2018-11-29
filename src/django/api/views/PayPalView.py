@@ -2,7 +2,8 @@ import paypalrestsdk
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
 from .error import RespError, Response
 from ..models import Reservation
 from decimal import Decimal
@@ -12,6 +13,7 @@ import datetime
 
 @csrf_exempt
 @api_view(['GET'])
+@permission_classes((AllowAny, ))
 def returnView(request):
     paymentId = request.query_params.get("paymentId", None)
     payerId = request.query_params.get("PayerID", None)
@@ -39,6 +41,7 @@ def returnView(request):
 
 
 @csrf_exempt
+@permission_classes((AllowAny, ))
 def cancelView(request):
 
     return render(request, 'cancel.html')
