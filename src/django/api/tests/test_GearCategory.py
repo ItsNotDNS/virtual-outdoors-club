@@ -1,6 +1,5 @@
 from django.test import TestCase
 from ..models import GearCategory, Gear
-from rest_framework.test import APIRequestFactory
 
 '''
 should have a test to ensure that all input and editing to category names
@@ -11,37 +10,74 @@ are input as lowercase
 class GearCategoryTestCase(TestCase):
 
     # Create test data and save primary key of all objects
-    @classmethod
-    def setUpClass(self):
-        super().setUpClass()
+    def setUp(self):
         self.bk = GearCategory.objects.create(name="Book")
         GearCategory.objects.create(name="Water Bottle")
-        self.gearObj1 = Gear.objects.create(code="BK01", category=self.bk, depositFee=22.00, description="The Necronomicon", condition="RENTABLE", version=1) 
-        self.client = APIRequestFactory()
+        self.gr1 = Gear.objects.create(code="BK01", category=self.bk, depositFee=22.00,
+                                       description="The Necronomicon", condition="RENTABLE", version=1)
 
     def test_get(self):
+        expected = [{"name": "Book"}, {'name': "Water Bottle"}]
         response = self.client.get("/api/gear/categories/", content_type="application/json").data['data']
-        # Test json response
-        expectedResponse = [{"name": "Book"}, {'name': "Water Bottle"}]
-        self.assertEqual(response, expectedResponse)
+        self.assertEqual(response, expected)
 
     def test_post(self):
-        request = {"name": "Tent"}
+        request = {"hello": "world"}
+        response = self.client.post("/api/gear/categories/", request, content_type='application/json').data['message']
+        self.assertEqual(response, "You are required to provide a name for a gear category")
 
-        # Test the post request
+        request = {"name": "Tent"}
         response = self.client.post("/api/gear/categories/", request, content_type='application/json').data
         self.assertEqual(response, request)
-                                                                        
+
+        request = {"name": "Tent"}
+        response = self.client.post("/api/gear/categories/", request, content_type='application/json').data['message']
+        self.assertEqual(response, "name: gear category with this name already exists.")
+
+        request = {"name": 123}
+        response = self.client.post("/api/gear/categories/", request, content_type='application/json').data['message']
+        self.assertEqual(response, "Gear category name needs to be a string")
+
         # Make sure the post (addition of gear category) was saved to the db
         response = self.client.get("/api/gear/categories").data['data']
-        correctReturn = [{"name": "Book"}, {'name': "Water Bottle"}, {"name": "Tent"}]
-        self.assertEqual(response, correctReturn)
-    
+        expected = [{"name": "Book"}, {'name': "Water Bottle"}, {"name": "Tent"}]
+        self.assertEqual(response, expected)
+
+    def test_patch(self):
+        request = {}
+        response = self.client.patch("/api/gear/categories/", request, content_type='application/json').data['message']
+        self.assertEqual(response, "You must specify a category to patch.")
+
+        request['name'] = "hello"
+        response = self.client.patch("/api/gear/categories/", request, content_type='application/json').data['message']
+        self.assertEqual(response, "You must specify a 'patch' object with attributes to patch.")
+
+        request['patch'] = {"name": 123}
+        response = self.client.patch("/api/gear/categories/", request, content_type='application/json').data['message']
+        self.assertEqual(response, "Gear category names must be a string")
+
+        request['name'] = 123
+        response = self.client.patch("/api/gear/categories/", request, content_type='application/json').data['message']
+        self.assertEqual(response, "Gear category names must be a string")
+
+        request['patch']['name'] = 'book'
+        request['name'] = "Hello"
+        response = self.client.patch("/api/gear/categories/", request, content_type='application/json').data['message']
+        self.assertEqual(response, "Gear category 'Hello' does not exist")
+
+        request['name'] = 'Water bottle'
+        response = self.client.patch("/api/gear/categories/", request, content_type='application/json').data['message']
+        self.assertEqual(response, "name: gear category with this name already exists.")
+
+        request['patch']['name'] = "map"
+        response = self.client.patch("/api/gear/categories/", request, content_type='application/json').data
+        self.assertEqual(response, {"name": "Map"})
+
     def test_delete(self):
         response = self.client.delete("/api/gear/categories?name=Book", content_type="application/json")
         self.assertEqual(response.status_code, 409) # Cannot delete, still used for item category somewhere
 
-        pk = self.gearObj1.pk
+        pk = self.gr1.pk
         response = self.client.delete("/api/gear?id=" + str(pk), content_type="application/json")
         self.assertEqual(response.status_code, 200)
 
@@ -50,7 +86,6 @@ class GearCategoryTestCase(TestCase):
 
         response = self.client.get("/api/gear/categories").data['data']
         self.assertEqual(response, [{'name': "Water Bottle"}])
-
 
     def test_delete_does_not_exist(self):
         name = "somecategorythatshouldneverexist"

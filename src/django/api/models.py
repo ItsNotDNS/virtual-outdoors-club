@@ -1,5 +1,5 @@
 from django.db import models
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator, MinLengthValidator
 from simple_history.models import HistoricalRecords
 
 
@@ -28,7 +28,7 @@ class BlackList(models.Model):
 
 # set a collection of available gear categories that are in the system
 class GearCategory(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True, validators=[MinLengthValidator(1)])
 
 
 # gearID is unique for every gear. Deletion will reset all conditions in the table.

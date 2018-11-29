@@ -9,24 +9,6 @@ from datetime import datetime
 from django.db.models import Q
 
 
-# returns False if no gear has that id, otherwise the gear with the id is returned
-def gearIdExists(id):
-    try:
-        gear = Gear.objects.get(id=id)
-    except exceptions.ObjectDoesNotExist:
-        return False
-    return gear
-
-
-# returns False or the gear object with a matching code
-def gearCodeExists(code):
-    try:
-        gear = Gear.objects.get(code=code)
-    except exceptions.ObjectDoesNotExist:
-        return False
-    return gear
-
-
 class GearView(APIView):
 
     # gets a list of all gear in the database and returns it as a list of json objects
@@ -102,13 +84,13 @@ class GearView(APIView):
 
         # The following 3 checks could be up-leveled to a generic PATCH-check function
         if not idToUpdate:
-            return RespError(400, "You must specify an id to patch.")
+            return RespError(400, "You must specify an 'id' to patch.")
         
         if not expectedVersion:
             return RespError(400, "You must specify an 'expectedVersion'.")
 
         if not patch:
-            return RespError(400, "You must specify a 'patch' object with methods.")
+            return RespError(400, "You must specify a 'patch' object with attributes to patch.")
 
         for key in patch:
             if key not in allowedPatchMethods:
@@ -159,15 +141,17 @@ class GearView(APIView):
 def getHistory(request):
     ID = request.query_params.get("id", None)
 
-    if ID:
-        gear = gearIdExists(ID)
-        if not gear:
-            return RespError(400, "Gear ID does not exist")
-        gear = gear.history.all()
-    else:
+    if not ID:
         return RespError(400, "Must give the ID to search for")
 
-    serial = GearSerializer(gear, many=True)
+    try:
+        gear = Gear.objects.get(id=ID)
+    except Gear.DoesNotExist:
+        return RespError(400, "Gear ID does not exist")
+
+    gear_history = gear.history.all()
+
+    serial = GearSerializer(gear_history, many=True)
 
     data = []
     for i in range(len(serial.data)):

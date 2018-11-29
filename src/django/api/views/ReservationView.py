@@ -5,10 +5,10 @@ from ..models import Reservation, System, Gear
 from ..emailing import cancelled, approved
 from ..views.PayPalView import process
 from ..serializers import ReservationPOSTSerializer, ReservationGETSerializer, GearSerializer
-from decimal import Decimal
 from django.db.models import Q
 from django.db import transaction
 import datetime
+import decimal
 
 
 def reservationIdExists(id):
@@ -164,11 +164,11 @@ class ReservationView(APIView):
             return RespError(400, "You must specify an 'expectedVersion'.")
 
         if not patch:
-            return RespError(400, "You must specify a 'patch' object with methods.")
+            return RespError(400, "You must specify a 'patch' object with attributes to patch.")
 
         for key in patch:
             if key not in allowedPatchMethods:
-                return RespError(400, "'" + key + "' is not a valid patch method.")
+                return RespError(400, "'" + key + "' is not a valid patch attribute.")
 
         try:
             resv = Reservation.objects.get(id=idToUpdate)
@@ -319,8 +319,8 @@ def checkin(request):
         return RespError(406, "The reservation status must be 'taken'.")
 
     try:
-        charge = Decimal(request['charge'])
-    except ValueError:
+        charge = decimal.Decimal(request['charge'])
+    except decimal.InvalidOperation:
         return RespError(400, "'" + request['charge'] + "' is not a valid decimal number.")
 
     if charge < 0:

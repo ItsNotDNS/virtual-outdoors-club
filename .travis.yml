@@ -33,7 +33,7 @@ script:
   # runs the Django/backend unit tests with a coverage reporter
   - coverage run --source='src/django/api/views/' --omit='src/django/api/views/PayPalView.py' src/django/manage.py test api
   # checks that coverage meets the requirments (>70%, aim for >85%)
-  - coverage report --fail-under=70
+  - coverage report --fail-under=85
   # enforces front-end code styling
   - npm run-script lint
   # runs the front-end unit tests and coverage

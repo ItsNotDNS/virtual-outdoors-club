@@ -1,5 +1,4 @@
 from django.test import TestCase
-from rest_framework.test import APIRequestFactory
 from decimal import Decimal
 from ..models import GearCategory, Gear, Reservation
 import datetime
@@ -8,23 +7,22 @@ import datetime
 class GearTestCase(TestCase):
 
     # Executed before any tests are run to set up the database.
-    @classmethod
-    def setUpClass(self):
-        super().setUpClass()
+    def setUp(self):
+        self.today = datetime.date.today()
         sb = GearCategory.objects.create(name="Sleeping Bag")
         bp = GearCategory.objects.create(name="Backpack")
 
-        self.gearObj1 = Gear.objects.create(code="BP01", category=bp, depositFee=50.00, description="A black Dakine backpack", condition="RENTABLE", version=1)
-        self.gearObj2 = Gear.objects.create(code="SB01", category=sb, depositFee=50.00, description="A old red sleeping bag", condition="RENTABLE", version=1)
-        self.client = APIRequestFactory()
+        self.gearObj1 = Gear.objects.create(code="BP01", category=bp, depositFee=50.00,
+                                            description="A black Dakine backpack", condition="RENTABLE", version=1)
+        self.gearObj2 = Gear.objects.create(code="SB01", category=sb, depositFee=50.00,
+                                            description="A old red sleeping bag", condition="RENTABLE", version=1)
         self.sbpk = sb.pk
         self.bppk = bp.pk
 
     def test_get(self):
-        response = self.client.get("/api/gear/", content_type="application/json").data
-        expectedResponse = {
+        expected = {
             "data": [{
-                "id": 2,
+                "id": self.gearObj1.id,
                 "code": "BP01",
                 "category": "Backpack",
                 "depositFee": "50.00",
@@ -33,7 +31,7 @@ class GearTestCase(TestCase):
                 "statusDescription": "",
                 "version": 1
             }, {
-                "id": 3,
+                "id": self.gearObj2.id,
                 "code": "SB01",
                 "category": "Sleeping Bag",
                 "depositFee": "50.00",
@@ -43,13 +41,17 @@ class GearTestCase(TestCase):
                 "version": 1
             }]
         }
-
-        self.assertEqual(response, expectedResponse)
+        response = self.client.get("/api/gear/", content_type="application/json").data
+        self.assertEqual(response, expected)
 
     def test_get_reservation(self):
+        url = "/api/gear?from=hello&to=world"
+        response = self.client.get(url, content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+
         today = datetime.datetime.today()
-        startDate=today.strftime("%Y-%m-%d")
-        endDate=(today + datetime.timedelta(days=3)).strftime("%Y-%m-%d")
+        startDate = today.strftime("%Y-%m-%d")
+        endDate = (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d")
         url = "/api/gear?from=" + startDate + "&to=" + endDate
         response = self.client.get(url, content_type="application/json").data["data"]
         originalResponseLength = len(response)
@@ -67,17 +69,29 @@ class GearTestCase(TestCase):
         gr.save()
 
         response = self.client.get(url, content_type="application/json").data["data"]
-        newResponseLen = len(response)
+        self.assertEqual(originalResponseLength - 1, len(response))
 
-        self.assertEqual(originalResponseLength - 1, newResponseLen)
-
+        today = datetime.datetime.today() + datetime.timedelta(days=4)
+        startDate = today.strftime("%Y-%m-%d")
+        endDate = (today + datetime.timedelta(days=8)).strftime("%Y-%m-%d")
+        url = "/api/gear?from=" + startDate + "&to=" + endDate
+        response = self.client.get(url, content_type="application/json").data['data']
+        self.assertEqual(len(response), originalResponseLength)
 
     def test_gearHistory(self):
-        response = self.client.get("/api/gear/history/?id=2", content_type="application/json").data
+        response = self.client.get("/api/gear/history/?id=").data['message']
+        self.assertEqual(response, "Must give the ID to search for")
 
-        expectedResponse = {
+        invalid_id = Gear.objects.latest("id").id + 1
+        response = self.client.get("/api/gear/history/?id=" + str(invalid_id)).data['message']
+        self.assertEqual(response, "Gear ID does not exist")
+
+        query = "/api/gear/history/?id=" + str(self.gearObj1.id)
+        response = self.client.get(query, content_type="application/json").data
+
+        expected = {
             "data": [{
-                "id": 2,
+                "id": self.gearObj1.id,
                 "code": "BP01",
                 "category": "Backpack",
                 "depositFee": "50.00",
@@ -87,7 +101,7 @@ class GearTestCase(TestCase):
                 "version": 1
             }]
         }
-        self.assertEqual(response, expectedResponse)
+        self.assertEqual(response, expected)
 
         # Patch and check history again
         patch = {
@@ -98,7 +112,7 @@ class GearTestCase(TestCase):
             "condition": "FLAGGED"
         }
         request = {
-            "id": 2,
+            "id": self.gearObj2.id,
             "expectedVersion": 1,
             "patch": patch
         }
@@ -107,31 +121,29 @@ class GearTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
         # Check if model history kept properly
-        response = self.client.get("/api/gear/history/?id=2", content_type="application/json").data
-        expectedResponse = {
-            "data": [{
-                "id": 2,
-                "code": "SB02",
-                "category": "Sleeping Bag",
-                "depositFee": "100.00",
-                "description": "This backpack was actually a sleeping bag all along!",
-                "condition": "FLAGGED",
-                "statusDescription": "",
-                "version": 2
-                }, {
-                "id": 2,
-                "code": "BP01",
-                "category": "Backpack",
-                "depositFee": "50.00",
-                "description": "A black Dakine backpack",
-                "condition": "RENTABLE",
-                "statusDescription": "",
-                "version": 1
-                },
-            ]
-        }
+        query = "/api/gear/history/?id=" + str(self.gearObj2.id)
+        response = self.client.get(query, content_type="application/json").data
+        expected = {
+            "data": [
+                {"id": self.gearObj2.id,
+                 "code": "SB02",
+                 "category": "Sleeping Bag",
+                 "depositFee": "100.00",
+                 "description": "This backpack was actually a sleeping bag all along!",
+                 "condition": "FLAGGED",
+                 "statusDescription": "",
+                 "version": 2},
+                {"id": self.gearObj2.id,
+                 "code": "SB01",
+                 "category": "Sleeping Bag",
+                 "depositFee": "50.00",
+                 "description": "A old red sleeping bag",
+                 "condition": "RENTABLE",
+                 "statusDescription": "",
+                 "version": 1}
+            ]}
 
-        self.assertEqual(response, expectedResponse)
+        self.assertEqual(response, expected)
 
         # Test illegal condition values
         patch = {
@@ -166,9 +178,8 @@ class GearTestCase(TestCase):
         response = self.client.patch("/api/gear", request, content_type='application/json')
         self.assertEqual(response.status_code, 400)
 
-
     def test_post(self):
-        gearList = self.client.get("/api/gear/", content_type='application/json').data["data"] # returned as {data: [...]}
+        gearList = self.client.get("/api/gear/", content_type='application/json').data["data"]
         gearListOriginalLen = len(gearList)
 
         request = {
@@ -179,8 +190,8 @@ class GearTestCase(TestCase):
             "condition": "RENTABLE",
         }
 
-        expectedResponse = {
-            "id": gearListOriginalLen + 2,
+        expected = {
+            "id": Gear.objects.latest('id').id + 1,
             "code": request["code"],
             "category": request["category"],
             "depositFee": request["depositFee"],
@@ -192,12 +203,11 @@ class GearTestCase(TestCase):
 
         # Test POST (create new gear)
         response = self.client.post("/api/gear/", request, content_type='application/json').data
-        self.assertEqual(response, expectedResponse)
+        self.assertEqual(response, expected)
 
         # Test GET (created and added list)
-        response = self.client.get("/api/gear/", content_type='application/json').data["data"] # returned as {data: [...]}
-        #self.assertEqual(response.status_code, 200) # shouldn't fail
-        self.assertEqual(len(response), gearListOriginalLen + 1) # len of GET should +1 original len
+        response = self.client.get("/api/gear/", content_type='application/json').data["data"]
+        self.assertEqual(len(response), gearListOriginalLen + 1)
 
     # POST will fail when sending bad key like "descrip7tion"
     def test_post_invalidKey(self):
@@ -234,20 +244,32 @@ class GearTestCase(TestCase):
         self.assertTrue("category: This field is required." in response)
 
     def test_patch(self):
+        request = {}
+        response = self.client.patch("/api/gear/", request, content_type='application/json').data["message"]
+        self.assertEqual(response, "You must specify an 'id' to patch.")
+
+        request["id"] = self.gearObj2.id
+        response = self.client.patch("/api/gear/", request, content_type='application/json').data["message"]
+        self.assertEqual(response, "You must specify an 'expectedVersion'.")
+
+        request["expectedVersion"] = 1
+        response = self.client.patch("/api/gear/", request, content_type='application/json').data["message"]
+        self.assertEqual(response, "You must specify a 'patch' object with attributes to patch.")
+
         patch = {
             "code": "SB02",
             "category": "Sleeping Bag",
-            "depositFee": "100.00",
+            "depositFee": "1000.00",
             "description": "This backpack was actually a sleeping bag all along!",
             "condition": "FLAGGED"
         }
-        request = {
-            "id": 2,
-            "expectedVersion": 1,
-            "patch": patch
-        }
+        request['patch'] = patch
 
-        expectedResponse = {
+        response = self.client.patch("/api/gear/", request, content_type='application/json')
+        self.assertEqual(response.status_code, 400)
+
+        request['patch']['depositFee'] = "100.00"
+        expected = {
             "id": request["id"],
             "code": patch["code"],
             "category": patch["category"],
@@ -260,7 +282,7 @@ class GearTestCase(TestCase):
 
         # check response data
         response = self.client.patch("/api/gear", request, content_type='application/json').data
-        self.assertEqual(response, expectedResponse)
+        self.assertEqual(response, expected)
 
         # check database
         g = Gear.objects.get(id=request["id"])
@@ -277,7 +299,7 @@ class GearTestCase(TestCase):
         response = self.client.get("/api/gear/", content_type='application/json').data["data"]
 
         correctResponse = [{
-                "id": 2,
+                "id": self.gearObj1.id,
                 "code": "BP01",
                 "category": "Backpack",
                 "depositFee": "50.00",
@@ -286,7 +308,7 @@ class GearTestCase(TestCase):
                 "statusDescription": "",
                 "version": 1
             }, {
-                "id": 3,
+                "id": self.gearObj2.id,
                 "code": "SB01",
                 "category": None,
                 "depositFee": "50.00",
