@@ -19,6 +19,7 @@ import AccountPage from "./accounts/AccountsPage";
 import StatisticsPage from "./statistics/StatisticsPage";
 import DisableSystemPage from "./reservation/DisableSystemPage";
 import HelpPage from "./help/HelpPage";
+import PageNotFound from "./help/PageNotFound";
 
 export default class App extends Reflux.Component {
     constructor(props) {
@@ -35,18 +36,19 @@ export default class App extends Reflux.Component {
             <BrowserRouter>
                 <Switch>
                     <Route exact path="/" component={withAuth(GearPage)} />
-                    <Route path="/gear" component={withAuth(GearPage)} />
-                    <Route path="/reservation" component={withAuth(ReservationPage)} />
-                    <Route path="/rent" component={withAuth(RentPage)} />
-                    <Route path="/login" component={LoginPage} />
-                    <Route path="/members" component={withAuth(MemberPage)} />
-                    <Route path="/accounts" component={withAuth(AccountPage)} />
-                    <Route path="/pay" component={PaymentPage} />
-                    <Route path="/variability" component={withAuth(VariabilityPage)} />
-                    <Route path="/statistics" component={withAuth(StatisticsPage)} />
-                    <Route path="/disable" component={withAuth(DisableSystemPage)} />
-                    <Route path="/help" component={withAuth(HelpPage)} />
-                    <Route path="/member-help" component={HelpPage} />
+                    <Route exact path="/gear" component={withAuth(GearPage)} />
+                    <Route exact path="/reservation" component={withAuth(ReservationPage)} />
+                    <Route exact path="/rent" component={withAuth(RentPage)} />
+                    <Route exact path="/login" component={LoginPage} />
+                    <Route exact path="/members" component={withAuth(MemberPage)} />
+                    <Route exact path="/accounts" component={withAuth(AccountPage)} />
+                    <Route exact path="/pay" component={PaymentPage} />
+                    <Route exact path="/variability" component={withAuth(VariabilityPage)} />
+                    <Route exact path="/statistics" component={withAuth(StatisticsPage)} />
+                    <Route exact path="/disable" component={withAuth(DisableSystemPage)} />
+                    <Route exact path="/help" component={withAuth(HelpPage)} />
+                    <Route exact path="/member-help" component={HelpPage} />
+                    <Route path="*" component={PageNotFound} />
                 </Switch>
             </BrowserRouter>
         );
