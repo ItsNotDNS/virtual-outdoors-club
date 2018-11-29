@@ -1,5 +1,5 @@
 import React from "react";
-import { Image } from "react-bootstrap";
+import { Image, Nav, NavItem } from "react-bootstrap";
 import constants from "../../constants/constants";
 
 function importAll(r) {
@@ -108,7 +108,7 @@ export default class HelpPage extends React.Component {
                 <div className="row">
                     <div className="col-md-6">
                         Clicking on a row of the table will open a modal that gives detailed information about the reservation. Reservation
-                        statuses go from <strong>requested</strong> to <strong>approved</strong> to <strong>paid</strong> to <strong>taken</strong>
+                        statuses go from <strong>requested</strong> to <strong>approved</strong> to <strong>paid</strong> to <strong>taken </strong>
                         to <strong>returned</strong>. A reservation can be cancelled as long as the status of the reservation is not already paid.
                         You will be able to edit the reservation as long as the status is not already taken.
                     </div>
@@ -197,7 +197,7 @@ export default class HelpPage extends React.Component {
                 <div className="row">
                     <div className="col-md-6">
                         This page allows you to disable the system and provides the option to cancel <strong>requested</strong>,
-                        <strong>approved</strong>, and <strong>paid</strong> reservations. <strong>Note:</strong> paid reservations
+                        <strong> approved</strong>, and <strong>paid</strong> reservations. <strong>Note:</strong> paid reservations
                         can only be cancelled if it can be refunded. Otherwise it will not be cancelled.
                     </div>
                     <div className="col-md-6">
@@ -300,11 +300,48 @@ export default class HelpPage extends React.Component {
         );
     };
 
+    static getNav() {
+        return (
+            <div>
+                <Nav bsStyle="pills" stacked className="nav-help">
+                    <NavItem eventKey={1} href={`#${constants.help.introduction}`}>
+                        Introduction
+                    </NavItem>
+                    <NavItem eventKey={2} href={`#${constants.help.gear}`}>
+                        Gear Page
+                    </NavItem>
+                    <NavItem eventKey={2} href={`#${constants.help.rent}`}>
+                        Rent Page
+                    </NavItem>
+                    <NavItem eventKey={2} href={`#${constants.help.reservation}`}>
+                        Reservation Page
+                    </NavItem>
+                    <NavItem eventKey={2} href={`#${constants.help.members}`}>
+                        Members Page
+                    </NavItem>
+                    <NavItem eventKey={2} href={`#${constants.help.disableSystem}`}>
+                        Disable System Page
+                    </NavItem>
+                    <NavItem eventKey={2} href={`#${constants.help.statistics}`}>
+                        Statistics Page
+                    </NavItem>
+                    <NavItem eventKey={2} href={`#${constants.help.systemVariables}`}>
+                        System Variables Page
+                    </NavItem>
+                    <NavItem eventKey={2} href={`#${constants.help.changePassword}`}>
+                        Change Password Page
+                    </NavItem>
+                </Nav>
+            </div>
+        );
+    }
+
     render() {
         return (
             <div className="help-page">
                 <div id={constants.help.introduction}
                     className="content-container col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-3">
+                    {HelpPage.getNav()}
                     <h1> Introduction </h1>
                     <p>
                         This is the University of Alberta Outdoors Club
