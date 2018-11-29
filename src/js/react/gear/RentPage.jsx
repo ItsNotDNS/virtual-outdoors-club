@@ -30,11 +30,11 @@ export default class RentPage extends Reflux.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevState.dateFilter !== this.state.dateFilter &&
-            this.state.dateFilter.startDate !== null &&
-            this.state.dateFilter.endDate != null) {
-            GearActions.fetchRentableListFromTo(this.state.dateFilter.startDate,
-                this.state.dateFilter.endDate);
+        if (prevState.reserveGearForm !== this.state.reserveGearForm &&
+            this.state.reserveGearForm.startDate !== null &&
+            this.state.reserveGearForm.endDate != null) {
+            GearActions.fetchRentableListFromTo(this.state.reserveGearForm.startDate,
+                this.state.reserveGearForm.endDate);
         }
     }
 
@@ -58,7 +58,7 @@ export default class RentPage extends Reflux.Component {
         GearActions.dateFilterChanged("endDate", date);
     }
 
-    getShoppingCart() {
+    getShoppingCart(inForm) {
         if (this.state.shoppingList.length > 0) {
             return (
                 <ShoppingCartTable
@@ -67,10 +67,19 @@ export default class RentPage extends Reflux.Component {
                 />
             );
         } else {
+            if (inForm) {
+                return (
+                    <div>Empty Shopping Cart</div>
+                );
+            }
             return (
                 <h3>Empty Shopping Cart</h3>
             );
         }
+    }
+
+    getCheckoutDisabled({ email, licenseName, licenseAddress, startDate, endDate }, shoppingList) {
+        return !(email && licenseName && licenseAddress && startDate && endDate && shoppingList.length);
     }
 
     render() {
@@ -98,6 +107,7 @@ export default class RentPage extends Reflux.Component {
                     Checkout
                 </Button>
                 <ButtonModalForm
+                    disableSubmit={this.getCheckoutDisabled(this.state.reserveGearForm, this.state.shoppingList)}
                     formTitle="Reservation Form"
                     onSubmit={GearActions.submitReserveGearForm}
                     onClose={GearActions.closeReserveGearForm}
@@ -127,14 +137,11 @@ export default class RentPage extends Reflux.Component {
                         setStartDate={this.handleStartDateChange}
                         setEndDate={this.handleEndDateChange}
                         horizontal={false}
-                        startDate={this.state.dateFilter.startDate}
-                        endDate={this.state.dateFilter.endDate}
+                        startDate={this.state.reserveGearForm.startDate}
+                        endDate={this.state.reserveGearForm.endDate}
                     />
                     <ControlLabel>Shopping Cart</ControlLabel>
-                    <ShoppingCartTable
-                        removeFromCart={GearActions.removeFromShoppingCart}
-                        shoppingList={this.state.shoppingList}
-                    />
+                    {this.getShoppingCart(true)}
                 </ButtonModalForm>
                 <Tabs defaultActiveKey={1} id="rent-view-tabs">
                     <Tab eventKey={1} title="Gear">
@@ -142,6 +149,8 @@ export default class RentPage extends Reflux.Component {
                             setStartDate={this.handleFilterStartDateChange}
                             setEndDate={this.handleFilterEndDateChange}
                             horizontal
+                            startDate={this.state.reserveGearForm.startDate}
+                            endDate={this.state.reserveGearForm.endDate}
                         />
                         <RentGearTable
                             gearList={this.state.rentableList}
@@ -149,7 +158,7 @@ export default class RentPage extends Reflux.Component {
                         />
                     </Tab>
                     <Tab eventKey={2} title={`Shopping Cart (${this.state.shoppingList.length})`} >
-                        {this.getShoppingCart()}
+                        {this.getShoppingCart(false)}
                     </Tab>
                 </Tabs>
             </div>

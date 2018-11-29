@@ -30,6 +30,7 @@ export default class ButtonModalForm extends React.Component {
                         {this.props.closeButtonText || "Close"}
                     </Button>
                     <Button
+                        disabled={this.props.disableSubmit}
                         bsStyle="primary"
                         onClick={this.props.onSubmit}
                     >
@@ -50,5 +51,6 @@ ButtonModalForm.propTypes = {
     error: PropTypes.bool,
     errorMessage: PropTypes.string,
     submitButtonText: PropTypes.string,
-    closeButtonText: PropTypes.string
+    closeButtonText: PropTypes.string,
+    disableSubmit: PropTypes.bool
 };

@@ -102,10 +102,6 @@ function defaultState() {
             NEEDS_REPAIR: true,
             DELETED: false
         },
-        dateFilter: {
-            startDate: null,
-            endDate: null
-        },
         rentableList: [],
         conditionSelected: "",
         fetchedRentableGearList: false,
@@ -714,9 +710,6 @@ export class GearStore extends Reflux.Store {
 
     onDateFilterChanged(field, date) {
         const newState = update(this.state, {
-            dateFilter: {
-                [field]: { $set: new Date(date) }
-            },
             reserveGearForm: {
                 [field]: { $set: new Date(date) }
             }

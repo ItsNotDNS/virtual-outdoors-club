@@ -119,12 +119,29 @@ describe("RentPage Tests", () => {
         actionsStub.fetchRentableListFromTo = sandbox.spy();
         page.instance().componentDidUpdate(mockPrevProps, mockPrevState);
         expect(actionsStub.fetchRentableListFromTo.calledOnce).to.be.false;
-        page.instance().state.dateFilter.startDate = "2013-03-01";
+        page.instance().state.reserveGearForm.startDate = "2013-03-01";
         page.instance().componentDidUpdate(mockPrevProps, mockPrevState);
         expect(actionsStub.fetchRentableListFromTo.calledOnce).to.be.false;
-        page.instance().state.dateFilter.endDate = "2013-03-03";
+        page.instance().state.reserveGearForm.endDate = "2013-03-03";
         page.instance().componentDidUpdate(mockPrevProps, mockPrevState);
         expect(actionsStub.fetchRentableListFromTo.calledOnce).to.be.true;
     });
 
+    it("disable checkout button success", () => {
+        const page = shallow(<RentPage />),
+            state = page.instance().state.reserveGearForm;
+        expect(page.instance().getCheckoutDisabled(state, page.instance().state.shoppingList)).to.be.true;
+        state.email = "some email";
+        expect(page.instance().getCheckoutDisabled(state, page.instance().state.shoppingList)).to.be.true;
+        state.licenseName = "some name";
+        expect(page.instance().getCheckoutDisabled(state, page.instance().state.shoppingList)).to.be.true;
+        state.licenseAddress = "some address";
+        expect(page.instance().getCheckoutDisabled(state, page.instance().state.shoppingList)).to.be.true;
+        state.startDate = new Date();
+        expect(page.instance().getCheckoutDisabled(state, page.instance().state.shoppingList)).to.be.true;
+        state.endDate = new Date();
+        expect(page.instance().getCheckoutDisabled(state, page.instance().state.shoppingList)).to.be.true;
+        page.instance().state.shoppingList = data;
+        expect(page.instance().getCheckoutDisabled(state, page.instance().state.shoppingList)).to.be.false;
+    });
 });
