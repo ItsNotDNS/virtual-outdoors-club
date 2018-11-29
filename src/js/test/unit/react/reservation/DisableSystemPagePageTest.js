@@ -36,14 +36,12 @@ describe("DisableSystemPage Tests", () => {
     it("getButton return button that says says Enable Rental system when disableRent is true", () => {
         const page = shallow(<DisableSystemPage />);
         page.instance().state.disableSystem.disableRent = true;
-        console.log(page.instance().getButton());
         expect(page.instance().getButton().props.children).to.equal("Enable Rental System");
     });
 
     it("getButton return button that says says Disable Rental system when disableRent is false", () => {
         const page = shallow(<DisableSystemPage />);
         page.instance().state.disableSystem.disableRent = false;
-        console.log(page.instance().getButton());
         expect(page.instance().getButton().props.children).to.equal("Disable Rental System");
     });
 });

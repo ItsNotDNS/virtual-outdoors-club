@@ -157,13 +157,11 @@ describe("GearStore Tests", () => {
 
     it("onFetchRentableGearList - success path", () => {
         const promise = Promise.resolve({ data: { data: mockGearList } });
-        console.log(mockGearList);
         expect(gearStore.state.fetchedRentableGearList).to.be.false;
 
         getStub.returns(promise); // set stub to return mock data
 
         return gearStore.onFetchRentableGearList().then(() => {
-            console.log(gearStore.state.rentableList);
             expect(gearStore.state.fetchedRentableGearList).to.be.true;
             expect(gearStore.state.rentableList.includes(mockGearList[0])).to.be.true;
             expect(gearStore.state.rentableList.includes(mockGearList[1])).to.be.false;

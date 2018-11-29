@@ -5,6 +5,32 @@
     margin-top: 1%;
 }
 
+.help-page {
+    text-align: left;
+
+    .content-container {
+        @media only screen and (max-width: 768px) {
+            width:100%;
+        }
+        display:inline-block;
+        width:60%
+    }
+
+    p {
+        @media only screen and (max-width: 768px) {
+            width:100%;
+            font-size:14px;
+        }
+        margin-top: 2%;
+        margin-bottom: 2%;
+        display:inline-block;
+        text-align:left;
+        width:80%;
+        font-size:17px;
+    }
+}
+
+
 .file-button {
     input {
         width: 69%;
@@ -447,4 +473,8 @@
         color: white;
         background-color: #ffc100;
     }
+}
+
+hr {
+    border-top: 1px solid black;
 }

@@ -46,8 +46,11 @@ export default class NavbarAdmin extends React.Component {
                         </NavDropdown>
                     </Nav>
                     <Nav pullRight>
+                        <LinkContainer to="/help">
+                            <NavItem eventKey={6}> Help </NavItem>
+                        </LinkContainer>
                         <LinkContainer to="/login">
-                            <NavItem eventKey={6}> Logout </NavItem>
+                            <NavItem eventKey={7}> Logout </NavItem>
                         </LinkContainer>
                     </Nav>
                 </Navbar.Collapse>

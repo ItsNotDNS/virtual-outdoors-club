@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
 import LabeledInput from "../../components/LabeledInput";
 import { ListGroup, ListGroupItem } from "react-bootstrap";
 import { ReservationActions, ReservationStore } from "../ReservationStore";
-import payPalLogo from "../../../images/PayPal_logo_logotype_emblem.png";
+import payPalLogo from "../../../../images/PayPal_logo_logotype_emblem.png";
 
 // This needs to be a Reflux component and not a redux component
 // Because it needs to monitor the store for changes

@@ -17,6 +17,7 @@ import VariabilityPage from "./variability/EditVariabilityPage";
 import AccountPage from "./accounts/AccountsPage";
 import StatisticsPage from "./statistics/StatisticsPage";
 import DisableSystemPage from "./reservation/DisableSystemPage";
+import HelpPage from "./help/HelpPage";
 
 export default class App extends React.Component {
     constructor(props) {
@@ -59,6 +60,7 @@ export default class App extends React.Component {
                     <Route path="/variability" component={this.AdminWrapper(VariabilityPage)} />
                     <Route path="/statistics" component={this.AdminWrapper(StatisticsPage)} />
                     <Route path="/disable" component={this.AdminWrapper(DisableSystemPage)} />
+                    <Route path="/help" component={this.AdminWrapper(HelpPage)} />
                 </div>
             </BrowserRouter>
         );

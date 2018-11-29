@@ -50,6 +50,17 @@ const constants = {
         FLAGGED: "FLAGGED",
         NEEDS_REPAIR: "NEEDS_REPAIR",
         DELETED: "DELETED"
+    },
+    help: {
+        introduction: "introduction",
+        gear: "gear-page",
+        rent: "rent-page",
+        reservation: "reservation-page",
+        members: "members-page",
+        disableSystem: "disable-system-page",
+        statistics: "statistics-page",
+        systemVariables: "system-variables-page",
+        changePassword: "change-password-page"
     }
 };
 
