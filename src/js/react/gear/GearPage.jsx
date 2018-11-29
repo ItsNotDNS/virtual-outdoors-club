@@ -198,7 +198,7 @@ export default class GearPage extends Reflux.Component {
                     <div className="col-md-2 col-xs-4">
                         <button className="btn btn-success full-width"
                             onClick={GearActions.uploadGearFile}
-                            disabled={gear.length === 0 || warnings.length !== 0}
+                            disabled={gear.length === 0}
                         >
                                 Upload
                         </button>
