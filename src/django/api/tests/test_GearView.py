@@ -311,7 +311,7 @@ class GearTestCase(TestCase):
         self.client.login(username="admin1", password="pass")
 
         response = self.client.delete("/api/gear?id=" + str(self.gearObj2.pk), content_type="application/json").data
-        self.assertEqual(response, {"message": "Successfully deleted gear: 'SB01'"})
+        self.assertEqual(response, {"message": "Successfully set gear: 'SB01' to deleted"})
         
         response = self.client.get("/api/gear/", content_type='application/json').data["data"]
 
@@ -338,7 +338,7 @@ class GearTestCase(TestCase):
         self.assertEqual(response, correctResponse)
 
 
-        # Test that deleted gear does not show on get gear
+        # Test that "deleted" gear does not show on get gear
         startDate = self.today.strftime("%Y-%m-%d")
         endDate = (self.today + datetime.timedelta(days=8)).strftime("%Y-%m-%d")
         url = "/api/gear?from=" + startDate + "&to=" + endDate
@@ -358,6 +358,14 @@ class GearTestCase(TestCase):
         }
         self.assertEqual(response, expected)
 
+        response = self.client.get("/api/gear/", content_type="application/json").data
+        self.assertEqual(len(response["data"]), 2)
+
+        response = self.client.delete("/api/gear?id=" + str(self.gearObj2.pk), content_type="application/json").data
+        self.assertEqual(response, {"message": "Successfully deleted gear: 'SB01'"})
+        
+        response = self.client.get("/api/gear/", content_type='application/json').data
+        self.assertEqual(len(response["data"]), 1)
 
 
     def test_delete_missingId(self):

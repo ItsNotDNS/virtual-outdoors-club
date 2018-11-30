@@ -146,10 +146,15 @@ class GearView(APIView):
                                   " Check the gear in before trying to delete.")
 
         delGearCode = delGear.code
+
+        if delGear.condition == "DELETED":
+            delGear.delete()
+            return RespError(200, "Successfully deleted gear: " + "'" + delGearCode + "'")
+
         delGear.condition = "DELETED"
         delGear.save()
 
-        return RespError(200, "Successfully deleted gear: " + "'" + delGearCode + "'")
+        return RespError(200, "Successfully set gear: " + "'" + delGearCode + "' to deleted")
 
 
 @api_view(['GET'])

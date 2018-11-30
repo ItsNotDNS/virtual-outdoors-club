@@ -39,7 +39,7 @@ class UserVariabilityTestCase(TestCase):
                 self.maxLength: 21,
             },
             "hello": {
-                "world": 23
+                self.maxLength: 21,
             },
             "member": {
                 "world": 14,
