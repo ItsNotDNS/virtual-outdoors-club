@@ -27,9 +27,6 @@ class ReservationView(APIView):
 
     # Gets list of all reservations or specific reservations, depending on parameters
     def get(self, request):
-        if not request.user.is_authenticated or not request.user.has_perm("api.view_reservation"):
-            return RespError(400, "You don't have permission to visit this page!")
- 
         # Look for the following parameters in GET request
         ID = request.query_params.get("id", None)
         email = request.query_params.get("email", None)
@@ -37,7 +34,30 @@ class ReservationView(APIView):
         endDate = request.query_params.get("to", None)
         gearId = request.query_params.get("gearId", None)
 
-        res = Reservation.objects.all()
+        if ID is not None:
+            try:
+                int(ID)
+            except ValueError:
+                return RespError(400, "id must be an integer.")
+
+        # Find a single reservation with a specific ID, associated with by a specific email
+        if ID and email:
+            try:
+                res = Reservation.objects.get(id=ID, email=email)
+            except Reservation.DoesNotExist:
+                return RespError(404, "No reservation with this ID and email combination were found.")
+            serial = ReservationGETSerializer(res)
+            return Response({"data": [serial.data]})
+
+        # do auth check after public API
+        if not request.user.is_authenticated or not request.user.has_perm("api.view_reservation"):
+            return RespError(400, "You don't have permission to visit this page!")
+
+        if gearId is not None:
+            try:
+                int(gearId)
+            except ValueError:
+                return RespError(400, "gearId must be an integer.")
 
         # Error check the dates to be in YYYY-MM-DD
         if startDate is not None:
@@ -53,29 +73,13 @@ class ReservationView(APIView):
             except ValueError:
                 return RespError(400, "endDate is in an invalid date format. Make sure it's in the YYYY-MM-DD format.")
 
-        if ID is not None:
-            try:
-                int(ID)
-            except ValueError:
-                return RespError(400, "id must be an integer.")
-
-        if gearId is not None:
-            try:
-                int(gearId)
-            except ValueError:
-                return RespError(400, "gearId must be an integer.")
-
         dateFilter = Q(startDate__range=[startDate, endDate]) | Q(endDate__range=[startDate, endDate]) | \
-                     Q(startDate__lte=startDate, endDate__gte=endDate)
+             Q(startDate__lte=startDate, endDate__gte=endDate)
 
-        # Find a single reservation with a specific ID, associated with by a specific email
-        if ID and email:
-            res = res.filter(id=ID, email=email)
-            if not res:
-                return RespError(404, "No reservation with this ID and email combination were found.")
+        res = Reservation.objects.all()
 
         # Find all reservations in a specific date range if only the start and end dates are given
-        elif (startDate and endDate) and not (ID or email):
+        if (startDate and endDate) and not (ID or email):
             res = res.filter(dateFilter)
 
         # Find all reservations made by a certain email address in a certain date range
@@ -152,7 +156,7 @@ class ReservationView(APIView):
     def patch(self, request):
         if not request.user.is_authenticated or not request.user.has_perm("api.change_reservation"):
             return RespError(400, "You don't have permission to visit this page!")
- 
+
         orgRequest = request
         request = request.data
         allowedPatchMethods = {
@@ -221,7 +225,7 @@ class ReservationView(APIView):
 def getHistory(request):
     if not request.user.is_authenticated or not request.user.has_perm("api.view_reservation"):
         return RespError(400, "You don't have permission to visit this page!")
- 
+
     ID = request.query_params.get("id", None)
 
     try:
@@ -246,7 +250,7 @@ def getHistory(request):
 def checkout(request):
     if not request.user.is_authenticated or not request.user.has_perm("api.change_reservation"):
         return RespError(400, "You don't have permission to visit this page!")
- 
+
     request = request.data
 
     if "id" not in request:
@@ -308,7 +312,7 @@ def checkout(request):
 def checkin(request):
     if not request.user.is_authenticated or not request.user.has_perm("api.change_reservation"):
         return RespError(400, "You don't have permission to visit this page!")
- 
+
     request = request.data
 
     if "id" not in request and "charge" not in request:
@@ -380,7 +384,7 @@ def checkin(request):
 def cancel(request):
     if not request.user.is_authenticated or not request.user.has_perm("api.change_reservation"):
         return RespError(400, "You don't have permission to visit this page!")
- 
+
     request = request.data
 
     if "id" not in request:
@@ -406,7 +410,7 @@ def cancel(request):
 def approve(request):
     if not request.user.is_authenticated or not request.user.has_perm("api.change_reservation"):
         return RespError(400, "You don't have permission to visit this page!")
- 
+
     request = request.data
 
     if "id" not in request:
