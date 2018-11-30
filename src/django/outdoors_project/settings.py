@@ -13,6 +13,11 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 import os
 from datetime import timedelta
 import paypalrestsdk
+from json import load
+
+with open("outdoors_project/secrets.json") as f:
+    secrets = load(f)
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -105,8 +110,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'outdoors_club_db',
-        'USER': 'postgres',
-        'PASSWORD': 'admin',
+        'USER': secrets['postgres']['username'],
+        'PASSWORD': secrets['postgres']['password'],
         'HOST': 'localhost',
         'PORT': '',
     }
@@ -156,8 +161,8 @@ STATIC_URL = '/static/'
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = "uofaoutdoorsclub@gmail.com"
-EMAIL_HOST_PASSWORD = "universityofalbertaoutdoorsclub"
+EMAIL_HOST_USER = secrets['email']['address']
+EMAIL_HOST_PASSWORD = secrets['email']['password']
 
 # TODO Change for release version
 PAYPAL_TEST = True
@@ -165,5 +170,5 @@ PAYPAL_TEST = True
 # no email verification for authentication
 ACCOUNT_EMAIL_VERIFICATION = "none"
 paypalrestsdk.configure({"mode": "sandbox",
-                         "client_id": "AUrNrlkC6Fexo2s-3muc01YsBBap5tx550MNkh68S9fNtM6eST0aPmu7FXfTMeFre04XjecHq66NvX-x",
-                         "client_secret": "ENCaWYHIDZERVsjHnfith1fLyHyV6R_vZIpbMFit7bO7iiN95R1MVsPR5-8fidpMYUNRh1S2f8Ol7ghK"})
+                         "client_id": secrets['PayPal']['ID'],
+                         "client_secret": secrets['PayPal']['secret']})
