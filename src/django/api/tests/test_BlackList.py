@@ -9,10 +9,10 @@ class BlackListTestCase(TestCase):
     def setUp(self):
         BlackList.objects.create(email="jim@gmail.com")
         BlackList.objects.create(email="jam@gmail.com")
-        User.objects.create_superuser("admin", "admin@gmail.com", "pass")
+        User.objects.create_superuser("admin1", "admin@gmail.com", "pass")
 
     def test_get(self):
-        self.client.login(username="admin", password="pass")
+        self.client.login(username="admin1", password="pass")
 
         response = self.client.get("/api/members/blacklist/", content_type="application/json").data['data']
         # Test json response
@@ -20,7 +20,7 @@ class BlackListTestCase(TestCase):
         self.assertEqual(response, expectedResponse)
 
     def test_post(self):
-        self.client.login(username="admin", password="pass")
+        self.client.login(username="admin1", password="pass")
 
         request = {"email": "henry@gmail.com"}
 
@@ -56,7 +56,7 @@ class BlackListTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
 
     def test_delete(self):
-        self.client.login(username="admin", password="pass")
+        self.client.login(username="admin1", password="pass")
 
         response = self.client.delete("/api/members/blacklist?email=jim@gmail.com", content_type="application/json").data
         self.assertEqual(response, {"message": "Deleted the email: 'jim@gmail.com'"})
@@ -65,7 +65,7 @@ class BlackListTestCase(TestCase):
         self.assertEqual(response, [{'email': "jam@gmail.com"}])
 
     def test_delete_does_not_exist(self):
-        self.client.login(username="admin", password="pass")
+        self.client.login(username="admin1", password="pass")
 
         email = "someemailthatshouldneverexist"
         response = self.client.delete("/api/members/blacklist?email=" + email, content_type="application/json").data

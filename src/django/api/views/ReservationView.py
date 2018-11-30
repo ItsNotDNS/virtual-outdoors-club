@@ -1,6 +1,6 @@
 from .error import *
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view
 from ..models import Reservation, System, Gear
 from ..emailing import cancelled, approved
 from ..views.PayPalView import process
@@ -20,8 +20,9 @@ def reservationIdExists(id):
 
     return reservation
 
-@permission_classes((AllowAny, ))
+
 class ReservationView(APIView):
+    permission_classes = (AllowAny, )
 
     # Gets list of all reservations or specific reservations, depending on parameters
     def get(self, request):

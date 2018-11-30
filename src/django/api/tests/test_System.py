@@ -1,6 +1,5 @@
 from django.test import TestCase
 from ..models import Reservation, Gear, GearCategory, Member
-from rest_framework.test import APIRequestFactory
 import datetime
 from django.core import mail
 from django.contrib.auth.models import User
@@ -9,11 +8,8 @@ from django.contrib.auth.models import User
 class SystemTestCase(TestCase):
 
     # Executed before any tests are run to set up the database.
-    @classmethod
-    def setUpClass(self):
-        super().setUpClass()
-        User.objects.create_superuser("admin", "admin@gmail.com", "pass")
-        self.client = APIRequestFactory()
+    def setUp(self):
+        User.objects.create_superuser("admin1", "admin@gmail.com", "pass")
 
     def test_get(self):
 
@@ -22,7 +18,7 @@ class SystemTestCase(TestCase):
         self.assertEqual(response.status_code, 401)
 
         # After logging in, the get request can be succesfully made (see below in the "Succesful get request test")
-        self.client.login(username="admin", password="pass")
+        self.client.login(username="admin1", password="pass")
 
         # Note that initially, disableSys will be set to False - these are their initial values.
         # Observe how even when theis variable is not first set by the client,
@@ -47,7 +43,7 @@ class SystemTestCase(TestCase):
 
         # After logging in, the disableRentalSystem request can be succesfully made.
         # No tests below now throw the 401 error.
-        self.client.login(username="admin", password="pass")
+        self.client.login(username="admin1", password="pass")
 
         # 2 keys required for a request to disableRentalSystem: "disableSys" and "cancelRes" (both with boolean values)
         # 1 key required for a request to enable the RentalSystem: "disableSys" (bool)

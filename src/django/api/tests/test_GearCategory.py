@@ -14,20 +14,20 @@ class GearCategoryTestCase(TestCase):
     def setUp(self):
         self.bk = GearCategory.objects.create(name="Book")
         GearCategory.objects.create(name="Water Bottle")
-        User.objects.create_superuser("admin", "admin@gmail.com", "pass")
+        User.objects.create_superuser("admin1", "admin@gmail.com", "pass")
 
         self.gr1 = Gear.objects.create(code="BK01", category=self.bk, depositFee=22.00,
                                        description="The Necronomicon", condition="RENTABLE", version=1)
 
     def test_get(self):
-        self.client.login(username="admin", password="pass")
+        self.client.login(username="admin1", password="pass")
         
         expected = [{"name": "Book"}, {'name': "Water Bottle"}]
         response = self.client.get("/api/gear/categories/", content_type="application/json").data['data']
         self.assertEqual(response, expected)
 
     def test_post(self):
-        self.client.login(username="admin", password="pass")
+        self.client.login(username="admin1", password="pass")
 
         request = {"hello": "world"}
         response = self.client.post("/api/gear/categories/", request, content_type='application/json').data['message']
@@ -51,7 +51,7 @@ class GearCategoryTestCase(TestCase):
         self.assertEqual(response, expected)
 
     def test_patch(self):
-        self.client.login(username="admin", password="pass")
+        self.client.login(username="admin1", password="pass")
 
         request = {}
         response = self.client.patch("/api/gear/categories/", request, content_type='application/json').data['message']
@@ -83,7 +83,7 @@ class GearCategoryTestCase(TestCase):
         self.assertEqual(response, {"name": "Map"})
 
     def test_delete(self):
-        self.client.login(username="admin", password="pass")
+        self.client.login(username="admin1", password="pass")
         response = self.client.delete("/api/gear/categories?name=Book", content_type="application/json")
         self.assertEqual(response.status_code, 409) # Cannot delete, still used for item category somewhere
 
@@ -98,7 +98,7 @@ class GearCategoryTestCase(TestCase):
         self.assertEqual(response, [{'name': "Water Bottle"}])
 
     def test_delete_does_not_exist(self):
-        self.client.login(username="admin", password="pass")
+        self.client.login(username="admin1", password="pass")
         name = "somecategorythatshouldneverexist"
         response = self.client.delete("/api/gear/categories?name=" + name, content_type="application/json").data
         self.assertEqual(response, {"message": "The gear category '" + name + "' does not exist so it cannot be deleted."})

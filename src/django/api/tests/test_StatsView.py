@@ -1,7 +1,6 @@
 from django.test import TestCase
 from ..models import GearCategory, Gear, GearStat
 from django.contrib.auth.models import User
-from decimal import Decimal
 import datetime
 
 
@@ -29,10 +28,10 @@ class StatsViewTestCase(TestCase):
         gs8 = GearStat(counter=6, gearID=self.gr3, usage=0)
         GearStat.objects.bulk_create([gs1, gs2, gs3, gs4, gs5, gs6, gs7, gs8])
 
-        User.objects.create_superuser("admin", "admin@gmail.com", "pass")
+        User.objects.create_superuser("admin1", "admin@gmail.com", "pass")
 
     def test_invalid_requests(self):
-        self.client.login(username="admin", password="pass")
+        self.client.login(username="admin1", password="pass")
 
         response = self.client.get('/api/statistics?from=2018-hello').data['message']
         self.assertEqual(response, "The start date is in an invalid format. Make sure it's in the YYYY-MM-DD format.")
@@ -52,7 +51,7 @@ class StatsViewTestCase(TestCase):
         self.assertEqual(response, "The end date cannot be before the start date.")
 
     def test_get_dates(self):
-        self.client.login(username="admin", password="pass")
+        self.client.login(username="admin1", password="pass")
 
         correct_response = {
             'gear': {

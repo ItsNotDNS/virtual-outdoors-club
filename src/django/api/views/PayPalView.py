@@ -1,14 +1,14 @@
-import paypalrestsdk
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from .error import RespError, Response
 from ..models import Reservation
 from decimal import Decimal
-import time
 import datetime
+import paypalrestsdk
 
 
 @csrf_exempt
@@ -19,12 +19,12 @@ def returnView(request):
     payerId = request.query_params.get("PayerID", None)
 
     if not paymentId and not payerId:
-        return render(request, 'cancel.html')
+        return render(request, 'cancel.html', {'URL': settings.SITE_URL})
 
     try:
         res = Reservation.objects.get(payment=paymentId)
     except Reservation.DoesNotExist:
-        return render(request, 'cancel.html')
+        return render(request, 'cancel.html', {'URL': settings.SITE_URL})
 
     deposit = paypalrestsdk.Payment.find(paymentId)
 
@@ -33,18 +33,18 @@ def returnView(request):
         res.status = "PAID"
     else:
         res.payment = ""
-        return Response(deposit.error)
+        return RespError(400, {"message": deposit.error})
 
     res.save()
 
-    return render(request, 'done.html')
+    return render(request, 'done.html', {'URL': settings.SITE_URL, "id": res.id})
 
 
 @csrf_exempt
 @permission_classes((AllowAny, ))
 def cancelView(request):
 
-    return render(request, 'cancel.html')
+    return render(request, 'cancel.html', {'URL': settings.SITE_URL})
 
 
 @api_view(['POST'])

@@ -1,20 +1,16 @@
 from django.test import TestCase
-from rest_framework.test import APIRequestFactory
-from decimal import Decimal
 from ..models import Member
 from django.contrib.auth.models import User
+
 
 class MemberTestCase(TestCase):
 
     # Executed before any tests are run to set up the database.
-    @classmethod
-    def setUpClass(self):
-        super().setUpClass()
-        self.client = APIRequestFactory()
-        User.objects.create_superuser("admin", "admin@gmail.com", "pass")
+    def setUp(self):
+        User.objects.create_superuser("admin1", "admin@gmail.com", "pass")
 
     def test_updateMemberList(self):
-        self.client.login(username="admin", password="pass")
+        self.client.login(username="admin1", password="pass")
 
         request = {
             "members": [
@@ -24,7 +20,6 @@ class MemberTestCase(TestCase):
         }
         response = self.client.post("/api/members/", request, content_type="application/json")
         self.assertEqual(response.status_code, 200)
-        response = response.data
         
         members = Member.objects.all()
         self.assertEqual(len(members), 2)
@@ -62,7 +57,6 @@ class MemberTestCase(TestCase):
         response = self.client.post("/api/members/", request, content_type="application/json")
         self.assertEqual(response.status_code, 400)
 
-
         # Test for too short email
         request = {
             "members": [
@@ -72,9 +66,8 @@ class MemberTestCase(TestCase):
         response = self.client.post("/api/members/", request, content_type="application/json")
         self.assertEqual(response.status_code, 400)
 
-
     def test_getMemberList(self):
-        self.client.login(username="admin", password="pass")
+        self.client.login(username="admin1", password="pass")
         # also tests lowercase
         request = {
             "members": [

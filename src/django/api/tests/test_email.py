@@ -4,6 +4,7 @@ from ..emailing import cancelled, approved
 from ..models import Reservation
 from django.contrib.auth.models import User
 
+
 class EmailTest(TestCase):
 
     def setUp(self):
@@ -15,10 +16,10 @@ class EmailTest(TestCase):
                                               licenseAddress="Address on their license.", approvedBy="nobody",
                                               startDate="2018-10-25", endDate="2018-10-28")
     
-        User.objects.create_superuser("admin", "admin@gmail.com", "pass")
+        User.objects.create_superuser("admin1", "admin@gmail.com", "pass")
 
     def test_cancelled(self):
-        self.client.login(username="admin", password="pass")
+        self.client.login(username="admin1", password="pass")
 
         # Send messages.
         cancelled([self.gr1, self.gr2])
@@ -34,7 +35,7 @@ class EmailTest(TestCase):
         self.assertEqual(mail.outbox[1].to, ['ceegan@email.com'])
 
     def test_approved(self):
-        self.client.login(username="admin", password="pass")
+        self.client.login(username="admin1", password="pass")
 
         # Send message.
 

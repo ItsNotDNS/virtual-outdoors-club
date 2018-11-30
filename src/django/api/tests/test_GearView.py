@@ -19,7 +19,7 @@ class GearTestCase(TestCase):
                                             description="A old red sleeping bag", condition="RENTABLE", version=1)
         self.sbpk = sb.pk
         self.bppk = bp.pk
-        User.objects.create_superuser("admin", "admin@gmail.com", "pass")
+        User.objects.create_superuser("admin1", "admin@gmail.com", "pass")
 
     def test_get(self):
         response = self.client.get("/api/gear/", content_type="application/json").data
@@ -48,7 +48,7 @@ class GearTestCase(TestCase):
         self.assertEqual(response, expected)
 
     def test_get_reservation(self):
-        self.client.login(username="admin", password="pass")
+        self.client.login(username="admin1", password="pass")
 
         url = "/api/gear?from=hello&to=world"
         response = self.client.get(url, content_type="application/json")
@@ -84,7 +84,7 @@ class GearTestCase(TestCase):
         self.assertEqual(len(response), originalResponseLength)
 
     def test_gearHistory(self):
-        self.client.login(username="admin", password="pass")
+        self.client.login(username="admin1", password="pass")
         
         response = self.client.get("/api/gear/history/?id=").data['message']
         self.assertEqual(response, "Must give the ID to search for")
@@ -186,7 +186,7 @@ class GearTestCase(TestCase):
         self.assertEqual(response.status_code, 400)
 
     def test_post(self):
-        self.client.login(username="admin", password="pass")
+        self.client.login(username="admin1", password="pass")
 
         gearList = self.client.get("/api/gear/", content_type='application/json').data["data"]
         gearListOriginalLen = len(gearList)
@@ -220,7 +220,7 @@ class GearTestCase(TestCase):
 
     # POST will fail when sending bad key like "descrip7tion"
     def test_post_invalidKey(self):
-        self.client.login(username="admin", password="pass")
+        self.client.login(username="admin1", password="pass")
 
         request = {
             "code": "SB02",
@@ -235,7 +235,7 @@ class GearTestCase(TestCase):
         self.assertTrue("'descrip7tion' is" in response)
 
     def test_post_missingKeys(self):
-        self.client.login(username="admin", password="pass")
+        self.client.login(username="admin1", password="pass")
 
         request = {
             "code": "SB02",
@@ -257,7 +257,7 @@ class GearTestCase(TestCase):
         self.assertTrue("category: This field is required." in response)
 
     def test_patch(self):
-        self.client.login(username="admin", password="pass")
+        self.client.login(username="admin1", password="pass")
 
         request = {}
         response = self.client.patch("/api/gear/", request, content_type='application/json').data["message"]
@@ -308,7 +308,7 @@ class GearTestCase(TestCase):
         self.assertEqual(g.condition, patch["condition"])
 
     def test_delete(self):
-        self.client.login(username="admin", password="pass")
+        self.client.login(username="admin1", password="pass")
 
         response = self.client.delete("/api/gear?id=" + str(self.gearObj2.pk), content_type="application/json").data
         self.assertEqual(response, {"message": "Successfully deleted gear: 'SB01'"})
@@ -338,13 +338,13 @@ class GearTestCase(TestCase):
         self.assertEqual(response, correctResponse)
 
     def test_delete_missingId(self):
-        self.client.login(username="admin", password="pass")
+        self.client.login(username="admin1", password="pass")
 
         response = self.client.delete("/api/gear?code=SB02", content_type="application/json").data
         self.assertEqual(response, {"message": "Missing gear id in request"})
 
     def test_delete_DNEGear(self):
-        self.client.login(username="admin", password="pass")
+        self.client.login(username="admin1", password="pass")
 
         lastGear = Gear.objects.latest('id')
         response = self.client.delete("/api/gear?id=" + str(lastGear.id + 1), content_type="application/json").data
