@@ -18,11 +18,14 @@ class GearView(APIView):
         end = request.query_params.get("to", None)
 
         gear = Gear.objects.all()
-
         if start and end:
+            gear = gear.filter(condition__in=["RENTABLE"])
+
             try:
                 start = datetime.strptime(start, "%Y-%m-%d")
                 end = datetime.strptime(end, "%Y-%m-%d")
+                if start > end:
+                    return RespError(400, "Start date must be before end date")
             except ValueError:
                 return RespError(400, "Date must be in year-month-day format")
 

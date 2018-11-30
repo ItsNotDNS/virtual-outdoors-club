@@ -337,6 +337,29 @@ class GearTestCase(TestCase):
 
         self.assertEqual(response, correctResponse)
 
+
+        # Test that deleted gear does not show on get gear
+        startDate = self.today.strftime("%Y-%m-%d")
+        endDate = (self.today + datetime.timedelta(days=8)).strftime("%Y-%m-%d")
+        url = "/api/gear?from=" + startDate + "&to=" + endDate
+        response = self.client.get(url, content_type="application/json").data
+ 
+        expected = {
+            "data": [{
+                "id": self.gearObj1.id,
+                "code": "BP01",
+                "category": "Backpack",
+                "depositFee": "50.00",
+                "description": "A black Dakine backpack",
+                "condition": "RENTABLE",
+                "statusDescription": "",
+                "version": 1
+            }]
+        }
+        self.assertEqual(response, expected)
+
+
+
     def test_delete_missingId(self):
         self.client.login(username="admin1", password="pass")
 
