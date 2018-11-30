@@ -17,19 +17,15 @@ export default function withAuth(Component) {
         }
 
         render() {
-            if (this.props.location.pathname.includes("rent") && !this.state.isAuthenticated) {
-                return (
-                    <Component {...this.props} />
-                );
-            }
-            if (this.state.isAuthenticated) {
+            if (((this.props.location.pathname.includes("rent") || this.props.location.pathname.includes("help")) &&
+                !this.state.isAuthenticated) || this.state.isAuthenticated) {
                 return (
                     <div className="with-auth">
                         <NavbarAdmin />
                         <div className="nav-page-wrapper">
                             <Component {...this.props} />
                         </div>
-                    </div>
+                    </div >
                 );
             } else {
                 return (

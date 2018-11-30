@@ -49,7 +49,7 @@ describe("withAuth Higher Order Tests", () => {
         const AuthComponent = withAuth(RentPage),
             AuthPage = shallow(<AuthComponent {...rentProps} />);
         // the page should then render the protect gear page
-        expect(AuthPage.text()).to.equal("<RentPage />");
+        expect(AuthPage.text()).to.equal("<NavbarAdmin /><RentPage />");
     });
 
     it("does not update if isAuthenticated is not changed", () => {

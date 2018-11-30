@@ -35,12 +35,6 @@ export class LoginStore extends Reflux.Store {
         this.setState({ [field]: value });
     }
 
-    componentDidMount() {
-        if (!cookies.get("token") && cookies.get("refresh")) {
-            this.onRefreshToken();
-        }
-    }
-
     // authenticate user - not done in store due to lack of global use - assign permission in store
     onHandleSubmit() {
         const { name, password } = this.state,
@@ -58,7 +52,7 @@ export class LoginStore extends Reflux.Store {
                 } else {
                     // set cookies in the site - single page app so no need to globalize
                     cookies.set("token", access, { maxAge: ACCESS_EXPIRE });
-                    cookies.set("refresh", refresh, { maxAge: REFRESH_EXPIRE });
+                    cookies.set("refresh", { refresh: refresh, logged: this.state.name }, { maxAge: REFRESH_EXPIRE });
                     setAxiosWithAuth();
                     newstate = update(this.state, {
                         error: { $set: false },
@@ -81,7 +75,7 @@ export class LoginStore extends Reflux.Store {
     // when the access token expires, use the refresh token given to get a new token (every 5 minutes)
     onRefreshToken() {
         const service = new LoginService(),
-            token = cookies.get("refresh");
+            token = cookies.get("refresh").refresh;
         // failure to get refresh token - expired or never had
         return service.refreshToken(token)
             .then(({ access, error }) => {
@@ -121,7 +115,6 @@ function removeCookies() {
 function defaultState() {
     if (cookies.get("refresh") && cookies.get("token")) {
         setAxiosWithAuth();
-        cancelTimeout = setTimeout(LoginActions.refreshToken, REFRESH_ACCESS);
         return {
             error: false,
             errorMessage: "",

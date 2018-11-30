@@ -98,7 +98,6 @@ describe("ReservationStore Test", () => {
         };
 
         axiosGetStub.returns(Promise.resolve(response));
-        axiosGetStub.returns(Promise.resolve(response));
         return store.onLoadAvailableGear().then(() => {
             expect(store.state.reservationModal.gearSelect.isLoading).to.be.false;
             expect(store.state.reservationModal.gearSelect.options).to.have.length(1);
@@ -125,7 +124,6 @@ describe("ReservationStore Test", () => {
             edit: {}
         };
 
-        axiosGetStub.returns(Promise.reject(error));
         axiosGetStub.returns(Promise.reject(error));
         return store.onLoadAvailableGear().then(() => {
             expect(store.state.reservationModal.gearSelect.isLoading).to.be.false;

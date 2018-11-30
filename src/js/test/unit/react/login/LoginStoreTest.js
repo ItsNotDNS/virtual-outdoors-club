@@ -65,25 +65,17 @@ describe("LoginStore tests", () => {
     it("should clear cookies and reset state on logout", () => {
         store.onHandleLogout();
         // confirm the state has been changed
-        expect(store.state).to.deep.equal({
-            error: false,
-            errorMessage: "",
-            name: "",
-            password: "",
-            isAuthenticated: false,
-        });
+        expect(store.state.isAuthenticated).to.be.false;
         expect(cookies.get("token")).to.not.exist;
         expect(cookies.get("refresh")).to.not.exist;
     });
 
     it("onRefreshToken - error path", () => {
-        const mockData = { data: { access: "accessToken", refresh: "refreshToken" } },
-            mockCookie = { access: "accessMock", refresh: "refreshMock" },
-            error = { response: { data: { message: "this is an error message" } } };
+        const error = { response: { data: { message: "this is an error message" } } };
 
         postStub.returns(Promise.reject(error));
 
-        cookies.set("refresh", "refreshToken");
+        cookies.set("refresh", { refresh: "refreshToken", logged: "someone" });
 
         return store.onRefreshToken().then(() => {
             expect(store.state.errorMessage).to.equal(error.response.data.message);
@@ -93,7 +85,7 @@ describe("LoginStore tests", () => {
 
     it("onRefreshToken - success path", () => {
         const data = Promise.resolve({ data: { access: "newAccess" } });
-        cookies.set("refresh", "refreshToken");
+        cookies.set("refresh", { refresh: "refreshToken", logged: "someone" });
 
         postStub.returns(data);
         return store.onRefreshToken().then(() => {
@@ -109,7 +101,7 @@ describe("LoginStore tests", () => {
 
         postStub.returns(Promise.reject(error));
 
-        cookies.set("refresh", "refreshToken");
+        cookies.set("refresh", { refresh: "refreshToken", logged: "someone" });
         cookies.set("token", "accessToken");
 
         return store.onRefreshToken().then(() => {
@@ -118,21 +110,8 @@ describe("LoginStore tests", () => {
         });
     });
 
-    it("properly calls componentDidMount when there is a cookie", () => {
-        const refreshStub = sandbox.stub(LoginStore.prototype, "onRefreshToken");
-        cookies.set("refresh", "whack");
-        store.componentDidMount();
-        expect(refreshStub.calledOnce).to.be.true;
-    });
-
-    it("properly calls componentDidMount when there is a cookie", () => {
-        const refreshStub = sandbox.stub(LoginStore.prototype, "onRefreshToken");
-        store.componentDidMount();
-        expect(refreshStub.calledOnce).to.be.false;
-    });
-
     it("should return a state that is uthenticated if cookies are there ", () => {
-        cookies.set("refresh", "refreshToken");
+        cookies.set("refresh", { refresh: "refreshToken", logged: "someone" });
         cookies.set("token", "accessToken");
 
         const expected = {
@@ -140,7 +119,7 @@ describe("LoginStore tests", () => {
                 errorMessage: "",
                 name: "",
                 password: "",
-                isAuthenticated: true
+                isAuthenticated: true,
             },
             defaultResult = new LoginStore;
 
