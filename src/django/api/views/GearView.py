@@ -2,15 +2,15 @@ from ..models import Gear, Reservation
 from django.core import exceptions
 from ..serializers import GearSerializer
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view
 from .error import *
 from datetime import datetime
 from django.db.models import Q
 from rest_framework.permissions import AllowAny
 
 
-@permission_classes((AllowAny, ))
 class GearView(APIView):
+    permission_classes = (AllowAny, )
 
     # gets a list of all gear in the database and returns it as a list of json objects
     def get(self, request):
@@ -132,18 +132,15 @@ class GearView(APIView):
         if not idToDelete:
             return RespError(400, "Missing gear id in request")
 
-        
-
         try:
             delGear = Gear.objects.get(id=idToDelete)
         except exceptions.ObjectDoesNotExist:
             return RespError(404, "The gear item trying to be removed does not exist")
 
-
         resos = Reservation.objects.filter(gear=delGear).filter(status="TAKEN")
         if len(resos) > 0:
-            return RespError(409, "The gear you are trying to delete is currently taken out. Check the gear in before trying to delete.")
-
+            return RespError(409, "The gear you are trying to delete is currently taken out."
+                                  " Check the gear in before trying to delete.")
 
         delGearCode = delGear.code
         delGear.condition = "DELETED"

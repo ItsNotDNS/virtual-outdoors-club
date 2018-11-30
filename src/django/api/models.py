@@ -48,7 +48,7 @@ class Gear(models.Model):
     category = models.ForeignKey(GearCategory, on_delete=models.PROTECT, null=True)
     depositFee = models.DecimalField(max_digits=5, decimal_places=2, validators=[MinValueValidator(0)])
     description = models.CharField(max_length=255, blank=True)
-    condition = models.CharField(max_length=20, choices=CONDITION_CHOICE, blank=True, default="RENTABLE")
+    condition = models.CharField(max_length=20, choices=CONDITION_CHOICE, default="RENTABLE")
     statusDescription = models.CharField(max_length=100, blank=True)
     version = models.IntegerField(default=1)
     history = HistoricalRecords()
@@ -82,24 +82,6 @@ class Reservation(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICE, default="REQUESTED")
     version = models.IntegerField(default=1)
     history = HistoricalRecords()
-
-
-# contains the permissions available that the Admin can delegate towards the executive accounts
-# each permission should be able to explain itself what the user will be able to do
-# permissions are set prior and are not manipulative
-class Permission(models.Model):
-
-    PERMISSION_CHOICE = (
-        ("EDIT_BLACKLIST", "Edit Blacklist"),
-        ("EDIT_GEAR", "Edit Gear"),
-        ("EDIT_RESERVATION", "Edit Reservation"),
-        ("CANCELLED", "Cancelled"),
-        ("APPROVED", "Approved"),
-        ("RENTED", "Rented"),
-    )
-
-    permissionID = models.AutoField(primary_key=True)
-    permissionType = models.CharField(max_length=30, choices=PERMISSION_CHOICE, default=None)
 
 
 class GearStat(models.Model):
