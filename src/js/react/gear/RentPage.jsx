@@ -14,7 +14,6 @@ import { Button, ControlLabel, Tab, Tabs } from "react-bootstrap";
 import ButtonModalForm from "../components/ButtonModalForm";
 import DateRangePicker from "../components/DateRangePicker";
 import { ToastContainer } from "react-toastify";
-import { Link } from "react-router-dom";
 
 export default class RentPage extends Reflux.Component {
     constructor() {
@@ -101,10 +100,6 @@ export default class RentPage extends Reflux.Component {
                     errorMessage={this.state.errorMessage}
                 />
                 <div className="pull-right">
-                    <Link to="/member-help">
-                        Help
-                    </Link>
-                    <div className="divider" />
                     <Button
                         className="btn btn-primary"
                         disabled={this.state.checkoutDisabled}

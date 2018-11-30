@@ -14,7 +14,8 @@ export default class CategoryStatisticTable extends React.Component {
         }, {
             sort: true,
             dataField: "usage",
-            text: "% Rented Out"
+            text: "% Rented Out",
+            align: "right"
         }];
     }
 

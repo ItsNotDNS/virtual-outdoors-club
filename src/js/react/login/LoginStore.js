@@ -14,9 +14,10 @@ export const LoginActions = Reflux.createActions([
         "checkRefreshToken"
     ]),
     // how long the access token should last - cookie expiration - 30 minutes
-    ACCESS_EXPIRE = 30 * 60 * 1000,
+    // maxAge uses seconds and not milliseconds
+    ACCESS_EXPIRE = 30 * 60,
     // how long the refresh token should last - cookie expiration - 24 hours
-    REFRESH_EXPIRE = 864 * 100000,
+    REFRESH_EXPIRE = 864 * 100,
     // how often it should refresh the token - setTimeout - 29 minutes
     REFRESH_ACCESS = 29 * 60 * 1000,
     cookies = new Cookies();
@@ -104,7 +105,7 @@ export class LoginStore extends Reflux.Store {
             });
     }
 }
-
+// cancels the refresher and removes the tokens on logout to prevent access again with it
 function removeCookies() {
     clearTimeout(cancelTimeout);
     cookies.remove("token");
@@ -113,6 +114,7 @@ function removeCookies() {
 
 // log out user every single time they enter into the site again through a new window
 function defaultState() {
+    // you need to be refreshed before the 30 minute mark or be forced to relog
     if (cookies.get("refresh") && cookies.get("token")) {
         setAxiosWithAuth();
         return {

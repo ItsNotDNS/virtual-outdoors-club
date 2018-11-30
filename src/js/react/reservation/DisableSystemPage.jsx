@@ -80,7 +80,7 @@ export default class DisableSystemPage extends Reflux.Component {
                     </Checkbox>
                     <p hidden={!this.state.disableSystem.cancelFutureReservations} className="text-danger">
                         <i className="fa fa-exclamation-triangle" />
-                        This will cancel all requested and approved reservations and disallow future reservations.
+                        This will cancel all reservations that are not taken out.
                     </p>
                 </div>
             );

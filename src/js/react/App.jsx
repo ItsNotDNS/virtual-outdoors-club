@@ -29,7 +29,7 @@ export default class App extends Reflux.Component {
         super(props);
         this.store = LoginStore;
 
-        // refresh token on entry of page
+        // refresh token on entry of page if the login credentials are saved in refresh
         if (cookies.get("token") && cookies.get("refresh")) {
             LoginActions.refreshToken();
         }
