@@ -2,12 +2,13 @@ from django.test import TestCase
 from ..models import GearCategory, Gear, GearStat
 from django.contrib.auth.models import User
 import datetime
+from ..local_date import local_date
 
 
 class StatsViewTestCase(TestCase):
 
     def setUp(self):
-        self.today = datetime.datetime.today()
+        self.today = local_date()
 
         self.gc1 = GearCategory(name="Map")
         self.gc2 = GearCategory(name="Ski Poles")

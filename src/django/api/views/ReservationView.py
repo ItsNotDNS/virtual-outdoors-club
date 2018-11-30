@@ -8,6 +8,7 @@ from ..serializers import ReservationPOSTSerializer, ReservationGETSerializer, G
 from django.db.models import Q
 from django.db import transaction
 from rest_framework.permissions import AllowAny
+from ..local_date import local_date
 import datetime
 import decimal
 
@@ -255,7 +256,7 @@ def checkout(request):
     if not reservation:
         return RespError(400, "There is no reservation with the id of '" + str(request['id']) + "'")
 
-    today = datetime.date.today()
+    today = local_date()
     if reservation.endDate < today:
         return RespError(406, "You cannot checkout a reservation that ends before today;"
                               " please fix the endDate and try again.")
@@ -268,8 +269,8 @@ def checkout(request):
     for gear in gearList:
         if gear.condition != "RENTABLE":
             return RespError(403, "The gear item with the code of '" + str(gear.code) + "' is not 'rentable',"
-                                                                                        " and thus can't be checked out. To still proceed with checking out, you"
-                                                                                        " must remove the gear item from this reservation.")
+                                  " and thus can't be checked out. To still proceed with checking out, you"
+                                  " must remove the gear item from this reservation.")
 
         try:
             # the below query does the following:
@@ -281,10 +282,9 @@ def checkout(request):
 
             if latestResWithGearItem.status != "CANCELLED" and latestResWithGearItem.status != "RETURNED":
                 return RespError(406, "The gear item with the code of '" + str(gear.code) + "' is currently held"
-                                                                                            " in another reservation (id #" + str(
-                    latestResWithGearItem.id) + "),"
-                                                " because that reservation hasn't been marked as 'returned' or 'cancelled'."
-                                                " You must remove the gear itemfrom your reservation in order to proceed.")
+                                      " in another reservation (id #" + str(latestResWithGearItem.id) + "),"
+                                      " because that reservation hasn't been marked as 'returned' or 'cancelled'."
+                                      " You must remove the gear itemfrom your reservation in order to proceed.")
 
         except Reservation.DoesNotExist:
             # no other reservation currently with the gear item.

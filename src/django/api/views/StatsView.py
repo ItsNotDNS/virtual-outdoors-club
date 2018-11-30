@@ -1,6 +1,7 @@
 from rest_framework.decorators import api_view
 from ..models import GearStat
 from .error import *
+from ..local_date import local_date
 import datetime
 
 
@@ -8,12 +9,12 @@ import datetime
 def statistics(request):
     start = request.query_params.get("from", None)
     end = request.query_params.get("to", None)
-    today = datetime.datetime.today()
+    today = local_date()
 
     # Error check the dates to be in YYYY-MM-DD and not in the future
     if start:
         try:
-            start = datetime.datetime.strptime(start, '%Y-%m-%d')
+            start = datetime.datetime.strptime(start, '%Y-%m-%d').date()
         except ValueError:
             return RespError(400, "The start date is in an invalid format. Make sure it's in the YYYY-MM-DD format.")
 
@@ -22,7 +23,7 @@ def statistics(request):
 
     if end:
         try:
-            end = datetime.datetime.strptime(end, '%Y-%m-%d')
+            end = datetime.datetime.strptime(end, '%Y-%m-%d').date()
         except ValueError:
             return RespError(400, "The end date is in an invalid format. Make sure it's in the YYYY-MM-DD format.")
 
@@ -43,10 +44,10 @@ def statistics(request):
     gear_ids = GearStat.objects.values_list("gearID", flat=True).distinct()
 
     # Calculate the date range
-    lowerbound = (today.date() - end.date()).days
+    lowerbound = (today - end).days
     lowerbound = (lowerbound + 7 // 2) // 7
 
-    upperbound = (end.date() - start.date()).days
+    upperbound = (end - start).days
     upperbound = (upperbound + 7 // 2) // 7 + lowerbound
 
     # Serialize the statistics between the date range

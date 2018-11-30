@@ -7,6 +7,7 @@ from rest_framework.permissions import AllowAny
 from .error import RespError, Response
 from ..models import Reservation
 from decimal import Decimal
+from ..local_date import local_date
 import datetime
 import paypalrestsdk
 
@@ -63,7 +64,7 @@ def paypalView(request):
     if res.status == "PAID":
         return RespError(400, "Reservation already paid for")
 
-    if res.startDate > (datetime.date.today() + datetime.timedelta(days=1)):
+    if res.startDate > (local_date() + datetime.timedelta(days=1)):
         return RespError(400, "The earliest you can pay for a reservation is the day before the start date")
 
     amount = Decimal()

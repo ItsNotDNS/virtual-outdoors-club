@@ -3,6 +3,7 @@ from .models import Gear, GearCategory, Reservation, UserVariability, Member, Bl
 from datetime import datetime
 from django.db.models import Q
 import datetime
+from .local_date import local_date
 
 
 class SystemSerializer(serializers.ModelSerializer):
@@ -138,7 +139,7 @@ class ReservationPOSTSerializer(serializers.ModelSerializer):
         except BlackList.DoesNotExist:
             pass
 
-        today = datetime.date.today()
+        today = local_date()
         if data['startDate'] < today:
             raise serializers.ValidationError("Start date must be in the future.")
 

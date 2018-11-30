@@ -3,6 +3,7 @@ from background_task import background
 from .models import Gear, Reservation, GearStat
 from .emailing import EmailThread
 from django.db.models import F
+from .local_date import local_date
 import datetime
 
 
@@ -34,7 +35,7 @@ def stats_worker():
 
 @background()
 def email_worker():
-    today = datetime.date.today()
+    today = local_date()
     tomorrow = (today + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
 
     oldpaidres = Reservation.objects.filter(endDate=today, status="PAID")

@@ -1,6 +1,7 @@
 from django.test import TestCase
 from ..models import Reservation, GearCategory, Gear, Member, BlackList
 from django.contrib.auth.models import User, Permission
+from ..local_date import local_date
 import datetime
 
 
@@ -8,7 +9,7 @@ class ReservationTestCase(TestCase):
 
     # Create test data and save primary key of all objects
     def setUp(self):
-        self.today = datetime.datetime.today()
+        self.today = local_date()
         Member.objects.create(email="enry@email.com")
         Member.objects.create(email="henry@email.com")
         Member.objects.create(email="blackListed@email.com")
@@ -341,7 +342,6 @@ class ReservationTestCase(TestCase):
         self.client.login(username="admin1", password="pass")
 
         request = {"id": self.reservationId}
-        today = datetime.datetime.today()
 
         response = self.client.post('/api/reservation/cancel/', request, content_type='application/json')
         self.assertEqual(response.status_code, 200)
@@ -360,8 +360,8 @@ class ReservationTestCase(TestCase):
                       'condition': 'RENTABLE',
                       "statusDescription": "",
                       'version': 1}],
-            'endDate': (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
-            'startDate': today.strftime("%Y-%m-%d"),
+            'endDate': (self.today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
+            'startDate': self.today.strftime("%Y-%m-%d"),
             'version': 1
             }]
 
@@ -391,7 +391,6 @@ class ReservationTestCase(TestCase):
         self.client.login(username="admin1", password="pass")
 
         request = {"id": self.reservationId}
-        today = datetime.datetime.today()
 
         response = self.client.post('/api/reservation/approve/', request, content_type='application/json')
         self.assertEqual(response.status_code, 200)
@@ -410,8 +409,8 @@ class ReservationTestCase(TestCase):
                       'condition': 'RENTABLE',
                       "statusDescription": "",
                       'version': 1}],
-            'endDate': (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
-            'startDate': today.strftime("%Y-%m-%d"),
+            'endDate': (self.today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
+            'startDate': self.today.strftime("%Y-%m-%d"),
             'version': 1
             }]
 
@@ -441,23 +440,21 @@ class ReservationTestCase(TestCase):
         reservationList = self.client.get("/api/reservation/", content_type='application/json').data["data"]
         reservationListOriginalLen = len(reservationList)
 
-        today = datetime.datetime.today()
-
         request = {
             "email": "enry@email.com",
             "licenseName": "Name on their license.",
             "licenseAddress": "Address on their license.",
-            "startDate": today.strftime("%Y-%m-%d"),
-            "endDate": (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
+            "startDate": self.today.strftime("%Y-%m-%d"),
+            "endDate": (self.today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
             "status": "REQUESTED",
             "gear": [self.bk.pk]
         }
 
         expected = {
-            'startDate': today.strftime("%Y-%m-%d"),
+            'startDate': self.today.strftime("%Y-%m-%d"),
             'id': 6,
             'email': 'enry@email.com',
-            'endDate': (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
+            'endDate': (self.today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
             'gear': [self.bk.pk],
             'licenseName': 'Name on their license.',
             'status': 'REQUESTED',
@@ -490,7 +487,7 @@ class ReservationTestCase(TestCase):
         # F B B B B F
         # ^ ^
         request['endDate'] = request['startDate']
-        request['startDate'] = (today - datetime.timedelta(days=1)).strftime("%Y-%m-%d")
+        request['startDate'] = (self.today - datetime.timedelta(days=1)).strftime("%Y-%m-%d")
 
         response = self.client.post("/api/reservation", request, content_type="application/json")
         self.assertEqual(response.status_code, 400)
@@ -498,7 +495,7 @@ class ReservationTestCase(TestCase):
         # Test for current startDate contained in new date range
         # F B B B B F
         # ^   ^
-        request['endDate'] = (today + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
+        request['endDate'] = (self.today + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
 
         response = self.client.post("/api/reservation", request, content_type="application/json")
         self.assertEqual(response.status_code, 400)
@@ -506,7 +503,7 @@ class ReservationTestCase(TestCase):
         # Test current startDate overlapping with new startDate
         # F B B B B F
         #   ^ ^
-        request['startDate'] = today.strftime("%Y-%m-%d")
+        request['startDate'] = self.today.strftime("%Y-%m-%d")
 
         response = self.client.post("/api/reservation", request, content_type="application/json")
         self.assertEqual(response.status_code, 400)
@@ -514,8 +511,8 @@ class ReservationTestCase(TestCase):
         # Test new reservation contained within current reservation
         # F B B B B F
         #     ^ ^
-        request['startDate'] = (today + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
-        request['endDate'] = (today + datetime.timedelta(days=2)).strftime("%Y-%m-%d")
+        request['startDate'] = (self.today + datetime.timedelta(days=1)).strftime("%Y-%m-%d")
+        request['endDate'] = (self.today + datetime.timedelta(days=2)).strftime("%Y-%m-%d")
 
         response = self.client.post("/api/reservation", request, content_type="application/json")
         self.assertEqual(response.status_code, 400)
@@ -523,7 +520,7 @@ class ReservationTestCase(TestCase):
         # Test current endDate overlapping with new endDate
         # F B B B B F
         #     ^   ^
-        request['endDate'] = (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d")
+        request['endDate'] = (self.today + datetime.timedelta(days=3)).strftime("%Y-%m-%d")
 
         response = self.client.post("/api/reservation", request, content_type="application/json")
         self.assertEqual(response.status_code, 400)
@@ -531,7 +528,7 @@ class ReservationTestCase(TestCase):
         # Test for current endDate contained within new date range
         # F B B B B F
         #     ^     ^
-        request['endDate'] = (today + datetime.timedelta(days=4)).strftime("%Y-%m-%d")
+        request['endDate'] = (self.today + datetime.timedelta(days=4)).strftime("%Y-%m-%d")
 
         response = self.client.post("/api/reservation", request, content_type="application/json")
         self.assertEqual(response.status_code, 400)
@@ -539,7 +536,7 @@ class ReservationTestCase(TestCase):
         # Test for current endDate overlapping with new startDate
         # F B B B B F
         #         ^ ^
-        request['startDate'] = (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d")
+        request['startDate'] = (self.today + datetime.timedelta(days=3)).strftime("%Y-%m-%d")
 
         response = self.client.post("/api/reservation", request, content_type="application/json")
         self.assertEqual(response.status_code, 400)
@@ -556,17 +553,17 @@ class ReservationTestCase(TestCase):
             "email": "enry@email.com",
             "licenseName": "Name on their license.",
             "licenseAddress": "Address on their license.",
-            "startDate": today.strftime("%Y-%m-%d"),
-            "endDate": (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
+            "startDate": self.today.strftime("%Y-%m-%d"),
+            "endDate": (self.today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
             "status": "REQUESTED",
             "gear": [self.bk.pk]
         }
 
         expected = {
-            'startDate': today.strftime("%Y-%m-%d"),
+            'startDate': self.today.strftime("%Y-%m-%d"),
             'id': postedReservationData["id"] + 1,
             'email': 'enry@email.com',
-            'endDate': (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
+            'endDate': (self.today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
             'gear': [self.bk.pk],
             'licenseName': 'Name on their license.',
             'status': 'REQUESTED',
@@ -782,14 +779,12 @@ class ReservationTestCase(TestCase):
     def test_invalidEmail(self):
         self.client.login(username="admin1", password="pass")
 
-        today = datetime.datetime.today()
-
         request = {
             "email": "invalid@email.com",
             "licenseName": "Name on their license.",
             "licenseAddress": "Address on their license.",
-            "startDate": today.strftime("%Y-%m-%d"),
-            "endDate": (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
+            "startDate": self.today.strftime("%Y-%m-%d"),
+            "endDate": (self.today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
             "status": "REQUESTED",
             "gear": [self.bk.pk],
             "version": 1
@@ -801,14 +796,12 @@ class ReservationTestCase(TestCase):
     def test_blackListedEmail(self):
         self.client.login(username="admin1", password="pass")
 
-        today = datetime.datetime.today()
-
         request = {
             "email": "blackListed@email.com",
             "licenseName": "Name on their license.",
             "licenseAddress": "Address on their license.",
-            "startDate": today.strftime("%Y-%m-%d"),
-            "endDate": (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
+            "startDate": self.today.strftime("%Y-%m-%d"),
+            "endDate": (self.today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
             "status": "REQUESTED",
             "gear": [self.bk.pk]
         }
@@ -819,14 +812,12 @@ class ReservationTestCase(TestCase):
     def test_postTooFarInFuture(self):
         self.client.login(username="exec", password="pass")
 
-        today = datetime.datetime.today()
-
         request = {
             "email": "enry@email.com",
             "licenseName": "Name on their license.",
             "licenseAddress": "Address on their license.",
-            "startDate": (today + datetime.timedelta(days=22)).strftime("%Y-%m-%d"),
-            "endDate": (today + datetime.timedelta(days=28)).strftime("%Y-%m-%d"),
+            "startDate": (self.today + datetime.timedelta(days=22)).strftime("%Y-%m-%d"),
+            "endDate": (self.today + datetime.timedelta(days=28)).strftime("%Y-%m-%d"),
             "status": "REQUESTED",
             "gear": [self.bk.pk]
         }
@@ -847,13 +838,12 @@ class ReservationTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.client.logout()
 
-        today = datetime.datetime.today()
         request = {
             "email": "enry@email.com",
             "licenseName": "Name on their license.",
             "licenseAddress": "Address on their license.",
-            "startDate": (today).strftime("%Y-%m-%d"),
-            "endDate": (today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
+            "startDate": self.today.strftime("%Y-%m-%d"),
+            "endDate": (self.today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
             "status": "REQUESTED",
             "gear": [self.bk.pk]
         }
