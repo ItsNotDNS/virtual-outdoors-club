@@ -3,12 +3,17 @@
  */
 import React from "react";
 import { Checkbox, FormGroup } from "react-bootstrap";
-import { GearActions } from "./GearStore";
 import Constants from "../../constants/constants";
+import PropTypes from "prop-types";
 
 export default class StatusSearchBar extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleChange = this.handleChange.bind(this);
+    }
+
     handleChange(event) {
-        GearActions.gearStatusCheckBoxChange(event.target.name, event.target.checked);
+        this.props.changeValue(event.target.name, event.target.checked);
     };
 
     render() {
@@ -17,25 +22,26 @@ export default class StatusSearchBar extends React.Component {
                 <FormGroup>
                     <div className="status-search-bar-header"> Gear condition filter: </div>
                     <Checkbox inline name={Constants.gearConditions.RENTABLE}
-                        defaultChecked
-                        onClick={this.handleChange}
+                        checked={this.props.options.RENTABLE}
+                        onChange={this.handleChange}
                     >
                         Rentable
                     </Checkbox>
                     <Checkbox inline name={Constants.gearConditions.FLAGGED}
-                        defaultChecked
-                        onClick={this.handleChange}
+                        checked={this.props.options.FLAGGED}
+                        onChange={this.handleChange}
                     >
                         Flagged
                     </Checkbox>
                     <Checkbox inline name={Constants.gearConditions.NEEDS_REPAIR}
-                        defaultChecked
-                        onClick={this.handleChange}
+                        checked={this.props.options.NEEDS_REPAIR}
+                        onChange={this.handleChange}
                     >
                         Needs Repair
                     </Checkbox>
                     <Checkbox inline name={Constants.gearConditions.DELETED}
-                        onClick={this.handleChange}
+                        checked={this.props.options.DELETED}
+                        onChange={this.handleChange}
                     >
                         Deleted
                     </Checkbox>
@@ -44,3 +50,8 @@ export default class StatusSearchBar extends React.Component {
         );
     }
 }
+
+StatusSearchBar.propTypes = {
+    options: PropTypes.object.isRequired,
+    changeValue: PropTypes.func.isRequired
+};

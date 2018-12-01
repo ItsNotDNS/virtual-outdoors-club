@@ -138,7 +138,10 @@ export default class GearTable extends React.Component {
         return (
             <div>
                 <SearchBar className="custom-search-field" {...props.searchProps} />
-                <StatusSearchBar />
+                <StatusSearchBar
+                    options={this.props.checkboxOptions}
+                    changeValue={this.props.changeCheckBox}
+                />
                 <Table
                     {...props.baseProps}
                     defaultSorted={[
@@ -169,5 +172,6 @@ GearTable.propTypes = {
     onClickDelete: PropTypes.func.isRequired,
     onSelectRow: PropTypes.func,
     gearList: PropTypes.array.isRequired,
-    checkboxOptions: PropTypes.object.isRequired
+    checkboxOptions: PropTypes.object.isRequired,
+    changeCheckBox: PropTypes.func.isRequired
 };

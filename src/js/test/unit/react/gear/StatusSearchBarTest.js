@@ -5,6 +5,7 @@ import { shallow } from "enzyme";
 import StatusSearchBar from "react/gear/StatusSearchBar";
 import { GearActions } from "react/gear/GearStore";
 import sinon from "sinon";
+import PropTypes from "prop-types";
 
 const sandbox = sinon.createSandbox();
 let actionsStub;
@@ -24,9 +25,21 @@ describe("StatusSearchBar Tests", () => {
                     checked: true
                 }
             },
-            statusSearchBar = shallow(<StatusSearchBar />);
+            mockOptions = {
+            RENTABLE: true,
+            FLAGGED: true,
+            NEEDS_REPAIR: true,
+            DELETED: false
+        },
+            mySpy = sinon.spy(),
+            statusSearchBar = shallow(
+                <StatusSearchBar
+                    options={mockOptions}
+                    changeValue={mySpy}
+                />
+            );
 
         statusSearchBar.instance().handleChange(event);
-        expect(actionsStub.gearStatusCheckBoxChange.calledOnce).to.be.true;
+        expect(mySpy.calledOnce).to.be.true;
     });
 });
