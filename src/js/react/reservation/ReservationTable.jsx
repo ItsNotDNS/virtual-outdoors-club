@@ -72,7 +72,10 @@ export default class ReservationTable extends React.Component {
                 <div className="custom-search-field">
                     <SearchBar {...props.searchProps} />
                 </div>
-                <ReservationStatusSearchBar />
+                <ReservationStatusSearchBar
+                    options={this.props.checkboxOptions}
+                    changeValue={this.props.changeCheckBox}
+                />
                 <Table
                     {...props.baseProps}
                     hover
@@ -121,5 +124,6 @@ export default class ReservationTable extends React.Component {
 ReservationTable.propTypes = {
     onSelectRow: PropTypes.func,
     reservationList: PropTypes.array.isRequired,
-    checkboxOptions: PropTypes.object.isRequired
+    checkboxOptions: PropTypes.object.isRequired,
+    changeCheckBox: PropTypes.func.isRequired
 };
