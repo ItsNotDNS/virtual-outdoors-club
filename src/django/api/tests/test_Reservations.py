@@ -74,7 +74,9 @@ class ReservationTestCase(TestCase):
                   "statusDescription": "",
                   "version": 1}
              ],
-             "version": 1}
+             "version": 1,
+            "payment": ""
+            }
         ]
 
         response = self.client.get('/api/reservation/', content_type="application/json").data['data']
@@ -224,7 +226,8 @@ class ReservationTestCase(TestCase):
                       'version': 1}],
             'endDate': (self.today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
             'startDate': self.today.strftime("%Y-%m-%d"),
-            'version': 1
+            'version': 1,
+            'payment': ""
             }]
 
         # tests if status of succesfully checked out reservation is "TAKEN" or not
@@ -305,7 +308,8 @@ class ReservationTestCase(TestCase):
                       'version': 1}],
             'endDate': (self.today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
             'startDate': self.today.strftime("%Y-%m-%d"),
-            'version': 1
+            'version': 1,
+            'payment': 'CASH'
         }]
 
         # tests if status of checked in reservation is "RETURNED" or not
@@ -362,7 +366,8 @@ class ReservationTestCase(TestCase):
                       'version': 1}],
             'endDate': (self.today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
             'startDate': self.today.strftime("%Y-%m-%d"),
-            'version': 1
+            'version': 1,
+            'payment': ""
             }]
 
         response = self.client.get('/api/reservation/').data['data']
@@ -411,7 +416,8 @@ class ReservationTestCase(TestCase):
                       'version': 1}],
             'endDate': (self.today + datetime.timedelta(days=3)).strftime("%Y-%m-%d"),
             'startDate': self.today.strftime("%Y-%m-%d"),
-            'version': 1
+            'version': 1,
+            'payment': ""
             }]
 
         response = self.client.get('/api/reservation/').data['data']
@@ -639,7 +645,8 @@ class ReservationTestCase(TestCase):
             'licenseName': 'Name on their license.',
             'status': 'REQUESTED',
             'licenseAddress': 'Address on their license.',
-            'version': 2
+            'version': 2,
+            'payment': ""
         }
 
         response = self.client.patch("/api/reservation", request, content_type="application/json").data
@@ -690,7 +697,8 @@ class ReservationTestCase(TestCase):
             'licenseName': 'Name on their license.',
             'status': 'REQUESTED',
             'licenseAddress': 'Address on their license.',
-            'version': 3
+            'version': 3,
+            'payment': ""
         }
 
         response = self.client.patch("/api/reservation", request, content_type="application/json").data

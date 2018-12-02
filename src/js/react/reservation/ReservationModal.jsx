@@ -124,10 +124,10 @@ export default class ReservationModal extends React.Component {
                         {this.getButton("Cancel", openConfirmWrapper(CANCEL), "danger")}
                     </div>
                     <div className="col-xs-4">
-                        {this.getButton("Take Cash Deposit", openConfirmWrapper(PAY_CASH), "warning")}
+                        {this.getButton("Cash Deposit", openConfirmWrapper(PAY_CASH), "warning")}
                     </div>
                     <div className="col-xs-4">
-                        {this.getButton("Open Payment Page", () => window.open(`/pay?id=${data.id}`), "primary")}
+                        {this.getButton("Online Payment", () => window.open(`/pay?id=${data.id}`), "primary")}
                     </div>
                 </div>
             ),

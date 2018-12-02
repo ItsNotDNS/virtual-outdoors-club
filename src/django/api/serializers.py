@@ -87,6 +87,7 @@ class ReservationGETSerializer(serializers.ModelSerializer):
             "status",
             "gear",
             "version",
+            "payment"
         ]
 
 
