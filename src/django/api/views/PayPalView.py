@@ -61,6 +61,9 @@ def paypalView(request):
     except Reservation.DoesNotExist:
         return RespError(400, "There is no reservation with the id of '" + str(data['id']) + "'")
 
+    if res.status == "CANCELLED" or res.status == "RETURNED":
+        return RespError(400, "Reservation already returned or cancelled")
+
     if res.status == "PAID":
         return RespError(400, "Reservation already paid for")
 

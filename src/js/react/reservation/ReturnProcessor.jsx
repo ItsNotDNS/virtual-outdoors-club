@@ -35,7 +35,7 @@ export default class ReturnProcessor extends Reflux.Component {
                     <button onClick={ReservationActions.startReturnProcess}
                         className="full-width btn btn-primary"
                     >
-                        Process Gear Return
+                        Return Gear
                     </button>
                 </div>
             </div>
