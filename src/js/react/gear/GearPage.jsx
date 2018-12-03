@@ -177,8 +177,8 @@ export default class GearPage extends Reflux.Component {
     getImportExportTab(tabKey) {
         const { gear, warnings, error, results } = this.state.upload,
             alert = this.getUploadErrorAlert(error) ||
-                this.getUploadWarningAlert(warnings) ||
                 this.getUploadSuccessAlert(results) ||
+                this.getUploadWarningAlert(warnings) ||
                 this.getParseSuccessAlert(gear);
 
         return (
