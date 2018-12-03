@@ -143,7 +143,7 @@ class ReservationView(APIView):
                 return RespError(400, "'" + str(key) + "' is not valid with this POST method, please resubmit the "
                                                        "request without it.")
 
-        sRes = ReservationPOSTSerializer(data=newRes, context={'request': request})
+        sRes = ReservationPOSTSerializer(data=newRes, context={'request': request.user.username})
 
         if not sRes.is_valid():
             return serialValidation(sRes)
