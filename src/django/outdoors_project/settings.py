@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'rest_auth',
     'rest_framework',
     'rest_framework.authtoken',
-    'paypal.standard.ipn',
     'background_task',
     'api',
     'simple_history',

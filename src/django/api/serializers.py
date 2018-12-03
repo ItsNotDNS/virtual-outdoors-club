@@ -1,8 +1,6 @@
 from rest_framework import serializers
 from .models import Gear, GearCategory, Reservation, UserVariability, Member, BlackList, System
-from datetime import datetime
 from django.db.models import Q
-import datetime
 from .local_date import local_date
 
 
@@ -68,7 +66,7 @@ class GearSerializer(serializers.ModelSerializer):
             "description",
             "condition",
             "statusDescription",
-            "version",
+            "version"
         ]
 
 
@@ -89,6 +87,13 @@ class ReservationGETSerializer(serializers.ModelSerializer):
             "version",
             "payment"
         ]
+
+    def to_representation(self, instance):
+        reservation = super().to_representation(instance)
+        if reservation['payment'] == "CASH":
+            return reservation
+        reservation["payment"] = ""
+        return reservation
 
 
 class ReservationPOSTSerializer(serializers.ModelSerializer):
@@ -130,16 +135,15 @@ class ReservationPOSTSerializer(serializers.ModelSerializer):
         try:
             Member.objects.get(email=data["email"])
         except Member.DoesNotExist:
-            raise serializers.ValidationError("Email for this request not in database!")
+            raise serializers.ValidationError("Error validating email")
 
-        try:    # Check if blacklisted email
-            blackListed = BlackList.objects.get(email=data["email"])
-            if blackListed:
-                raise serializers.ValidationError("You are not allowed to rent gear at this time. If you wish to know why, contact the outdoors club.")
-                
+        try:
+            BlackList.objects.get(email=data["email"])
         except BlackList.DoesNotExist:
             pass
-
+        else:
+            raise serializers.ValidationError("You are not allowed to rent gear at this time. If you wish to know "
+                                              "why, contact the outdoors club.")
         today = local_date()
         if data['startDate'] < today:
             raise serializers.ValidationError("Start date must be in the future.")

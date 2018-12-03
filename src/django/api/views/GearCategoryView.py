@@ -108,7 +108,7 @@ class GearCategoryView(APIView):
             return RespError(409, "You cannot remove a gear category that is currently being referenced by a piece of gear.")
 
         # all deleted gear lose their condition
-        gear = Gear.objects.all().filter(category=category.id).update(category=None)
+        Gear.objects.all().filter(category=category.id).update(category=None)
 
         # try to delete the category
         try:
