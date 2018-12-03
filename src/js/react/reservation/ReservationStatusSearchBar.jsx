@@ -18,45 +18,53 @@ export default class ReservationStatusSearchBar extends React.Component {
     };
 
     render() {
+        const { options } = this.props,
+            {
+                REQUESTED,
+                APPROVED,
+                PAID,
+                TAKEN,
+                RETURNED,
+                CANCELLED } = Constants.reservations.status;
         return (
             <div>
                 <FormGroup>
                     <div className="status-search-bar-header"> Reservation Status filter: </div>
-                    <Checkbox inline name={Constants.reservations.status["REQUESTED"]}
-                        checked={this.props.options[Constants.reservations.status["REQUESTED"]]}
+                    <Checkbox inline name={REQUESTED}
+                        checked={options[REQUESTED]}
                         onChange={this.handleChange}
                     >
-                        {capitalizeFirstLetter(Constants.reservations.status["REQUESTED"])}
+                        {capitalizeFirstLetter(REQUESTED)}
                     </Checkbox>
-                    <Checkbox inline name={Constants.reservations.status["APPROVED"]}
-                        checked={this.props.options[Constants.reservations.status["APPROVED"]]}
+                    <Checkbox inline name={APPROVED}
+                        checked={options[APPROVED]}
                         onChange={this.handleChange}
                     >
-                        {capitalizeFirstLetter(Constants.reservations.status["APPROVED"])}
+                        {capitalizeFirstLetter(APPROVED)}
                     </Checkbox>
-                    <Checkbox inline name={Constants.reservations.status["PAID"]}
-                        checked={this.props.options[Constants.reservations.status["PAID"]]}
+                    <Checkbox inline name={PAID}
+                        checked={options[PAID]}
                         onChange={this.handleChange}
                     >
-                        {capitalizeFirstLetter(Constants.reservations.status["PAID"])}
+                        {capitalizeFirstLetter(PAID)}
                     </Checkbox>
-                    <Checkbox inline name={Constants.reservations.status["TAKEN"]}
-                        checked={this.props.options[Constants.reservations.status["TAKEN"]]}
+                    <Checkbox inline name={TAKEN}
+                        checked={options[TAKEN]}
                         onChange={this.handleChange}
                     >
-                        {capitalizeFirstLetter(Constants.reservations.status["TAKEN"])}
+                        {capitalizeFirstLetter(TAKEN)}
                     </Checkbox>
-                    <Checkbox inline name={Constants.reservations.status["RETURNED"]}
-                        checked={this.props.options[Constants.reservations.status["RETURNED"]]}
+                    <Checkbox inline name={RETURNED}
+                        checked={options[RETURNED]}
                         onChange={this.handleChange}
                     >
-                        {capitalizeFirstLetter(Constants.reservations.status["RETURNED"])}
+                        {capitalizeFirstLetter(RETURNED)}
                     </Checkbox>
-                    <Checkbox inline name={Constants.reservations.status["CANCELLED"]}
-                        checked={this.props.options[Constants.reservations.status["CANCELLED"]]}
+                    <Checkbox inline name={CANCELLED}
+                        checked={options[CANCELLED]}
                         onChange={this.handleChange}
                     >
-                        {capitalizeFirstLetter(Constants.reservations.status["CANCELLED"])}
+                        {capitalizeFirstLetter(CANCELLED)}
                     </Checkbox>
                 </FormGroup>
             </div>
