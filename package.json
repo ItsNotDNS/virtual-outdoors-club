@@ -31,7 +31,7 @@
     "@webpack-cli/serve": "^0.1.2",
     "arraybuffer-loader": "^1.0.7",
     "autoprefixer": "^9.1.5",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "babel-loader": "^8.0.4",
     "babel-plugin-istanbul": "^5.0.1",
     "bootstrap": "^3.3.7",
