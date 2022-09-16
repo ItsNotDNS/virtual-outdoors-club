@@ -34,7 +34,7 @@
     "axios": "^0.18.0",
     "babel-loader": "^8.0.4",
     "babel-plugin-istanbul": "^5.0.1",
-    "bootstrap": "^3.3.7",
+    "bootstrap": "^3.4.1",
     "chai": "^4.2.0",
     "css-loader": "^1.0.0",
     "enzyme": "^3.7.0",
