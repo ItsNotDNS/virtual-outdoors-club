@@ -90,7 +90,7 @@
   "dependencies": {
     "compression": "^1.7.3",
     "immutability-helper": "^2.8.1",
-    "jsonwebtoken": "^8.4.0",
+    "jsonwebtoken": "^9.0.0",
     "moment": "^2.22.2",
     "prop-types": "^15.6.2",
     "query-string": "^6.2.0",
